@@ -1,11 +1,11 @@
 package it.polimi.baselines.timekeeping.external.snapshot;
 
 import it.polimi.baselines.JenaEngine;
-import it.polimi.processing.EventProcessor;
-import it.polimi.processing.events.CTEvent;
-import it.polimi.processing.events.TripleContainer;
-import it.polimi.processing.rspengine.abstracts.RSPListener;
-import it.polimi.processing.rspengine.rspevents.jena.StatementEvent;
+import it.polimi.heaven.core.rspengine.rspevents.jena.StatementEvent;
+import it.polimi.heaven.core.ts.EventProcessor;
+import it.polimi.heaven.core.ts.events.Stimulus;
+import it.polimi.heaven.core.ts.events.TripleContainer;
+import it.polimi.heaven.core.ts.rspengine.RSPListener;
 import it.polimi.utils.RDFSUtils;
 import it.polimi.utils.WindowUtils;
 import lombok.extern.log4j.Log4j;
@@ -21,7 +21,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 @Log4j
 public class JenaEngineStmt extends JenaEngine {
 
-	public JenaEngineStmt(String name, EventProcessor<CTEvent> collector, RSPListener listener) {
+	public JenaEngineStmt(String name, EventProcessor<Stimulus> collector, RSPListener listener) {
 		super(name, collector, listener, WindowUtils.JENA_INPUT_QUERY_SNAPTSHOT);
 
 		cepConfig = new Configuration();
@@ -32,7 +32,7 @@ public class JenaEngineStmt extends JenaEngine {
 	}
 
 	@Override
-	protected void handleEvent(CTEvent e) {
+	protected void handleEvent(Stimulus e) {
 		super.handleEvent(e);
 		for (TripleContainer tc : e.getEventTriples()) {
 			String[] t = tc.getTriple();

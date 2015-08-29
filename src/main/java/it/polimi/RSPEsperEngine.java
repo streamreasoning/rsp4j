@@ -1,8 +1,9 @@
-package it.polimi.processing.rspengine.abstracts;
+package it.polimi;
 
-import it.polimi.processing.EventProcessor;
-import it.polimi.processing.enums.ExecutionState;
-import it.polimi.processing.events.CTEvent;
+import it.polimi.heaven.core.enums.ExecutionState;
+import it.polimi.heaven.core.ts.EventProcessor;
+import it.polimi.heaven.core.ts.events.Stimulus;
+import it.polimi.heaven.core.ts.rspengine.RSPEngine;
 import it.polimi.utils.WindowUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,17 +27,17 @@ public abstract class RSPEsperEngine implements RSPEngine {
 	protected ConfigurationMethodRef ref;
 
 	protected ExecutionState status;
-	protected EventProcessor<CTEvent> next;
+	protected EventProcessor<Stimulus> next;
 
 	protected String name;
 
 	@Setter
-	protected CTEvent currentEvent = null;
+	protected Stimulus currentEvent = null;
 	protected long sentTimestamp;
 
 	protected int windowShots = 0, snapshots = 0, time = 1, registrationTime = 0, rspEventsNumber = 0, esperEventsNumber = 0;
 
-	public RSPEsperEngine(String name, EventProcessor<CTEvent> next) {
+	public RSPEsperEngine(String name, EventProcessor<Stimulus> next) {
 		this.next = next;
 		this.name = name;
 	}

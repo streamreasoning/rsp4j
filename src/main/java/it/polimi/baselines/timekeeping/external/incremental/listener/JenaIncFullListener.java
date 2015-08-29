@@ -1,8 +1,8 @@
 package it.polimi.baselines.timekeeping.external.incremental.listener;
 
 import it.polimi.baselines.timekeeping.external.snapshot.listener.abstracts.JenaIncrementalListener;
-import it.polimi.processing.EventProcessor;
-import it.polimi.processing.events.CTEvent;
+import it.polimi.heaven.core.ts.EventProcessor;
+import it.polimi.heaven.core.ts.events.Stimulus;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.impl.InfModelImpl;
@@ -12,7 +12,7 @@ import com.hp.hpl.jena.vocabulary.ReasonerVocabulary;
 
 public class JenaIncFullListener extends JenaIncrementalListener {
 
-	public JenaIncFullListener(Model tbox, EventProcessor<CTEvent> collector) {
+	public JenaIncFullListener(Model tbox, EventProcessor<Stimulus> collector) {
 		super(tbox, collector);
 
 		reasoner = ReasonerRegistry.getRDFSReasoner();

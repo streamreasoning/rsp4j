@@ -1,21 +1,21 @@
 package it.polimi.ready2go;
 
 import it.polimi.baselines.enums.OntoLanguage;
-import it.polimi.processing.enums.ExperimentType;
-import it.polimi.processing.enums.FlowRateProfile;
-import it.polimi.processing.enums.Reasoning;
-import it.polimi.processing.events.CTEvent;
-import it.polimi.processing.events.Experiment;
-import it.polimi.processing.events.profiler.ConstantFlowRateProfiler;
-import it.polimi.processing.events.profiler.abstracts.FlowRateProfiler;
-import it.polimi.processing.rspengine.abstracts.RSPEngine;
-import it.polimi.processing.teststand.collector.TSResultCollector;
-import it.polimi.processing.teststand.core.TestStand;
-import it.polimi.processing.teststand.core.TestStandImpl;
-import it.polimi.processing.teststand.streamer.RDF2RDFStream;
-import it.polimi.processing.teststand.streamer.TSStreamer;
+import it.polimi.heaven.core.enums.ExperimentType;
+import it.polimi.heaven.core.enums.FlowRateProfile;
+import it.polimi.heaven.core.enums.Reasoning;
+import it.polimi.heaven.core.ts.TestStand;
+import it.polimi.heaven.core.ts.events.Experiment;
+import it.polimi.heaven.core.ts.events.Stimulus;
+import it.polimi.heaven.core.ts.rspengine.RSPEngine;
+import it.polimi.heaven.core.ts.streamer.flowrateprofiler.FlowRateProfiler;
+import it.polimi.heaven.core.tsimpl.TestStandImpl;
+import it.polimi.heaven.core.tsimpl.collector.TSResultCollector;
+import it.polimi.heaven.core.tsimpl.streamer.RDF2RDFStream;
+import it.polimi.heaven.core.tsimpl.streamer.TSStreamer;
+import it.polimi.heaven.core.tsimpl.streamer.flowrateprofiler.ConstantFlowRateProfiler;
+import it.polimi.heaven.services.system.ExecutionEnvirorment;
 import it.polimi.services.FileService;
-import it.polimi.services.system.ExecutionEnvirorment;
 import it.polimi.utils.FileUtils;
 import it.polimi.utils.GetPropertyValues;
 
@@ -141,7 +141,7 @@ public class ToImplement {
 	}
 
 	protected static String flowRateProfileSelection() {
-		FlowRateProfiler<CTEvent> eb = new ConstantFlowRateProfiler(INIT_SIZE,
+		FlowRateProfiler<Stimulus> eb = new ConstantFlowRateProfiler(INIT_SIZE,
 				EXPERIMENT_NUMBER);
 		streamer = new RDF2RDFStream(testStand, eb, MAX_EVENT_STREAM);
 		String code = "_FRP_";

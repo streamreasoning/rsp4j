@@ -1,8 +1,8 @@
 package it.polimi.baselines.timekeeping.external.snapshot.listener;
 
 import it.polimi.baselines.timekeeping.external.snapshot.listener.abstracts.JenaNaiveListener;
-import it.polimi.processing.EventProcessor;
-import it.polimi.processing.events.CTEvent;
+import it.polimi.heaven.core.ts.EventProcessor;
+import it.polimi.heaven.core.ts.events.Stimulus;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.reasoner.Reasoner;
@@ -11,7 +11,7 @@ import com.hp.hpl.jena.vocabulary.ReasonerVocabulary;
 
 public final class JenaSMPLListener extends JenaNaiveListener {
 
-	public JenaSMPLListener(Model tbox, EventProcessor<CTEvent> next) {
+	public JenaSMPLListener(Model tbox, EventProcessor<Stimulus> next) {
 		super(tbox, next);
 	}
 

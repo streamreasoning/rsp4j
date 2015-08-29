@@ -1,10 +1,10 @@
 package it.polimi.baselines;
 
-import it.polimi.processing.EventProcessor;
-import it.polimi.processing.enums.ExecutionState;
-import it.polimi.processing.events.CTEvent;
-import it.polimi.processing.rspengine.abstracts.RSPEsperEngine;
-import it.polimi.processing.rspengine.abstracts.RSPListener;
+import it.polimi.RSPEsperEngine;
+import it.polimi.heaven.core.enums.ExecutionState;
+import it.polimi.heaven.core.ts.EventProcessor;
+import it.polimi.heaven.core.ts.events.Stimulus;
+import it.polimi.heaven.core.ts.rspengine.RSPListener;
 import it.polimi.utils.WindowUtils;
 import lombok.extern.log4j.Log4j;
 
@@ -23,7 +23,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
 
 	private EPStatement out = null;
 
-	public JenaEngine(String name, EventProcessor<CTEvent> collector, RSPListener listener, String query) {
+	public JenaEngine(String name, EventProcessor<Stimulus> collector, RSPListener listener, String query) {
 		super(name, collector);
 		super.cepConfig = new Configuration();
 		this.listener = listener;
@@ -64,7 +64,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
 	}
 
 	@Override
-	public boolean process(CTEvent e) {
+	public boolean process(Stimulus e) {
 		setCurrentEvent(e);
 		status = ExecutionState.RUNNING;
 		rspEventsNumber++;
@@ -84,7 +84,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
 		moveTime();
 	}
 
-	protected void handleEvent(CTEvent e) {
+	protected void handleEvent(Stimulus e) {
 		this.sentTimestamp = System.currentTimeMillis();
 	}
 

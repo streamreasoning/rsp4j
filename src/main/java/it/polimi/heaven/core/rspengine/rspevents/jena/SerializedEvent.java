@@ -1,7 +1,7 @@
-package it.polimi.processing.rspengine.rspevents.jena;
+package it.polimi.heaven.core.rspengine.rspevents.jena;
 
-import it.polimi.processing.events.TripleContainer;
-import it.polimi.processing.rspengine.rspevents.SerializedTripleEvent;
+import it.polimi.heaven.core.rspengine.rspevents.SerializedTripleEvent;
+import it.polimi.heaven.core.ts.events.TripleContainer;
 import it.polimi.utils.RDFSUtils;
 
 import java.util.HashSet;

@@ -1,8 +1,8 @@
 package it.polimi.baselines.timekeeping.external.incremental.listener;
 
 import it.polimi.baselines.timekeeping.external.snapshot.listener.abstracts.JenaIncrementalListener;
-import it.polimi.processing.EventProcessor;
-import it.polimi.processing.events.CTEvent;
+import it.polimi.heaven.core.ts.EventProcessor;
+import it.polimi.heaven.core.ts.events.Stimulus;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.impl.InfModelImpl;
@@ -14,7 +14,7 @@ public class JenaIncRhoDFListener extends JenaIncrementalListener {
 
 	private final String aBoxRuleset;
 
-	public JenaIncRhoDFListener(Model tbox, String aBoxRuleset, EventProcessor<CTEvent> collector) {
+	public JenaIncRhoDFListener(Model tbox, String aBoxRuleset, EventProcessor<Stimulus> collector) {
 		super(tbox, collector);
 		this.aBoxRuleset = aBoxRuleset;
 		reasoner = new GenericRuleReasoner(Rule.rulesFromURL(this.aBoxRuleset));

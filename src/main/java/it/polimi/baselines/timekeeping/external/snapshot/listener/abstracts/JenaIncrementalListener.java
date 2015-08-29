@@ -1,12 +1,12 @@
 package it.polimi.baselines.timekeeping.external.snapshot.listener.abstracts;
 
-import it.polimi.processing.EventProcessor;
-import it.polimi.processing.events.CTEvent;
-import it.polimi.processing.events.TripleContainer;
-import it.polimi.processing.events.results.OutCTEvent;
-import it.polimi.processing.rspengine.abstracts.RSPListener;
-import it.polimi.processing.rspengine.rspevents.jena.JenaEsperEvent;
-import it.polimi.services.system.ExecutionEnvirorment;
+import it.polimi.heaven.core.rspengine.rspevents.jena.JenaEsperEvent;
+import it.polimi.heaven.core.ts.EventProcessor;
+import it.polimi.heaven.core.ts.events.RSPEngineResult;
+import it.polimi.heaven.core.ts.events.Stimulus;
+import it.polimi.heaven.core.ts.events.TripleContainer;
+import it.polimi.heaven.core.ts.rspengine.RSPListener;
+import it.polimi.heaven.services.system.ExecutionEnvirorment;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,13 +30,13 @@ public abstract class JenaIncrementalListener implements RSPListener {
 	protected InfModel ABoxStar;
 
 	protected Reasoner reasoner;
-	protected final EventProcessor<CTEvent> next;
+	protected final EventProcessor<Stimulus> next;
 
 	private int eventNumber = 0;
 	private final Set<TripleContainer> ABoxTriples;
 	private Set<TripleContainer> statements;
 
-	public JenaIncrementalListener(Model tbox, EventProcessor<CTEvent> next) {
+	public JenaIncrementalListener(Model tbox, EventProcessor<Stimulus> next) {
 		this.TBoxStar = tbox;
 		this.next = next;
 		abox = ModelFactory.createMemModelMaker().createDefaultModel();
@@ -88,9 +88,9 @@ public abstract class JenaIncrementalListener implements RSPListener {
 		if (next != null) {
 			log.debug("Send Event to the StoreCollector");
 			eventNumber++;
-			next.process(new OutCTEvent("", statements, eventNumber, 0, outputTimestamp, false));
+			next.process(new RSPEngineResult("", statements, eventNumber, 0, outputTimestamp, false));
 			if (ExecutionEnvirorment.aboxLogEnabled) {
-				next.process(new OutCTEvent("", ABoxTriples, eventNumber, 0, outputTimestamp, true));
+				next.process(new RSPEngineResult("", ABoxTriples, eventNumber, 0, outputTimestamp, true));
 			}
 		}
 

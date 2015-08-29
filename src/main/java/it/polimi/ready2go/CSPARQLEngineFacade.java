@@ -1,11 +1,11 @@
 package it.polimi.ready2go;
 
-import it.polimi.processing.EventProcessor;
-import it.polimi.processing.enums.ExecutionState;
-import it.polimi.processing.events.CTEvent;
-import it.polimi.processing.events.TripleContainer;
-import it.polimi.processing.events.results.OutCTEvent;
-import it.polimi.processing.rspengine.abstracts.RSPEngine;
+import it.polimi.heaven.core.enums.ExecutionState;
+import it.polimi.heaven.core.ts.EventProcessor;
+import it.polimi.heaven.core.ts.events.RSPEngineResult;
+import it.polimi.heaven.core.ts.events.Stimulus;
+import it.polimi.heaven.core.ts.events.TripleContainer;
+import it.polimi.heaven.core.ts.rspengine.RSPEngine;
 
 import java.text.ParseException;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class CSPARQLEngineFacade implements RSPEngine {
 
 	private final String query;
 
-	private EventProcessor<CTEvent> next;
+	private EventProcessor<Stimulus> next;
 
 	private CsparqlEngine engine;
 
@@ -52,7 +52,7 @@ public class CSPARQLEngineFacade implements RSPEngine {
 				statements.add(statementStrings);
 			}
 			long outputTimestamp = System.currentTimeMillis();
-			next.process(new OutCTEvent("", statements, rspEventsNumber, 0,
+			next.process(new RSPEngineResult("", statements, rspEventsNumber, 0,
 					outputTimestamp, false));
 			log.debug("Status[" + status
 					+ "] C-SPARQL has sent an OutCTEvent downstream");
@@ -60,7 +60,7 @@ public class CSPARQLEngineFacade implements RSPEngine {
 
 	}
 
-	public CSPARQLEngineFacade(String name, EventProcessor<CTEvent> next) {
+	public CSPARQLEngineFacade(String name, EventProcessor<Stimulus> next) {
 		this.next = next;
 		this.query = "REGISTER STREAM TantoPerProvare AS "
 				+ "CONSTRUCT {?s ?p ?o} "
@@ -110,7 +110,7 @@ public class CSPARQLEngineFacade implements RSPEngine {
 	}
 
 	@Override
-	public boolean process(CTEvent event) {
+	public boolean process(Stimulus event) {
 		// NOTE: this is not implemented, the engine will be running in any case
 		status = ExecutionState.RUNNING;
 		rspEventsNumber++;

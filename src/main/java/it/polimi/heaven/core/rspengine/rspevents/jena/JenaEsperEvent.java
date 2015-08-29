@@ -1,6 +1,6 @@
-package it.polimi.processing.rspengine.rspevents.jena;
+package it.polimi.heaven.core.rspengine.rspevents.jena;
 
-import it.polimi.processing.events.TripleContainer;
+import it.polimi.heaven.core.ts.events.TripleContainer;
 
 import java.util.Set;
 

@@ -7,16 +7,16 @@ import it.polimi.baselines.timekeeping.external.incremental.JenaEngineStmtInc;
 import it.polimi.baselines.timekeeping.external.snapshot.JenaEngineGraph;
 import it.polimi.baselines.timekeeping.external.snapshot.JenaEngineSerialized;
 import it.polimi.baselines.timekeeping.external.snapshot.JenaEngineStmt;
-import it.polimi.processing.EventProcessor;
-import it.polimi.processing.events.CTEvent;
-import it.polimi.processing.rspengine.abstracts.RSPEngine;
-import it.polimi.processing.rspengine.abstracts.RSPListener;
-import it.polimi.processing.teststand.core.TestStand;
+import it.polimi.heaven.core.ts.EventProcessor;
+import it.polimi.heaven.core.ts.TestStand;
+import it.polimi.heaven.core.ts.events.Stimulus;
+import it.polimi.heaven.core.ts.rspengine.RSPEngine;
+import it.polimi.heaven.core.ts.rspengine.RSPListener;
 import it.polimi.utils.GetPropertyValues;
 
 public final class JenaRSPEngineFactory {
 
-	public static RSPEngine getSerializedEngine(EventProcessor<CTEvent> next, RSPListener listener) {
+	public static RSPEngine getSerializedEngine(EventProcessor<Stimulus> next, RSPListener listener) {
 		return new JenaEngineSerialized(GetPropertyValues.getEnumProperty(OntoLanguage.class, "onto_lang").name().toLowerCase(), next,
 				listener != null ? listener : JenaReasoningListenerFactory.getCurrent());
 	}
@@ -31,7 +31,7 @@ public final class JenaRSPEngineFactory {
 				listener != null ? listener : JenaReasoningListenerFactory.getCurrent());
 	}
 
-	public static RSPEngine getIncrementalSerializedEngine(EventProcessor<CTEvent> next, RSPListener listener) {
+	public static RSPEngine getIncrementalSerializedEngine(EventProcessor<Stimulus> next, RSPListener listener) {
 		return new JenaEngineSerializedInc(GetPropertyValues.getEnumProperty(OntoLanguage.class, "onto_lang").name().toLowerCase(), next,
 				listener != null ? listener : JenaReasoningListenerFactory.getCurrent());
 	}
