@@ -1,11 +1,11 @@
 package it.polimi.heaven.baselines.timekeeping.internal.snapshot;
 
 import it.polimi.heaven.baselines.JenaEngine;
+import it.polimi.heaven.baselines.RSPListener;
 import it.polimi.heaven.baselines.events.jena.GraphEvent;
 import it.polimi.heaven.core.ts.EventProcessor;
 import it.polimi.heaven.core.ts.events.Stimulus;
 import it.polimi.heaven.core.ts.events.TripleContainer;
-import it.polimi.heaven.core.ts.rspengine.RSPListener;
 import it.polimi.utils.RDFSUtils;
 import it.polimi.utils.WindowUtils;
 import lombok.extern.log4j.Log4j;

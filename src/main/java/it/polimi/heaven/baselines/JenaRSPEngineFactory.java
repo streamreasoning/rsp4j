@@ -10,7 +10,6 @@ import it.polimi.heaven.core.ts.EventProcessor;
 import it.polimi.heaven.core.ts.TestStand;
 import it.polimi.heaven.core.ts.events.Stimulus;
 import it.polimi.heaven.core.ts.rspengine.RSPEngine;
-import it.polimi.heaven.core.ts.rspengine.RSPListener;
 import it.polimi.heaven.enums.OntoLanguage;
 import it.polimi.heaven.run.JenaReasoningListenerFactory;
 import it.polimi.utils.GetPropertyValues;

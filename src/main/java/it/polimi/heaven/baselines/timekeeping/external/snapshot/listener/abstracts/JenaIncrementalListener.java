@@ -1,11 +1,11 @@
 package it.polimi.heaven.baselines.timekeeping.external.snapshot.listener.abstracts;
 
+import it.polimi.heaven.baselines.RSPListener;
 import it.polimi.heaven.baselines.events.jena.JenaEsperEvent;
 import it.polimi.heaven.core.ts.EventProcessor;
 import it.polimi.heaven.core.ts.events.RSPEngineResult;
 import it.polimi.heaven.core.ts.events.Stimulus;
 import it.polimi.heaven.core.ts.events.TripleContainer;
-import it.polimi.heaven.core.ts.rspengine.RSPListener;
 import it.polimi.heaven.services.system.ExecutionEnvirorment;
 
 import java.util.HashSet;

@@ -1,5 +1,6 @@
 package it.polimi.heaven.run;
 
+import it.polimi.heaven.baselines.RSPListener;
 import it.polimi.heaven.baselines.timekeeping.external.incremental.listener.JenaIncFullListener;
 import it.polimi.heaven.baselines.timekeeping.external.incremental.listener.JenaIncRhoDFListener;
 import it.polimi.heaven.baselines.timekeeping.external.incremental.listener.JenaIncSMPLListener;
@@ -9,7 +10,6 @@ import it.polimi.heaven.baselines.timekeeping.external.snapshot.listener.JenaSMP
 import it.polimi.heaven.core.ts.EventProcessor;
 import it.polimi.heaven.core.ts.TestStand;
 import it.polimi.heaven.core.ts.events.Stimulus;
-import it.polimi.heaven.core.ts.rspengine.RSPListener;
 import it.polimi.utils.FileUtils;
 import it.polimi.utils.RDFSUtils;
 import lombok.extern.log4j.Log4j;

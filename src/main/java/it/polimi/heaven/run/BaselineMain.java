@@ -1,6 +1,7 @@
 package it.polimi.heaven.run;
 
 import it.polimi.heaven.baselines.JenaRSPEngineFactory;
+import it.polimi.heaven.baselines.RSPListener;
 import it.polimi.heaven.core.enums.ExperimentType;
 import it.polimi.heaven.core.enums.FlowRateProfile;
 import it.polimi.heaven.core.enums.Reasoning;
@@ -8,7 +9,6 @@ import it.polimi.heaven.core.ts.TestStand;
 import it.polimi.heaven.core.ts.events.Experiment;
 import it.polimi.heaven.core.ts.events.Stimulus;
 import it.polimi.heaven.core.ts.rspengine.RSPEngine;
-import it.polimi.heaven.core.ts.rspengine.RSPListener;
 import it.polimi.heaven.core.ts.streamer.flowrateprofiler.FlowRateProfiler;
 import it.polimi.heaven.core.tsimpl.TestStandImpl;
 import it.polimi.heaven.core.tsimpl.collector.TSResultCollector;
