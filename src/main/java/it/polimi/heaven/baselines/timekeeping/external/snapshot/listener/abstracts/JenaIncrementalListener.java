@@ -82,12 +82,13 @@ public abstract class JenaIncrementalListener implements RSPListener {
 			statementStrings = new TripleContainer(t.getSubject().toString(), t.getPredicate().toString(), t.getObject().toString());
 			statements.add(statementStrings);
 		}
-
 		long outputTimestamp = System.currentTimeMillis();
 
 		if (next != null) {
 			log.debug("Send Event to the StoreCollector");
 			eventNumber++;
+			// the input and the output timestamps are the same because this
+			// result is realted to the window not to the stimulus
 			next.process(new RSPEngineResult("", statements, eventNumber, 0, outputTimestamp, false));
 			if (GetPropertyValues.getBooleanProperty("abox_log_enabled")) {
 				next.process(new RSPEngineResult("", ABoxTriples, eventNumber, 0, outputTimestamp, true));

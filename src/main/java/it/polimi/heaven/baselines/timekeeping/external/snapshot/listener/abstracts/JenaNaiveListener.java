@@ -84,7 +84,7 @@ public abstract class JenaNaiveListener implements RSPListener {
 				log.debug("Send Event to the StoreCollector");
 				eventNumber++;
 				next.process(new RSPEngineResult("", statements, eventNumber, 0, outputTimestamp, false));
-				if (GetPropertyValues.getBooleanProperty("save_abox_log")) {
+				if (GetPropertyValues.getBooleanProperty("abox_log_enabled")) {
 					next.process(new RSPEngineResult("", ABoxTriples, eventNumber, 0, outputTimestamp, true));
 				}
 			}
