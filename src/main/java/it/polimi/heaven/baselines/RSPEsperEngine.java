@@ -1,10 +1,10 @@
 package it.polimi.heaven.baselines;
 
+import it.polimi.heaven.WindowUtils;
 import it.polimi.heaven.core.enums.ExecutionState;
 import it.polimi.heaven.core.ts.EventProcessor;
 import it.polimi.heaven.core.ts.events.Stimulus;
 import it.polimi.heaven.core.ts.rspengine.RSPEngine;
-import it.polimi.utils.WindowUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;

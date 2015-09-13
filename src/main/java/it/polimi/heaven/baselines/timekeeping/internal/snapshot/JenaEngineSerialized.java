@@ -1,12 +1,12 @@
 package it.polimi.heaven.baselines.timekeeping.internal.snapshot;
 
+import it.polimi.heaven.WindowUtils;
 import it.polimi.heaven.baselines.JenaEngine;
 import it.polimi.heaven.baselines.RSPListener;
 import it.polimi.heaven.baselines.events.jena.SerializedEvent;
 import it.polimi.heaven.core.ts.EventProcessor;
 import it.polimi.heaven.core.ts.events.Stimulus;
 import it.polimi.heaven.core.ts.events.TripleContainer;
-import it.polimi.utils.WindowUtils;
 import lombok.extern.log4j.Log4j;
 
 import com.espertech.esper.client.Configuration;

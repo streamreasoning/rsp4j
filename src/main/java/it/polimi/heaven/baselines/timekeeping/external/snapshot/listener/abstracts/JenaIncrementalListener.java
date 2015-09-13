@@ -1,12 +1,12 @@
 package it.polimi.heaven.baselines.timekeeping.external.snapshot.listener.abstracts;
 
+import it.polimi.heaven.GetPropertyValues;
 import it.polimi.heaven.baselines.RSPListener;
 import it.polimi.heaven.baselines.events.jena.JenaEsperEvent;
 import it.polimi.heaven.core.ts.EventProcessor;
 import it.polimi.heaven.core.ts.events.RSPEngineResult;
 import it.polimi.heaven.core.ts.events.Stimulus;
 import it.polimi.heaven.core.ts.events.TripleContainer;
-import it.polimi.heaven.services.system.ExecutionEnvirorment;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -89,11 +89,10 @@ public abstract class JenaIncrementalListener implements RSPListener {
 			log.debug("Send Event to the StoreCollector");
 			eventNumber++;
 			next.process(new RSPEngineResult("", statements, eventNumber, 0, outputTimestamp, false));
-			if (ExecutionEnvirorment.aboxLogEnabled) {
+			if (GetPropertyValues.getBooleanProperty("abox_log_enabled")) {
 				next.process(new RSPEngineResult("", ABoxTriples, eventNumber, 0, outputTimestamp, true));
 			}
 		}
-
 	}
 
 }

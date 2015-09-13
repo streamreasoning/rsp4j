@@ -1,5 +1,6 @@
 package it.polimi.heaven.baselines;
 
+import it.polimi.heaven.GetPropertyValues;
 import it.polimi.heaven.baselines.timekeeping.external.incremental.JenaEngineGraphInc;
 import it.polimi.heaven.baselines.timekeeping.external.incremental.JenaEngineSerializedInc;
 import it.polimi.heaven.baselines.timekeeping.external.incremental.JenaEngineStmtInc;
@@ -12,37 +13,36 @@ import it.polimi.heaven.core.ts.events.Stimulus;
 import it.polimi.heaven.core.ts.rspengine.RSPEngine;
 import it.polimi.heaven.enums.OntoLanguage;
 import it.polimi.heaven.run.JenaReasoningListenerFactory;
-import it.polimi.utils.GetPropertyValues;
 
 public final class JenaRSPEngineFactory {
 
 	public static RSPEngine getSerializedEngine(EventProcessor<Stimulus> next, RSPListener listener) {
-		return new JenaEngineSerialized(GetPropertyValues.getEnumProperty(OntoLanguage.class, "onto_lang").name().toLowerCase(), next,
+		return new JenaEngineSerialized(GetPropertyValues.getEnumProperty(OntoLanguage.class, "onto_lang").name(), next,
 				listener != null ? listener : JenaReasoningListenerFactory.getCurrent());
 	}
 
 	public static RSPEngine getStmtEngine(TestStand next, RSPListener listener) {
-		return new JenaEngineStmt(GetPropertyValues.getEnumProperty(OntoLanguage.class, "onto_lang").name().toLowerCase(), next,
+		return new JenaEngineStmt(GetPropertyValues.getEnumProperty(OntoLanguage.class, "onto_lang").name(), next,
 				listener != null ? listener : JenaReasoningListenerFactory.getCurrent());
 	}
 
 	public static RSPEngine getJenaEngineGraph(TestStand next, RSPListener listener) {
-		return new JenaEngineGraph(GetPropertyValues.getEnumProperty(OntoLanguage.class, "onto_lang").name().toLowerCase(), next,
+		return new JenaEngineGraph(GetPropertyValues.getEnumProperty(OntoLanguage.class, "onto_lang").name(), next,
 				listener != null ? listener : JenaReasoningListenerFactory.getCurrent());
 	}
 
 	public static RSPEngine getIncrementalSerializedEngine(EventProcessor<Stimulus> next, RSPListener listener) {
-		return new JenaEngineSerializedInc(GetPropertyValues.getEnumProperty(OntoLanguage.class, "onto_lang").name().toLowerCase(), next,
+		return new JenaEngineSerializedInc(GetPropertyValues.getEnumProperty(OntoLanguage.class, "onto_lang").name(), next,
 				listener != null ? listener : JenaReasoningListenerFactory.getCurrent());
 	}
 
 	public static RSPEngine getIncrementalStmtEngine(TestStand next, RSPListener listener) {
-		return new JenaEngineStmtInc(GetPropertyValues.getEnumProperty(OntoLanguage.class, "onto_lang").name().toLowerCase(), next,
+		return new JenaEngineStmtInc(GetPropertyValues.getEnumProperty(OntoLanguage.class, "onto_lang").name(), next,
 				listener != null ? listener : JenaReasoningListenerFactory.getCurrent());
 	}
 
 	public static RSPEngine getIncrementalJenaEngineGraph(TestStand next, RSPListener listener) {
-		return new JenaEngineGraphInc(GetPropertyValues.getEnumProperty(OntoLanguage.class, "onto_lang").name().toLowerCase(), next,
+		return new JenaEngineGraphInc(GetPropertyValues.getEnumProperty(OntoLanguage.class, "onto_lang").name(), next,
 				listener != null ? listener : JenaReasoningListenerFactory.getCurrent());
 	}
 }
