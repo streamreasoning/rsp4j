@@ -78,8 +78,8 @@ public abstract class JenaEngine extends RSPEsperEngine {
 	 * @see it.polimi.processing.rspengine.abstracts.RSPEsperEngine#moveTime();
 	 */
 	@Override
-	public void timeProgress() {
-		moveTime();
+	public boolean timeProgress() {
+		return moveTime();
 	}
 
 	protected void handleEvent(Stimulus e) {

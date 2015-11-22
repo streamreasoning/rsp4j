@@ -46,10 +46,4 @@ public class JenaEngineSerialized extends JenaEngine {
 		}
 	}
 
-	@Override
-	public void timeProgress() {
-		// TODO Auto-generated method stub
-		super.timeProgress();
-	}
-
 }

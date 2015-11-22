@@ -56,20 +56,21 @@ public abstract class RSPEsperEngine implements RSPEngine {
 	}
 
 	/**
-	 * Moves time forward of exactly one time slot, represented by the time value of the Output
-	 * clause of Esper
+	 * Moves time forward of exactly one time slot, represented by the time
+	 * value of the Output clause of Esper
 	 */
-	public void moveTime() {
+	public boolean moveTime() {
 		this.time += WindowUtils.beta;
 		snapshots++;
 		cepRT.sendEvent(new CurrentTimeEvent(time));
 		windowShots += time % WindowUtils.omega == 0 ? 1 : 0;
 		log.debug("Sent time Event current runtime ts [" + time + "]");
+		return true;
 	}
 
 	/**
-	 * Moves time forward of exactly n time slots, represented by the time value of the Output
-	 * clause of Esper
+	 * Moves time forward of exactly n time slots, represented by the time value
+	 * of the Output clause of Esper
 	 */
 	public void moveTiveOfSlot(int n) {
 		time += n * WindowUtils.beta;
@@ -113,5 +114,5 @@ public abstract class RSPEsperEngine implements RSPEngine {
 	}
 
 	@Override
-	public abstract void timeProgress();
+	public abstract boolean timeProgress();
 }

@@ -13,13 +13,13 @@ import it.polimi.heaven.core.ts.rspengine.RSPEngine;
 import it.polimi.heaven.core.ts.streamer.flowrateprofiler.FlowRateProfiler;
 import it.polimi.heaven.core.tsimpl.TestStandImpl;
 import it.polimi.heaven.core.tsimpl.collector.TSResultCollector;
-import it.polimi.heaven.core.tsimpl.streamer.RDF2RDFStream;
-import it.polimi.heaven.core.tsimpl.streamer.TSStreamer;
-import it.polimi.heaven.core.tsimpl.streamer.flowrateprofiler.ConstantFlowRateProfiler;
-import it.polimi.heaven.core.tsimpl.streamer.flowrateprofiler.CustomStepFlowRateProfiler;
-import it.polimi.heaven.core.tsimpl.streamer.flowrateprofiler.RandomFlowRateProfiler;
-import it.polimi.heaven.core.tsimpl.streamer.flowrateprofiler.StepFactorFlowRateProfiler;
-import it.polimi.heaven.core.tsimpl.streamer.flowrateprofiler.StepFlowRateProfiler;
+import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.RDF2RDFStream;
+import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.TSStreamer;
+import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.flowrateprofiler.ConstantFlowRateProfiler;
+import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.flowrateprofiler.CustomStepFlowRateProfiler;
+import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.flowrateprofiler.RandomFlowRateProfiler;
+import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.flowrateprofiler.StepFactorFlowRateProfiler;
+import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.flowrateprofiler.StepFlowRateProfiler;
 import it.polimi.heaven.enums.JenaEventType;
 import it.polimi.heaven.enums.OntoLanguage;
 import it.polimi.services.FileService;
@@ -148,21 +148,21 @@ public class BaselineMain {
 		switch (FLOW_RATE_PROFILE) {
 		case CONSTANT:
 			code += "K" + INIT_SIZE;
-			eb = new ConstantFlowRateProfiler(INIT_SIZE, EXPERIMENT_NUMBER, WindowUtils.beta);
+			eb = new ConstantFlowRateProfiler(INIT_SIZE, EXPERIMENT_NUMBER);
 			break;
 		case STEP:
 			message += " Heigh [" + Y + "] Width [" + X + "] ";
-			eb = new StepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, WindowUtils.beta);
+			eb = new StepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER);
 			code += "S" + INIT_SIZE + "W" + X + "H" + Y;
 			break;
 		case STEP_FACTOR:
 			message += " Factor [" + Y + "] Width [" + X + "] ";
-			eb = new StepFactorFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, WindowUtils.beta);
+			eb = new StepFactorFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER);
 			code += "S" + INIT_SIZE + "W" + X + "H" + Y;
 			break;
 		case CUSTOM_STEP:
 			message += " Custom Step Init [" + INIT_SIZE + "] FINAL [" + Y + "] WIDTH [" + X + "] ";
-			eb = new CustomStepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, WindowUtils.beta);
+			eb = new CustomStepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER);
 			code += "S" + INIT_SIZE + "F" + Y + "W" + X;
 			break;
 		case RANDOM:
@@ -263,6 +263,7 @@ public class BaselineMain {
 
 		experiment.setInputSource(INPUT_FILE);
 		experiment.setOutputPath(OUTPUT_DIR);
+		experiment.setResponsivity(100L);
 
 		testStand.run(experiment);
 
