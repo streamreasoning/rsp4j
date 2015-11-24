@@ -4,7 +4,8 @@ import com.espertech.esper.client.UpdateListener;
 
 /**
  * 
- * Utility interface to have the rappresentation of the UpdateListner in the desing
+ * Utility interface to have the representation of the UpdateListner in the
+ * design
  * 
  * @author Riccardo
  * 

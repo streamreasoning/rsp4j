@@ -2,19 +2,20 @@ package it.polimi.heaven.run;
 
 import it.polimi.heaven.GetPropertyValues;
 import it.polimi.heaven.WindowUtils;
-import it.polimi.heaven.baselines.JenaRSPEngineFactory;
 import it.polimi.heaven.baselines.RSPListener;
+import it.polimi.heaven.baselines.jena.JenaRSPEngineFactory;
 import it.polimi.heaven.core.enums.FlowRateProfile;
 import it.polimi.heaven.core.enums.Reasoning;
 import it.polimi.heaven.core.ts.TestStand;
 import it.polimi.heaven.core.ts.events.Experiment;
 import it.polimi.heaven.core.ts.events.Stimulus;
+import it.polimi.heaven.core.ts.events.TripleContainer;
 import it.polimi.heaven.core.ts.rspengine.RSPEngine;
 import it.polimi.heaven.core.ts.streamer.flowrateprofiler.FlowRateProfiler;
 import it.polimi.heaven.core.tsimpl.TestStandImpl;
 import it.polimi.heaven.core.tsimpl.collector.TSResultCollector;
+import it.polimi.heaven.core.tsimpl.streamer.TSStreamer;
 import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.RDF2RDFStream;
-import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.TSStreamer;
 import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.flowrateprofiler.ConstantFlowRateProfiler;
 import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.flowrateprofiler.CustomStepFlowRateProfiler;
 import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.flowrateprofiler.RandomFlowRateProfiler;
@@ -140,7 +141,7 @@ public class BaselineMain {
 
 	protected static String flowRateProfileSelection() {
 
-		FlowRateProfiler<Stimulus> eb = null;
+		FlowRateProfiler<Stimulus, TripleContainer> eb = null;
 
 		String code = "_FRP_";
 		String message = "Flow Rate Profile [" + FLOW_RATE_PROFILE + "] [" + INIT_SIZE + "] ";

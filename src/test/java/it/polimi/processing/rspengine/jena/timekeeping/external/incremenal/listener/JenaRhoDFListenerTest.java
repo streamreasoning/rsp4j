@@ -1,10 +1,10 @@
 package it.polimi.processing.rspengine.jena.timekeeping.external.incremenal.listener;
 
 import it.polimi.heaven.FileUtils;
-import it.polimi.heaven.baselines.events.jena.GraphEvent;
-import it.polimi.heaven.baselines.events.jena.StatementEvent;
-import it.polimi.heaven.baselines.events.jena.TripleEvent;
-import it.polimi.heaven.baselines.timekeeping.external.snapshot.listener.JenaRhoDFListener;
+import it.polimi.heaven.baselines.jena.events.jena.GraphEvent;
+import it.polimi.heaven.baselines.jena.events.jena.StatementEvent;
+import it.polimi.heaven.baselines.jena.events.jena.TripleEvent;
+import it.polimi.heaven.baselines.jena.timekeeping.external.snapshot.listener.JenaRhoDFListener;
 import it.polimi.utils.RDFSUtils;
 
 import org.junit.Test;
