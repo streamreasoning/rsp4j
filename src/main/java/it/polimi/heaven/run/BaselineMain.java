@@ -149,21 +149,21 @@ public class BaselineMain {
 		switch (FLOW_RATE_PROFILE) {
 		case CONSTANT:
 			code += "K" + INIT_SIZE;
-			eb = new ConstantFlowRateProfiler(INIT_SIZE, EXPERIMENT_NUMBER);
+			eb = new ConstantFlowRateProfiler(INIT_SIZE, EXPERIMENT_NUMBER, WindowUtils.beta);
 			break;
 		case STEP:
 			message += " Heigh [" + Y + "] Width [" + X + "] ";
-			eb = new StepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER);
+			eb = new StepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, WindowUtils.beta);
 			code += "S" + INIT_SIZE + "W" + X + "H" + Y;
 			break;
 		case STEP_FACTOR:
 			message += " Factor [" + Y + "] Width [" + X + "] ";
-			eb = new StepFactorFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER);
+			eb = new StepFactorFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, WindowUtils.beta);
 			code += "S" + INIT_SIZE + "W" + X + "H" + Y;
 			break;
 		case CUSTOM_STEP:
 			message += " Custom Step Init [" + INIT_SIZE + "] FINAL [" + Y + "] WIDTH [" + X + "] ";
-			eb = new CustomStepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER);
+			eb = new CustomStepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, WindowUtils.beta);
 			code += "S" + INIT_SIZE + "F" + Y + "W" + X;
 			break;
 		case RANDOM:
