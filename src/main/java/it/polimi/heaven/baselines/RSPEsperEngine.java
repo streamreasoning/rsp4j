@@ -6,7 +6,6 @@ import it.polimi.heaven.core.ts.events.Stimulus;
 import it.polimi.heaven.core.ts.rspengine.RSPEngine;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j;
 
 import com.espertech.esper.client.Configuration;
 import com.espertech.esper.client.ConfigurationMethodRef;
@@ -16,7 +15,6 @@ import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 
 @Getter
-@Log4j
 public abstract class RSPEsperEngine implements RSPEngine {
 
 	protected Configuration cepConfig;
@@ -60,11 +58,6 @@ public abstract class RSPEsperEngine implements RSPEngine {
 
 	protected boolean isReady() {
 		return ExecutionState.READY.equals(status);
-	}
-
-	@Override
-	public int getEventNumber() {
-		return rspEventsNumber;
 	}
 
 	public abstract boolean timeProgress(CurrentTimeEvent cte);
