@@ -1,6 +1,5 @@
 package it.polimi.heaven.baselines;
 
-import it.polimi.heaven.WindowUtils;
 import it.polimi.heaven.core.enums.ExecutionState;
 import it.polimi.heaven.core.ts.EventProcessor;
 import it.polimi.heaven.core.ts.events.Stimulus;
@@ -35,65 +34,20 @@ public abstract class RSPEsperEngine implements RSPEngine {
 	protected Stimulus currentEvent = null;
 	protected long sentTimestamp;
 
-	protected int windowShots = 0, snapshots = 0, time = 1, registrationTime = 0, rspEventsNumber = 0, esperEventsNumber = 0;
+	protected int rspEventsNumber = 0, esperEventsNumber = 0;
+	protected long currentTimestamp;
 
 	public RSPEsperEngine(String name, EventProcessor<Stimulus> next) {
 		this.next = next;
 		this.name = name;
-	}
-
-	/**
-	 * 
-	 * Moves time forward of an given amount of time
-	 * 
-	 * @param delta
-	 *            , Must be greater than zero
-	 */
-	public void moveTime(long delta) {
-		this.time += delta;
-		cepRT.sendEvent(new CurrentTimeEvent(time));
-		log.debug("Sent time Event current runtime ts [" + time + "]");
-	}
-
-	/**
-	 * Moves time forward of exactly one time slot, represented by the time
-	 * value of the Output clause of Esper
-	 */
-	public boolean moveTime() {
-		this.time += WindowUtils.beta;
-		snapshots++;
-		cepRT.sendEvent(new CurrentTimeEvent(time));
-		windowShots += time % WindowUtils.omega == 0 ? 1 : 0;
-		log.debug("Sent time Event current runtime ts [" + time + "]");
-		return true;
-	}
-
-	/**
-	 * Moves time forward of exactly n time slots, represented by the time value
-	 * of the Output clause of Esper
-	 */
-	public void moveTiveOfSlot(int n) {
-		time += n * WindowUtils.beta;
-		cepRT.sendEvent(new CurrentTimeEvent(time));
-		windowShots += time % WindowUtils.omega == 0 ? 1 : 0;
-		log.debug("Sent time Event current runtime ts [" + time + "]");
-	}
-
-	/**
-	 * Moves time forward of exactly one window
-	 */
-	public void moveTimeWindow() {
-		time += WindowUtils.omega;
-		windowShots++;
-		cepRT.sendEvent(new CurrentTimeEvent(time));
-		log.debug("Sent time Event current runtime ts [" + time + "]");
+		this.currentTimestamp = 0L;
 	}
 
 	/**
 	 * Initialize Esper internal clock
 	 */
 	protected void resetTime() {
-		cepRT.sendEvent(new CurrentTimeEvent(registrationTime));
+		cepRT.sendEvent(new CurrentTimeEvent(0));
 	}
 
 	protected boolean isStartable() {
@@ -113,6 +67,6 @@ public abstract class RSPEsperEngine implements RSPEngine {
 		return rspEventsNumber;
 	}
 
-	@Override
-	public abstract boolean timeProgress();
+	public abstract boolean timeProgress(CurrentTimeEvent cte);
+
 }

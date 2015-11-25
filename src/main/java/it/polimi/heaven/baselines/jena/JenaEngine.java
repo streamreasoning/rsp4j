@@ -1,6 +1,5 @@
 package it.polimi.heaven.baselines.jena;
 
-import it.polimi.heaven.WindowUtils;
 import it.polimi.heaven.baselines.RSPEsperEngine;
 import it.polimi.heaven.baselines.RSPListener;
 import it.polimi.heaven.core.enums.ExecutionState;
@@ -55,7 +54,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
 	@Override
 	public ExecutionState startProcessing() {
 		if (isStartable()) {
-			cepRT.sendEvent(new CurrentTimeEvent(registrationTime + 1));
+			cepRT.sendEvent(new CurrentTimeEvent(1));
 			status = ExecutionState.READY;
 		} else {
 			status = ExecutionState.ERROR;
@@ -71,17 +70,16 @@ public abstract class JenaEngine extends RSPEsperEngine {
 		handleEvent(e);
 		status = ExecutionState.READY;
 		log.debug("Status[" + status + "] Parsing done, prepare time scheduling...");
+		timeProgress(new CurrentTimeEvent(e.getTimestamp()));
 		return ExecutionState.READY.equals(status);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see it.polimi.processing.rspengine.abstracts.RSPEsperEngine#moveTime();
-	 */
 	@Override
-	public boolean timeProgress() {
-		return moveTime();
+	public boolean timeProgress(CurrentTimeEvent cte) {
+		currentTimestamp = cte.getTimeInMillis();
+		log.debug("Sent time Event current runtime ts [" + currentTimestamp + "]");
+		cepRT.sendEvent(cte);
+		return true;
 	}
 
 	protected void handleEvent(Stimulus e) {
@@ -101,8 +99,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
 	@Override
 	public ExecutionState close() {
 		status = ExecutionState.CLOSED;
-		log.info("Status [" + status + "] Turing Off Processed RSPEvents [" + rspEventsNumber + "]  EsperEvents [" + esperEventsNumber
-				+ "] Windows [" + windowShots + "] Snapshots [" + (time / WindowUtils.beta) + "]");
+		log.info("Status [" + status + "] Turing Off Processed RSPEvents [" + rspEventsNumber + "]  EsperEvents [" + esperEventsNumber + "]");
 		return status;
 	}
 
