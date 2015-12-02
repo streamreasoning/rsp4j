@@ -69,7 +69,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
 		rspEventsNumber++;
 		handleEvent(e);
 		status = ExecutionState.READY;
-		log.debug("Status[" + status + "] Parsing done, prepare time scheduling...");
+		log.info("Status[" + status + "] Parsing done, prepare time scheduling...");
 		timeProgress(new CurrentTimeEvent(e.getTimestamp()));
 		return ExecutionState.READY.equals(status);
 	}
@@ -77,7 +77,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
 	@Override
 	public boolean timeProgress(CurrentTimeEvent cte) {
 		currentTimestamp = cte.getTimeInMillis();
-		log.debug("Sent time Event current runtime ts [" + currentTimestamp + "]");
+		log.info("Sent time Event current runtime ts [" + currentTimestamp + "]");
 		cepRT.sendEvent(cte);
 		return true;
 	}
