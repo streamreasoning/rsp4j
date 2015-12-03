@@ -10,7 +10,6 @@ import it.polimi.heaven.core.ts.EventProcessor;
 import it.polimi.heaven.core.ts.events.Stimulus;
 import it.polimi.heaven.core.ts.rspengine.Query;
 import it.polimi.heaven.enums.OntoLanguage;
-import it.polimi.heaven.run.JenaReasoningListenerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,16 +34,19 @@ public abstract class JenaEngine extends RSPEsperEngine {
 	@Setter
 	private OntoLanguage ontology_language;
 
-	private Map<Query, RSPListener> queries = new HashMap<Query, RSPListener>();
-	private BaselineEvent streamDataModel;
+	private Map<Query, RSPListener> queries;
 
 	public JenaEngine(BaselineEvent eventType, EventProcessor<Stimulus> collector) {
 		super(collector, new Configuration());
-		this.streamDataModel = eventType;
+		this.queries = new HashMap<Query, RSPListener>();
+		ref = new ConfigurationMethodRef();
 		cepConfig = new Configuration();
 		cepConfig.getEngineDefaults().getThreading().setInternalTimerEnabled(false);
 		log.info("Added [" + eventType + "] as TEvent");
 		cepConfig.addEventType("TEvent", eventType);
+		cep = EPServiceProviderManager.getProvider(JenaEngine.class.getName(), cepConfig);
+		cepAdm = cep.getEPAdministrator();
+		cepRT = cep.getEPRuntime();
 	}
 
 	public void setStreamEncoding(String encoding, BaselineEvent eventType) {
@@ -54,10 +56,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
 
 	@Override
 	public ExecutionState init() {
-		ref = new ConfigurationMethodRef();
-		cep = EPServiceProviderManager.getProvider(JenaEngine.class.getName(), cepConfig);
-		cepAdm = cep.getEPAdministrator();
-		cepRT = cep.getEPRuntime();
+
 		status = ExecutionState.READY;
 		log.debug("Status[" + status + "] Initizalized the RSPEngine");
 		cepRT.sendEvent(new CurrentTimeEvent(0));
@@ -109,21 +108,20 @@ public abstract class JenaEngine extends RSPEsperEngine {
 	protected abstract void handleEvent(Stimulus e);
 
 	public void registerQuery(Query q) {
-
 		BaselineQuery bq = (BaselineQuery) q;
 		String esperQuery = bq.getEsperQuery();
 		String sparqlQuery = bq.getSparqlQuery();
 
 		for (String c : bq.getEsperStreams()) {
-			cepAdm.createEPL("create schema " + c + "() copyfrom TEvent");
+			log.info("create schema " + c + "() copyfrom TEvent");
+			cepAdm.createEPL("create schema " + c + "() inherits TEvent");
 
 		}
 
 		EPStatement epl = cepAdm.createEPL(esperQuery);
-		RSPListener listener = JenaReasoningListenerFactory.getListener(reasoning, ontology_language, super.next, sparqlQuery, streamDataModel);
-
+		RSPListener listener = bq.hasTBox() ? new JenaListener(bq.getTbox(), next, sparqlQuery, reasoning, ontology_language) : new JenaListener(
+				next, sparqlQuery, reasoning, ontology_language);
 		epl.addListener(listener);
 		queries.put(q, listener);
-
 	}
 }

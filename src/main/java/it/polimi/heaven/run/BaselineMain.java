@@ -1,9 +1,13 @@
 package it.polimi.heaven.run;
 
+import it.polimi.heaven.BaselinesUtils;
+import it.polimi.heaven.FileUtils;
 import it.polimi.heaven.GetPropertyValues;
-import it.polimi.heaven.WindowUtils;
-import it.polimi.heaven.baselines.RSPListener;
-import it.polimi.heaven.baselines.jena.JenaRSPEngineFactory;
+import it.polimi.heaven.baselines.esper.RSPListener;
+import it.polimi.heaven.baselines.jena.BaselineQuery;
+import it.polimi.heaven.baselines.jena.GraphBaseline;
+import it.polimi.heaven.baselines.jena.StatementBaseline;
+import it.polimi.heaven.baselines.jena.abstracts.JenaEngine;
 import it.polimi.heaven.core.enums.FlowRateProfile;
 import it.polimi.heaven.core.enums.Reasoning;
 import it.polimi.heaven.core.ts.TestStand;
@@ -25,6 +29,7 @@ import it.polimi.heaven.enums.JenaEventType;
 import it.polimi.heaven.enums.OntoLanguage;
 import it.polimi.services.FileService;
 import it.polimi.services.SQLListeService;
+import it.polimi.utils.RDFSUtils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -132,7 +137,6 @@ public class BaselineMain {
 
 		SQLListeService.openDatabase(dbPath, "experiments" + DT.format(EXPERIMENT_DATE).toString() + ".db");
 
-		reasonerSelection();
 		collectorSelection();
 		jenaEngineSelection();
 		run();
@@ -149,26 +153,26 @@ public class BaselineMain {
 		switch (FLOW_RATE_PROFILE) {
 		case CONSTANT:
 			code += "K" + INIT_SIZE;
-			eb = new ConstantFlowRateProfiler(INIT_SIZE, EXPERIMENT_NUMBER, WindowUtils.beta);
+			eb = new ConstantFlowRateProfiler(INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
 			break;
 		case STEP:
 			message += " Heigh [" + Y + "] Width [" + X + "] ";
-			eb = new StepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, WindowUtils.beta);
+			eb = new StepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
 			code += "S" + INIT_SIZE + "W" + X + "H" + Y;
 			break;
 		case STEP_FACTOR:
 			message += " Factor [" + Y + "] Width [" + X + "] ";
-			eb = new StepFactorFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, WindowUtils.beta);
+			eb = new StepFactorFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
 			code += "S" + INIT_SIZE + "W" + X + "H" + Y;
 			break;
 		case CUSTOM_STEP:
 			message += " Custom Step Init [" + INIT_SIZE + "] FINAL [" + Y + "] WIDTH [" + X + "] ";
-			eb = new CustomStepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, WindowUtils.beta);
+			eb = new CustomStepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
 			code += "S" + INIT_SIZE + "F" + Y + "W" + X;
 			break;
 		case RANDOM:
 			message += " RND";
-			eb = new RandomFlowRateProfiler(Y, INIT_SIZE, EXPERIMENT_NUMBER, WindowUtils.beta);
+			eb = new RandomFlowRateProfiler(Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
 			code += "S" + INIT_SIZE + "H" + X + "W" + Y;
 			break;
 		default:
@@ -184,48 +188,39 @@ public class BaselineMain {
 	}
 
 	protected static void jenaEngineSelection() {
+		Reasoning r;
+		JenaEngine baseline;
+
 		String message = "Engine Selection: [" + CEP_EVENT_TYPE + "] [" + ONTO_LANGUAGE.name().toUpperCase() + "] ["
 				+ (INCREMENTAL ? "INCREMENTAL" : "NAIVE") + "]";
 		log.info(message);
 		switch (CEP_EVENT_TYPE) {
-		case TEVENT:
-			engine = INCREMENTAL ? JenaRSPEngineFactory.getIncrementalSerializedEngine(testStand, listener) : JenaRSPEngineFactory
-					.getSerializedEngine(testStand, listener);
-			return;
 		case STMT:
-			engine = INCREMENTAL ? JenaRSPEngineFactory.getIncrementalStmtEngine(testStand, listener) : JenaRSPEngineFactory.getStmtEngine(testStand,
-					listener);
-			return;
+			baseline = new StatementBaseline(listener, testStand);
+			r = INCREMENTAL ? Reasoning.INCREMENTAL : Reasoning.NAIVE;
+			baseline.setReasoning(r);
+			engine = baseline;
+			break;
 		case GRAPH:
-			engine = INCREMENTAL ? JenaRSPEngineFactory.getIncrementalJenaEngineGraph(testStand, listener) : JenaRSPEngineFactory.getJenaEngineGraph(
-					testStand, listener);
-			return;
+			baseline = new GraphBaseline(listener, testStand);
+			r = INCREMENTAL ? Reasoning.INCREMENTAL : Reasoning.NAIVE;
+			baseline.setReasoning(r);
+			engine = baseline;
+			break;
 		default:
-			message = "Not valid case [" + CEP_EVENT_TYPE + "]";
+			throw new IllegalArgumentException("Not valid case [" + CEP_EVENT_TYPE + "]");
 		}
-		log.info(message);
-		throw new IllegalArgumentException("Not valid case [" + CEP_EVENT_TYPE + "]");
-	}
 
-	protected static void reasonerSelection() {
-		log.info("Reasoner Selection: [" + ONTO_LANGUAGE + "]");
-		switch (ONTO_LANGUAGE) {
-		case SMPL:
-			listener = INCREMENTAL ? JenaReasoningListenerFactory.getIncrementalSMPLListener(testStand) : JenaReasoningListenerFactory
-					.getSMPLListener(testStand);
-			break;
-		case RHODF:
-			listener = INCREMENTAL ? JenaReasoningListenerFactory.getIncrementalRhoDfListener(testStand) : JenaReasoningListenerFactory
-					.getRhoDfListener(testStand);
-			break;
-		case FULL:
-			listener = INCREMENTAL ? JenaReasoningListenerFactory.getIncrementalFULLListener(testStand) : JenaReasoningListenerFactory
-					.getFULLListener(testStand);
-			break;
-		default:
-			log.error("Not valid case [" + ONTO_LANGUAGE + "]");
-			throw new IllegalArgumentException("Not valid case [" + ONTO_LANGUAGE + "]");
-		}
+		baseline.setReasoning(Reasoning.NAIVE);
+		baseline.setOntology_language(ONTO_LANGUAGE.RHODF);
+
+		BaselineQuery query = new BaselineQuery();
+		query.setEsperQuery(" select  * from lubmEvent.win:time(" + BaselinesUtils.omega + " msec) output snapshot every " + BaselinesUtils.beta
+				+ "msec");
+		query.setSparqlQuery("SELECT * WHERE {?s ?p ?o}");
+		query.setEsperStreams(new String[] { "lubmEvent" });
+		query.setTbox(RDFSUtils.loadModel(FileUtils.UNIV_BENCH_RHODF_MODIFIED));
+		baseline.registerQuery(query);
 	}
 
 	protected static void collectorSelection() {
