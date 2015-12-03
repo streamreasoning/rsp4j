@@ -1,8 +1,6 @@
 package it.polimi.heaven;
 
-
-
-public class WindowUtils {
+public class BaselinesUtils {
 
 	public static final int beta = 100;
 
@@ -14,4 +12,6 @@ public class WindowUtils {
 
 	public static final String JENA_INPUT_QUERY_INCREMENTAL = " select irstream * from TEvent.win:time(" + omega + "msec) output all every " + beta
 			+ " msec";
+
+	public static final String aBoxRuleset = "";
 }

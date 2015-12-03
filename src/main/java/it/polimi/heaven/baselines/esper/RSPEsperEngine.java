@@ -1,4 +1,4 @@
-package it.polimi.heaven.baselines;
+package it.polimi.heaven.baselines.esper;
 
 import it.polimi.heaven.core.enums.ExecutionState;
 import it.polimi.heaven.core.ts.EventProcessor;
@@ -12,7 +12,6 @@ import com.espertech.esper.client.ConfigurationMethodRef;
 import com.espertech.esper.client.EPAdministrator;
 import com.espertech.esper.client.EPRuntime;
 import com.espertech.esper.client.EPServiceProvider;
-import com.espertech.esper.client.time.CurrentTimeEvent;
 
 @Getter
 public abstract class RSPEsperEngine implements RSPEngine {
@@ -26,8 +25,6 @@ public abstract class RSPEsperEngine implements RSPEngine {
 	protected ExecutionState status;
 	protected EventProcessor<Stimulus> next;
 
-	protected String name;
-
 	@Setter
 	protected Stimulus currentEvent = null;
 	protected long sentTimestamp;
@@ -35,17 +32,10 @@ public abstract class RSPEsperEngine implements RSPEngine {
 	protected int rspEventsNumber = 0, esperEventsNumber = 0;
 	protected long currentTimestamp;
 
-	public RSPEsperEngine(String name, EventProcessor<Stimulus> next) {
+	public RSPEsperEngine(EventProcessor<Stimulus> next, Configuration config) {
 		this.next = next;
-		this.name = name;
+		this.cepConfig = config;
 		this.currentTimestamp = 0L;
-	}
-
-	/**
-	 * Initialize Esper internal clock
-	 */
-	protected void resetTime() {
-		cepRT.sendEvent(new CurrentTimeEvent(0));
 	}
 
 	protected boolean isStartable() {
@@ -59,7 +49,5 @@ public abstract class RSPEsperEngine implements RSPEngine {
 	protected boolean isReady() {
 		return ExecutionState.READY.equals(status);
 	}
-
-	public abstract boolean timeProgress(CurrentTimeEvent cte);
 
 }
