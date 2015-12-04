@@ -217,7 +217,7 @@ public class BaselineMain {
 		BaselineQuery query = new BaselineQuery();
 		query.setEsperQuery(" select  * from lubmEvent.win:time(" + BaselinesUtils.omega + " msec) output snapshot every " + BaselinesUtils.beta
 				+ "msec");
-		query.setSparqlQuery("SELECT * WHERE {?s ?p ?o}");
+		query.setSparqlQuery("CONSTRUCT {?s ?p ?o } WHERE {?s ?p ?o}");
 		query.setEsperStreams(new String[] { "lubmEvent" });
 		query.setTbox(RDFSUtils.loadModel(FileUtils.UNIV_BENCH_RHODF_MODIFIED));
 		baseline.registerQuery(query);

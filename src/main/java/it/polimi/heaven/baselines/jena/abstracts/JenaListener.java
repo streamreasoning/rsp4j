@@ -143,9 +143,9 @@ public class JenaListener implements RSPListener {
 
 	private void IStreamUpdate(EventBean[] newData) {
 		if (newData != null) {
-			log.info("[" + newData.length + "] New Events of type [" + newData[0].getUnderlying().getClass().getSimpleName() + "]");
+			log.debug("[" + newData.length + "] New Events of type [" + newData[0].getUnderlying().getClass().getSimpleName() + "]");
 			for (EventBean e : newData) {
-				log.info(e.getUnderlying().toString());
+				log.debug(e.getUnderlying().toString());
 				BaselineEvent underlying = (BaselineEvent) e.getUnderlying();
 				ABoxStar = ModelFactory.createInfModel((InfGraph) underlying.addTo(ABoxStar.getGraph()));
 				ABoxTriples.addAll(underlying.serialize());
