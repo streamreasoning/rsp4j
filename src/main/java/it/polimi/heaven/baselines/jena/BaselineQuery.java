@@ -12,6 +12,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 @AllArgsConstructor
 public class BaselineQuery implements Query {
 
+	private String id;
 	private String[] esperStreams;
 	private String esperQuery;
 	private String sparqlQuery;
