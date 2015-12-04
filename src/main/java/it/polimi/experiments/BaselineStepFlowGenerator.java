@@ -23,7 +23,7 @@ public class BaselineStepFlowGenerator {
 	private static final ExperimentType[] experimentTypes = new ExperimentType[] { ExperimentType.LATENCY, ExperimentType.MEMORY };
 	private static final FlowRateProfile profile = FlowRateProfile.STEP;
 	private static final Reasoning[] reasoning = new Reasoning[] { Reasoning.NAIVE, Reasoning.INCREMENTAL };
-	private static final JenaEventType[] jenaEventTypes = new JenaEventType[] { JenaEventType.STMT, JenaEventType.GRAPH };
+	private static final JenaEventType[] jenaEventTypes = new JenaEventType[] { JenaEventType.STATEMENT, JenaEventType.GRAPH };
 
 	public static void main(String[] args) throws IOException {
 
