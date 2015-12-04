@@ -35,13 +35,29 @@ public abstract class JenaEngine extends RSPEsperEngine {
 	private OntoLanguage ontology_language;
 
 	private Map<Query, RSPListener> queries;
+	private final boolean internalTimerEnabled;
 
 	public JenaEngine(BaselineEvent eventType, EventProcessor<Stimulus> collector) {
 		super(collector, new Configuration());
 		this.queries = new HashMap<Query, RSPListener>();
+		this.internalTimerEnabled = false;
 		ref = new ConfigurationMethodRef();
 		cepConfig = new Configuration();
-		cepConfig.getEngineDefaults().getThreading().setInternalTimerEnabled(false);
+		cepConfig.getEngineDefaults().getThreading().setInternalTimerEnabled(internalTimerEnabled);
+		log.info("Added [" + eventType + "] as TEvent");
+		cepConfig.addEventType("TEvent", eventType);
+		cep = EPServiceProviderManager.getProvider(JenaEngine.class.getName(), cepConfig);
+		cepAdm = cep.getEPAdministrator();
+		cepRT = cep.getEPRuntime();
+	}
+
+	public JenaEngine(BaselineEvent eventType, EventProcessor<Stimulus> collector, boolean internalTimerEnabled) {
+		super(collector, new Configuration());
+		this.queries = new HashMap<Query, RSPListener>();
+		this.internalTimerEnabled = internalTimerEnabled;
+		ref = new ConfigurationMethodRef();
+		cepConfig = new Configuration();
+		cepConfig.getEngineDefaults().getThreading().setInternalTimerEnabled(internalTimerEnabled);
 		log.info("Added [" + eventType + "] as TEvent");
 		cepConfig.addEventType("TEvent", eventType);
 		cep = EPServiceProviderManager.getProvider(JenaEngine.class.getName(), cepConfig);
@@ -59,7 +75,8 @@ public abstract class JenaEngine extends RSPEsperEngine {
 
 		status = ExecutionState.READY;
 		log.debug("Status[" + status + "] Initizalized the RSPEngine");
-		cepRT.sendEvent(new CurrentTimeEvent(0));
+		if (!internalTimerEnabled)
+			cepRT.sendEvent(new CurrentTimeEvent(0));
 		return status;
 	}
 
@@ -101,7 +118,8 @@ public abstract class JenaEngine extends RSPEsperEngine {
 		log.info("Status[" + status + "] Parsing done, prepare time scheduling...");
 		currentTimestamp = e.getTimestamp();
 		log.info("Sent time Event current runtime ts [" + currentTimestamp + "]");
-		cepRT.sendEvent(new CurrentTimeEvent(e.getTimestamp()));
+		if (!internalTimerEnabled)
+			cepRT.sendEvent(new CurrentTimeEvent(e.getTimestamp()));
 		return ExecutionState.READY.equals(status);
 	}
 
