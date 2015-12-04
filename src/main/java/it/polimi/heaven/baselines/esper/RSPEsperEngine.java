@@ -1,8 +1,8 @@
 package it.polimi.heaven.baselines.esper;
 
-import it.polimi.heaven.core.enums.ExecutionState;
 import it.polimi.heaven.core.ts.EventProcessor;
-import it.polimi.heaven.core.ts.events.Stimulus;
+import it.polimi.heaven.core.ts.events.engine.Response;
+import it.polimi.heaven.core.ts.events.engine.Stimulus;
 import it.polimi.heaven.core.ts.rspengine.RSPEngine;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,8 +22,7 @@ public abstract class RSPEsperEngine implements RSPEngine {
 	protected EPAdministrator cepAdm;
 	protected ConfigurationMethodRef ref;
 
-	protected ExecutionState status;
-	protected EventProcessor<Stimulus> next;
+	protected EventProcessor<Response> next;
 
 	@Setter
 	protected Stimulus currentEvent = null;
@@ -32,22 +31,10 @@ public abstract class RSPEsperEngine implements RSPEngine {
 	protected int rspEventsNumber = 0, esperEventsNumber = 0;
 	protected long currentTimestamp;
 
-	public RSPEsperEngine(EventProcessor<Stimulus> next, Configuration config) {
+	public RSPEsperEngine(EventProcessor<Response> next, Configuration config) {
 		this.next = next;
 		this.cepConfig = config;
 		this.currentTimestamp = 0L;
-	}
-
-	protected boolean isStartable() {
-		return ExecutionState.READY.equals(status) || ExecutionState.CLOSED.equals(status);
-	}
-
-	protected boolean isOn() {
-		return ExecutionState.READY.equals(status);
-	}
-
-	protected boolean isReady() {
-		return ExecutionState.READY.equals(status);
 	}
 
 }
