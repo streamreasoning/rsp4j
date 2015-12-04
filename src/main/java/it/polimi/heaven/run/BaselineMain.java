@@ -8,17 +8,20 @@ import it.polimi.heaven.baselines.jena.BaselineQuery;
 import it.polimi.heaven.baselines.jena.GraphBaseline;
 import it.polimi.heaven.baselines.jena.StatementBaseline;
 import it.polimi.heaven.baselines.jena.abstracts.JenaEngine;
+import it.polimi.heaven.baselines.jena.encoders.GraphEncoder;
+import it.polimi.heaven.baselines.jena.encoders.StatementEncoder;
 import it.polimi.heaven.core.enums.FlowRateProfile;
 import it.polimi.heaven.core.enums.Reasoning;
 import it.polimi.heaven.core.ts.TestStand;
-import it.polimi.heaven.core.ts.events.Experiment;
-import it.polimi.heaven.core.ts.events.Stimulus;
-import it.polimi.heaven.core.ts.events.TripleContainer;
+import it.polimi.heaven.core.ts.collector.ResultCollector;
+import it.polimi.heaven.core.ts.data.Experiment;
+import it.polimi.heaven.core.ts.data.TripleContainer;
+import it.polimi.heaven.core.ts.events.heaven.HeavenInput;
 import it.polimi.heaven.core.ts.rspengine.RSPEngine;
+import it.polimi.heaven.core.ts.rspengine.Receiver;
+import it.polimi.heaven.core.ts.streamer.Encoder;
 import it.polimi.heaven.core.ts.streamer.flowrateprofiler.FlowRateProfiler;
-import it.polimi.heaven.core.tsimpl.TestStandImpl;
-import it.polimi.heaven.core.tsimpl.collector.TSResultCollector;
-import it.polimi.heaven.core.tsimpl.streamer.TSStreamer;
+import it.polimi.heaven.core.tsimpl.streamer.Streamer;
 import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.RDF2RDFStream;
 import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.flowrateprofiler.ConstantFlowRateProfiler;
 import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.flowrateprofiler.CustomStepFlowRateProfiler;
@@ -54,17 +57,17 @@ public class BaselineMain {
 	private static int EXPERIMENT_NUMBER;
 
 	private static RSPEngine engine;
-
+	private static Receiver receiver;
 	private static Date EXPERIMENT_DATE;
 	private static final DateFormat DT = new SimpleDateFormat("yyyy_MM_dd");
 
 	private static TestStand testStand;
-	private static TSResultCollector streamingEventResultCollector;
+	private static ResultCollector streamingEventResultCollector;
 	private static RSPListener listener;
 
 	private static int EXECUTION_NUMBER;
 
-	private static TSStreamer streamer;
+	private static Streamer streamer;
 	private static OntoLanguage ONTO_LANGUAGE;
 	private static Reasoning REASONING_MODE;
 	private static FlowRateProfile FLOW_RATE_PROFILE;
@@ -125,8 +128,6 @@ public class BaselineMain {
 		log.info("Experiment [" + EXPERIMENT_NUMBER + "] on [" + INPUT_FILE + "] of [" + EXPERIMENT_DATE + "] Number of Events [" + MAX_EVENT_STREAM
 				+ "]");
 
-		testStand = new TestStandImpl();
-
 		eventBuilderCodeName = flowRateProfileSelection();
 
 		log.info("Results and Performance Logs will be located in [" + outputPath + "]");
@@ -145,7 +146,8 @@ public class BaselineMain {
 
 	protected static String flowRateProfileSelection() {
 
-		FlowRateProfiler<Stimulus, TripleContainer> eb = null;
+		RDF2RDFStream rdf2rdfstream = new RDF2RDFStream();
+		FlowRateProfiler<HeavenInput, TripleContainer> profiler = null;
 
 		String code = "_FRP_";
 		String message = "Flow Rate Profile [" + FLOW_RATE_PROFILE + "] [" + INIT_SIZE + "] ";
@@ -153,26 +155,26 @@ public class BaselineMain {
 		switch (FLOW_RATE_PROFILE) {
 		case CONSTANT:
 			code += "K" + INIT_SIZE;
-			eb = new ConstantFlowRateProfiler(INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
+			profiler = new ConstantFlowRateProfiler(INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
 			break;
 		case STEP:
 			message += " Heigh [" + Y + "] Width [" + X + "] ";
-			eb = new StepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
+			profiler = new StepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
 			code += "S" + INIT_SIZE + "W" + X + "H" + Y;
 			break;
 		case STEP_FACTOR:
 			message += " Factor [" + Y + "] Width [" + X + "] ";
-			eb = new StepFactorFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
+			profiler = new StepFactorFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
 			code += "S" + INIT_SIZE + "W" + X + "H" + Y;
 			break;
 		case CUSTOM_STEP:
 			message += " Custom Step Init [" + INIT_SIZE + "] FINAL [" + Y + "] WIDTH [" + X + "] ";
-			eb = new CustomStepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
+			profiler = new CustomStepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
 			code += "S" + INIT_SIZE + "F" + Y + "W" + X;
 			break;
 		case RANDOM:
 			message += " RND";
-			eb = new RandomFlowRateProfiler(Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
+			profiler = new RandomFlowRateProfiler(Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
 			code += "S" + INIT_SIZE + "H" + X + "W" + Y;
 			break;
 		default:
@@ -180,68 +182,88 @@ public class BaselineMain {
 		}
 
 		log.info(message);
-		if (eb != null) {
-			streamer = new RDF2RDFStream(testStand, eb, MAX_EVENT_STREAM);
+		if (profiler != null) {
+			rdf2rdfstream.setProfiler(profiler);
+			rdf2rdfstream.setEventLimit(MAX_EVENT_STREAM);
+			rdf2rdfstream.setCollector(testStand);
+			streamer = rdf2rdfstream;
 			return code;
 		}
 		throw new IllegalArgumentException("Not valid case [" + FLOW_RATE_PROFILE + "]");
 	}
 
 	protected static void jenaEngineSelection() {
-		Reasoning r;
 		JenaEngine baseline;
+		Encoder encoder;
+		String esperQuery = INCREMENTAL ? BaselinesUtils.JENA_INPUT_QUERY_INCREMENTAL : BaselinesUtils.JENA_INPUT_QUERY_NAIVE;
+		Reasoning r = INCREMENTAL ? Reasoning.INCREMENTAL : Reasoning.NAIVE;
+		receiver = new Receiver();
+		BaselineQuery query = queryDefinition(esperQuery);
 
 		String message = "Engine Selection: [" + CEP_EVENT_TYPE + "] [" + ONTO_LANGUAGE.name().toUpperCase() + "] ["
 				+ (INCREMENTAL ? "INCREMENTAL" : "NAIVE") + "]";
 		log.info(message);
+
 		switch (CEP_EVENT_TYPE) {
-		case STMT:
-			baseline = new StatementBaseline(listener, testStand);
-			r = INCREMENTAL ? Reasoning.INCREMENTAL : Reasoning.NAIVE;
-			baseline.setReasoning(r);
+		case STATEMENT:
+			baseline = new StatementBaseline(listener, receiver);
+			encoder = new StatementEncoder();
 			engine = baseline;
 			break;
 		case GRAPH:
-			baseline = new GraphBaseline(listener, testStand);
-			r = INCREMENTAL ? Reasoning.INCREMENTAL : Reasoning.NAIVE;
-			baseline.setReasoning(r);
-			engine = baseline;
+			encoder = new GraphEncoder();
+			streamer.setEncoder(encoder);
+			baseline = new GraphBaseline(listener, receiver);
+
 			break;
 		default:
 			throw new IllegalArgumentException("Not valid case [" + CEP_EVENT_TYPE + "]");
 		}
+		streamer.setEngine(baseline);
+		streamer.setEncoder(encoder);
+		baseline.setReasoning(r);
+		baseline.setOntology_language(ONTO_LANGUAGE);
+		baseline.registerQuery(query);
 
-		baseline.setReasoning(Reasoning.NAIVE);
-		baseline.setOntology_language(ONTO_LANGUAGE.RHODF);
+		engine = baseline;
+	}
 
+	private static BaselineQuery queryDefinition(String esperQuery) {
 		BaselineQuery query = new BaselineQuery();
-		query.setEsperQuery(" select  * from lubmEvent.win:time(" + BaselinesUtils.omega + " msec) output snapshot every " + BaselinesUtils.beta
-				+ "msec");
-		query.setSparqlQuery("CONSTRUCT {?s ?p ?o } WHERE {?s ?p ?o}");
+		query.setEsperQuery(esperQuery);
+		query.setSparqlQuery("SELECT ?s ?p ?o  WHERE {?s ?p ?o}");
 		query.setEsperStreams(new String[] { "lubmEvent" });
 		query.setTbox(RDFSUtils.loadModel(FileUtils.UNIV_BENCH_RHODF_MODIFIED));
-		baseline.registerQuery(query);
+		return query;
 	}
 
 	protected static void collectorSelection() {
 
-		streamingEventResultCollector = new TSResultCollector(outputPath);
 		String exp = "";
-		if (GetPropertyValues.getBooleanProperty("result_log_enabled"))
+		boolean result_log_enabled = GetPropertyValues.getBooleanProperty("result_log_enabled");
+		boolean memory_log_enabled = GetPropertyValues.getBooleanProperty("memory_log_enabled");
+		boolean latency_log_enabled = GetPropertyValues.getBooleanProperty("latency_log_enabled");
+		if (result_log_enabled)
 			exp += "Result C&S ";
-		if (GetPropertyValues.getBooleanProperty("memory_log_enabled"))
+		if (memory_log_enabled)
 			exp += "Memory ";
-		if (GetPropertyValues.getBooleanProperty("latency_log_enabled"))
+		if (latency_log_enabled)
 			exp += "Latency ";
 
+		streamingEventResultCollector = new ResultCollector(result_log_enabled, memory_log_enabled, latency_log_enabled);
 		log.info("Execution of " + exp + "Experiment");
 	}
 
 	private static void run() {
 
-		testStand.build(streamer, engine, streamingEventResultCollector);
-		testStand.init();
+		testStand = new TestStand(streamer, engine, streamingEventResultCollector, receiver);
+		Experiment experiment = createExperiment();
+		testStand.init(experiment);
+		testStand.run();
 
+	}
+
+	private static Experiment createExperiment() {
 		Experiment experiment = new Experiment();
 		experiment.setExperimentNumber(EXPERIMENT_NUMBER);
 		experiment.setExecutionNumber(EXECUTION_NUMBER);
@@ -261,8 +283,6 @@ public class BaselineMain {
 		experiment.setOutputPath(OUTPUT_DIR);
 		experiment.setResponsivity(100L);
 
-		testStand.run(experiment);
-
-		testStand.close();
+		return experiment;
 	}
 }
