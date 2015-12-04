@@ -1,6 +1,6 @@
-package it.polimi.heaven.baselines.jena.events;
+package it.polimi.heaven.baselines.jena.events.stimuli;
 
-import it.polimi.heaven.core.ts.events.TripleContainer;
+import it.polimi.heaven.core.ts.data.TripleContainer;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,20 +11,20 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 
-public class StatementEvent extends BaselineEvent {
+public class StatementStimulus extends BaselineStimulus {
 
 	private static final long serialVersionUID = 1L;
 
-	public StatementEvent() {
+	public StatementStimulus() {
 		super(Statement.class);
 	}
 
-	public StatementEvent(long appTimestamp1, long sysTimestamp1, Statement content1) {
+	public StatementStimulus(long appTimestamp1, long sysTimestamp1, Statement content1) {
 		super(appTimestamp1, sysTimestamp1, content1);
 	}
 
 	public Statement getContent() {
-		return (Statement) super.get(super.content);
+		return (Statement) super.getContent();
 	}
 
 	public Resource getS() {

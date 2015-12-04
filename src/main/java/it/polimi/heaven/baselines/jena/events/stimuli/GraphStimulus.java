@@ -1,34 +1,41 @@
-package it.polimi.heaven.baselines.jena.events;
+package it.polimi.heaven.baselines.jena.events.stimuli;
 
-import it.polimi.heaven.core.ts.events.TripleContainer;
+import it.polimi.heaven.core.ts.data.TripleContainer;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.graph.GraphUtil;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
-public class GraphEvent extends BaselineEvent {
+public class GraphStimulus extends BaselineStimulus {
 
-	public GraphEvent() {
+	private static final long serialVersionUID = 1L;
+	@Setter
+	@Getter
+	private String stream_name;
+
+	public GraphStimulus() {
 		super(Graph.class);
 	}
 
-	public GraphEvent(long appTimestamp1, long sysTimestamp1, Graph content1) {
+	public GraphStimulus(long appTimestamp1, long sysTimestamp1, Graph content1, String stream_name) {
 		super(appTimestamp1, sysTimestamp1, content1);
+		this.stream_name = stream_name;
 	}
 
-	private static final long serialVersionUID = 1L;
-
 	public Graph getContent() {
-		return (Graph) super.get(super.content);
+		return (Graph) super.get(content);
 	}
 
 	@Override
 	public Graph addTo(Graph abox) {
-		GraphUtil.addInto(abox, getContent());
+		GraphUtil.addInto(abox, this.getContent());
 		return abox;
 	}
 
@@ -52,6 +59,7 @@ public class GraphEvent extends BaselineEvent {
 
 	@Override
 	public String toString() {
-		return "GraphEvent [" + super.toString() + "]";
+		return "GraphEvent on Stream [" + stream_name + "] [" + super.toString() + "]";
 	}
+
 }
