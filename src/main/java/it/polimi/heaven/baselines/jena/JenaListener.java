@@ -9,8 +9,8 @@ import it.polimi.heaven.baselines.jena.events.stimuli.BaselineStimulus;
 import it.polimi.heaven.baselines.utils.BaselinesUtils;
 import it.polimi.heaven.core.enums.Reasoning;
 import it.polimi.heaven.core.teststand.EventProcessor;
+import it.polimi.heaven.core.teststand.data.Line;
 import it.polimi.heaven.core.teststand.rspengine.events.Response;
-import it.polimi.heaven.core.teststand.streamer.lubm.Line;
 
 import java.util.HashSet;
 import java.util.Set;

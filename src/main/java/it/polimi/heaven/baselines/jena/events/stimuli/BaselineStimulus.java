@@ -1,7 +1,7 @@
 package it.polimi.heaven.baselines.jena.events.stimuli;
 
+import it.polimi.heaven.core.teststand.data.Line;
 import it.polimi.heaven.core.teststand.rspengine.events.Stimulus;
-import it.polimi.heaven.core.teststand.streamer.lubm.Line;
 
 import java.util.HashMap;
 import java.util.Set;

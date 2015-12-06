@@ -1,6 +1,6 @@
 package it.polimi.heaven.baselines.jena.events.stimuli;
 
-import it.polimi.heaven.core.teststand.streamer.lubm.Line;
+import it.polimi.heaven.core.teststand.data.Line;
 
 import java.util.HashSet;
 import java.util.Set;

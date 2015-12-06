@@ -1,10 +1,10 @@
 package it.polimi.heaven.baselines.jena.encoders;
 
 import it.polimi.heaven.baselines.jena.events.stimuli.StatementStimulus;
+import it.polimi.heaven.core.teststand.data.Line;
 import it.polimi.heaven.core.teststand.events.HeavenInput;
 import it.polimi.heaven.core.teststand.rspengine.events.Stimulus;
 import it.polimi.heaven.core.teststand.streamer.Encoder;
-import it.polimi.heaven.core.teststand.streamer.lubm.Line;
 import it.polimi.utils.RDFSUtils;
 
 import com.hp.hpl.jena.graph.Graph;
