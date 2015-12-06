@@ -29,7 +29,8 @@ public class StatementEncoder implements Encoder {
 		for (TripleContainer tc : e.getEventTriples()) {
 			String[] t = tc.getTriple();
 			abox.add(createTriple(t));
-			stimuli[i] = new StatementStimulus(e.getStimuli_application_timestamp(), System.currentTimeMillis(), createStatement(t));
+			stimuli[i] = new StatementStimulus(e.getStimuli_application_timestamp(), System.currentTimeMillis(), createStatement(t),
+					e.getStream_name());
 			i++;
 		}
 		return stimuli;

@@ -19,8 +19,8 @@ public class StatementStimulus extends BaselineStimulus {
 		super(Statement.class);
 	}
 
-	public StatementStimulus(long appTimestamp1, long sysTimestamp1, Statement content1) {
-		super(appTimestamp1, sysTimestamp1, content1);
+	public StatementStimulus(long appTimestamp1, long sysTimestamp1, Statement content1, String stream_name) {
+		super(appTimestamp1, sysTimestamp1, content1, stream_name);
 	}
 
 	public Statement getContent() {
@@ -56,5 +56,10 @@ public class StatementStimulus extends BaselineStimulus {
 	public Graph removeFrom(Graph abox) {
 		abox.remove(getS().asNode(), getP().asNode(), getO().asNode());
 		return abox;
+	}
+
+	@Override
+	public String toString() {
+		return "StatementStimulus on Stream [" + getStream_name() + "] [" + super.toString() + "]";
 	}
 }

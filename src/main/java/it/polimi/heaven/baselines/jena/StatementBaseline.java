@@ -19,15 +19,14 @@ public class StatementBaseline extends JenaEngine {
 
 	@Override
 	public boolean process(Stimulus e) {
-		StatementStimulus s = (StatementStimulus) e;
-		s.setAppTimestamp(cepRT.getCurrentTime());
-		cepRT.sendEvent(s);
 		this.currentEvent = e;
-		currentTimestamp = s.getAppTimestamp();
+		StatementStimulus s = (StatementStimulus) e;
+		cepRT.sendEvent(s, s.getStream_name());
+		log.info("Received Stimulus [" + s + "]");
 		rspEventsNumber++;
-		if (!this.internalTimerEnabled) {
+		if (!this.internalTimerEnabled && currentTimestamp != s.getAppTimestamp()) {
+			cepRT.sendEvent(new CurrentTimeEvent(currentTimestamp = s.getAppTimestamp()));
 			log.info("Sent time Event current runtime ts [" + currentTimestamp + "]");
-			cepRT.sendEvent(new CurrentTimeEvent(currentTimestamp));
 		}
 		return true;
 	}
