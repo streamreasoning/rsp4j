@@ -23,11 +23,10 @@ public class GraphBaseline extends JenaEngine {
 		GraphStimulus g = (GraphStimulus) e;
 		cepRT.sendEvent(g, g.getStream_name());
 		log.info("Received Stimulus [" + g + "]");
-		currentTimestamp = g.getAppTimestamp();
 		rspEventsNumber++;
-		if (!this.internalTimerEnabled) {
+		if (!this.internalTimerEnabled && currentTimestamp != g.getAppTimestamp()) {
+			cepRT.sendEvent(new CurrentTimeEvent(currentTimestamp = g.getAppTimestamp()));
 			log.info("Sent time Event current runtime ts [" + currentTimestamp + "]");
-			cepRT.sendEvent(new CurrentTimeEvent(currentTimestamp));
 		}
 		return true;
 	}

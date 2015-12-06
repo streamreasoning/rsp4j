@@ -6,6 +6,8 @@ import it.polimi.heaven.core.ts.events.engine.Stimulus;
 import java.util.HashMap;
 import java.util.Set;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 import com.hp.hpl.jena.graph.Graph;
@@ -19,16 +21,21 @@ public abstract class BaselineStimulus extends HashMap<String, Object> implement
 	protected final String sysTimestamp = "sys_timestamp";
 	protected final String content = "content";
 
+	@Setter
+	@Getter
+	private String stream_name;
+
 	public BaselineStimulus(Class<?> type) {
 		this.put(appTimestamp, long.class);
 		this.put(sysTimestamp, long.class);
 		this.put("content", type);
 	}
 
-	public BaselineStimulus(long appTimestamp1, long sysTimestamp1, Object content1) {
+	public BaselineStimulus(long appTimestamp1, long sysTimestamp1, Object content1, String stream_name) {
 		this.put(appTimestamp, appTimestamp1);
 		this.put(sysTimestamp, sysTimestamp1);
 		this.put(content, content1);
+		this.stream_name = stream_name;
 	}
 
 	public BaselineStimulus(long sysTimestamp1, Object content1) {
@@ -49,7 +56,6 @@ public abstract class BaselineStimulus extends HashMap<String, Object> implement
 	}
 
 	public Object getContent() {
-		log.info(this.get(content));
 		return this.get(content);
 	}
 

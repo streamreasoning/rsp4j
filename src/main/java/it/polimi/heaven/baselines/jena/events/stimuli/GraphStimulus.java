@@ -5,9 +5,6 @@ import it.polimi.heaven.core.ts.data.TripleContainer;
 import java.util.HashSet;
 import java.util.Set;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.graph.GraphUtil;
 import com.hp.hpl.jena.graph.Triple;
@@ -16,17 +13,13 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 public class GraphStimulus extends BaselineStimulus {
 
 	private static final long serialVersionUID = 1L;
-	@Setter
-	@Getter
-	private String stream_name;
 
 	public GraphStimulus() {
 		super(Graph.class);
 	}
 
 	public GraphStimulus(long appTimestamp1, long sysTimestamp1, Graph content1, String stream_name) {
-		super(appTimestamp1, sysTimestamp1, content1);
-		this.stream_name = stream_name;
+		super(appTimestamp1, sysTimestamp1, content1, stream_name);
 	}
 
 	public Graph getContent() {
@@ -59,7 +52,7 @@ public class GraphStimulus extends BaselineStimulus {
 
 	@Override
 	public String toString() {
-		return "GraphEvent on Stream [" + stream_name + "] [" + super.toString() + "]";
+		return "GraphStimulus on Stream [" + getStream_name() + "] [" + super.toString() + "]";
 	}
 
 }
