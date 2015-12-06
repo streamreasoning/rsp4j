@@ -1,7 +1,7 @@
 package it.polimi.heaven.baselines.jena.events.stimuli;
 
-import it.polimi.heaven.core.ts.data.TripleContainer;
 import it.polimi.heaven.core.ts.events.engine.Stimulus;
+import it.polimi.heaven.core.ts.streamer.flowrateprofiler.TripleContainer;
 
 import java.util.HashMap;
 import java.util.Set;

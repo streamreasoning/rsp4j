@@ -1,17 +1,16 @@
-package it.polimi.heaven.baselines.jena.abstracts;
+package it.polimi.heaven.baselines.jena;
 
-import it.polimi.heaven.BaselinesUtils;
+import it.polimi.heaven.baselines.enums.OntoLanguage;
 import it.polimi.heaven.baselines.esper.RSPListener;
-import it.polimi.heaven.baselines.jena.BaselineQuery;
 import it.polimi.heaven.baselines.jena.events.response.BaselineResponse;
 import it.polimi.heaven.baselines.jena.events.response.ConstructResponse;
 import it.polimi.heaven.baselines.jena.events.response.SelectResponse;
 import it.polimi.heaven.baselines.jena.events.stimuli.BaselineStimulus;
+import it.polimi.heaven.baselines.utils.BaselinesUtils;
 import it.polimi.heaven.core.enums.Reasoning;
 import it.polimi.heaven.core.ts.EventProcessor;
-import it.polimi.heaven.core.ts.data.TripleContainer;
 import it.polimi.heaven.core.ts.events.engine.Response;
-import it.polimi.heaven.enums.OntoLanguage;
+import it.polimi.heaven.core.ts.streamer.flowrateprofiler.TripleContainer;
 
 import java.util.HashSet;
 import java.util.Set;

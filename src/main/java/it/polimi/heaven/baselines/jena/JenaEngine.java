@@ -1,14 +1,13 @@
-package it.polimi.heaven.baselines.jena.abstracts;
+package it.polimi.heaven.baselines.jena;
 
+import it.polimi.heaven.baselines.enums.OntoLanguage;
 import it.polimi.heaven.baselines.esper.RSPEsperEngine;
 import it.polimi.heaven.baselines.esper.RSPListener;
-import it.polimi.heaven.baselines.jena.BaselineQuery;
 import it.polimi.heaven.baselines.jena.events.stimuli.BaselineStimulus;
 import it.polimi.heaven.core.enums.Reasoning;
 import it.polimi.heaven.core.ts.EventProcessor;
 import it.polimi.heaven.core.ts.events.engine.Response;
 import it.polimi.heaven.core.ts.rspengine.Query;
-import it.polimi.heaven.enums.OntoLanguage;
 
 import java.util.HashMap;
 import java.util.Map;

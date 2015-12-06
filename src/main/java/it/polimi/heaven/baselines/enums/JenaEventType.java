@@ -1,4 +1,4 @@
-package it.polimi.heaven.enums;
+package it.polimi.heaven.baselines.enums;
 
 public enum JenaEventType {
 	STATEMENT, GRAPH

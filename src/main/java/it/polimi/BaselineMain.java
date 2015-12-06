@@ -1,35 +1,36 @@
-package it.polimi.heaven.run;
+package it.polimi;
 
-import it.polimi.heaven.BaselinesUtils;
-import it.polimi.heaven.FileUtils;
-import it.polimi.heaven.GetPropertyValues;
+import it.polimi.heaven.baselines.enums.JenaEventType;
+import it.polimi.heaven.baselines.enums.OntoLanguage;
 import it.polimi.heaven.baselines.esper.RSPListener;
 import it.polimi.heaven.baselines.jena.BaselineQuery;
 import it.polimi.heaven.baselines.jena.GraphBaseline;
+import it.polimi.heaven.baselines.jena.JenaEngine;
 import it.polimi.heaven.baselines.jena.StatementBaseline;
-import it.polimi.heaven.baselines.jena.abstracts.JenaEngine;
 import it.polimi.heaven.baselines.jena.encoders.GraphEncoder;
 import it.polimi.heaven.baselines.jena.encoders.StatementEncoder;
+import it.polimi.heaven.baselines.utils.BaselinesUtils;
+import it.polimi.heaven.baselines.utils.FileUtils;
+import it.polimi.heaven.baselines.utils.GetPropertyValues;
 import it.polimi.heaven.core.enums.FlowRateProfile;
 import it.polimi.heaven.core.enums.Reasoning;
 import it.polimi.heaven.core.ts.TestStand;
 import it.polimi.heaven.core.ts.collector.ResultCollector;
 import it.polimi.heaven.core.ts.data.Experiment;
-import it.polimi.heaven.core.ts.data.TripleContainer;
 import it.polimi.heaven.core.ts.events.heaven.HeavenInput;
 import it.polimi.heaven.core.ts.rspengine.RSPEngine;
 import it.polimi.heaven.core.ts.rspengine.Receiver;
 import it.polimi.heaven.core.ts.streamer.Encoder;
+import it.polimi.heaven.core.ts.streamer.Streamer;
 import it.polimi.heaven.core.ts.streamer.flowrateprofiler.FlowRateProfiler;
-import it.polimi.heaven.core.tsimpl.streamer.Streamer;
-import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.RDF2RDFStream;
-import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.flowrateprofiler.ConstantFlowRateProfiler;
-import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.flowrateprofiler.CustomStepFlowRateProfiler;
-import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.flowrateprofiler.RandomFlowRateProfiler;
-import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.flowrateprofiler.StepFactorFlowRateProfiler;
-import it.polimi.heaven.core.tsimpl.streamer.rdf2rdfstream.flowrateprofiler.StepFlowRateProfiler;
-import it.polimi.heaven.enums.JenaEventType;
-import it.polimi.heaven.enums.OntoLanguage;
+import it.polimi.heaven.core.ts.streamer.flowrateprofiler.TripleContainer;
+import it.polimi.heaven.core.ts.streamer.impl.LUBMParser;
+import it.polimi.heaven.core.ts.streamer.impl.RDF2RDFStream;
+import it.polimi.heaven.core.ts.streamer.impl.flowrateprofiler.ConstantFlowRateProfiler;
+import it.polimi.heaven.core.ts.streamer.impl.flowrateprofiler.CustomStepFlowRateProfiler;
+import it.polimi.heaven.core.ts.streamer.impl.flowrateprofiler.RandomFlowRateProfiler;
+import it.polimi.heaven.core.ts.streamer.impl.flowrateprofiler.StepFactorFlowRateProfiler;
+import it.polimi.heaven.core.ts.streamer.impl.flowrateprofiler.StepFlowRateProfiler;
 import it.polimi.services.FileService;
 import it.polimi.services.SQLListeService;
 import it.polimi.utils.RDFSUtils;
@@ -146,7 +147,7 @@ public class BaselineMain {
 
 	protected static String flowRateProfileSelection() {
 
-		RDF2RDFStream rdf2rdfstream = new RDF2RDFStream();
+		RDF2RDFStream rdf2rdfstream = new RDF2RDFStream(new LUBMParser());
 		FlowRateProfiler<HeavenInput, TripleContainer> profiler = null;
 
 		String code = "_FRP_";

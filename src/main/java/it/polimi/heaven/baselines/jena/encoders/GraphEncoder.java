@@ -1,10 +1,10 @@
 package it.polimi.heaven.baselines.jena.encoders;
 
 import it.polimi.heaven.baselines.jena.events.stimuli.GraphStimulus;
-import it.polimi.heaven.core.ts.data.TripleContainer;
 import it.polimi.heaven.core.ts.events.engine.Stimulus;
 import it.polimi.heaven.core.ts.events.heaven.HeavenInput;
 import it.polimi.heaven.core.ts.streamer.Encoder;
+import it.polimi.heaven.core.ts.streamer.flowrateprofiler.TripleContainer;
 import it.polimi.utils.RDFSUtils;
 
 import com.hp.hpl.jena.graph.Graph;

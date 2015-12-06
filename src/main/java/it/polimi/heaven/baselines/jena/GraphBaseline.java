@@ -1,7 +1,6 @@
 package it.polimi.heaven.baselines.jena;
 
 import it.polimi.heaven.baselines.esper.RSPListener;
-import it.polimi.heaven.baselines.jena.abstracts.JenaEngine;
 import it.polimi.heaven.baselines.jena.events.stimuli.GraphStimulus;
 import it.polimi.heaven.core.ts.EventProcessor;
 import it.polimi.heaven.core.ts.events.engine.Response;
@@ -22,11 +21,11 @@ public class GraphBaseline extends JenaEngine {
 		this.currentEvent = e;
 		GraphStimulus g = (GraphStimulus) e;
 		cepRT.sendEvent(g, g.getStream_name());
-		log.info("Received Stimulus [" + g + "]");
+		log.debug("Received Stimulus [" + g + "]");
 		rspEventsNumber++;
 		if (!this.internalTimerEnabled && currentTimestamp != g.getAppTimestamp()) {
 			cepRT.sendEvent(new CurrentTimeEvent(currentTimestamp = g.getAppTimestamp()));
-			log.info("Sent time Event current runtime ts [" + currentTimestamp + "]");
+			log.debug("Sent time Event current runtime ts [" + currentTimestamp + "]");
 		}
 		return true;
 	}
