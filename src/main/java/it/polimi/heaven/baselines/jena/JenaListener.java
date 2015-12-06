@@ -8,9 +8,9 @@ import it.polimi.heaven.baselines.jena.events.response.SelectResponse;
 import it.polimi.heaven.baselines.jena.events.stimuli.BaselineStimulus;
 import it.polimi.heaven.baselines.utils.BaselinesUtils;
 import it.polimi.heaven.core.enums.Reasoning;
-import it.polimi.heaven.core.ts.EventProcessor;
-import it.polimi.heaven.core.ts.events.engine.Response;
-import it.polimi.heaven.core.ts.streamer.flowrateprofiler.TripleContainer;
+import it.polimi.heaven.core.teststand.EventProcessor;
+import it.polimi.heaven.core.teststand.rspengine.events.Response;
+import it.polimi.heaven.core.teststand.streamer.lubm.Line;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -46,7 +46,7 @@ public class JenaListener implements RSPListener {
 	protected Reasoner reasoner;
 	protected final EventProcessor<Response> next;
 
-	private final Set<TripleContainer> ABoxTriples;
+	private final Set<Line> ABoxTriples;
 
 	@Setter
 	@Getter
@@ -69,7 +69,7 @@ public class JenaListener implements RSPListener {
 		this.abox = bq.hasTBox() ? bq.getTbox().getGraph() : ModelFactory.createMemModelMaker().createDefaultModel().getGraph();
 		this.TBoxStar = ModelFactory.createMemModelMaker().createDefaultModel();
 		this.id_base = id_base;
-		this.ABoxTriples = new HashSet<TripleContainer>();
+		this.ABoxTriples = new HashSet<Line>();
 		this.reasoner = getReasoner(ontoLang);
 		this.reasoner.bindSchema(TBoxStar.getGraph());
 		this.ABoxStar = new InfModelImpl(reasoner.bind(abox));

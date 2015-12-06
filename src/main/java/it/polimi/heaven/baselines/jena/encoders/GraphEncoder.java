@@ -1,10 +1,10 @@
 package it.polimi.heaven.baselines.jena.encoders;
 
 import it.polimi.heaven.baselines.jena.events.stimuli.GraphStimulus;
-import it.polimi.heaven.core.ts.events.engine.Stimulus;
-import it.polimi.heaven.core.ts.events.heaven.HeavenInput;
-import it.polimi.heaven.core.ts.streamer.Encoder;
-import it.polimi.heaven.core.ts.streamer.flowrateprofiler.TripleContainer;
+import it.polimi.heaven.core.teststand.events.HeavenInput;
+import it.polimi.heaven.core.teststand.rspengine.events.Stimulus;
+import it.polimi.heaven.core.teststand.streamer.Encoder;
+import it.polimi.heaven.core.teststand.streamer.lubm.Line;
 import it.polimi.utils.RDFSUtils;
 
 import com.hp.hpl.jena.graph.Graph;
@@ -21,7 +21,7 @@ public class GraphEncoder implements Encoder {
 	@Override
 	public Stimulus[] encode(HeavenInput e) {
 		Graph abox = ModelFactory.createMemModelMaker().createDefaultModel().getGraph();
-		for (TripleContainer tc : e.getEventTriples()) {
+		for (Line tc : e.getEventTriples()) {
 			String[] t = tc.getTriple();
 			abox.add(createTriple(t));
 		}

@@ -1,8 +1,8 @@
 package it.polimi.heaven.baselines.jena.events.response;
 
-import it.polimi.heaven.core.ts.collector.Collectable;
-import it.polimi.heaven.core.ts.events.engine.Response;
-import it.polimi.heaven.core.ts.rspengine.Query;
+import it.polimi.heaven.core.teststand.collector.Collectable;
+import it.polimi.heaven.core.teststand.rspengine.Query;
+import it.polimi.heaven.core.teststand.rspengine.events.Response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -3,8 +3,8 @@ package it.polimi.experiments;
 import it.polimi.heaven.baselines.enums.JenaEventType;
 import it.polimi.heaven.baselines.enums.OntoLanguage;
 import it.polimi.heaven.core.enums.ExperimentType;
-import it.polimi.heaven.core.enums.FlowRateProfile;
 import it.polimi.heaven.core.enums.Reasoning;
+import it.polimi.heaven.core.teststand.streamer.flowrateprofiler.profiles.FlowRateProfile;
 import it.polimi.services.FileService;
 
 import java.io.IOException;

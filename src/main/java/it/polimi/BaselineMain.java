@@ -12,25 +12,24 @@ import it.polimi.heaven.baselines.jena.encoders.StatementEncoder;
 import it.polimi.heaven.baselines.utils.BaselinesUtils;
 import it.polimi.heaven.baselines.utils.FileUtils;
 import it.polimi.heaven.baselines.utils.GetPropertyValues;
-import it.polimi.heaven.core.enums.FlowRateProfile;
 import it.polimi.heaven.core.enums.Reasoning;
-import it.polimi.heaven.core.ts.TestStand;
-import it.polimi.heaven.core.ts.collector.ResultCollector;
-import it.polimi.heaven.core.ts.data.Experiment;
-import it.polimi.heaven.core.ts.events.heaven.HeavenInput;
-import it.polimi.heaven.core.ts.rspengine.RSPEngine;
-import it.polimi.heaven.core.ts.rspengine.Receiver;
-import it.polimi.heaven.core.ts.streamer.Encoder;
-import it.polimi.heaven.core.ts.streamer.Streamer;
-import it.polimi.heaven.core.ts.streamer.flowrateprofiler.FlowRateProfiler;
-import it.polimi.heaven.core.ts.streamer.flowrateprofiler.TripleContainer;
-import it.polimi.heaven.core.ts.streamer.impl.LUBMParser;
-import it.polimi.heaven.core.ts.streamer.impl.RDF2RDFStream;
-import it.polimi.heaven.core.ts.streamer.impl.flowrateprofiler.ConstantFlowRateProfiler;
-import it.polimi.heaven.core.ts.streamer.impl.flowrateprofiler.CustomStepFlowRateProfiler;
-import it.polimi.heaven.core.ts.streamer.impl.flowrateprofiler.RandomFlowRateProfiler;
-import it.polimi.heaven.core.ts.streamer.impl.flowrateprofiler.StepFactorFlowRateProfiler;
-import it.polimi.heaven.core.ts.streamer.impl.flowrateprofiler.StepFlowRateProfiler;
+import it.polimi.heaven.core.teststand.TestStand;
+import it.polimi.heaven.core.teststand.collector.ResultCollector;
+import it.polimi.heaven.core.teststand.data.Experiment;
+import it.polimi.heaven.core.teststand.rspengine.RSPEngine;
+import it.polimi.heaven.core.teststand.rspengine.Receiver;
+import it.polimi.heaven.core.teststand.streamer.Encoder;
+import it.polimi.heaven.core.teststand.streamer.ParsingTemplate;
+import it.polimi.heaven.core.teststand.streamer.Streamer;
+import it.polimi.heaven.core.teststand.streamer.flowrateprofiler.FlowRateProfiler;
+import it.polimi.heaven.core.teststand.streamer.flowrateprofiler.RDF2RDFStream;
+import it.polimi.heaven.core.teststand.streamer.flowrateprofiler.profiles.ConstantFlowRateProfiler;
+import it.polimi.heaven.core.teststand.streamer.flowrateprofiler.profiles.CustomStepFlowRateProfiler;
+import it.polimi.heaven.core.teststand.streamer.flowrateprofiler.profiles.FlowRateProfile;
+import it.polimi.heaven.core.teststand.streamer.flowrateprofiler.profiles.RandomFlowRateProfiler;
+import it.polimi.heaven.core.teststand.streamer.flowrateprofiler.profiles.StepFactorFlowRateProfiler;
+import it.polimi.heaven.core.teststand.streamer.flowrateprofiler.profiles.StepFlowRateProfiler;
+import it.polimi.heaven.core.teststand.streamer.lubm.LUBMParser;
 import it.polimi.services.FileService;
 import it.polimi.services.SQLListeService;
 import it.polimi.utils.RDFSUtils;
@@ -62,8 +61,8 @@ public class BaselineMain {
 	private static Date EXPERIMENT_DATE;
 	private static final DateFormat DT = new SimpleDateFormat("yyyy_MM_dd");
 
-	private static TestStand testStand;
-	private static ResultCollector streamingEventResultCollector;
+	private static TestStand test_stand;
+	private static ResultCollector result_collector;
 	private static RSPListener listener;
 
 	private static int EXECUTION_NUMBER;
@@ -86,6 +85,7 @@ public class BaselineMain {
 	private static String TIME_CONTROL;
 	private static String outputPath;
 	private static String dbPath;
+	private static FlowRateProfiler profiler;
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, ParseException {
 
@@ -147,35 +147,34 @@ public class BaselineMain {
 
 	protected static String flowRateProfileSelection() {
 
-		RDF2RDFStream rdf2rdfstream = new RDF2RDFStream(new LUBMParser());
-		FlowRateProfiler<HeavenInput, TripleContainer> profiler = null;
-
+		RDF2RDFStream rdf2rdfstream = new RDF2RDFStream();
+		ParsingTemplate parser = new LUBMParser();
 		String code = "_FRP_";
 		String message = "Flow Rate Profile [" + FLOW_RATE_PROFILE + "] [" + INIT_SIZE + "] ";
 
 		switch (FLOW_RATE_PROFILE) {
 		case CONSTANT:
 			code += "K" + INIT_SIZE;
-			profiler = new ConstantFlowRateProfiler(INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
+			profiler = new ConstantFlowRateProfiler(parser, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
 			break;
 		case STEP:
 			message += " Heigh [" + Y + "] Width [" + X + "] ";
-			profiler = new StepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
+			profiler = new StepFlowRateProfiler(parser, X, Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
 			code += "S" + INIT_SIZE + "W" + X + "H" + Y;
 			break;
 		case STEP_FACTOR:
 			message += " Factor [" + Y + "] Width [" + X + "] ";
-			profiler = new StepFactorFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
+			profiler = new StepFactorFlowRateProfiler(parser, X, Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
 			code += "S" + INIT_SIZE + "W" + X + "H" + Y;
 			break;
 		case CUSTOM_STEP:
 			message += " Custom Step Init [" + INIT_SIZE + "] FINAL [" + Y + "] WIDTH [" + X + "] ";
-			profiler = new CustomStepFlowRateProfiler(X, Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
+			profiler = new CustomStepFlowRateProfiler(parser, X, Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
 			code += "S" + INIT_SIZE + "F" + Y + "W" + X;
 			break;
 		case RANDOM:
 			message += " RND";
-			profiler = new RandomFlowRateProfiler(Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
+			profiler = new RandomFlowRateProfiler(parser, Y, INIT_SIZE, EXPERIMENT_NUMBER, BaselinesUtils.beta);
 			code += "S" + INIT_SIZE + "H" + X + "W" + Y;
 			break;
 		default:
@@ -186,7 +185,7 @@ public class BaselineMain {
 		if (profiler != null) {
 			rdf2rdfstream.setProfiler(profiler);
 			rdf2rdfstream.setEventLimit(MAX_EVENT_STREAM);
-			rdf2rdfstream.setCollector(testStand);
+			rdf2rdfstream.setCollector(test_stand);
 			streamer = rdf2rdfstream;
 			return code;
 		}
@@ -213,7 +212,6 @@ public class BaselineMain {
 			break;
 		case GRAPH:
 			encoder = new GraphEncoder();
-			streamer.setEncoder(encoder);
 			baseline = new GraphBaseline(listener, receiver);
 
 			break;
@@ -221,7 +219,7 @@ public class BaselineMain {
 			throw new IllegalArgumentException("Not valid case [" + CEP_EVENT_TYPE + "]");
 		}
 		streamer.setEngine(baseline);
-		streamer.setEncoder(encoder);
+		profiler.setEncoder(encoder);
 		baseline.setReasoning(r);
 		baseline.setOntology_language(ONTO_LANGUAGE);
 		baseline.registerQuery(query);
@@ -251,16 +249,16 @@ public class BaselineMain {
 		if (latency_log_enabled)
 			exp += "Latency ";
 
-		streamingEventResultCollector = new ResultCollector(result_log_enabled, memory_log_enabled, latency_log_enabled);
+		result_collector = new ResultCollector(result_log_enabled, memory_log_enabled, latency_log_enabled);
 		log.info("Execution of " + exp + "Experiment");
 	}
 
 	private static void run() {
 
-		testStand = new TestStand(streamer, engine, streamingEventResultCollector, receiver);
+		test_stand = new TestStand(streamer, engine, result_collector, receiver);
 		Experiment experiment = createExperiment();
-		testStand.init(experiment);
-		testStand.run();
+		test_stand.init(experiment);
+		test_stand.run();
 
 	}
 

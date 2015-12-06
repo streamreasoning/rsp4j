@@ -1,10 +1,10 @@
 package it.polimi.heaven.baselines.jena.encoders;
 
 import it.polimi.heaven.baselines.jena.events.stimuli.StatementStimulus;
-import it.polimi.heaven.core.ts.events.engine.Stimulus;
-import it.polimi.heaven.core.ts.events.heaven.HeavenInput;
-import it.polimi.heaven.core.ts.streamer.Encoder;
-import it.polimi.heaven.core.ts.streamer.flowrateprofiler.TripleContainer;
+import it.polimi.heaven.core.teststand.events.HeavenInput;
+import it.polimi.heaven.core.teststand.rspengine.events.Stimulus;
+import it.polimi.heaven.core.teststand.streamer.Encoder;
+import it.polimi.heaven.core.teststand.streamer.lubm.Line;
 import it.polimi.utils.RDFSUtils;
 
 import com.hp.hpl.jena.graph.Graph;
@@ -26,7 +26,7 @@ public class StatementEncoder implements Encoder {
 		int size = e.getEventTriples().size();
 		Stimulus[] stimuli = new StatementStimulus[size];
 		int i = 0;
-		for (TripleContainer tc : e.getEventTriples()) {
+		for (Line tc : e.getEventTriples()) {
 			String[] t = tc.getTriple();
 			abox.add(createTriple(t));
 			stimuli[i] = new StatementStimulus(e.getStimuli_application_timestamp(), System.currentTimeMillis(), createStatement(t),

@@ -1,9 +1,9 @@
 package it.polimi.heaven.baselines.esper;
 
-import it.polimi.heaven.core.ts.EventProcessor;
-import it.polimi.heaven.core.ts.events.engine.Response;
-import it.polimi.heaven.core.ts.events.engine.Stimulus;
-import it.polimi.heaven.core.ts.rspengine.RSPEngine;
+import it.polimi.heaven.core.teststand.EventProcessor;
+import it.polimi.heaven.core.teststand.rspengine.RSPEngine;
+import it.polimi.heaven.core.teststand.rspengine.events.Response;
+import it.polimi.heaven.core.teststand.rspengine.events.Stimulus;
 import lombok.Getter;
 import lombok.Setter;
 

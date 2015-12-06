@@ -1,6 +1,6 @@
 package it.polimi.heaven.baselines.jena.events.stimuli;
 
-import it.polimi.heaven.core.ts.streamer.flowrateprofiler.TripleContainer;
+import it.polimi.heaven.core.teststand.streamer.lubm.Line;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -46,9 +46,9 @@ public class StatementStimulus extends BaselineStimulus {
 	}
 
 	@Override
-	public Set<TripleContainer> serialize() {
-		HashSet<TripleContainer> hashSet = new HashSet<TripleContainer>();
-		hashSet.add(new TripleContainer(getS().toString(), getP().toString(), getO().toString()));
+	public Set<Line> serialize() {
+		HashSet<Line> hashSet = new HashSet<Line>();
+		hashSet.add(new Line(getS().toString(), getP().toString(), getO().toString()));
 		return hashSet;
 	}
 

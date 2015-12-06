@@ -1,7 +1,7 @@
 package it.polimi.heaven.baselines.jena.events.stimuli;
 
-import it.polimi.heaven.core.ts.events.engine.Stimulus;
-import it.polimi.heaven.core.ts.streamer.flowrateprofiler.TripleContainer;
+import it.polimi.heaven.core.teststand.rspengine.events.Stimulus;
+import it.polimi.heaven.core.teststand.streamer.lubm.Line;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -63,6 +63,6 @@ public abstract class BaselineStimulus extends HashMap<String, Object> implement
 
 	public abstract Graph removeFrom(Graph abox);
 
-	public abstract Set<TripleContainer> serialize();
+	public abstract Set<Line> serialize();
 
 }

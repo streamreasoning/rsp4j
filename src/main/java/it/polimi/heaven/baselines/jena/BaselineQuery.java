@@ -1,6 +1,6 @@
 package it.polimi.heaven.baselines.jena;
 
-import it.polimi.heaven.core.ts.rspengine.Query;
+import it.polimi.heaven.core.teststand.rspengine.Query;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

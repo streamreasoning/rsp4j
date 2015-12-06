@@ -5,9 +5,9 @@ import it.polimi.heaven.baselines.esper.RSPEsperEngine;
 import it.polimi.heaven.baselines.esper.RSPListener;
 import it.polimi.heaven.baselines.jena.events.stimuli.BaselineStimulus;
 import it.polimi.heaven.core.enums.Reasoning;
-import it.polimi.heaven.core.ts.EventProcessor;
-import it.polimi.heaven.core.ts.events.engine.Response;
-import it.polimi.heaven.core.ts.rspengine.Query;
+import it.polimi.heaven.core.teststand.EventProcessor;
+import it.polimi.heaven.core.teststand.rspengine.Query;
+import it.polimi.heaven.core.teststand.rspengine.events.Response;
 
 import java.util.HashMap;
 import java.util.Map;
