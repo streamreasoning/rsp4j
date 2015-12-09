@@ -1,6 +1,6 @@
 package it.polimi.heaven.baselines.jena.events.stimuli;
 
-import it.polimi.heaven.core.teststand.data.Line;
+import it.polimi.heaven.core.teststand.data.RDFLine;
 import it.polimi.heaven.core.teststand.rspengine.events.Stimulus;
 
 import java.util.HashMap;
@@ -63,6 +63,6 @@ public abstract class BaselineStimulus extends HashMap<String, Object> implement
 
 	public abstract Graph removeFrom(Graph abox);
 
-	public abstract Set<Line> serialize();
+	public abstract Set<RDFLine> serialize();
 
 }

@@ -10,7 +10,7 @@ import it.polimi.heaven.baselines.jena.query.BaselineQuery;
 import it.polimi.heaven.baselines.utils.BaselinesUtils;
 import it.polimi.heaven.core.enums.Reasoning;
 import it.polimi.heaven.core.teststand.EventProcessor;
-import it.polimi.heaven.core.teststand.data.Line;
+import it.polimi.heaven.core.teststand.data.RDFLine;
 import it.polimi.heaven.core.teststand.rspengine.events.Response;
 
 import java.util.HashSet;
@@ -47,7 +47,7 @@ public class JenaListener implements RSPListener {
 	protected Reasoner reasoner;
 	protected final EventProcessor<Response> next;
 
-	private final Set<Line> ABoxTriples;
+	private final Set<RDFLine> ABoxTriples;
 
 	@Setter
 	@Getter
@@ -70,7 +70,7 @@ public class JenaListener implements RSPListener {
 		this.abox = bq.hasTBox() ? bq.getTbox().getGraph() : ModelFactory.createMemModelMaker().createDefaultModel().getGraph();
 		this.TBoxStar = ModelFactory.createMemModelMaker().createDefaultModel();
 		this.id_base = id_base;
-		this.ABoxTriples = new HashSet<Line>();
+		this.ABoxTriples = new HashSet<RDFLine>();
 		this.reasoner = getReasoner(ontoLang);
 		this.reasoner.bindSchema(TBoxStar.getGraph());
 		this.ABoxStar = new InfModelImpl(reasoner.bind(abox));

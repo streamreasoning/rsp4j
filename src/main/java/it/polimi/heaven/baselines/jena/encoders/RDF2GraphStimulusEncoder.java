@@ -2,6 +2,7 @@ package it.polimi.heaven.baselines.jena.encoders;
 
 import it.polimi.heaven.baselines.jena.events.stimuli.GraphStimulus;
 import it.polimi.heaven.core.teststand.data.Line;
+import it.polimi.heaven.core.teststand.data.RDFLine;
 import it.polimi.heaven.core.teststand.events.HeavenInput;
 import it.polimi.heaven.core.teststand.rspengine.events.Stimulus;
 import it.polimi.heaven.core.teststand.streamer.Encoder;
@@ -16,13 +17,14 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 
-public class GraphEncoder implements Encoder {
+public class RDF2GraphStimulusEncoder implements Encoder {
 
 	@Override
 	public Stimulus[] encode(HeavenInput e) {
 		Graph abox = ModelFactory.createMemModelMaker().createDefaultModel().getGraph();
-		for (Line tc : e.getEventTriples()) {
-			String[] t = tc.getTriple();
+		for (Line tc : e.getLines()) {
+			RDFLine rdf = (RDFLine) tc;
+			String[] t = rdf.getTriple();
 			abox.add(createTriple(t));
 		}
 		return new Stimulus[] { new GraphStimulus(e.getStimuli_application_timestamp(), System.currentTimeMillis(), abox, e.getStream_name()) };

@@ -1,6 +1,6 @@
 package it.polimi.heaven.baselines.jena.events.stimuli;
 
-import it.polimi.heaven.core.teststand.data.Line;
+import it.polimi.heaven.core.teststand.data.RDFLine;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -33,12 +33,12 @@ public class GraphStimulus extends BaselineStimulus {
 	}
 
 	@Override
-	public Set<Line> serialize() {
-		HashSet<Line> hashSet = new HashSet<Line>();
+	public Set<RDFLine> serialize() {
+		HashSet<RDFLine> hashSet = new HashSet<RDFLine>();
 		ExtendedIterator<Triple> all = GraphUtil.findAll(getContent());
 		while (all.hasNext()) {
 			Triple next = all.next();
-			hashSet.add(new Line(next.getSubject().toString(), next.getPredicate().toString(), next.getObject().toString()));
+			hashSet.add(new RDFLine(next.getSubject().toString(), next.getPredicate().toString(), next.getObject().toString()));
 		}
 
 		return hashSet;
