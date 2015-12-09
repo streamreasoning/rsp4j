@@ -1,6 +1,5 @@
 package it.polimi.heaven.baselines.jena;
 
-import it.polimi.heaven.baselines.esper.RSPListener;
 import it.polimi.heaven.baselines.jena.events.stimuli.StatementStimulus;
 import it.polimi.heaven.core.teststand.EventProcessor;
 import it.polimi.heaven.core.teststand.rspengine.events.Response;
@@ -12,7 +11,13 @@ import com.espertech.esper.client.time.CurrentTimeEvent;
 @Log4j
 public class StatementBaseline extends JenaEngine {
 
+<<<<<<< HEAD
 	public StatementBaseline(RSPListener listener, EventProcessor<Response> collector) {
+=======
+	private long processing_duration;
+
+	public StatementBaseline(EventProcessor<Response> collector) {
+>>>>>>> 0545c1c... fixed some minors in event representation
 		super(new StatementStimulus(), collector);
 	}
 

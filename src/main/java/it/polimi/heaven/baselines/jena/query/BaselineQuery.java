@@ -1,4 +1,4 @@
-package it.polimi.heaven.baselines.jena;
+package it.polimi.heaven.baselines.jena.query;
 
 import it.polimi.heaven.core.teststand.rspengine.Query;
 import lombok.AllArgsConstructor;
@@ -13,9 +13,10 @@ import com.hp.hpl.jena.rdf.model.Model;
 public class BaselineQuery implements Query {
 
 	private String id;
+	private String esper_queries;
+	private String sparql_query;
 	private String[] esperStreams;
-	private String esperQuery;
-	private String sparqlQuery;
+
 	private Model tbox;
 
 	public boolean hasTBox() {

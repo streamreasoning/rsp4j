@@ -6,6 +6,7 @@ import it.polimi.heaven.baselines.jena.events.response.BaselineResponse;
 import it.polimi.heaven.baselines.jena.events.response.ConstructResponse;
 import it.polimi.heaven.baselines.jena.events.response.SelectResponse;
 import it.polimi.heaven.baselines.jena.events.stimuli.BaselineStimulus;
+import it.polimi.heaven.baselines.jena.query.BaselineQuery;
 import it.polimi.heaven.baselines.utils.BaselinesUtils;
 import it.polimi.heaven.core.enums.Reasoning;
 import it.polimi.heaven.core.teststand.EventProcessor;
@@ -63,7 +64,7 @@ public class JenaListener implements RSPListener {
 	public JenaListener(EventProcessor<Response> next, BaselineQuery bq, Reasoning reasoningType, OntoLanguage ontoLang, String id_base) {
 		this.next = next;
 		this.bq = bq;
-		this.q = QueryFactory.create(bq.getSparqlQuery());
+		this.q = QueryFactory.create(bq.getSparql_query());
 		this.ontoLang = ontoLang;
 		this.reasoningType = reasoningType;
 		this.abox = bq.hasTBox() ? bq.getTbox().getGraph() : ModelFactory.createMemModelMaker().createDefaultModel().getGraph();
