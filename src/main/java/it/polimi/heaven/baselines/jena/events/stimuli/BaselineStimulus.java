@@ -8,11 +8,9 @@ import java.util.Set;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j;
 
 import com.hp.hpl.jena.graph.Graph;
 
-@Log4j
 public abstract class BaselineStimulus extends HashMap<String, Object> implements Stimulus {
 
 	private static final long serialVersionUID = 1L;
@@ -27,13 +25,11 @@ public abstract class BaselineStimulus extends HashMap<String, Object> implement
 
 	public BaselineStimulus(Class<?> type) {
 		this.put(appTimestamp, long.class);
-		this.put(sysTimestamp, long.class);
 		this.put("content", type);
 	}
 
-	public BaselineStimulus(long appTimestamp1, long sysTimestamp1, Object content1, String stream_name) {
+	public BaselineStimulus(long appTimestamp1, Object content1, String stream_name) {
 		this.put(appTimestamp, appTimestamp1);
-		this.put(sysTimestamp, sysTimestamp1);
 		this.put(content, content1);
 		this.stream_name = stream_name;
 	}

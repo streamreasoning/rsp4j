@@ -19,8 +19,8 @@ public class StatementStimulus extends BaselineStimulus {
 		super(Statement.class);
 	}
 
-	public StatementStimulus(long appTimestamp1, long sysTimestamp1, Statement content1, String stream_name) {
-		super(appTimestamp1, sysTimestamp1, content1, stream_name);
+	public StatementStimulus(long appTimestamp1, Statement content1, String stream_name) {
+		super(appTimestamp1, content1, stream_name);
 	}
 
 	public Statement getContent() {

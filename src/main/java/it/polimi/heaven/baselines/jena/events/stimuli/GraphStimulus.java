@@ -18,8 +18,8 @@ public class GraphStimulus extends BaselineStimulus {
 		super(Graph.class);
 	}
 
-	public GraphStimulus(long appTimestamp1, long sysTimestamp1, Graph content1, String stream_name) {
-		super(appTimestamp1, sysTimestamp1, content1, stream_name);
+	public GraphStimulus(long appTimestamp1, Graph content1, String stream_name) {
+		super(appTimestamp1, content1, stream_name);
 	}
 
 	public Graph getContent() {
