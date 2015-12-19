@@ -43,13 +43,16 @@ public abstract class JenaEngine extends RSPEsperEngine {
 		this.queries = new HashMap<Query, RSPListener>();
 		this.internalTimerEnabled = false;
 		ref = new ConfigurationMethodRef();
-		cepConfig = new Configuration();
 		cepConfig.getEngineDefaults().getThreading().setInternalTimerEnabled(internalTimerEnabled);
+		cepConfig.getEngineDefaults().getLogging().setEnableExecutionDebug(true);
+		cepConfig.getEngineDefaults().getLogging().setEnableTimerDebug(true);
+
 		log.info("Added [" + eventType + "] as TEvent");
 		cepConfig.addEventType("TEvent", eventType);
-		cep = EPServiceProviderManager.getDefaultProvider();
+		cep = EPServiceProviderManager.getProvider(JenaEngine.class.getName(), cepConfig);
 		cepAdm = cep.getEPAdministrator();
 		cepRT = cep.getEPRuntime();
+
 	}
 
 	public JenaEngine(BaselineStimulus eventType, EventProcessor<Response> receiver, boolean internalTimerEnabled) {
@@ -57,10 +60,10 @@ public abstract class JenaEngine extends RSPEsperEngine {
 		this.queries = new HashMap<Query, RSPListener>();
 		this.internalTimerEnabled = internalTimerEnabled;
 		ref = new ConfigurationMethodRef();
-		cepConfig = new Configuration();
 		cepConfig.getEngineDefaults().getThreading().setInternalTimerEnabled(internalTimerEnabled);
 		log.info("Added [" + eventType + "] as TEvent");
 		cepConfig.addEventType("TEvent", eventType);
+		cepConfig.getEngineDefaults().getLogging().setEnableTimerDebug(true);
 		cep = EPServiceProviderManager.getProvider(JenaEngine.class.getName(), cepConfig);
 		cepAdm = cep.getEPAdministrator();
 		cepRT = cep.getEPRuntime();
@@ -73,7 +76,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
 
 	@Override
 	public void startProcessing() {
-		cepRT.sendEvent(new CurrentTimeEvent(1));
+		cepRT.sendEvent(new CurrentTimeEvent(1406872790001L));
 	}
 
 	@Override
@@ -85,18 +88,19 @@ public abstract class JenaEngine extends RSPEsperEngine {
 		BaselineQuery bq = (BaselineQuery) q;
 		String esperQuery = bq.getEsper_queries();
 		for (String c : bq.getEsperStreams()) {
-			log.info("create schema " + c + "() copyfrom TEvent");
+			log.info("create schema " + c + "() inherits TEvent");
 			cepAdm.createEPL("create schema " + c + "() inherits TEvent");
 		}
-
 		log.info("Register esper query [" + esperQuery + "]");
-		EPStatement epl = cepAdm.createEPL(esperQuery);
+		String[] split = esperQuery.split("\\;");
 		RSPListener listener = new JenaListener(next, bq, reasoning, ontology_language, "http://streamreasoning.org/heaven/" + bq.getId());
-		epl.addListener(listener);
+		for (String string : split) {
+			EPStatement epl = cepAdm.createEPL(string);
+			epl.addListener(listener);
+		}
 		queries.put(q, listener);
 	}
 
-	@Override
 	public void registerReceiver(Receiver r) {
 		// TODO Auto-generated method stub
 

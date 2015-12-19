@@ -50,9 +50,4 @@ public class GraphStimulus extends BaselineStimulus {
 		return abox;
 	}
 
-	@Override
-	public String toString() {
-		return "GraphStimulus on Stream [" + getStream_name() + "] [" + super.toString() + "]";
-	}
-
 }

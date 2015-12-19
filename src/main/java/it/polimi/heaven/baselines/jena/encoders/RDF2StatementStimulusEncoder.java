@@ -31,8 +31,7 @@ public class RDF2StatementStimulusEncoder implements Encoder {
 			RDFLine rdf = (RDFLine) tc;
 			String[] t = rdf.getTriple();
 			abox.add(createTriple(t));
-			stimuli[i] = new StatementStimulus(e.getStimuli_application_timestamp(), System.currentTimeMillis(), createStatement(t),
-					e.getStream_name());
+			stimuli[i] = new StatementStimulus(e.getStimuli_application_timestamp(), createStatement(t), e.getStream_name());
 			i++;
 		}
 		return stimuli;

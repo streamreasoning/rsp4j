@@ -25,17 +25,20 @@ public abstract class BaselineStimulus extends HashMap<String, Object> implement
 
 	public BaselineStimulus(Class<?> type) {
 		this.put(appTimestamp, long.class);
+		this.put(sysTimestamp, long.class);
 		this.put("content", type);
 	}
 
 	public BaselineStimulus(long appTimestamp1, Object content1, String stream_name) {
 		this.put(appTimestamp, appTimestamp1);
 		this.put(content, content1);
+		this.put(sysTimestamp, System.currentTimeMillis());
 		this.stream_name = stream_name;
 	}
 
 	public BaselineStimulus(long sysTimestamp1, Object content1) {
 		this.put(sysTimestamp, sysTimestamp1);
+		this.put(sysTimestamp, System.currentTimeMillis());
 		this.put(content, content1);
 	}
 

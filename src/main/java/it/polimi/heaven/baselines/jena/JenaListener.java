@@ -21,6 +21,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 import com.espertech.esper.client.EventBean;
+import com.espertech.esper.event.map.MapEventBean;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -81,8 +82,9 @@ public class JenaListener implements RSPListener {
 	public void update(EventBean[] newData, EventBean[] oldData) {
 		response_number++;
 		IStreamUpdate(newData);
-		DStreamUpdate(oldData);
 
+		DStreamUpdate(oldData);
+		log.info("ciao");
 		reasoner = getReasoner(ontoLang);
 		reasoner.bindSchema(TBoxStar.getGraph());
 		InfGraph graph = reasoner.bind(abox);
@@ -92,6 +94,7 @@ public class JenaListener implements RSPListener {
 		if (q.isSelectType()) {
 			QueryExecution exec = QueryExecutionFactory.create(q, ABoxStar);
 			current_response = new SelectResponse("http://streamreasoning.org/heaven/", bq, exec.execSelect());
+
 		} else if (q.isConstructType()) {
 			QueryExecution exec = QueryExecutionFactory.create(q, ABoxStar);
 			current_response = new ConstructResponse("http://streamreasoning.org/heaven/", bq, exec.execConstruct());
@@ -121,26 +124,55 @@ public class JenaListener implements RSPListener {
 
 	}
 
+	private void handleSingleIStream(BaselineStimulus underlying) {
+		log.debug(underlying);
+		ABoxStar = ModelFactory.createInfModel((InfGraph) underlying.addTo(ABoxStar.getGraph()));
+		ABoxTriples.addAll(underlying.serialize());
+	}
+
 	private void IStreamUpdate(EventBean[] newData) {
 		if (newData != null) {
 			log.debug("[" + newData.length + "] New Events of type [" + newData[0].getUnderlying().getClass().getSimpleName() + "]");
 			for (EventBean e : newData) {
 				log.debug(e.getUnderlying().toString());
-				BaselineStimulus underlying = (BaselineStimulus) e.getUnderlying();
-				ABoxStar = ModelFactory.createInfModel((InfGraph) underlying.addTo(ABoxStar.getGraph()));
-				ABoxTriples.addAll(underlying.serialize());
+				if (e instanceof MapEventBean) {
+					MapEventBean meb = (MapEventBean) e;
+					if (meb.getProperties() instanceof BaselineStimulus) {
+						handleSingleIStream((BaselineStimulus) e.getUnderlying());
+					} else {
+
+						for (int i = 0; i < meb.getProperties().size(); i++) {
+							BaselineStimulus underlying = (BaselineStimulus) meb.get("stream_" + i);
+							handleSingleIStream(underlying);
+						}
+					}
+				}
 			}
 		}
+	}
+
+	private void handleSingleDStream(BaselineStimulus underlying) {
+		log.debug(underlying);
+		ABoxStar = ModelFactory.createInfModel((InfGraph) underlying.removeFrom(ABoxStar.getGraph()));
+		ABoxTriples.removeAll(underlying.serialize());
 	}
 
 	private void DStreamUpdate(EventBean[] oldData) {
 		if (oldData != null && Reasoning.INCREMENTAL.equals(reasoningType)) {
 			log.debug("[" + oldData.length + "] Old Events of type [" + oldData[0].getUnderlying().getClass().getSimpleName() + "]");
 			for (EventBean e : oldData) {
-				log.debug(e.getUnderlying().toString());
-				BaselineStimulus underlying = (BaselineStimulus) e.getUnderlying();
-				ABoxStar = ModelFactory.createInfModel((InfGraph) underlying.removeFrom(ABoxStar.getGraph()));
-				ABoxTriples.removeAll(underlying.serialize());
+				if (e instanceof MapEventBean) {
+					MapEventBean meb = (MapEventBean) e;
+					if (meb.getProperties() instanceof BaselineStimulus) {
+						handleSingleDStream((BaselineStimulus) e.getUnderlying());
+					} else {
+
+						for (int i = 0; i < meb.getProperties().size(); i++) {
+							BaselineStimulus underlying = (BaselineStimulus) meb.get("stream_" + i);
+							handleSingleDStream(underlying);
+						}
+					}
+				}
 			}
 		}
 	}

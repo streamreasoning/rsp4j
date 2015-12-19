@@ -1,6 +1,9 @@
 package it.polimi.heaven.baselines.jena.query;
 
 import it.polimi.heaven.core.teststand.rspengine.Query;
+
+import java.util.Arrays;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +24,13 @@ public class BaselineQuery implements Query {
 
 	public boolean hasTBox() {
 		return tbox != null;
+	}
+
+	@Override
+	public String toString() {
+		return "BaselineQuery [id=" + id + ", esper_queries=" + esper_queries + ", sparql_query=" + sparql_query + ", esperStreams="
+				+ Arrays.toString(esperStreams) + "] ";
+		// TODO tbox file or uri
 	}
 
 }

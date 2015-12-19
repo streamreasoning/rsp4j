@@ -27,7 +27,7 @@ public class RDF2GraphStimulusEncoder implements Encoder {
 			String[] t = rdf.getTriple();
 			abox.add(createTriple(t));
 		}
-		return new Stimulus[] { new GraphStimulus(e.getStimuli_application_timestamp(), System.currentTimeMillis(), abox, e.getStream_name()) };
+		return new Stimulus[] { new GraphStimulus(e.getStimuli_application_timestamp(), abox, e.getStream_name()) };
 	}
 
 	private Triple createTriple(String[] eventTriple) {
