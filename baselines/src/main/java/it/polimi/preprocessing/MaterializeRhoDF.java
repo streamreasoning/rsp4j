@@ -17,31 +17,38 @@
 
 package it.polimi.preprocessing;
 
+import it.polimi.heaven.baselines.utils.FileUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
 import com.hp.hpl.jena.rdf.model.InfModel;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.reasoner.Reasoner;
-import com.hp.hpl.jena.reasoner.ReasonerRegistry;
+import com.hp.hpl.jena.reasoner.rulesys.GenericRuleReasoner;
+import com.hp.hpl.jena.reasoner.rulesys.Rule;
 import com.hp.hpl.jena.util.FileManager;
 
 @Log4j
-public class Materialize {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class MaterializeRhoDF {
+	static Reasoner reasoner;
 
 	public static void main(String[] args) throws Exception {
-		Reasoner reasoner;
 
 		Model m = FileManager.get().loadModel("src/main/resources/data/inference/univ-bench-rdfs.rdf", null, "RDF/XML");
 
-		reasoner = ReasonerRegistry.getRDFSReasoner();
+		reasoner = getReducedReasoner();
 		InfModel infmodel = ModelFactory.createInfModel(reasoner, m);
 
-		File file = new File("src/main/resources/data/inference/univ-bench-rdfs-materialized.rdf");
+		File file = new File("src/main/resources/data/inference/univ-bench-rdfs-materialized-rhodf.rdf");
 
 		try (FileOutputStream fop = new FileOutputStream(file)) {
 			if (!file.exists()) {
@@ -59,4 +66,8 @@ public class Materialize {
 		log.info("Done");
 	}
 
+	private static Reasoner getReducedReasoner() {
+		List<Rule> rules = Rule.rulesFromURL(FileUtils.RHODF_RULE_SET);
+		return new GenericRuleReasoner(rules);
+	}
 }
