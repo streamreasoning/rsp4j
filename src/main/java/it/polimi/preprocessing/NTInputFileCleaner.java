@@ -1,7 +1,7 @@
 package it.polimi.preprocessing;
 
+import it.polimi.rsp.baselines.utils.RDFSUtils;
 import it.polimi.services.FileService;
-import it.polimi.utils.RDFSUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
