@@ -6,7 +6,6 @@ import it.polimi.heaven.core.teststand.data.RDFLine;
 import it.polimi.heaven.core.teststand.events.HeavenInput;
 import it.polimi.heaven.core.teststand.rspengine.events.Stimulus;
 import it.polimi.heaven.core.teststand.streamer.Encoder;
-import it.polimi.utils.RDFSUtils;
 
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.graph.Triple;
@@ -17,6 +16,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.vocabulary.RDF;
+import it.polimi.rsp.baselines.utils.RDFSUtils;
 
 public class RDF2StatementStimulusEncoder implements Encoder {
 

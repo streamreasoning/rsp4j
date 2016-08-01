@@ -10,12 +10,19 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.2</version>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
@@ -36,26 +43,30 @@
             <artifactId>esper</artifactId>
             <version>5.3.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.streamreasoning.heaven</groupId>
+            <artifactId>heaven-core</artifactId>
+            <version>0.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.streamreasoning.heaven</groupId>
+            <artifactId>heaven-citybench</artifactId>
+            <version>0.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.streamreasoning.heaven</groupId>
+            <artifactId>heaven-lubm</artifactId>
+            <version>0.9</version>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.16.10</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>it.polimi.heaven</groupId>
-            <artifactId>heaven-core</artifactId>
-            <version>0.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>it.polimi.heaven</groupId>
-            <artifactId>heaven-lubm</artifactId>
-            <version>0.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>it.polimi.heaven</groupId>
-            <artifactId>heaven-citybench</artifactId>
-            <version>0.0.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/log4j/log4j -->
