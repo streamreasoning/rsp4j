@@ -1,15 +1,17 @@
 package it.polimi.rsp.baselines.jena.events.stimuli;
 
+import com.apple.laf.ClientPropertyApplicator;
 import it.polimi.heaven.core.teststand.data.RDFLine;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
+
 
 public class StatementStimulus extends BaselineStimulus {
 

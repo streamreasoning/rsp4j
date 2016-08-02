@@ -8,8 +8,8 @@ import java.util.Set;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.jena.graph.Graph;
 
-import com.hp.hpl.jena.graph.Graph;
 
 public abstract class BaselineStimulus extends HashMap<String, Object> implements Stimulus {
 

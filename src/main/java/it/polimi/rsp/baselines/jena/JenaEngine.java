@@ -23,7 +23,7 @@ import com.espertech.esper.client.ConfigurationMethodRef;
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.time.CurrentTimeEvent;
-import com.hp.hpl.jena.graph.Graph;
+import org.apache.jena.graph.Graph;
 
 @Log4j
 public abstract class JenaEngine extends RSPEsperEngine {
