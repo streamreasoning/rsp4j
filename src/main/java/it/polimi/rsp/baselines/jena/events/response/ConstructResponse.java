@@ -4,10 +4,10 @@ import it.polimi.heaven.core.teststand.rspengine.Query;
 import it.polimi.services.FileService;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 @Getter
 @Log4j

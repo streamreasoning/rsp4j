@@ -1,14 +1,13 @@
 package it.polimi.rsp.baselines.jena.events.stimuli;
 
 import it.polimi.heaven.core.teststand.data.RDFLine;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.graph.GraphUtil;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.util.iterator.ExtendedIterator;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.graph.GraphUtil;
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 public class GraphStimulus extends BaselineStimulus {
 

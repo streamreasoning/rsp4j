@@ -6,9 +6,8 @@ import it.polimi.services.FileService;
 import java.util.List;
 
 import lombok.Getter;
-
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
 
 @Getter
 public final class SelectResponse extends BaselineResponse {

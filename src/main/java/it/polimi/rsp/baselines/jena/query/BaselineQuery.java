@@ -7,8 +7,8 @@ import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.jena.rdf.model.Model;
 
-import com.hp.hpl.jena.rdf.model.Model;
 
 @Data
 @NoArgsConstructor
