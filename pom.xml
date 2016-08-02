@@ -51,18 +51,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.streamreasoning.heaven</groupId>
-            <artifactId>heaven-citybench</artifactId>
-            <version>0.9</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.streamreasoning.heaven</groupId>
-            <artifactId>heaven-lubm</artifactId>
-            <version>0.9</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.16.10</version>
