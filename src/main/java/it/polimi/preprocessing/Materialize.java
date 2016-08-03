@@ -17,18 +17,17 @@
 
 package it.polimi.preprocessing;
 
+import lombok.extern.log4j.Log4j;
+import org.apache.jena.rdf.model.InfModel;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.reasoner.Reasoner;
+import org.apache.jena.reasoner.ReasonerRegistry;
+import org.apache.jena.util.FileManager;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import lombok.extern.log4j.Log4j;
-
-import com.hp.hpl.jena.rdf.model.InfModel;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.reasoner.Reasoner;
-import com.hp.hpl.jena.reasoner.ReasonerRegistry;
-import com.hp.hpl.jena.util.FileManager;
 
 @Log4j
 public class Materialize {
