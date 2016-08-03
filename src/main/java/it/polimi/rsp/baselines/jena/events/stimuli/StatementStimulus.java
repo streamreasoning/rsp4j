@@ -1,6 +1,5 @@
 package it.polimi.rsp.baselines.jena.events.stimuli;
 
-import com.apple.laf.ClientPropertyApplicator;
 import it.polimi.heaven.core.teststand.data.RDFLine;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.Property;

@@ -76,6 +76,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
 
 	@Override
 	public void startProcessing() {
+		//TODO put 0
 		cepRT.sendEvent(new CurrentTimeEvent(1406872790001L));
 	}
 

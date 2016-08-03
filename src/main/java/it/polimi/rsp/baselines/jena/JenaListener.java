@@ -83,7 +83,6 @@ public class JenaListener implements RSPListener {
         IStreamUpdate(newData);
 
         DStreamUpdate(oldData);
-        log.info("ciao");
         reasoner = getReasoner(ontoLang);
         reasoner.bindSchema(TBoxStar.getGraph());
         InfGraph graph = reasoner.bind(abox);
