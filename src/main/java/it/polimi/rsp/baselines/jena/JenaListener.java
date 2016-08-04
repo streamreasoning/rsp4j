@@ -79,10 +79,11 @@ public class JenaListener implements RSPListener {
 
     @Override
     public void update(EventBean[] newData, EventBean[] oldData) {
+
         response_number++;
         IStreamUpdate(newData);
-
         DStreamUpdate(oldData);
+
         reasoner = getReasoner(ontoLang);
         reasoner.bindSchema(TBoxStar.getGraph());
         InfGraph graph = reasoner.bind(abox);
@@ -101,6 +102,11 @@ public class JenaListener implements RSPListener {
         if (next != null) {
             log.debug("Send Event to the Receiver");
             next.process(current_response);
+        }
+
+        if (Reasoning.NAIVE.equals(reasoningType)) {
+            this.abox = bq.hasTBox() ? bq.getTbox().getGraph() : ModelFactory.createMemModelMaker().createDefaultModel().getGraph();
+            ABoxStar = new InfModelImpl(reasoner.bind(abox));
         }
 
     }
@@ -123,7 +129,7 @@ public class JenaListener implements RSPListener {
     }
 
     private void handleSingleIStream(BaselineStimulus underlying) {
-        log.debug(underlying);
+        log.debug("Handling single Istream [" + underlying + "]");
         ABoxStar = ModelFactory.createInfModel((InfGraph) underlying.addTo(ABoxStar.getGraph()));
         ABoxTriples.addAll(underlying.serialize());
     }
@@ -132,7 +138,6 @@ public class JenaListener implements RSPListener {
         if (newData != null) {
             log.debug("[" + newData.length + "] New Events of type [" + newData[0].getUnderlying().getClass().getSimpleName() + "]");
             for (EventBean e : newData) {
-                log.debug(e.getUnderlying().toString());
                 if (e instanceof MapEventBean) {
                     MapEventBean meb = (MapEventBean) e;
                     if (meb.getProperties() instanceof BaselineStimulus) {
@@ -150,13 +155,13 @@ public class JenaListener implements RSPListener {
     }
 
     private void handleSingleDStream(BaselineStimulus underlying) {
-        log.debug(underlying);
+        log.debug("Handling single Dstream [" + underlying + "]");
         ABoxStar = ModelFactory.createInfModel((InfGraph) underlying.removeFrom(ABoxStar.getGraph()));
         ABoxTriples.removeAll(underlying.serialize());
     }
 
     private void DStreamUpdate(EventBean[] oldData) {
-        if (oldData != null && Reasoning.INCREMENTAL.equals(reasoningType)) {
+        if (oldData != null && Reasoning.INCREMENTAL.equals(reasoningType)) { //TODO not sure that it has to be only for incremental
             log.debug("[" + oldData.length + "] Old Events of type [" + oldData[0].getUnderlying().getClass().getSimpleName() + "]");
             for (EventBean e : oldData) {
                 if (e instanceof MapEventBean) {
