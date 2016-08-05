@@ -10,8 +10,8 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class StatementBaseline extends JenaEngine {
 
-    public StatementBaseline(EventProcessor<Response> collector) {
-        super(new StatementStimulus(), collector, 0);
+    public StatementBaseline(EventProcessor<Response> collector,String provider) {
+        super(new StatementStimulus(), collector, 0, provider);
     }
 
     @Override

@@ -36,7 +36,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
     private Map<Query, RSPListener> queries;
     protected final boolean internalTimerEnabled;
 
-    public JenaEngine(BaselineStimulus eventType, EventProcessor<Response> receiver, long t0) {
+    public JenaEngine(BaselineStimulus eventType, EventProcessor<Response> receiver, long t0, String provider) {
         super(receiver, new Configuration());
         this.queries = new HashMap<Query, RSPListener>();
         this.internalTimerEnabled = false;
@@ -48,7 +48,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
 
         log.info("Added [" + eventType + "] as TEvent");
         cepConfig.addEventType("TEvent", eventType);
-        cep = EPServiceProviderManager.getProvider(JenaEngine.class.getName(), cepConfig);
+        cep = EPServiceProviderManager.getProvider(provider, cepConfig);
         cepAdm = cep.getEPAdministrator();
         cepRT = cep.getEPRuntime();
 

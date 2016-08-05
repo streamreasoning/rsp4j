@@ -10,8 +10,8 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class GraphBaseline extends JenaEngine {
 
-    public GraphBaseline(EventProcessor<Response> collector) {
-        super(new GraphStimulus(), collector, 0);
+    public GraphBaseline(EventProcessor<Response> collector,String provider) {
+        super(new GraphStimulus(), collector, 0,provider);
     }
 
     @Override
