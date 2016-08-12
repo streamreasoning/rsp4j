@@ -5,7 +5,7 @@ import com.espertech.esper.event.map.MapEventBean;
 import it.polimi.heaven.core.enums.Reasoning;
 import it.polimi.heaven.core.teststand.EventProcessor;
 import it.polimi.heaven.core.teststand.data.RDFLine;
-import it.polimi.heaven.core.teststand.rspengine.events.Response;
+import it.polimi.heaven.core.teststand.rsp.data.Response;
 import it.polimi.rsp.baselines.enums.OntoLanguage;
 import it.polimi.rsp.baselines.esper.RSPListener;
 import it.polimi.rsp.baselines.jena.events.response.BaselineResponse;
@@ -18,10 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -39,6 +36,7 @@ import java.util.Set;
 @Log4j
 public class JenaListener implements RSPListener {
 
+    private final Dataset dataset;
     protected Graph abox;
     protected Model TBoxStar;
     protected InfModel ABoxStar;
@@ -60,7 +58,7 @@ public class JenaListener implements RSPListener {
     private int response_number = 0;
     private String id_base;
 
-    public JenaListener(EventProcessor<Response> next, BaselineQuery bq, Reasoning reasoningType, OntoLanguage ontoLang, String id_base) {
+    public JenaListener(Dataset dataset, EventProcessor<Response> next, BaselineQuery bq, Reasoning reasoningType, OntoLanguage ontoLang, String id_base) {
         this.next = next;
         this.bq = bq;
         Query query = QueryFactory.create(bq.getSparql_query());
@@ -74,11 +72,17 @@ public class JenaListener implements RSPListener {
         this.reasoner = getReasoner(ontoLang);
         this.reasoner.bindSchema(TBoxStar.getGraph());
         this.ABoxStar = new InfModelImpl(reasoner.bind(abox));
+        this.dataset = dataset;
+        dataset.setDefaultModel(this.TBoxStar);
+        dataset.addNamedModel(bq.getId(), this.ABoxStar);
+
 
     }
 
     @Override
     public void update(EventBean[] newData, EventBean[] oldData) {
+
+        dataset.removeNamedModel(bq.getId());
 
         response_number++;
         IStreamUpdate(newData);
@@ -89,6 +93,8 @@ public class JenaListener implements RSPListener {
         InfGraph graph = reasoner.bind(abox);
         ABoxStar = new InfModelImpl(graph);
         ABoxStar.rebind(); // forcing the reasoning to be executed
+
+        dataset.addNamedModel(bq.getId(), ABoxStar);
 
         if (q.isSelectType()) {
             QueryExecution exec = QueryExecutionFactory.create(q, ABoxStar);
@@ -108,6 +114,7 @@ public class JenaListener implements RSPListener {
             this.abox = bq.hasTBox() ? bq.getTbox().getGraph() : ModelFactory.createMemModelMaker().createDefaultModel().getGraph();
             ABoxStar = new InfModelImpl(reasoner.bind(abox));
         }
+
 
     }
 

@@ -7,8 +7,9 @@ import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 import it.polimi.heaven.core.enums.Reasoning;
 import it.polimi.heaven.core.teststand.EventProcessor;
-import it.polimi.heaven.core.teststand.rspengine.Query;
-import it.polimi.heaven.core.teststand.rspengine.events.Response;
+import it.polimi.heaven.core.teststand.rsp.data.Response;
+import it.polimi.heaven.core.teststand.rsp.querying.ContinousQueryExecution;
+import it.polimi.heaven.core.teststand.rsp.querying.Query;
 import it.polimi.rsp.baselines.enums.OntoLanguage;
 import it.polimi.rsp.baselines.esper.RSPEsperEngine;
 import it.polimi.rsp.baselines.esper.RSPListener;
@@ -17,6 +18,8 @@ import it.polimi.rsp.baselines.jena.query.BaselineQuery;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.DatasetFactory;
 
 import javax.sound.midi.Receiver;
 import java.util.HashMap;
@@ -35,6 +38,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
 
     private Map<Query, RSPListener> queries;
     protected final boolean internalTimerEnabled;
+    private Dataset dataset;
 
     public JenaEngine(BaselineStimulus eventType, EventProcessor<Response> receiver, long t0) {
         super(receiver, new Configuration());
@@ -51,6 +55,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
         cep = EPServiceProviderManager.getProvider(JenaEngine.class.getName(), cepConfig);
         cepAdm = cep.getEPAdministrator();
         cepRT = cep.getEPRuntime();
+
 
     }
 
@@ -85,21 +90,24 @@ public abstract class JenaEngine extends RSPEsperEngine {
         log.info("Engine is closing");
     }
 
-    public void registerQuery(Query q) {
+    public ContinousQueryExecution registerQuery(Query q) {
         BaselineQuery bq = (BaselineQuery) q;
         String esperQuery = bq.getEsper_queries();
+        this.dataset = DatasetFactory.create();
+        //TODO fix return types of register query
         for (String c : bq.getEsperStreams()) {
             log.info("create schema " + c + "() inherits TEvent");
             cepAdm.createEPL("create schema " + c + "() inherits TEvent");
         }
         log.info("Register esper query [" + esperQuery + "]");
         String[] split = esperQuery.split("\\;");
-        RSPListener listener = new JenaListener(next, bq, reasoning, ontology_language, "http://streamreasoning.org/heaven/" + bq.getId());
+        RSPListener listener = new JenaListener(dataset, next, bq, reasoning, ontology_language, "http://streamreasoning.org/heaven/" + bq.getId());
         for (String string : split) {
             EPStatement epl = cepAdm.createEPL(string);
             epl.addListener(listener);
         }
         queries.put(q, listener);
+        return null;
     }
 
     public void registerReceiver(Receiver r) {
