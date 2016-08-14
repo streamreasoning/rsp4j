@@ -8,6 +8,7 @@ import it.polimi.heaven.core.teststand.data.RDFLine;
 import it.polimi.heaven.core.teststand.rsp.data.Response;
 import it.polimi.rsp.baselines.enums.OntoLanguage;
 import it.polimi.rsp.baselines.esper.RSPListener;
+import it.polimi.rsp.baselines.exceptions.UnregisteredStreamExeception;
 import it.polimi.rsp.baselines.jena.events.response.BaselineResponse;
 import it.polimi.rsp.baselines.jena.events.response.ConstructResponse;
 import it.polimi.rsp.baselines.jena.events.response.SelectResponse;
@@ -28,6 +29,7 @@ import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
 import org.apache.jena.reasoner.rulesys.Rule;
+import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.vocabulary.ReasonerVocabulary;
 
 import java.util.HashSet;
@@ -37,9 +39,10 @@ import java.util.Set;
 public class JenaListener implements RSPListener {
 
     private final Dataset dataset;
+    private final IRIResolver resolver;
     protected Graph abox;
     protected Model TBoxStar;
-    protected InfModel ABoxStar;
+    protected InfModel currentAbox;
 
     protected Reasoner reasoner;
     protected final EventProcessor<Response> next;
@@ -57,64 +60,64 @@ public class JenaListener implements RSPListener {
     private BaselineResponse current_response;
     private int response_number = 0;
     private String id_base;
+    private Set<String> updatedStream;
+    private Set<String> defaultStreamMember, namedStreams;
 
     public JenaListener(Dataset dataset, EventProcessor<Response> next, BaselineQuery bq, Reasoning reasoningType, OntoLanguage ontoLang, String id_base) {
         this.next = next;
         this.bq = bq;
-        Query query = QueryFactory.create(bq.getSparql_query());
-        this.q = query;
+        this.q = QueryFactory.create(bq.getSparql_query());
+        this.resolver = q.getResolver();
         this.ontoLang = ontoLang;
         this.reasoningType = reasoningType;
-        this.abox = bq.hasTBox() ? bq.getTbox().getGraph() : ModelFactory.createMemModelMaker().createDefaultModel().getGraph();
+        this.abox = ModelFactory.createMemModelMaker().createDefaultModel().getGraph();
         this.TBoxStar = ModelFactory.createMemModelMaker().createDefaultModel();
         this.id_base = id_base;
-        this.ABoxTriples = new HashSet<RDFLine>();
+        this.ABoxTriples = new HashSet<>();
         this.reasoner = getReasoner(ontoLang);
         this.reasoner.bindSchema(TBoxStar.getGraph());
-        this.ABoxStar = new InfModelImpl(reasoner.bind(abox));
         this.dataset = dataset;
-        dataset.setDefaultModel(this.TBoxStar);
-        dataset.addNamedModel(bq.getId(), this.ABoxStar);
-
-
+        this.dataset.setDefaultModel(new InfModelImpl(reasoner.bind(TBoxStar.getGraph())));
+        this.reasoner = getReasoner(ontoLang);
+        this.defaultStreamMember = new HashSet<>();
+        this.namedStreams = new HashSet<>();
     }
 
     @Override
     public void update(EventBean[] newData, EventBean[] oldData) {
 
-        dataset.removeNamedModel(bq.getId());
-
+        this.updatedStream = new HashSet<>();
         response_number++;
+
         IStreamUpdate(newData);
         DStreamUpdate(oldData);
 
-        reasoner = getReasoner(ontoLang);
-        reasoner.bindSchema(TBoxStar.getGraph());
-        InfGraph graph = reasoner.bind(abox);
-        ABoxStar = new InfModelImpl(graph);
-        ABoxStar.rebind(); // forcing the reasoning to be executed
-
-        dataset.addNamedModel(bq.getId(), ABoxStar);
-
         if (q.isSelectType()) {
-            QueryExecution exec = QueryExecutionFactory.create(q, ABoxStar);
+            QueryExecution exec = QueryExecutionFactory.create(q, dataset);
             current_response = new SelectResponse("http://streamreasoning.org/heaven/", bq, exec.execSelect());
 
         } else if (q.isConstructType()) {
-            QueryExecution exec = QueryExecutionFactory.create(q, ABoxStar);
+            QueryExecution exec = QueryExecutionFactory.create(q, dataset);
             current_response = new ConstructResponse("http://streamreasoning.org/heaven/", bq, exec.execConstruct());
 
         }
+
         if (next != null) {
             log.debug("Send Event to the Receiver");
             next.process(current_response);
         }
 
         if (Reasoning.NAIVE.equals(reasoningType)) {
-            this.abox = bq.hasTBox() ? bq.getTbox().getGraph() : ModelFactory.createMemModelMaker().createDefaultModel().getGraph();
-            ABoxStar = new InfModelImpl(reasoner.bind(abox));
+            for (String str : updatedStream) {
+                if (defaultStreamMember.contains(str)) {
+                    dataset.getDefaultModel().removeAll();
+                } else if (namedStreams.contains(str)) {
+                    dataset.getNamedModel(str).removeAll();
+                } else {
+                    throw new UnregisteredStreamExeception("Stream [" + str + "] is unregistered");
+                }
+            }
         }
-
 
     }
 
@@ -137,13 +140,30 @@ public class JenaListener implements RSPListener {
 
     private void handleSingleIStream(BaselineStimulus underlying) {
         log.debug("Handling single Istream [" + underlying + "]");
-        ABoxStar = ModelFactory.createInfModel((InfGraph) underlying.addTo(ABoxStar.getGraph()));
-        ABoxTriples.addAll(underlying.serialize());
+        String stream_name = resolver.resolveToStringSilent(underlying.getStream_name());
+
+        Model streamGraph;
+
+        if (defaultStreamMember.contains(stream_name)) {
+            streamGraph = dataset.getDefaultModel();
+        } else if (namedStreams.contains(stream_name)) {
+            streamGraph = dataset.getNamedModel(stream_name);
+        } else {
+            throw new UnregisteredStreamExeception("Stream [" + stream_name + "] is unregistered. ");
+        }
+
+        updatedStream.add(stream_name);
+
+        Graph updated = underlying.addTo(streamGraph.getGraph());
+        InfGraph graph = reasoner.bind(updated);
+        graph.rebind();
+
+        //ABoxTriples.addAll(underlying.serialize());
     }
 
     private void IStreamUpdate(EventBean[] newData) {
         if (newData != null) {
-            log.debug("[" + newData.length + "] New Events of type [" + newData[0].getUnderlying().getClass().getSimpleName() + "]");
+            log.info("[" + newData.length + "] New Events of type [" + newData[0].getUnderlying().getClass().getSimpleName() + "]");
             for (EventBean e : newData) {
                 if (e instanceof MapEventBean) {
                     MapEventBean meb = (MapEventBean) e;
@@ -163,8 +183,23 @@ public class JenaListener implements RSPListener {
 
     private void handleSingleDStream(BaselineStimulus underlying) {
         log.debug("Handling single Dstream [" + underlying + "]");
-        ABoxStar = ModelFactory.createInfModel((InfGraph) underlying.removeFrom(ABoxStar.getGraph()));
-        ABoxTriples.removeAll(underlying.serialize());
+        String stream_name = resolver.resolveToStringSilent(underlying.getStream_name());
+
+        Model streamGraph;
+
+        if (defaultStreamMember.contains(stream_name)) {
+            streamGraph = dataset.getDefaultModel();
+        } else if (namedStreams.contains(stream_name)) {
+            streamGraph = dataset.getNamedModel(stream_name);
+        } else {
+            throw new UnregisteredStreamExeception("Stream [" + stream_name + "] is unregistered. ");
+        }
+
+        updatedStream.add(stream_name);
+
+        Graph updated = underlying.removeFrom(streamGraph.getGraph());
+        InfGraph graph = reasoner.bind(updated);
+        graph.rebind();
     }
 
     private void DStreamUpdate(EventBean[] oldData) {
@@ -176,7 +211,6 @@ public class JenaListener implements RSPListener {
                     if (meb.getProperties() instanceof BaselineStimulus) {
                         handleSingleDStream((BaselineStimulus) e.getUnderlying());
                     } else {
-
                         for (int i = 0; i < meb.getProperties().size(); i++) {
                             BaselineStimulus underlying = (BaselineStimulus) meb.get("stream_" + i);
                             handleSingleDStream(underlying);
@@ -185,5 +219,20 @@ public class JenaListener implements RSPListener {
                 }
             }
         }
+    }
+
+    public boolean addStream(String c) {
+        String uri = resolver.resolveToStringSilent(c);
+        defaultStreamMember.add(uri);
+        return defaultStreamMember.contains(uri);
+    }
+
+    public boolean addNamedStream(String c) {
+        log.debug("Added named stream [" + c + " ]");
+
+        final String uri = resolver.resolveToStringSilent(c);
+        dataset.addNamedModel(uri, new InfModelImpl(reasoner.bind(TBoxStar.getGraph())));
+        namedStreams.add(uri);
+        return namedStreams.contains(uri);
     }
 }

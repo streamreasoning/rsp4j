@@ -18,6 +18,7 @@ public class BaselineQuery implements Query {
 	private String id;
 	private String esper_queries;
 	private String sparql_query;
+	private String[] esperNamedStreams;
 	private String[] esperStreams;
 
 	private Model tbox;

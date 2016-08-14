@@ -13,11 +13,12 @@ import it.polimi.heaven.core.teststand.rsp.querying.Query;
 import it.polimi.rsp.baselines.enums.OntoLanguage;
 import it.polimi.rsp.baselines.esper.RSPEsperEngine;
 import it.polimi.rsp.baselines.esper.RSPListener;
+import it.polimi.rsp.baselines.exceptions.StreamRegistrationException;
 import it.polimi.rsp.baselines.jena.events.stimuli.BaselineStimulus;
 import it.polimi.rsp.baselines.jena.query.BaselineQuery;
+import it.polimi.rsp.baselines.jena.query.JenaCQueryExecution;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
-import org.apache.jena.graph.Graph;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 
@@ -28,8 +29,6 @@ import java.util.Map;
 @Log4j
 public abstract class JenaEngine extends RSPEsperEngine {
 
-    protected Graph abox;
-
     protected final long t0;
     @Setter
     private Reasoning reasoning;
@@ -38,7 +37,6 @@ public abstract class JenaEngine extends RSPEsperEngine {
 
     private Map<Query, RSPListener> queries;
     protected final boolean internalTimerEnabled;
-    private Dataset dataset;
 
     public JenaEngine(BaselineStimulus eventType, EventProcessor<Response> receiver, long t0) {
         super(receiver, new Configuration());
@@ -93,21 +91,35 @@ public abstract class JenaEngine extends RSPEsperEngine {
     public ContinousQueryExecution registerQuery(Query q) {
         BaselineQuery bq = (BaselineQuery) q;
         String esperQuery = bq.getEsper_queries();
-        this.dataset = DatasetFactory.create();
-        //TODO fix return types of register query
+        Dataset dataset = DatasetFactory.create();
+        JenaListener listener = new JenaListener(dataset, next, bq, reasoning, ontology_language, "http://streamreasoning.org/heaven/" + bq.getId());
+
+
+        for (String c : bq.getEsperNamedStreams()) {
+            log.info("create named schema " + c + "() inherits TEvent");
+            cepAdm.createEPL("create schema " + c + "() inherits TEvent");
+            if (!listener.addNamedStream(c)) {
+                throw new StreamRegistrationException("Impossible to register stream [" + c + "]");
+            }
+        }
+
         for (String c : bq.getEsperStreams()) {
             log.info("create schema " + c + "() inherits TEvent");
             cepAdm.createEPL("create schema " + c + "() inherits TEvent");
+            if (!listener.addStream(c)) {
+                throw new StreamRegistrationException("Impossible to register stream [" + c + "]");
+            }
         }
+
+
         log.info("Register esper query [" + esperQuery + "]");
         String[] split = esperQuery.split("\\;");
-        RSPListener listener = new JenaListener(dataset, next, bq, reasoning, ontology_language, "http://streamreasoning.org/heaven/" + bq.getId());
         for (String string : split) {
             EPStatement epl = cepAdm.createEPL(string);
             epl.addListener(listener);
         }
         queries.put(q, listener);
-        return null;
+        return new JenaCQueryExecution(dataset, listener);
     }
 
     public void registerReceiver(Receiver r) {
