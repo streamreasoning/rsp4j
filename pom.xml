@@ -59,7 +59,7 @@
         <dependency>
             <groupId>com.github.streamreasoning.heaven</groupId>
             <artifactId>heaven-core</artifactId>
-            <version>0.9</version>
+            <version>0.9.1</version>
         </dependency>
 
         <dependency>

@@ -1,6 +1,6 @@
 package it.polimi.rsp.baselines.jena.events.response;
 
-import it.polimi.heaven.core.teststand.rspengine.Query;
+import it.polimi.heaven.core.teststand.rsp.querying.Query;
 import it.polimi.services.FileService;
 
 import java.util.List;

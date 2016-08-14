@@ -2,8 +2,8 @@ package it.polimi.rsp.baselines.jena;
 
 import com.espertech.esper.client.time.CurrentTimeEvent;
 import it.polimi.heaven.core.teststand.EventProcessor;
-import it.polimi.heaven.core.teststand.rspengine.events.Response;
-import it.polimi.heaven.core.teststand.rspengine.events.Stimulus;
+import it.polimi.heaven.core.teststand.rsp.data.Response;
+import it.polimi.heaven.core.teststand.rsp.data.Stimulus;
 import it.polimi.rsp.baselines.jena.events.stimuli.GraphStimulus;
 import lombok.extern.log4j.Log4j;
 
