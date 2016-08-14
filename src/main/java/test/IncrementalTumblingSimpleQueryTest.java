@@ -40,6 +40,7 @@ public class IncrementalTumblingSimpleQueryTest {
         query.setEsper_queries(incremental_query);
         query.setSparql_query("SELECT ?s ?p ?o  WHERE {?s ?p ?o} ORDER BY ?o");
         query.setEsperStreams(new String[]{"stream1"});
+        query.setEsperNamedStreams(new String[]{});
 
         JenaEngine je = (JenaEngine) e;
 

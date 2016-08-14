@@ -40,6 +40,7 @@ public class NaiveTumblingSimpleQueryTest {
         query.setEsper_queries(naive_queries);
         query.setSparql_query("SELECT ?s ?p ?o  WHERE {?s ?p ?o} ORDER BY ?o");
         query.setEsperStreams(new String[]{"stream1"});
+        query.setEsperNamedStreams(new String[]{});
 
         JenaEngine je = (JenaEngine) e;
 
