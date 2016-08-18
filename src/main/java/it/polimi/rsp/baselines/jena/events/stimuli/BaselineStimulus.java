@@ -1,11 +1,11 @@
 package it.polimi.rsp.baselines.jena.events.stimuli;
 
 import it.polimi.heaven.core.teststand.data.RDFLine;
-import it.polimi.heaven.core.teststand.rspengine.events.Stimulus;
 
 import java.util.HashMap;
 import java.util.Set;
 
+import it.polimi.heaven.core.teststand.rsp.data.Stimulus;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.jena.graph.Graph;

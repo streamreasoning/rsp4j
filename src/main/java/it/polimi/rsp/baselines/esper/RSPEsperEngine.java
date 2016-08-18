@@ -1,17 +1,12 @@
 package it.polimi.rsp.baselines.esper;
 
+import com.espertech.esper.client.*;
 import it.polimi.heaven.core.teststand.EventProcessor;
-import it.polimi.heaven.core.teststand.rspengine.RSPEngine;
-import it.polimi.heaven.core.teststand.rspengine.events.Response;
-import it.polimi.heaven.core.teststand.rspengine.events.Stimulus;
+import it.polimi.heaven.core.teststand.rsp.RSPEngine;
+import it.polimi.heaven.core.teststand.rsp.data.Response;
+import it.polimi.heaven.core.teststand.rsp.data.Stimulus;
 import lombok.Getter;
 import lombok.Setter;
-
-import com.espertech.esper.client.Configuration;
-import com.espertech.esper.client.ConfigurationMethodRef;
-import com.espertech.esper.client.EPAdministrator;
-import com.espertech.esper.client.EPRuntime;
-import com.espertech.esper.client.EPServiceProvider;
 
 @Getter
 public abstract class RSPEsperEngine implements RSPEngine {
