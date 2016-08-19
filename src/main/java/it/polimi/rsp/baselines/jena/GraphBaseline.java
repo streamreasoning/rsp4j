@@ -14,7 +14,6 @@ public class GraphBaseline extends JenaEngine {
         super(new GraphStimulus(), collector, 0,provider);
     }
 
-    @Override
     public boolean process(Stimulus e) {
         log.info("Current runtime is  [" + cepRT.getCurrentTime() + "]");
         this.currentEvent = e;
@@ -25,7 +24,7 @@ public class GraphBaseline extends JenaEngine {
             currentTimestamp = g.getAppTimestamp();// TODO
             log.info("Current runtime is now [" + cepRT.getCurrentTime() + "]");
         }
-        cepRT.sendEvent(g, g.getStream_name());
+        cepRT.sendEvent(g, g.getStream_uri());
         log.info("Received Stimulus [" + g + "]");
         rspEventsNumber++;
         log.info("Current runtime is  [" + cepRT.getCurrentTime() + "]");

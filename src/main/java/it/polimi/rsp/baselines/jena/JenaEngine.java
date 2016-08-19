@@ -22,7 +22,6 @@ import lombok.extern.log4j.Log4j;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 
-import javax.sound.midi.Receiver;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,66 +76,54 @@ public abstract class JenaEngine extends RSPEsperEngine {
         cepConfig.addEventType(encoding, eventType);
     }
 
-    @Override
     public void startProcessing() {
         //TODO put 0 1406872790001L
         cepRT.sendEvent(new CurrentTimeEvent(t0));
     }
 
-    @Override
     public void stopProcessing() {
         log.info("Engine is closing");
-		//stop the CEP engine
-		for(String stmtName :cepAdm.getStatementNames()){
-			EPStatement stmt = cepAdm.getStatement(stmtName);
-			if(!stmt.isStopped()){
-				stmt.stop();
-			}
-		}
+        //stop the CEP engine
+        for (String stmtName : cepAdm.getStatementNames()) {
+            EPStatement stmt = cepAdm.getStatement(stmtName);
+            if (!stmt.isStopped()) {
+                stmt.stop();
+            }
+        }
     }
 
     public ContinousQueryExecution registerQuery(Query q) {
         BaselineQuery bq = (BaselineQuery) q;
-        String esperQuery = bq.getEsper_queries();
         Dataset dataset = DatasetFactory.create();
-        JenaListener listener = new JenaListener(dataset, next, bq, reasoning, ontology_language, "http://streamreasoning.org/heaven/" + bq.getId());
+        JenaListener listener = new JenaListener(dataset, receiver, bq, reasoning, ontology_language, "http://streamreasoning.org/heaven/" + bq.getId());
 
 
-        for (String c : bq.getEsperNamedStreams()) {
-            log.info("create named schema " + c + "() inherits TEvent");
-            cepAdm.createEPL("create schema " + c + "() inherits TEvent");
-            if (!listener.addNamedStream(c)) {
-                throw new StreamRegistrationException("Impossible to register stream [" + c + "]");
+        for (String[] pair : bq.getEsperNamedStreams()) {
+            log.info("create named schema " + pair[1] + "() inherits TEvent");
+            cepAdm.createEPL("create schema " + pair[1] + "() inherits TEvent");
+            log.info("creating named graph " + pair[0] + "");
+            if (!listener.addNamedWindowStream(pair[0])) {
+                throw new StreamRegistrationException("Impossible to register window named  [" + pair[0] + "] on stream [" + pair[1] + "]");
             }
         }
 
         for (String c : bq.getEsperStreams()) {
             log.info("create schema " + c + "() inherits TEvent");
             cepAdm.createEPL("create schema " + c + "() inherits TEvent");
-            if (!listener.addStream(c)) {
+            if (!listener.addDefaultWindowStream(c)) {
                 throw new StreamRegistrationException("Impossible to register stream [" + c + "]");
             }
         }
 
 
-        log.info("Register esper query [" + esperQuery + "]");
-        String[] split = esperQuery.split("\\;");
-        for (String string : split) {
-            EPStatement epl = cepAdm.createEPL(string);
+        for (String eq : bq.getEsper_queries()) {
+            log.info("Register esper query [" + eq + "]");
+            EPStatement epl = cepAdm.createEPL(eq);
+            log.info("Add listener");
             epl.addListener(listener);
         }
+
         queries.put(q, listener);
-        return new JenaCQueryExecution(dataset, listener);
-    }
-
-    public void registerReceiver(Receiver r) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public boolean setNext(EventProcessor<?> ep) {
-        // TODO Auto-generated method stub
-        return false;
+        return new  JenaCQueryExecution(dataset, listener);
     }
 }
