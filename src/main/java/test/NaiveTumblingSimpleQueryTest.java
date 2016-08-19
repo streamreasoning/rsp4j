@@ -32,7 +32,7 @@ public class NaiveTumblingSimpleQueryTest {
             public boolean setNext(EventProcessor<?> eventProcessor) {
                 return false;
             }
-        });
+        }, null);
 
 
         BaselineQuery query = new BaselineQuery();
