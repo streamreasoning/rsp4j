@@ -5,6 +5,7 @@ import com.espertech.esper.event.map.MapEventBean;
 import it.polimi.heaven.core.enums.Reasoning;
 import it.polimi.heaven.core.teststand.EventProcessor;
 import it.polimi.heaven.core.teststand.data.RDFLine;
+import it.polimi.heaven.core.teststand.rsp.Receiver;
 import it.polimi.heaven.core.teststand.rsp.data.Response;
 import it.polimi.rsp.baselines.enums.OntoLanguage;
 import it.polimi.rsp.baselines.esper.RSPListener;
@@ -64,7 +65,7 @@ public class JenaListener implements RSPListener {
     private Set<String> updatedStream;
     private Set<String> defaultWindowStreamNames, namedWindowStreamNames;
 
-    public JenaListener(Dataset dataset, EventProcessor<Response> next, BaselineQuery bq, Reasoning reasoningType, OntoLanguage ontoLang, String id_base) {
+    public JenaListener(Dataset dataset, Receiver next, BaselineQuery bq, Reasoning reasoningType, OntoLanguage ontoLang, String id_base) {
         this.next = next;
         this.bq = bq;
         this.q = QueryFactory.create(bq.getSparql_query());
@@ -237,4 +238,9 @@ public class JenaListener implements RSPListener {
         namedWindowStreamNames.add(uri);
         return namedWindowStreamNames.contains(uri);
     }
+
+    public void registerReceiver(javax.sound.midi.Receiver receiver) {
+
+    }
+
 }

@@ -3,7 +3,7 @@ package it.polimi.rsp.baselines.esper;
 import com.espertech.esper.client.*;
 import it.polimi.heaven.core.teststand.EventProcessor;
 import it.polimi.heaven.core.teststand.rsp.RSPEngine;
-import it.polimi.heaven.core.teststand.rsp.data.Response;
+import it.polimi.heaven.core.teststand.rsp.Receiver;
 import it.polimi.heaven.core.teststand.rsp.data.Stimulus;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +17,7 @@ public abstract class RSPEsperEngine implements RSPEngine {
 	protected EPAdministrator cepAdm;
 	protected ConfigurationMethodRef ref;
 
-	protected EventProcessor<Response> next;
+	protected Receiver receiver;
 
 	@Setter
 	protected Stimulus currentEvent = null;
@@ -26,10 +26,19 @@ public abstract class RSPEsperEngine implements RSPEngine {
 	protected int rspEventsNumber = 0, esperEventsNumber = 0;
 	protected long currentTimestamp;
 
-	public RSPEsperEngine(EventProcessor<Response> next, Configuration config) {
-		this.next = next;
+	public RSPEsperEngine(Receiver receiver, Configuration config) {
+		this.receiver = receiver;
 		this.cepConfig = config;
 		this.currentTimestamp = 0L;
 	}
 
+
+	@Override
+	public boolean setNext(EventProcessor<?> eventProcessor) {
+		return false;
+	}
+
+	public void registerReceiver(Receiver receiver) {
+
+	}
 }

@@ -6,8 +6,7 @@ import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 import it.polimi.heaven.core.enums.Reasoning;
-import it.polimi.heaven.core.teststand.EventProcessor;
-import it.polimi.heaven.core.teststand.rsp.data.Response;
+import it.polimi.heaven.core.teststand.rsp.Receiver;
 import it.polimi.heaven.core.teststand.rsp.querying.ContinousQueryExecution;
 import it.polimi.heaven.core.teststand.rsp.querying.Query;
 import it.polimi.rsp.baselines.enums.OntoLanguage;
@@ -37,7 +36,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
     private Map<Query, RSPListener> queries;
     protected final boolean internalTimerEnabled;
 
-    public JenaEngine(BaselineStimulus eventType, EventProcessor<Response> receiver, long t0, String provider) {
+    public JenaEngine(BaselineStimulus eventType, Receiver receiver, long t0, String provider) {
         super(receiver, new Configuration());
         this.queries = new HashMap<Query, RSPListener>();
         this.internalTimerEnabled = false;
@@ -47,7 +46,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
         cepConfig.getEngineDefaults().getLogging().setEnableExecutionDebug(true);
         cepConfig.getEngineDefaults().getLogging().setEnableTimerDebug(true);
 
-        log.info("Added [" + eventType + "] as TEvent");
+        log.info("Added [" + eventType + "] as TStream");
         cepConfig.addEventType("TEvent", eventType);
         cep = EPServiceProviderManager.getProvider(provider, cepConfig);
         cepAdm = cep.getEPAdministrator();
@@ -56,7 +55,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
 
     }
 
-    public JenaEngine(BaselineStimulus eventType, EventProcessor<Response> receiver, long t0, boolean internalTimerEnabled, String provider) {
+    public JenaEngine(BaselineStimulus eventType, Receiver receiver, long t0, boolean internalTimerEnabled, String provider) {
         super(receiver, new Configuration());
         this.t0 = t0;
         this.queries = new HashMap<Query, RSPListener>();
@@ -124,6 +123,10 @@ public abstract class JenaEngine extends RSPEsperEngine {
         }
 
         queries.put(q, listener);
-        return new  JenaCQueryExecution(dataset, listener);
+        return new JenaCQueryExecution(dataset, listener);
+    }
+
+    public void registerReceiver(javax.sound.midi.Receiver receiver) {
+
     }
 }
