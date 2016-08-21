@@ -15,22 +15,28 @@ public abstract class BaselineStimulus extends HashMap<String, Object> implement
 
     private static final long serialVersionUID = 1L;
 
+    @Override
+    public String toString() {
+        return "{" +
+                "appTimestamp='" + appTimestamp + '\'' +
+                ", sysTimestamp='" + sysTimestamp + '\'' +
+                ", content='" + getContent() + '\'' +
+                ", stream_uri='" + stream_uri + '\'' +
+                '}';
+    }
+
     protected final String appTimestamp = "app_timestamp";
     protected final String sysTimestamp = "sys_timestamp";
     protected final String content = "content";
 
     @Setter
     @Getter
-    private String window_uri;
-    @Setter
-    @Getter
     private String stream_uri;
 
-    public BaselineStimulus(long appTimestamp1, Object content1, String window_uri, String stream_uri) {
+    public BaselineStimulus(long appTimestamp1, Object content1, String stream_uri) {
         this.put(appTimestamp, appTimestamp1);
         this.put(content, content1);
         this.put(sysTimestamp, System.currentTimeMillis());
-        this.window_uri = window_uri;
         this.stream_uri = stream_uri;
     }
 

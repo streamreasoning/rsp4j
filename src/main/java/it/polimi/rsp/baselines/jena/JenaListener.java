@@ -1,8 +1,10 @@
 package it.polimi.rsp.baselines.jena;
 
+import com.espertech.esper.client.EPServiceProvider;
+import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
+import com.espertech.esper.client.SafeIterator;
 import com.espertech.esper.event.map.MapEventBean;
-import it.polimi.rdf.RDFLine;
 import it.polimi.rsp.baselines.enums.OntoLanguage;
 import it.polimi.rsp.baselines.enums.Reasoning;
 import it.polimi.rsp.baselines.esper.RSPListener;
@@ -32,8 +34,7 @@ import org.apache.jena.reasoner.rulesys.Rule;
 import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.vocabulary.ReasonerVocabulary;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Log4j
 public class JenaListener implements RSPListener {
@@ -48,7 +49,6 @@ public class JenaListener implements RSPListener {
     protected Reasoner reasoner;
     protected final EventProcessor<Response> next;
 
-    private final Set<RDFLine> ABoxTriples;
 
     @Setter
     @Getter
@@ -61,8 +61,11 @@ public class JenaListener implements RSPListener {
     private BaselineResponse current_response;
     private int response_number = 0;
     private String id_base;
-    private Set<String> updatedStream;
-    private Set<String> defaultWindowStreamNames, namedWindowStreamNames;
+    private Set<String> updatedWindowViews;
+    private Set<String> defaultWindowStreamNames;
+    private Map<String, String> namedWindowStreamNames;
+    private Set<String> statementNames;
+    private Set<String> resolvedDefaultStreamSet;
 
     public JenaListener(Dataset dataset, EventProcessor<Response> next, BaselineQuery bq, Reasoning reasoningType, OntoLanguage ontoLang, String id_base) {
         this.next = next;
@@ -74,24 +77,46 @@ public class JenaListener implements RSPListener {
         this.abox = ModelFactory.createMemModelMaker().createDefaultModel().getGraph();
         this.TBoxStar = ModelFactory.createMemModelMaker().createDefaultModel();
         this.id_base = id_base;
-        this.ABoxTriples = new HashSet<>();
         this.reasoner = getReasoner(ontoLang);
         this.reasoner.bindSchema(TBoxStar.getGraph());
         this.dataset = dataset;
         this.dataset.setDefaultModel(new InfModelImpl(reasoner.bind(TBoxStar.getGraph())));
         this.reasoner = getReasoner(ontoLang);
         this.defaultWindowStreamNames = new HashSet<>();
-        this.namedWindowStreamNames = new HashSet<>();
+        this.namedWindowStreamNames = new HashMap<String, String>();
         this.resolvedDefaultStream = resolver.resolveToStringSilent("default");
+        this.statementNames = new HashSet<String>();
+        this.resolvedDefaultStreamSet = new HashSet<String>();
+        this.resolvedDefaultStreamSet.add(resolvedDefaultStream);
     }
 
     @Override
-    public void update(EventBean[] newData, EventBean[] oldData) {
+    public void update(EventBean[] newData, EventBean[] oldData, EPStatement stmt, EPServiceProvider esp) {
+        log.info("[" + System.currentTimeMillis() + "] FROM STATEMENT: " + stmt.getText() + " AT " + esp.getEPRuntime().getCurrentTime());
 
-        this.updatedStream = new HashSet<>();
+        List<EventBean> events = new ArrayList<EventBean>();
+
+        for (String stmtName : statementNames) {
+            if (!stmtName.equals(stmt.getName())) {
+                EPStatement statement1 = esp.getEPAdministrator().getStatement(stmtName);
+                log.debug("[" + System.currentTimeMillis() + "] Polling STATEMENT: " + statement1.getText() + " " + statement1.getTimeLastStateChange());
+                SafeIterator<EventBean> it = statement1.safeIterator();
+                while (it.hasNext()) {
+                    EventBean next = it.next();
+                    System.out.println(next.getUnderlying());
+                    events.add(next);
+                }
+
+                it.close();
+            }
+        }
+
+        this.updatedWindowViews = new HashSet<>();
         response_number++;
 
-        IStreamUpdate(newData);
+        events.addAll(Arrays.asList(newData));
+
+        IStreamUpdate(events);
         DStreamUpdate(oldData);
 
         if (q.isSelectType()) {
@@ -110,21 +135,19 @@ public class JenaListener implements RSPListener {
         }
 
         if (Reasoning.NAIVE.equals(reasoningType)) {
-            for (String str : updatedStream) {
-                if (defaultWindowStreamNames.contains(str)) {
+            for (String str : updatedWindowViews) {
+                if (resolvedDefaultStream.equals(str)) {
                     dataset.getDefaultModel().removeAll();
-                } else if (namedWindowStreamNames.contains(str)) {
-                    dataset.getNamedModel(str).removeAll();
                 } else {
-                    throw new UnregisteredStreamExeception("Stream [" + str + "] is unregistered");
+                    dataset.getNamedModel(str).removeAll();
                 }
             }
         }
-
     }
 
     private Reasoner getReasoner(OntoLanguage ontoLang) {
         Reasoner reasoner = ReasonerRegistry.getRDFSReasoner();
+
         switch (ontoLang) {
             case FULL:
                 reasoner.setParameter(ReasonerVocabulary.PROPsetRDFSLevel, ReasonerVocabulary.RDFS_FULL);
@@ -142,30 +165,33 @@ public class JenaListener implements RSPListener {
 
     private void handleSingleIStream(BaselineStimulus underlying) {
         log.debug("Handling single Istream [" + underlying + "]");
-        String window_uri = resolver.resolveToStringSilent(underlying.getWindow_uri());
-
-        Model streamGraph;
-
-        if (resolvedDefaultStream.equals(window_uri)) {
-            streamGraph = dataset.getDefaultModel();
-        } else if (namedWindowStreamNames.contains(window_uri)) {
-            streamGraph = dataset.getNamedModel(window_uri);
+        String window_uris = resolveWindowUri(underlying.getStream_uri());
+        updatedWindowViews.add(window_uris);
+        if (resolvedDefaultStream.equals(window_uris)) {
+            Graph updated = underlying.addTo(dataset.getDefaultModel().getGraph());
+            reasoner.bind(updated).rebind();
         } else {
-            throw new UnregisteredStreamExeception("Stream [" + window_uri + "] is unregistered. ");
+            Model namedModel = dataset.getNamedModel(window_uris);
+            Graph updated = underlying.addTo(namedModel.getGraph());
+            reasoner.bind(updated).rebind();
         }
-
-        updatedStream.add(window_uri);
-
-        Graph updated = underlying.addTo(streamGraph.getGraph());
-        InfGraph graph = reasoner.bind(updated);
-        graph.rebind();
-
-        //ABoxTriples.addAll(underlying.serialize());
     }
 
-    private void IStreamUpdate(EventBean[] newData) {
-        if (newData != null) {
-            log.info("[" + newData.length + "] New Events of type [" + newData[0].getUnderlying().getClass().getSimpleName() + "]");
+    private String resolveWindowUri(String stream_uri) {
+
+        if (defaultWindowStreamNames.contains(stream_uri)) {
+            return resolvedDefaultStream;
+        } else if (namedWindowStreamNames.containsKey(stream_uri)) {
+            return namedWindowStreamNames.get(stream_uri);
+        } else {
+            throw new UnregisteredStreamExeception("Stream [" + stream_uri + "] is unregistered");
+        }
+
+    }
+
+    private void IStreamUpdate(List<EventBean> newData) {
+        if (newData != null && !newData.isEmpty()) {
+            log.info("[" + newData.size() + "] New Events of type [" + newData.get(0).getUnderlying().getClass().getSimpleName() + "]");
             for (EventBean e : newData) {
                 if (e instanceof MapEventBean) {
                     MapEventBean meb = (MapEventBean) e;
@@ -184,24 +210,17 @@ public class JenaListener implements RSPListener {
     }
 
     private void handleSingleDStream(BaselineStimulus underlying) {
-        log.debug("Handling single Dstream [" + underlying + "]");
-        String window_uri = resolver.resolveToStringSilent(underlying.getWindow_uri());
-
-        Model streamGraph;
-
-        if (defaultWindowStreamNames.contains(window_uri)) {
-            streamGraph = dataset.getDefaultModel();
-        } else if (namedWindowStreamNames.contains(window_uri)) {
-            streamGraph = dataset.getNamedModel(window_uri);
+        log.debug("Handling single Istream [" + underlying + "]");
+        String window_uris = resolveWindowUri(underlying.getStream_uri());
+        updatedWindowViews.add(window_uris);
+        if (resolvedDefaultStream.equals(window_uris)) {
+            Graph updated = underlying.removeFrom(dataset.getDefaultModel().getGraph());
+            reasoner.bind(updated).rebind();
         } else {
-            throw new UnregisteredStreamExeception("Stream [" + window_uri + "] is unregistered. ");
+            Model namedModel = dataset.getNamedModel(window_uris);
+            Graph updated = underlying.removeFrom(namedModel.getGraph());
+            reasoner.bind(updated).rebind();
         }
-
-        updatedStream.add(window_uri);
-
-        Graph updated = underlying.removeFrom(streamGraph.getGraph());
-        InfGraph graph = reasoner.bind(updated);
-        graph.rebind();
     }
 
     private void DStreamUpdate(EventBean[] oldData) {
@@ -223,23 +242,25 @@ public class JenaListener implements RSPListener {
         }
     }
 
-    public boolean addDefaultWindowStream(String c) {
-        String uri = resolver.resolveToStringSilent(c);
+    public boolean addStatementName(String c) {
+        return statementNames.add(c);
+    }
+
+    public boolean addDefaultWindowStream(String uri) {
         defaultWindowStreamNames.add(uri);
         return defaultWindowStreamNames.contains(uri);
     }
 
-    public boolean addNamedWindowStream(String c) {
-        log.debug("Added named stream [" + c + " ]");
-
-        final String uri = resolver.resolveToStringSilent(c);
+    public boolean addNamedWindowStream(String w, String s) {
+        log.debug("Added named window [" + w + "] on stream [" + s + " ]");
+        final String uri = resolver.resolveToStringSilent(w);
         dataset.addNamedModel(uri, new InfModelImpl(reasoner.bind(TBoxStar.getGraph())));
-        namedWindowStreamNames.add(uri);
-        return namedWindowStreamNames.contains(uri);
-    }
-
-    public void registerReceiver(javax.sound.midi.Receiver receiver) {
-
+        if (namedWindowStreamNames.containsKey(s)) {
+            return false;
+        } else {
+            namedWindowStreamNames.put(s, uri);
+            return true;
+        }
     }
 
 }

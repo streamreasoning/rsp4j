@@ -47,7 +47,7 @@ public class NaiveSlidingSimpleQueryTest {
 
         BaselineQuery query = new BaselineQuery();
         String naive_queries = "select * from stream1.win:time(10 msec) output snapshot every 1 msec";
-        query.setEsper_queries(new String[]{naive_queries});
+        query.setEPLStreamQueries(new String[]{naive_queries});
         query.setSparql_query("SELECT ?s ?p ?o  WHERE {?s ?p ?o} ORDER BY ?o");
         query.setEsperStreams(new String[]{"stream1"});
         query.setEsperNamedStreams(new String[][]{});
@@ -66,11 +66,11 @@ public class NaiveSlidingSimpleQueryTest {
             Thread.sleep(1000);
         }*/
 
-        e.process(new GraphStimulus(1, getGraph(1), "default", "stream1"));
-        e.process(new GraphStimulus(2, getGraph(2), "default", "stream1"));
+        e.process(new GraphStimulus(1, getGraph(1), "stream1"));
+        e.process(new GraphStimulus(2, getGraph(2), "stream1"));
 
-        e.process(new GraphStimulus(12, getGraph(12), "default", "stream1"));
-        e.process(new GraphStimulus(22, getGraph(22), "default", "stream1"));
+        e.process(new GraphStimulus(12, getGraph(12), "stream1"));
+        e.process(new GraphStimulus(22, getGraph(22), "stream1"));
 
 
         je.stopProcessing();

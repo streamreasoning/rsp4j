@@ -16,8 +16,8 @@ public class StatementStimulus extends BaselineStimulus {
 
     private static final long serialVersionUID = 1L;
 
-    public StatementStimulus(long appTimestamp1, Statement content1, String window_uri, String stream_uri) {
-        super(appTimestamp1, content1, window_uri, stream_uri);
+    public StatementStimulus(long appTimestamp1, Statement content1, String stream_uri) {
+        super(appTimestamp1, content1, stream_uri);
     }
 
     public Statement getContent() {
@@ -55,8 +55,4 @@ public class StatementStimulus extends BaselineStimulus {
         return abox;
     }
 
-    @Override
-    public String toString() {
-        return "StatementStimulus on Stream [" + getWindow_uri() + "] [" + super.toString() + "]";
-    }
 }
