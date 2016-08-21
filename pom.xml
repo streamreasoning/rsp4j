@@ -22,6 +22,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -58,8 +59,14 @@
 
         <dependency>
             <groupId>com.github.streamreasoning.heaven</groupId>
-            <artifactId>heaven-core</artifactId>
-            <version>0.9.1</version>
+            <artifactId>heaven-commons</artifactId>
+            <version>0.9.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.streamreasoning.heaven</groupId>
+            <artifactId>heaven-rsp</artifactId>
+            <version>0.9.3</version>
         </dependency>
 
         <dependency>

@@ -1,6 +1,6 @@
 package it.polimi.rsp.baselines.jena.events.stimuli;
 
-import it.polimi.heaven.core.teststand.data.RDFLine;
+import it.polimi.rdf.RDFLine;
 import lombok.NoArgsConstructor;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.Property;

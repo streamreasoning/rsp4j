@@ -1,15 +1,15 @@
 package test;
 
-import it.polimi.heaven.core.enums.Reasoning;
-import it.polimi.heaven.core.teststand.EventProcessor;
-import it.polimi.heaven.core.teststand.rsp.data.Response;
 import it.polimi.rsp.baselines.enums.OntoLanguage;
+import it.polimi.rsp.baselines.enums.Reasoning;
 import it.polimi.rsp.baselines.esper.RSPEsperEngine;
 import it.polimi.rsp.baselines.jena.GraphBaseline;
 import it.polimi.rsp.baselines.jena.JenaEngine;
 import it.polimi.rsp.baselines.jena.events.response.SelectResponse;
 import it.polimi.rsp.baselines.jena.events.stimuli.GraphStimulus;
 import it.polimi.rsp.baselines.jena.query.BaselineQuery;
+import it.polimi.streaming.EventProcessor;
+import it.polimi.streaming.Response;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.*;
@@ -31,6 +31,16 @@ public class NaiveTumblingSimpleQueryTest {
 
             public boolean setNext(EventProcessor<?> eventProcessor) {
                 return false;
+            }
+
+            @Override
+            public void startProcessing() {
+
+            }
+
+            @Override
+            public void stopProcessing() {
+
             }
         }, null);
 

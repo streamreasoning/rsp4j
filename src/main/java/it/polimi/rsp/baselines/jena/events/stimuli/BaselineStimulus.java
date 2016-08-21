@@ -1,7 +1,7 @@
 package it.polimi.rsp.baselines.jena.events.stimuli;
 
-import it.polimi.heaven.core.teststand.data.RDFLine;
-import it.polimi.heaven.core.teststand.rsp.data.Stimulus;
+import it.polimi.rdf.RDFLine;
+import it.polimi.streaming.Stimulus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

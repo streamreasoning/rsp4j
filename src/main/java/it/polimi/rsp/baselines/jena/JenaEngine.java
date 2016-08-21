@@ -5,17 +5,18 @@ import com.espertech.esper.client.ConfigurationMethodRef;
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.time.CurrentTimeEvent;
-import it.polimi.heaven.core.enums.Reasoning;
-import it.polimi.heaven.core.teststand.rsp.Receiver;
-import it.polimi.heaven.core.teststand.rsp.querying.ContinousQueryExecution;
-import it.polimi.heaven.core.teststand.rsp.querying.Query;
+import it.polimi.heaven.rsp.rsp.querying.ContinousQueryExecution;
+import it.polimi.heaven.rsp.rsp.querying.Query;
 import it.polimi.rsp.baselines.enums.OntoLanguage;
+import it.polimi.rsp.baselines.enums.Reasoning;
 import it.polimi.rsp.baselines.esper.RSPEsperEngine;
 import it.polimi.rsp.baselines.esper.RSPListener;
 import it.polimi.rsp.baselines.exceptions.StreamRegistrationException;
 import it.polimi.rsp.baselines.jena.events.stimuli.BaselineStimulus;
 import it.polimi.rsp.baselines.jena.query.BaselineQuery;
 import it.polimi.rsp.baselines.jena.query.JenaCQueryExecution;
+import it.polimi.streaming.EventProcessor;
+import it.polimi.streaming.Response;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.query.Dataset;
@@ -36,7 +37,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
     private Map<Query, RSPListener> queries;
     protected final boolean internalTimerEnabled;
 
-    public JenaEngine(BaselineStimulus eventType, Receiver receiver, long t0, String provider) {
+    public JenaEngine(BaselineStimulus eventType, EventProcessor<Response> receiver, long t0, String provider) {
         super(receiver, new Configuration());
         this.queries = new HashMap<Query, RSPListener>();
         this.internalTimerEnabled = false;
@@ -55,7 +56,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
 
     }
 
-    public JenaEngine(BaselineStimulus eventType, Receiver receiver, long t0, boolean internalTimerEnabled, String provider) {
+    public JenaEngine(BaselineStimulus eventType, EventProcessor<Response> receiver, long t0, boolean internalTimerEnabled, String provider) {
         super(receiver, new Configuration());
         this.t0 = t0;
         this.queries = new HashMap<Query, RSPListener>();
