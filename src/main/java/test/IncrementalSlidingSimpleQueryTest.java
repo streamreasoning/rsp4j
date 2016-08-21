@@ -1,15 +1,15 @@
 package test;
 
-import it.polimi.heaven.core.enums.Reasoning;
-import it.polimi.heaven.core.teststand.EventProcessor;
-import it.polimi.heaven.core.teststand.rsp.RSPEngine;
-import it.polimi.heaven.core.teststand.rsp.data.Response;
 import it.polimi.rsp.baselines.enums.OntoLanguage;
+import it.polimi.rsp.baselines.enums.Reasoning;
+import it.polimi.rsp.baselines.esper.RSPEsperEngine;
 import it.polimi.rsp.baselines.jena.GraphBaseline;
 import it.polimi.rsp.baselines.jena.JenaEngine;
 import it.polimi.rsp.baselines.jena.events.response.SelectResponse;
 import it.polimi.rsp.baselines.jena.events.stimuli.GraphStimulus;
 import it.polimi.rsp.baselines.jena.query.BaselineQuery;
+import it.polimi.streaming.EventProcessor;
+import it.polimi.streaming.Response;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.*;
@@ -21,7 +21,7 @@ public class IncrementalSlidingSimpleQueryTest {
 
     public static void main(String[] args) throws InterruptedException {
 
-        RSPEngine e = new GraphBaseline(new EventProcessor<Response>() {
+        RSPEsperEngine e = new GraphBaseline(new EventProcessor<Response>() {
             public boolean process(Response response) {
                 SelectResponse sr = (SelectResponse) response;
                 ResultSetFormatter.out(System.out, sr.getResults());
@@ -32,15 +32,25 @@ public class IncrementalSlidingSimpleQueryTest {
             public boolean setNext(EventProcessor<?> eventProcessor) {
                 return false;
             }
+
+            @Override
+            public void startProcessing() {
+
+            }
+
+            @Override
+            public void stopProcessing() {
+
+            }
         }, null);
 
 
         BaselineQuery query = new BaselineQuery();
-        String naive_queries = "select  irstream * from stream1.win:time(10 msec) output all every 5 msec";
-        query.setEsper_queries(naive_queries);
+        String incremental_query = "select  irstream * from stream1.win:time(10 msec) output all every 5 msec";
+        query.setEsper_queries(new String[]{incremental_query});
         query.setSparql_query("SELECT ?s ?p ?o  WHERE {?s ?p ?o} ORDER BY ?o");
         query.setEsperStreams(new String[]{"stream1"});
-        query.setEsperNamedStreams(new String[]{});
+        query.setEsperNamedStreams(new String[][]{});
         JenaEngine je = (JenaEngine) e;
 
         je.setReasoning(Reasoning.INCREMENTAL);
@@ -51,10 +61,11 @@ public class IncrementalSlidingSimpleQueryTest {
 
         for (int i = 0; i < 50; i++) {
             System.out.println("Sending...[" + i + "]");
-            e.process(new GraphStimulus(i, getGraph(i), "stream1"));
+            e.process(new GraphStimulus(i, getGraph(i), "default", "stream1"));
             Thread.sleep(1000);
         }
 
+        je.stopProcessing();
 
     }
 

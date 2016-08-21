@@ -1,31 +1,33 @@
 package it.polimi.rsp.baselines.jena;
 
 import com.espertech.esper.client.time.CurrentTimeEvent;
-import it.polimi.heaven.core.teststand.EventProcessor;
-import it.polimi.heaven.core.teststand.rsp.data.Response;
-import it.polimi.heaven.core.teststand.rsp.data.Stimulus;
 import it.polimi.rsp.baselines.jena.events.stimuli.StatementStimulus;
+import it.polimi.streaming.EventProcessor;
+import it.polimi.streaming.Response;
+import it.polimi.streaming.Stimulus;
 import lombok.extern.log4j.Log4j;
 
 @Log4j
 public class StatementBaseline extends JenaEngine {
 
-    public StatementBaseline(EventProcessor<Response> collector,String provider) {
+    public StatementBaseline(EventProcessor<Response> collector, String provider) {
         super(new StatementStimulus(), collector, 0, provider);
     }
 
-    @Override
     public boolean process(Stimulus e) {
+        log.info("Current runtime is  [" + cepRT.getCurrentTime() + "]");
         this.currentEvent = e;
         StatementStimulus s = (StatementStimulus) e;
-        cepRT.sendEvent(s, s.getStream_name());
-        log.debug("Received Stimulus [" + s + "]");
-        rspEventsNumber++;
-        if (!this.internalTimerEnabled && currentTimestamp != s.getAppTimestamp()) {
-            cepRT.sendEvent(new CurrentTimeEvent(currentTimestamp = s.getAppTimestamp()));
-            log.debug("Sent time Event current runtime ts [" + currentTimestamp + "]");
+        if (!this.internalTimerEnabled && cepRT.getCurrentTime() < s.getAppTimestamp()) {
+            log.info("Sent time event with current [" + (s.getAppTimestamp()) + "]");
+            cepRT.sendEvent(new CurrentTimeEvent(s.getAppTimestamp()));
+            currentTimestamp = s.getAppTimestamp();// TODO
+            log.info("Current runtime is now [" + cepRT.getCurrentTime() + "]");
         }
+        cepRT.sendEvent(s, s.getStream_uri());
+        log.info("Received Stimulus [" + s + "]");
+        rspEventsNumber++;
+        log.info("Current runtime is  [" + cepRT.getCurrentTime() + "]");
         return true;
     }
-
 }

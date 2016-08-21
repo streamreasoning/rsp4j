@@ -32,7 +32,7 @@ public class NTInputFileCleaner {
 
     }
 
-    private static void cleanFile(String inputFileWithPath, String outputFile, String outputPath) throws IOException, FileNotFoundException {
+    private static void cleanFile(String inputFileWithPath, String outputFile, String outputPath) throws IOException {
 
         FileService.createFolders(outputPath);
         FileService.createFolders(outputPath + "datatype/");

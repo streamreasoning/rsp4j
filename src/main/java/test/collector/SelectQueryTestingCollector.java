@@ -1,8 +1,8 @@
 package test.collector;
 
-import it.polimi.heaven.core.teststand.EventProcessor;
-import it.polimi.heaven.core.teststand.rsp.data.Response;
 import it.polimi.rsp.baselines.jena.events.response.SelectResponse;
+import it.polimi.streaming.EventProcessor;
+import it.polimi.streaming.Response;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.*;
@@ -22,6 +22,16 @@ public class SelectQueryTestingCollector implements EventProcessor<Response> {
 
     public boolean setNext(EventProcessor<?> eventProcessor) {
         return false;
+    }
+
+    @Override
+    public void startProcessing() {
+
+    }
+
+    @Override
+    public void stopProcessing() {
+
     }
 
     public void addStatement(Statement s, long app_timestamp) {

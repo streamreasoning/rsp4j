@@ -2,11 +2,9 @@ package it.polimi.rsp.baselines.jena;
 
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.event.map.MapEventBean;
-import it.polimi.heaven.core.enums.Reasoning;
-import it.polimi.heaven.core.teststand.EventProcessor;
-import it.polimi.heaven.core.teststand.data.RDFLine;
-import it.polimi.heaven.core.teststand.rsp.data.Response;
+import it.polimi.rdf.RDFLine;
 import it.polimi.rsp.baselines.enums.OntoLanguage;
+import it.polimi.rsp.baselines.enums.Reasoning;
 import it.polimi.rsp.baselines.esper.RSPListener;
 import it.polimi.rsp.baselines.exceptions.UnregisteredStreamExeception;
 import it.polimi.rsp.baselines.jena.events.response.BaselineResponse;
@@ -15,6 +13,8 @@ import it.polimi.rsp.baselines.jena.events.response.SelectResponse;
 import it.polimi.rsp.baselines.jena.events.stimuli.BaselineStimulus;
 import it.polimi.rsp.baselines.jena.query.BaselineQuery;
 import it.polimi.rsp.baselines.utils.BaselinesUtils;
+import it.polimi.streaming.EventProcessor;
+import it.polimi.streaming.Response;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -40,6 +40,7 @@ public class JenaListener implements RSPListener {
 
     private final Dataset dataset;
     private final IRIResolver resolver;
+    private final String resolvedDefaultStream;
     protected Graph abox;
     protected Model TBoxStar;
     protected InfModel currentAbox;
@@ -61,7 +62,7 @@ public class JenaListener implements RSPListener {
     private int response_number = 0;
     private String id_base;
     private Set<String> updatedStream;
-    private Set<String> defaultStreamMember, namedStreams;
+    private Set<String> defaultWindowStreamNames, namedWindowStreamNames;
 
     public JenaListener(Dataset dataset, EventProcessor<Response> next, BaselineQuery bq, Reasoning reasoningType, OntoLanguage ontoLang, String id_base) {
         this.next = next;
@@ -79,8 +80,9 @@ public class JenaListener implements RSPListener {
         this.dataset = dataset;
         this.dataset.setDefaultModel(new InfModelImpl(reasoner.bind(TBoxStar.getGraph())));
         this.reasoner = getReasoner(ontoLang);
-        this.defaultStreamMember = new HashSet<>();
-        this.namedStreams = new HashSet<>();
+        this.defaultWindowStreamNames = new HashSet<>();
+        this.namedWindowStreamNames = new HashSet<>();
+        this.resolvedDefaultStream = resolver.resolveToStringSilent("default");
     }
 
     @Override
@@ -109,9 +111,9 @@ public class JenaListener implements RSPListener {
 
         if (Reasoning.NAIVE.equals(reasoningType)) {
             for (String str : updatedStream) {
-                if (defaultStreamMember.contains(str)) {
+                if (defaultWindowStreamNames.contains(str)) {
                     dataset.getDefaultModel().removeAll();
-                } else if (namedStreams.contains(str)) {
+                } else if (namedWindowStreamNames.contains(str)) {
                     dataset.getNamedModel(str).removeAll();
                 } else {
                     throw new UnregisteredStreamExeception("Stream [" + str + "] is unregistered");
@@ -140,19 +142,19 @@ public class JenaListener implements RSPListener {
 
     private void handleSingleIStream(BaselineStimulus underlying) {
         log.debug("Handling single Istream [" + underlying + "]");
-        String stream_name = resolver.resolveToStringSilent(underlying.getStream_name());
+        String window_uri = resolver.resolveToStringSilent(underlying.getWindow_uri());
 
         Model streamGraph;
 
-        if (defaultStreamMember.contains(stream_name)) {
+        if (resolvedDefaultStream.equals(window_uri)) {
             streamGraph = dataset.getDefaultModel();
-        } else if (namedStreams.contains(stream_name)) {
-            streamGraph = dataset.getNamedModel(stream_name);
+        } else if (namedWindowStreamNames.contains(window_uri)) {
+            streamGraph = dataset.getNamedModel(window_uri);
         } else {
-            throw new UnregisteredStreamExeception("Stream [" + stream_name + "] is unregistered. ");
+            throw new UnregisteredStreamExeception("Stream [" + window_uri + "] is unregistered. ");
         }
 
-        updatedStream.add(stream_name);
+        updatedStream.add(window_uri);
 
         Graph updated = underlying.addTo(streamGraph.getGraph());
         InfGraph graph = reasoner.bind(updated);
@@ -183,19 +185,19 @@ public class JenaListener implements RSPListener {
 
     private void handleSingleDStream(BaselineStimulus underlying) {
         log.debug("Handling single Dstream [" + underlying + "]");
-        String stream_name = resolver.resolveToStringSilent(underlying.getStream_name());
+        String window_uri = resolver.resolveToStringSilent(underlying.getWindow_uri());
 
         Model streamGraph;
 
-        if (defaultStreamMember.contains(stream_name)) {
+        if (defaultWindowStreamNames.contains(window_uri)) {
             streamGraph = dataset.getDefaultModel();
-        } else if (namedStreams.contains(stream_name)) {
-            streamGraph = dataset.getNamedModel(stream_name);
+        } else if (namedWindowStreamNames.contains(window_uri)) {
+            streamGraph = dataset.getNamedModel(window_uri);
         } else {
-            throw new UnregisteredStreamExeception("Stream [" + stream_name + "] is unregistered. ");
+            throw new UnregisteredStreamExeception("Stream [" + window_uri + "] is unregistered. ");
         }
 
-        updatedStream.add(stream_name);
+        updatedStream.add(window_uri);
 
         Graph updated = underlying.removeFrom(streamGraph.getGraph());
         InfGraph graph = reasoner.bind(updated);
@@ -221,18 +223,23 @@ public class JenaListener implements RSPListener {
         }
     }
 
-    public boolean addStream(String c) {
+    public boolean addDefaultWindowStream(String c) {
         String uri = resolver.resolveToStringSilent(c);
-        defaultStreamMember.add(uri);
-        return defaultStreamMember.contains(uri);
+        defaultWindowStreamNames.add(uri);
+        return defaultWindowStreamNames.contains(uri);
     }
 
-    public boolean addNamedStream(String c) {
+    public boolean addNamedWindowStream(String c) {
         log.debug("Added named stream [" + c + " ]");
 
         final String uri = resolver.resolveToStringSilent(c);
         dataset.addNamedModel(uri, new InfModelImpl(reasoner.bind(TBoxStar.getGraph())));
-        namedStreams.add(uri);
-        return namedStreams.contains(uri);
+        namedWindowStreamNames.add(uri);
+        return namedWindowStreamNames.contains(uri);
     }
+
+    public void registerReceiver(javax.sound.midi.Receiver receiver) {
+
+    }
+
 }
