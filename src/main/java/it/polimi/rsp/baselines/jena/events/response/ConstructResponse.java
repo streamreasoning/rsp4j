@@ -1,6 +1,6 @@
 package it.polimi.rsp.baselines.jena.events.response;
 
-import it.polimi.heaven.core.teststand.rsp.querying.Query;
+import it.polimi.heaven.rsp.rsp.querying.Query;
 import it.polimi.services.FileService;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;

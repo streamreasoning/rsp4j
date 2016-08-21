@@ -1,7 +1,6 @@
 package it.polimi.rsp.baselines.jena.query;
 
-import it.polimi.heaven.core.teststand.rsp.querying.ContinousQueryExecution;
-import it.polimi.rsp.baselines.esper.RSPListener;
+import it.polimi.heaven.rsp.rsp.querying.ContinousQueryExecution;
 import it.polimi.rsp.baselines.jena.JenaListener;
 import lombok.AllArgsConstructor;
 import lombok.Data;
