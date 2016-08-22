@@ -6,19 +6,30 @@ import it.polimi.rsp.baselines.esper.RSPEsperEngine;
 import it.polimi.rsp.baselines.jena.GraphBaseline;
 import it.polimi.rsp.baselines.jena.JenaEngine;
 import it.polimi.rsp.baselines.jena.events.response.SelectResponse;
-import it.polimi.rsp.baselines.jena.query.BaselineQuery;
 import it.polimi.rsp.baselines.jena.query.JenaCQueryExecution;
+import it.polimi.sr.rsp.RSPQLParser;
+import it.polimi.sr.rsp.RSPQuery;
+import it.polimi.sr.rsp.streams.Stream;
 import it.polimi.streaming.EventProcessor;
 import it.polimi.streaming.Response;
+import org.apache.commons.io.FileUtils;
 import org.apache.jena.query.ResultSetFormatter;
-import test.Stream;
+import org.apache.jena.riot.system.IRIResolver;
+import org.parboiled.Parboiled;
+import org.parboiled.errors.ParseError;
+import org.parboiled.parserunners.ReportingParseRunner;
+import org.parboiled.support.ParsingResult;
+import test.StreamThread;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by Riccardo on 03/08/16.
  */
 public class NaiveBaselineTest {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
 
         RSPEsperEngine e = new GraphBaseline(new EventProcessor<Response>() {
             public boolean process(Response response) {
@@ -45,7 +56,22 @@ public class NaiveBaselineTest {
         }, null);
 
 
-        BaselineQuery query = new BaselineQuery();
+        String input = getInput();
+
+        RSPQLParser parser = Parboiled.createParser(RSPQLParser.class);
+
+        parser.setResolver(IRIResolver.create());
+
+        ParsingResult<RSPQuery> result = new ReportingParseRunner(parser.Query()).run(input);
+
+        if (result.hasErrors()) {
+            for (ParseError arg : result.parseErrors) {
+                System.out.println(input.substring(0, arg.getStartIndex()) + "|->" + input.substring(arg.getStartIndex(), arg.getEndIndex()) + "<-|" + input.substring(arg.getEndIndex() + 1, input.length() - 1));
+            }
+        }
+        RSPQuery q = result.resultValue;
+
+       /* BaselineQuery query = new BaselineQuery();
         query.setId("Q1");
         query.setEPLStreamQueries(new String[]{});
         query.setEPLNamedStreamQueries(new String[]{
@@ -64,7 +90,7 @@ public class NaiveBaselineTest {
                 "}");
         //"WHERE { ?s ?p ?o }  ");
         query.setEsperStreams(new String[]{});
-        query.setEsperNamedStreams(new String[][]{new String[]{":win2", "stream2"}, new String[]{":win3", "stream3"}});
+        query.setEsperNamedStreams(new String[][]{new String[]{":win2", "stream2"}, new String[]{":win3", "stream3"}});*/
 
         //TODO UNNAMED SREAMS (_, window, stream_uri), esper writes on "default" graph
         //TODO NAMED SREAMS (window_uri, window, stream_uri), esper writes on iri graph
@@ -86,11 +112,16 @@ public class NaiveBaselineTest {
         je.startProcessing();
 
 
-        JenaCQueryExecution cqe = (JenaCQueryExecution) je.registerQuery(query);
+        JenaCQueryExecution cqe = (JenaCQueryExecution) je.registerQuery(q);
 
-        (new Thread(new Stream(je, "A", "stream2", 1))).start();
-        (new Thread(new Stream(je, "B", "stream3", 1))).start();
+         (new Thread(new StreamThread(je, "A", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
+         (new Thread(new StreamThread(je, "B", "http://streamreasoning.org/iminds/massif/stream2", 1))).start();
 
 
+    }
+
+    public static String getInput() throws IOException {
+        File file = new File("/Users/Riccardo/_Projects/Streamreasoning/RSP-Baselines/src/test/resources/rspquery.q");
+        return FileUtils.readFileToString(file);
     }
 }

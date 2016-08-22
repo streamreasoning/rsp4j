@@ -11,15 +11,21 @@ import it.polimi.rsp.baselines.enums.OntoLanguage;
 import it.polimi.rsp.baselines.enums.Reasoning;
 import it.polimi.rsp.baselines.esper.RSPEsperEngine;
 import it.polimi.rsp.baselines.exceptions.StreamRegistrationException;
+import it.polimi.rsp.baselines.exceptions.UnsuportedQueryFormatExecption;
 import it.polimi.rsp.baselines.jena.events.stimuli.BaselineStimulus;
 import it.polimi.rsp.baselines.jena.query.BaselineQuery;
 import it.polimi.rsp.baselines.jena.query.JenaCQueryExecution;
+import it.polimi.sr.rsp.RSPQuery;
+import it.polimi.sr.rsp.streams.Window;
+import it.polimi.sr.rsp.utils.EncodingUtils;
 import it.polimi.streaming.EventProcessor;
 import it.polimi.streaming.Response;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
+import org.apache.jena.graph.Node;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
+import org.apache.jena.query.QueryFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -91,10 +97,73 @@ public abstract class JenaEngine extends RSPEsperEngine {
         }
     }
 
+
     public ContinousQueryExecution registerQuery(Query q) {
-        BaselineQuery bq = (BaselineQuery) q;
+        if (q instanceof BaselineQuery)
+            return registerQuery((BaselineQuery) q);
+        else if (q instanceof RSPQuery)
+            return registerQuery((RSPQuery) q);
+        throw new UnsuportedQueryFormatExecption();
+    }
+
+    public ContinousQueryExecution registerQuery(RSPQuery bq) {
         Dataset dataset = DatasetFactory.create();
-        JenaListener listener = new JenaListener(dataset, receiver, bq, reasoning, ontology_language, "http://streamreasoning.org/heaven/" + bq.getId());
+
+        log.debug(bq.getQ().toString());
+
+        JenaListener listener = new JenaListener(dataset, receiver, bq, bq.getQ(), reasoning, ontology_language, "");
+
+        int i = 0;
+        if (bq.getWindows() != null) {
+            for (Window window : bq.getWindows()) {
+                log.info(window.getStream().toEPLSchema());
+                cepAdm.createEPL(window.getStream().toEPLSchema());
+                String uri = window.getStreamURI();
+                if (!listener.addDefaultWindowStream(uri)) {
+                    throw new StreamRegistrationException("Impossible to register stream [" + uri + "]");
+                }
+                String statementName = "QUERY" + "STMT_" + i;
+                EPStatement epl = cepAdm.create(window.toEPL(), statementName);
+                epl.addListener(listener);
+                listener.addStatementName(statementName);
+                i++;
+            }
+        }
+
+        //NAMED
+
+        int j = 0;
+
+        if (bq.getNamedwindows() != null) {
+
+            for (Map.Entry<Node, Window> entry : bq.getNamedwindows().entrySet()) {
+                Window w = entry.getValue();
+                String stream = EncodingUtils.encode(w.getStreamURI());
+                String window = w.getIri().getURI();
+
+                log.info(w.getStream().toEPLSchema());
+                cepAdm.createEPL(w.getStream().toEPLSchema());
+                log.info("creating named graph " + window + "");
+                if (!listener.addNamedWindowStream(window, stream)) {
+                    throw new StreamRegistrationException("Impossible to register window named  [" + window + "] on stream [" + stream + "]");
+                }
+
+                String statementName = "QUERY" + bq.getId() + "STMT_NDM" + j;
+                EPStatement epl = cepAdm.create(w.toEPL(), statementName);
+                epl.addListener(listener);
+                listener.addStatementName(statementName);
+                i++;
+
+                queries.put(bq, listener);
+
+            }
+        }
+        return new JenaCQueryExecution(dataset, listener);
+    }
+
+    public ContinousQueryExecution registerQuery(BaselineQuery bq) {
+        Dataset dataset = DatasetFactory.create();
+        JenaListener listener = new JenaListener(dataset, receiver, bq, QueryFactory.create(bq.getSparql_query()), reasoning, ontology_language, "http://streamreasoning.org/heaven/" + bq.getId());
 
         for (String c : bq.getEsperStreams()) {
             log.info("create schema " + c + "() inherits TStream");
@@ -136,7 +205,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
             i++;
         }
 
-        queries.put(q, listener);
+        queries.put(bq, listener);
         return new JenaCQueryExecution(dataset, listener);
     }
 

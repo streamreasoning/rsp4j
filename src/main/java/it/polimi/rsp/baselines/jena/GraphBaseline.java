@@ -2,6 +2,7 @@ package it.polimi.rsp.baselines.jena;
 
 import com.espertech.esper.client.time.CurrentTimeEvent;
 import it.polimi.rsp.baselines.jena.events.stimuli.GraphStimulus;
+import it.polimi.sr.rsp.utils.EncodingUtils;
 import it.polimi.streaming.EventProcessor;
 import it.polimi.streaming.Response;
 import it.polimi.streaming.Stimulus;
@@ -24,7 +25,7 @@ public class GraphBaseline extends JenaEngine {
             currentTimestamp = g.getAppTimestamp();// TODO
             log.info("Current runtime is now [" + cepRT.getCurrentTime() + "]");
         }
-        cepRT.sendEvent(g, g.getStream_uri());
+        cepRT.sendEvent(g, EncodingUtils.encode(g.getStream_uri()));
         log.info("Received Stimulus [" + g + "]");
         rspEventsNumber++;
         log.info("Current runtime is  [" + cepRT.getCurrentTime() + "]");

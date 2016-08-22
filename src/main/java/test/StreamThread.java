@@ -9,7 +9,7 @@ import org.apache.jena.rdf.model.*;
  * Created by Riccardo on 13/08/16.
  */
 @AllArgsConstructor
-public class Stream implements Runnable {
+public class StreamThread implements Runnable {
 
     JenaEngine e;
     private String name;

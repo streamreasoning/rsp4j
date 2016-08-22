@@ -58,6 +58,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.streamreasoning</groupId>
+            <artifactId>rsp-baseline-parser</artifactId>
+            <version>0.3</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.streamreasoning.heaven</groupId>
             <artifactId>heaven-commons</artifactId>
             <version>0.9.3</version>

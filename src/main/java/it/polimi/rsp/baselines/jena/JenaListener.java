@@ -5,6 +5,7 @@ import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.SafeIterator;
 import com.espertech.esper.event.map.MapEventBean;
+import it.polimi.heaven.rsp.rsp.querying.Query;
 import it.polimi.rsp.baselines.enums.OntoLanguage;
 import it.polimi.rsp.baselines.enums.Reasoning;
 import it.polimi.rsp.baselines.esper.RSPListener;
@@ -13,20 +14,21 @@ import it.polimi.rsp.baselines.jena.events.response.BaselineResponse;
 import it.polimi.rsp.baselines.jena.events.response.ConstructResponse;
 import it.polimi.rsp.baselines.jena.events.response.SelectResponse;
 import it.polimi.rsp.baselines.jena.events.stimuli.BaselineStimulus;
-import it.polimi.rsp.baselines.jena.query.BaselineQuery;
 import it.polimi.rsp.baselines.utils.BaselinesUtils;
+import it.polimi.sr.rsp.utils.EncodingUtils;
 import it.polimi.streaming.EventProcessor;
 import it.polimi.streaming.Response;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;
-import org.apache.jena.query.*;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.impl.InfModelImpl;
-import org.apache.jena.reasoner.InfGraph;
 import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
@@ -56,8 +58,8 @@ public class JenaListener implements RSPListener {
     @Setter
     @Getter
     private OntoLanguage ontoLang;
-    private BaselineQuery bq;
-    private Query q;
+    private Query bq;
+    private org.apache.jena.query.Query q;
     private BaselineResponse current_response;
     private int response_number = 0;
     private String id_base;
@@ -67,10 +69,10 @@ public class JenaListener implements RSPListener {
     private Set<String> statementNames;
     private Set<String> resolvedDefaultStreamSet;
 
-    public JenaListener(Dataset dataset, EventProcessor<Response> next, BaselineQuery bq, Reasoning reasoningType, OntoLanguage ontoLang, String id_base) {
+    public JenaListener(Dataset dataset, EventProcessor<Response> next, Query bq, org.apache.jena.query.Query sparql_query, Reasoning reasoningType, OntoLanguage ontoLang, String id_base) {
         this.next = next;
         this.bq = bq;
-        this.q = QueryFactory.create(bq.getSparql_query());
+        this.q = sparql_query;
         this.resolver = q.getResolver();
         this.ontoLang = ontoLang;
         this.reasoningType = reasoningType;
@@ -165,7 +167,7 @@ public class JenaListener implements RSPListener {
 
     private void handleSingleIStream(BaselineStimulus underlying) {
         log.debug("Handling single Istream [" + underlying + "]");
-        String window_uris = resolveWindowUri(underlying.getStream_uri());
+        String window_uris = resolveWindowUri(EncodingUtils.encode(underlying.getStream_uri()));
         updatedWindowViews.add(window_uris);
         if (resolvedDefaultStream.equals(window_uris)) {
             Graph updated = underlying.addTo(dataset.getDefaultModel().getGraph());
@@ -184,7 +186,7 @@ public class JenaListener implements RSPListener {
         } else if (namedWindowStreamNames.containsKey(stream_uri)) {
             return namedWindowStreamNames.get(stream_uri);
         } else {
-            throw new UnregisteredStreamExeception("Stream [" + stream_uri + "] is unregistered");
+            throw new UnregisteredStreamExeception("StreamThread [" + stream_uri + "] is unregistered");
         }
 
     }
@@ -252,7 +254,7 @@ public class JenaListener implements RSPListener {
     }
 
     public boolean addNamedWindowStream(String w, String s) {
-        log.debug("Added named window [" + w + "] on stream [" + s + " ]");
+        log.info("Added named window [" + w + "] on stream [" + s + " ]");
         final String uri = resolver.resolveToStringSilent(w);
         dataset.addNamedModel(uri, new InfModelImpl(reasoner.bind(TBoxStar.getGraph())));
         if (namedWindowStreamNames.containsKey(s)) {
