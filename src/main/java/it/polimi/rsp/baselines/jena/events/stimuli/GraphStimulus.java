@@ -11,12 +11,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
+
 public class GraphStimulus extends BaselineStimulus {
 
     private static final long serialVersionUID = 1L;
 
-    public GraphStimulus(long appTimestamp1, Graph content1, String window_uri, String stream_uri) {
-        super(appTimestamp1, content1, window_uri, stream_uri);
+    public GraphStimulus(long appTimestamp1, Graph content1, String stream_uri) {
+        super(appTimestamp1, content1, stream_uri);
     }
 
     public Graph getContent() {
@@ -47,4 +48,8 @@ public class GraphStimulus extends BaselineStimulus {
         return abox;
     }
 
+    @Override
+    public String toString() {
+        return "GraphStimulus " + super.toString();
+    }
 }

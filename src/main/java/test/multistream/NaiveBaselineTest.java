@@ -1,6 +1,5 @@
 package test.multistream;
 
-import com.espertech.esper.client.StatementAwareUpdateListener;
 import it.polimi.rsp.baselines.enums.OntoLanguage;
 import it.polimi.rsp.baselines.enums.Reasoning;
 import it.polimi.rsp.baselines.esper.RSPEsperEngine;
@@ -23,7 +22,7 @@ public class NaiveBaselineTest {
 
         RSPEsperEngine e = new GraphBaseline(new EventProcessor<Response>() {
             public boolean process(Response response) {
-                System.out.println("Process");
+                System.out.println("[" + System.currentTimeMillis() + "] Result");
                 SelectResponse sr = (SelectResponse) response;
                 ResultSetFormatter.out(System.out, sr.getResults());
 
@@ -47,26 +46,26 @@ public class NaiveBaselineTest {
 
 
         BaselineQuery query = new BaselineQuery();
-        query.setEsper_queries(new String[]{
-                "select * from srcomstream0.win:time(8 sec) output snapshot every 4 sec",
-                "select * from srcomstream1.win:time(4 sec) output snapshot every 2 sec",
-                "select * from srcomstream2.win:time(3 sec) output snapshot every 1 sec",
-                "select * from srcomstream3.win:time(3 sec) output snapshot every 1 sec"});
+        query.setId("Q1");
+        query.setEPLStreamQueries(new String[]{});
+        query.setEPLNamedStreamQueries(new String[]{
+                "select * from stream2.win:time(3 sec) output snapshot every 1 sec",
+                "select * from stream3.win:time(3 sec) output snapshot every 3 sec"
+        });
+
 
         query.setSparql_query("" +
-                "PREFIX : <srcom> " +
-                "SELECT ?s ?p ?o  " +
-                "FROM  :stream0 " +
-                "FROM  :stream1 " +
-                "FROM NAMED :win2 " +
+                "PREFIX : <http://streamreasoning.com/> " +
+                "SELECT *  " +
+                "FROM NAMED :win2 " +  //parsed from FROM NAMED WINDOW :win1 ON STREAM
                 "FROM NAMED :win3 " +  //parsed from FROM NAMED WINDOW :win1 ON STREAM
                 "WHERE { " +
-                "{?s ?p ?o }  " +
+                "GRAPH ?g { ?s ?p ?o }  " +
                 "}");
         //"WHERE { ?s ?p ?o }  ");
-        query.setEsperNamedStreams(new String[][]{new String[]{"srcomwin2", "srcomstream2"}, new String[]{"srcomwin3", "srcomstream3"}});
+        query.setEsperStreams(new String[]{});
+        query.setEsperNamedStreams(new String[][]{new String[]{":win2", "stream2"}, new String[]{":win3", "stream3"}});
 
-        query.setEsperStreams(new String[]{"srcomstream0", "srcomstream1"});
         //TODO UNNAMED SREAMS (_, window, stream_uri), esper writes on "default" graph
         //TODO NAMED SREAMS (window_uri, window, stream_uri), esper writes on iri graph
         //TODO FROM NAMED WINDOW window_uri [a,b] ON STREAM stream_uri -> FROM NAMED window_uri + Select * from stream_uri.win:time([a]) output every b
@@ -89,10 +88,8 @@ public class NaiveBaselineTest {
 
         JenaCQueryExecution cqe = (JenaCQueryExecution) je.registerQuery(query);
 
-        //  (new Thread(new Stream(je, "JohnathanDoe win1", "srcomwin1", "srcomstream1"))).start();
-        //  (new Thread(new Stream(je, "JanineDoe2 win2 ", "srcomwin2", "srcomstream2"))).start();
-        (new Thread(new Stream(je, "JanineDoe def0 ", "default", "srcomstream0", 1))).start();
-        (new Thread(new Stream(je, "JanineDoe def1", "default", "srcomstream1", 2))).start();
+        (new Thread(new Stream(je, "A", "stream2", 1))).start();
+        (new Thread(new Stream(je, "B", "stream3", 1))).start();
 
 
     }

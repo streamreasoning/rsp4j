@@ -5,18 +5,19 @@ import it.polimi.heaven.rsp.rsp.querying.Query;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.apache.jena.rdf.model.Model;
-
-import java.util.Arrays;
 
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class BaselineQuery implements Query {
 
     private String id;
-    private String[] esper_queries;
+    private String[] EPLNamedStreamQueries;
+    private String[] EPLStreamQueries;
     private String sparql_query;
     private String[][] esperNamedStreams;
     private String[] esperStreams;
@@ -27,11 +28,5 @@ public class BaselineQuery implements Query {
         return tbox != null;
     }
 
-    @Override
-    public String toString() {
-        return "BaselineQuery [id=" + id + ", esper_queries=" + esper_queries + ", sparql_query=" + sparql_query + ", esperStreams="
-                + Arrays.toString(esperStreams) + "] ";
-        // TODO tbox file or uri
-    }
 
 }

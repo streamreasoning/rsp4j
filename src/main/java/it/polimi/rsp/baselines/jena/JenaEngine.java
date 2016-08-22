@@ -10,7 +10,6 @@ import it.polimi.heaven.rsp.rsp.querying.Query;
 import it.polimi.rsp.baselines.enums.OntoLanguage;
 import it.polimi.rsp.baselines.enums.Reasoning;
 import it.polimi.rsp.baselines.esper.RSPEsperEngine;
-import it.polimi.rsp.baselines.esper.RSPListener;
 import it.polimi.rsp.baselines.exceptions.StreamRegistrationException;
 import it.polimi.rsp.baselines.jena.events.stimuli.BaselineStimulus;
 import it.polimi.rsp.baselines.jena.query.BaselineQuery;
@@ -34,12 +33,12 @@ public abstract class JenaEngine extends RSPEsperEngine {
     @Setter
     private OntoLanguage ontology_language;
 
-    private Map<Query, RSPListener> queries;
+    private Map<Query, JenaListener> queries;
     protected final boolean internalTimerEnabled;
 
     public JenaEngine(BaselineStimulus eventType, EventProcessor<Response> receiver, long t0, String provider) {
         super(receiver, new Configuration());
-        this.queries = new HashMap<Query, RSPListener>();
+        this.queries = new HashMap<Query, JenaListener>();
         this.internalTimerEnabled = false;
         this.t0 = t0;
         ref = new ConfigurationMethodRef();
@@ -48,7 +47,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
         cepConfig.getEngineDefaults().getLogging().setEnableTimerDebug(true);
 
         log.info("Added [" + eventType + "] as TStream");
-        cepConfig.addEventType("TEvent", eventType);
+        cepConfig.addEventType("TStream", eventType);
         cep = EPServiceProviderManager.getProvider(provider, cepConfig);
         cepAdm = cep.getEPAdministrator();
         cepRT = cep.getEPRuntime();
@@ -59,12 +58,12 @@ public abstract class JenaEngine extends RSPEsperEngine {
     public JenaEngine(BaselineStimulus eventType, EventProcessor<Response> receiver, long t0, boolean internalTimerEnabled, String provider) {
         super(receiver, new Configuration());
         this.t0 = t0;
-        this.queries = new HashMap<Query, RSPListener>();
+        this.queries = new HashMap<Query, JenaListener>();
         this.internalTimerEnabled = internalTimerEnabled;
         ref = new ConfigurationMethodRef();
         cepConfig.getEngineDefaults().getThreading().setInternalTimerEnabled(internalTimerEnabled);
-        log.info("Added [" + eventType + "] as TEvent");
-        cepConfig.addEventType("TEvent", eventType);
+        log.info("Added [" + eventType + "] as TStream");
+        cepConfig.addEventType("TStream", eventType);
         cepConfig.getEngineDefaults().getLogging().setEnableTimerDebug(true);
         cep = EPServiceProviderManager.getProvider(provider, cepConfig);
         cepAdm = cep.getEPAdministrator();
@@ -97,30 +96,44 @@ public abstract class JenaEngine extends RSPEsperEngine {
         Dataset dataset = DatasetFactory.create();
         JenaListener listener = new JenaListener(dataset, receiver, bq, reasoning, ontology_language, "http://streamreasoning.org/heaven/" + bq.getId());
 
-
-        for (String[] pair : bq.getEsperNamedStreams()) {
-            log.info("create named schema " + pair[1] + "() inherits TEvent");
-            cepAdm.createEPL("create schema " + pair[1] + "() inherits TEvent");
-            log.info("creating named graph " + pair[0] + "");
-            if (!listener.addNamedWindowStream(pair[0])) {
-                throw new StreamRegistrationException("Impossible to register window named  [" + pair[0] + "] on stream [" + pair[1] + "]");
-            }
-        }
-
         for (String c : bq.getEsperStreams()) {
-            log.info("create schema " + c + "() inherits TEvent");
-            cepAdm.createEPL("create schema " + c + "() inherits TEvent");
+            log.info("create schema " + c + "() inherits TStream");
+            cepAdm.createEPL("create schema " + c + "() inherits TStream");
             if (!listener.addDefaultWindowStream(c)) {
                 throw new StreamRegistrationException("Impossible to register stream [" + c + "]");
             }
         }
 
-
-        for (String eq : bq.getEsper_queries()) {
+        int i = 0;
+        for (String eq : bq.getEPLStreamQueries()) {
             log.info("Register esper query [" + eq + "]");
-            EPStatement epl = cepAdm.createEPL(eq);
-            log.info("Add listener");
+            String statementName = "QUERY" + bq.getId() + "STMT_" + i;
+            EPStatement epl = cepAdm.createEPL(eq, statementName);
             epl.addListener(listener);
+            listener.addStatementName(statementName);
+            i++;
+        }
+
+
+        for (String[] pair : bq.getEsperNamedStreams()) {
+            String stream = pair[1];
+            String window = pair[0];
+            log.info("create named schema " + stream + "() inherits TStream");
+            cepAdm.createEPL("create schema " + stream + "() inherits TStream");
+            log.info("creating named graph " + window + "");
+            if (!listener.addNamedWindowStream(window, stream)) {
+                throw new StreamRegistrationException("Impossible to register window named  [" + window + "] on stream [" + stream + "]");
+            }
+        }
+
+        i = 0;
+        for (String eq : bq.getEPLNamedStreamQueries()) {
+            log.info("Register esper query [" + eq + "]");
+            String statementName = "QUERY" + bq.getId() + "STMT_NDM" + i;
+            EPStatement epl = cepAdm.createEPL(eq, statementName);
+            epl.addListener(listener);
+            listener.addStatementName(statementName);
+            i++;
         }
 
         queries.put(q, listener);

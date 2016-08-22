@@ -47,7 +47,7 @@ public class NaiveTumblingSimpleQueryTest {
 
         BaselineQuery query = new BaselineQuery();
         String naive_queries = "select  * from stream1.win:time_batch(10 msec) output snapshot";
-        query.setEsper_queries(new String[]{naive_queries});
+        query.setEPLStreamQueries(new String[]{naive_queries});
         query.setSparql_query("SELECT ?s ?p ?o  WHERE {?s ?p ?o} ORDER BY ?o");
         query.setEsperStreams(new String[]{"stream1"});
         query.setEsperNamedStreams(new String[][]{});
@@ -61,7 +61,7 @@ public class NaiveTumblingSimpleQueryTest {
 
         for (int i = 0; i < 50; i++) {
             System.out.println("Sending...[" + i + "]");
-            e.process(new GraphStimulus(i, getGraph(i), "default", "stream1"));
+            e.process(new GraphStimulus(i, getGraph(i), "stream1"));
             Thread.sleep(1000);
         }
 

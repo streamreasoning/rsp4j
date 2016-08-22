@@ -47,7 +47,7 @@ public class IncrementalTumblingSimpleQueryTest {
 
         BaselineQuery query = new BaselineQuery();
         String incremental_query = "select irstream * from stream1.win:time_batch( 5 msec )";
-        query.setEsper_queries(new String[]{incremental_query});
+        query.setEPLStreamQueries(new String[]{incremental_query});
         query.setSparql_query("SELECT ?s ?p ?o  WHERE {?s ?p ?o} ORDER BY ?o");
         query.setEsperStreams(new String[]{"stream1"});
         query.setEsperNamedStreams(new String[][]{});
@@ -62,7 +62,7 @@ public class IncrementalTumblingSimpleQueryTest {
 
         for (int i = 0; i < 50; i++) {
             System.out.println("Sending...[" + i + "]");
-            e.process(new GraphStimulus(i, getGraph(i), "default", "stream1"));
+            e.process(new GraphStimulus(i, getGraph(i), "stream1"));
             Thread.sleep(1000);
         }
 
