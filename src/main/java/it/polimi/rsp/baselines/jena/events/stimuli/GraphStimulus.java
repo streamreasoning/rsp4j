@@ -14,42 +14,45 @@ import java.util.Set;
 
 public class GraphStimulus extends BaselineStimulus {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public GraphStimulus(long appTimestamp1, Graph content1, String stream_uri) {
-        super(appTimestamp1, content1, stream_uri);
-    }
+	public GraphStimulus(long appTimestamp1, Graph content1, String stream_uri) {
+		super(appTimestamp1, content1, stream_uri);
+	}
 
-    public Graph getContent() {
-        return (Graph) super.get(content);
-    }
+	public Graph getContent() {
+		return (Graph) super.get(content);
+	}
 
-    @Override
-    public Graph addTo(Graph abox) {
-        GraphUtil.addInto(abox, this.getContent());
-        return abox;
-    }
+	@Override
+	public Graph addTo(Graph abox) {
+		GraphUtil.addInto(abox, this.getContent());
+		return abox;
+	}
 
-    @Override
-    public Set<RDFLine> serialize() {
-        HashSet<RDFLine> hashSet = new HashSet<RDFLine>();
-        ExtendedIterator<Triple> all = GraphUtil.findAll(getContent());
-        while (all.hasNext()) {
-            Triple next = all.next();
-            hashSet.add(new RDFLine(next.getSubject().toString(), next.getPredicate().toString(), next.getObject().toString()));
-        }
+	@Override
+	public Set<RDFLine> serialize() {
+		HashSet<RDFLine> hashSet = new HashSet<RDFLine>();
+		ExtendedIterator<Triple> all = GraphUtil.findAll(getContent());
+		while (all.hasNext()) {
+			Triple next = all.next();
+			hashSet.add(new RDFLine(next.getSubject().toString(), next.getPredicate().toString(),
+					next.getObject().toString()));
+		}
 
-        return hashSet;
-    }
+		return hashSet;
+	}
 
-    @Override
-    public Graph removeFrom(Graph abox) {
-        GraphUtil.deleteFrom(abox, getContent());
-        return abox;
-    }
+	@Override
+	public Graph removeFrom(Graph abox) {
+		GraphUtil.deleteFrom(abox, getContent());
+		return abox;
+	}
 
-    @Override
-    public String toString() {
-        return "GraphStimulus " + super.toString();
-    }
+	@Override
+	public String toString() {
+		return "GraphStimulus {" + "appTimestamp='" + getAppTimestamp() + '\'' + ", sysTimestamp='" + getSysTimestamp()
+				+ '\'' + ", content='" + getContent() + '\'' + ", stream_uri='" + getStream_uri() + '\'' + '}';
+	}
+
 }

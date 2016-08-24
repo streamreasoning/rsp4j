@@ -55,4 +55,10 @@ public class StatementStimulus extends BaselineStimulus {
         return abox;
     }
 
+    
+    @Override
+	public String toString() {
+		return "StatementStimulus {" + "appTimestamp='" + getAppTimestamp() + '\'' + ", sysTimestamp='" + getSysTimestamp()
+				+ '\'' + ", content='" + getContent() + '\'' + ", stream_uri='" + getStream_uri() + '\'' + '}';
+	}
 }
