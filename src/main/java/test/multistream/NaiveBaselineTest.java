@@ -32,10 +32,17 @@ public class NaiveBaselineTest {
     public static void main(String[] args) throws InterruptedException, IOException {
 
         RSPEsperEngine e = new GraphBaseline(new EventProcessor<Response>() {
+            long last_result = -1L;
+
             public boolean process(Response response) {
+
                 System.out.println("[" + System.currentTimeMillis() + "] Result");
                 SelectResponse sr = (SelectResponse) response;
-                ResultSetFormatter.out(System.out, sr.getResults());
+
+                if (sr.getCep_timestamp() != last_result) {
+                    ResultSetFormatter.out(System.out, sr.getResults());
+                    last_result = sr.getCep_timestamp();
+                }
 
                 return true;
             }
@@ -112,16 +119,16 @@ public class NaiveBaselineTest {
         je.startProcessing();
 
 
-        JenaCQueryExecution cqe = (JenaCQueryExecution) je.registerQuery(q);
+        JenaCQueryExecution cqe = (JenaCQueryExecution) je.registerQuery2(q);
 
-         (new Thread(new StreamThread(je, "A", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
-         (new Thread(new StreamThread(je, "B", "http://streamreasoning.org/iminds/massif/stream2", 1))).start();
+        (new Thread(new StreamThread(je, "A", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
+        (new Thread(new StreamThread(je, "B", "http://streamreasoning.org/iminds/massif/stream2", 1))).start();
 
 
     }
 
     public static String getInput() throws IOException {
-        File file = new File("/Users/Riccardo/_Projects/Streamreasoning/RSP-Baselines/src/test/resources/rspquery.q");
+        File file = new File("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/test/resources/rspquery.q");
         return FileUtils.readFileToString(file);
     }
 }

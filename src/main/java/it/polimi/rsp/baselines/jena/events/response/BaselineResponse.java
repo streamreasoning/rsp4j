@@ -11,7 +11,7 @@ import lombok.Getter;
 public abstract class BaselineResponse implements Response, Collectable {
 
 	private String id;
-	private long creation_timestamp;
+	private long creation_timestamp, cep_timestamp;
 	private Query query;
 
 	@Override

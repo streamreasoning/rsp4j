@@ -12,31 +12,31 @@ import org.apache.jena.rdf.model.StmtIterator;
 @Getter
 @Log4j
 public final class ConstructResponse extends BaselineResponse {
-	private Model results;
+    private Model results;
 
-	public ConstructResponse(String id, Query query, Model results) {
-		super(id, System.currentTimeMillis(), query);
-		this.results = results;
-	}
+    public ConstructResponse(String id, Query query, Model results, long cep_timestamp) {
+        super(id, System.currentTimeMillis(), cep_timestamp, query);
+        this.results = results;
+    }
 
-	@Override
-	public boolean save(String where) {
-		log.debug("Save Data [" + where + "]");
+    @Override
+    public boolean save(String where) {
+        log.debug("Save Data [" + where + "]");
 
-		return FileService.write(where + ".trig", getData());
-	}
+        return FileService.write(where + ".trig", getData());
+    }
 
-	private String getData() {
+    private String getData() {
 
-		String eol = System.getProperty("line.separator");
-		String trig = getId() + " {";
-		StmtIterator listStatements = results.listStatements();
-		while (listStatements.hasNext()) {
-			Statement s = listStatements.next();
-			trig += eol + "<" + s.getSubject().toString() + ">" + " " + "<" + s.getPredicate().toString() + ">" + " " + "<"
-					+ s.getObject().toString() + "> .";
-		}
-		trig += eol + "}" + eol;
-		return trig;
-	}
+        String eol = System.getProperty("line.separator");
+        String trig = getId() + " {";
+        StmtIterator listStatements = results.listStatements();
+        while (listStatements.hasNext()) {
+            Statement s = listStatements.next();
+            trig += eol + "<" + s.getSubject().toString() + ">" + " " + "<" + s.getPredicate().toString() + ">" + " " + "<"
+                    + s.getObject().toString() + "> .";
+        }
+        trig += eol + "}" + eol;
+        return trig;
+    }
 }
