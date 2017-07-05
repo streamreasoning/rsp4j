@@ -1,6 +1,7 @@
 package it.polimi.rsp.baselines.rsp.stream.element;
 
 import it.polimi.rdf.RDFLine;
+import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
 import lombok.NoArgsConstructor;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.GraphUtil;
@@ -25,7 +26,7 @@ public class GraphStimulus extends StreamItem {
 	}
 
 	@Override
-	public Graph addTo(Graph abox) {
+	public TimeVaryingGraph addTo(TimeVaryingGraph abox) {
 		GraphUtil.addInto(abox, this.getContent());
 		return abox;
 	}
@@ -44,7 +45,7 @@ public class GraphStimulus extends StreamItem {
 	}
 
 	@Override
-	public Graph removeFrom(Graph abox) {
+	public TimeVaryingGraph removeFrom(TimeVaryingGraph abox) {
 		GraphUtil.deleteFrom(abox, getContent());
 		return abox;
 	}

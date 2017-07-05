@@ -3,8 +3,10 @@ package it.polimi.rsp.baselines.rsp.query.execution;
 import com.espertech.esper.client.EPStatement;
 import it.polimi.rsp.baselines.rsp.sds.SDS;
 import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
+import it.polimi.rsp.baselines.rsp.sds.windows.WindowModel;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.reasoner.InfGraph;
 
 import java.util.Observer;
 
@@ -20,9 +22,8 @@ public interface ContinuousQueryExecution extends QueryExecution, it.polimi.heav
 
     public void eval(SDS sds, long ts);
 
-    public void bindTbox(Model tbox);
+    void materialize(WindowModel tvg);
 
-    void materialize(TimeVaryingGraph tvg);
 
 }
 

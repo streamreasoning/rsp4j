@@ -2,43 +2,48 @@ package it.polimi.rsp.baselines.rsp;
 
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
-import com.espertech.esper.client.soda.*;
-import com.espertech.esper.client.time.CurrentTimeEvent;
 import it.polimi.heaven.rsp.rsp.querying.Query;
 import it.polimi.rsp.baselines.enums.Entailment;
 import it.polimi.rsp.baselines.enums.Maintenance;
-import it.polimi.rsp.baselines.exceptions.StreamRegistrationException;
 import it.polimi.rsp.baselines.rsp.query.execution.ContinuousQueryExecution;
 import it.polimi.rsp.baselines.rsp.query.execution.ContinuousQueryExecutionFactory;
 import it.polimi.rsp.baselines.rsp.query.observer.QueryResponseObserver;
+import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasoner;
 import it.polimi.rsp.baselines.rsp.sds.SDS;
-import it.polimi.rsp.baselines.rsp.sds.graphs.DefaultTVG;
-import it.polimi.rsp.baselines.rsp.sds.graphs.NamedTVG;
 import it.polimi.rsp.baselines.rsp.sds.SDSImpl;
+import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
+import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraphBase;
+import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingInfGraph;
+import it.polimi.rsp.baselines.rsp.sds.windows.DefaultWindow;
+import it.polimi.rsp.baselines.rsp.sds.windows.NamedWindow;
 import it.polimi.rsp.baselines.rsp.stream.RSPEsperEngine;
 import it.polimi.rsp.baselines.rsp.stream.element.StreamItem;
 import it.polimi.sr.rsp.RSPQuery;
 import it.polimi.sr.rsp.streams.Window;
 import it.polimi.sr.rsp.utils.EncodingUtils;
-import it.polimi.streaming.Stimulus;
 import lombok.extern.log4j.Log4j;
+import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.impl.InfModelImpl;
+import org.apache.jena.rdf.model.impl.ModelCom;
+import org.apache.jena.reasoner.InfGraph;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 @Log4j
 public abstract class RSPQLEngine extends RSPEsperEngine {
 
     private Map<Query, SDS> queries;
-    protected long t0;
 
     public RSPQLEngine(StreamItem eventType, long t0) {
-
         this.queries = new HashMap<>();
         this.t0 = t0;
-
         log.info("Added [" + eventType.getClass() + "] as TStream");
         cepConfig.addEventType("TStream", eventType);
         cep = EPServiceProviderManager.getProvider(this.getClass().getCanonicalName(), cepConfig);
@@ -47,44 +52,125 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
 
     }
 
-    public void startProcessing() {
-        cepRT.sendEvent(new CurrentTimeEvent(t0));
-    }
-
-    public void stopProcessing() {
-        log.info("Engine is closing");
-        // stop the CEP engine
-        for (String stmtName : cepAdm.getStatementNames()) {
-            EPStatement stmt = cepAdm.getStatement(stmtName);
-            if (!stmt.isStopped()) {
-                stmt.stop();
-            }
-        }
-    }
-
     public ContinuousQueryExecution registerQuery(Query q) {
         return registerQuery((RSPQuery) q, Maintenance.NAIVE, Entailment.NONE);
     }
 
-    public ContinuousQueryExecution registerQuery(RSPQuery bq, Maintenance maintenance, Entailment ontology_language) {
+    public ContinuousQueryExecution registerQuery(RSPQuery bq, Maintenance maintenance, Entailment entailment) {
         log.info(bq.getQ().toString());
-        Model def = ModelFactory.createMemModelMaker().createDefaultModel();
+
         Model tbox = ModelFactory.createMemModelMaker().createDefaultModel();
+        Model def = loadStaticGraph(bq, new ModelCom(new TimeVaryingGraphBase(-1, null)));
 
-        SDSImpl sds = new SDSImpl(tbox, def, bq.getResolver(), maintenance, ontology_language, "");
+        TVGReasoner reasoner = ContinuousQueryExecutionFactory.getGenericRuleReasoner(entailment);
+        reasoner = (TVGReasoner) reasoner.bindSchema(tbox);
 
-        initializeSDS(bq, sds, def);
+        TimeVaryingInfGraph bind = (TimeVaryingInfGraph) reasoner.bind(def.getGraph());
+        InfModel kb_star = ModelFactory.createInfModel(bind);
 
-        ContinuousQueryExecution qe = ContinuousQueryExecutionFactory.ccreate(bq, sds, ontology_language);
-        qe.bindTbox(tbox);
+        SDSImpl sds = new SDSImpl(tbox, kb_star, bq.getResolver(), maintenance, "", cep);
+        ContinuousQueryExecution qe = ContinuousQueryExecutionFactory.create(bq, sds, reasoner);
 
+        addNamedStaticGraph(bq, sds, reasoner);
+        addWindows(bq, sds, reasoner);
+        addNamedWindows(sds, bq, reasoner);
+
+        sds.addQueryExecutor(qe);
+
+        queries.put(bq, sds);
+
+        return qe;
+    }
+
+    public ContinuousQueryExecution registerQuery(RSPQuery bq, SDS sds, Entailment e) {
+        //TODO check compatibility
+        queries.put(bq, sds);
+        ContinuousQueryExecution qe = ContinuousQueryExecutionFactory.create(bq, sds, ContinuousQueryExecutionFactory.getGenericRuleReasoner(e));
         sds.addQueryExecutor(qe);
         return qe;
     }
 
-    private void initializeSDS(RSPQuery bq, SDS sds, Model def) {
-        queries.put(bq, sds);
+    public void registerObserver(ContinuousQueryExecution ceq, QueryResponseObserver o) {
+        ceq.addObserver(o);
+    }
 
+    private void addWindows(RSPQuery bq, SDS sds, TVGReasoner reasoner) {
+        //Default Time-Varying Graph
+        int i = 0;
+        TimeVaryingGraph graph = new TimeVaryingGraphBase(-1, null);
+        TimeVaryingInfGraph bind = (TimeVaryingInfGraph) reasoner.bind(graph);
+        bind.rebind();
+        sds.asDatasetGraph().setDefaultGraph(bind);
+
+        DefaultWindow defTVG = new DefaultWindow(sds.getMaintenanceType(), bind);
+        sds.addTimeVaryingGraph(defTVG);
+
+        if (bq.getWindows() != null) {
+            for (Window window : bq.getWindows()) {
+                String stream = EncodingUtils.encode(window.getStreamURI());
+                String statementName = "QUERY" + "STMT_" + i;
+                cepAdm.createEPL(window.getStream().toEPLSchema());
+                log.info(window.getStream().toEPLSchema());
+                EPStatement epl = getEpStatement(sds, window, statementName);
+                epl.addListener(defTVG);
+                sds.addDefaultWindowStream(statementName, stream);
+                i++;
+            }
+        }
+    }
+
+    private void addNamedWindows(SDS sds, RSPQuery bq, TVGReasoner reasoner) {
+        int j = 0;
+        if (bq.getNamedwindows() != null) {
+            for (Map.Entry<Node, Window> entry : bq.getNamedwindows().entrySet()) {
+                Window w = entry.getValue();
+                String stream_uri = EncodingUtils.encode(w.getStreamURI());
+                String window_uri = w.getIri().getURI();
+                String statementName = "QUERY" + bq.getId() + "STMT_NDM" + j;
+
+                cepAdm.createEPL(w.getStream().toEPLSchema());
+
+                log.info(w.getStream().toEPLSchema());
+                log.info("creating named graph " + window_uri + "");
+
+                EPStatement epl = getEpStatement(sds, w, statementName);
+                log.info(epl.toString());
+
+                TimeVaryingGraph bind = (TimeVaryingGraph) reasoner.bind(new TimeVaryingGraphBase(-1, null));
+                NamedWindow tvg = new NamedWindow(sds.getMaintenanceType(), bind, epl);
+                sds.addNamedTimeVaryingGraph(statementName, window_uri, stream_uri, tvg);
+                epl.addListener(tvg);
+                j++;
+            }
+        }
+    }
+
+    private EPStatement getEpStatement(SDS sds, Window w, String statementName) {
+        EPStatement epl;
+        if (Maintenance.INCREMENTAL.equals(sds.getMaintenanceType())) {
+            epl = cepAdm.create(w.toIREPL(), statementName);
+            log.debug(w.toIREPL().toEPL());
+        } else {
+            epl = cepAdm.create(w.toEPL(), statementName);
+            log.debug(w.toEPL().toEPL());
+        }
+        return epl;
+    }
+
+    private void addNamedStaticGraph(RSPQuery bq, SDS sds, TVGReasoner reasoner) {
+        //Named Static Graphs
+        if (bq.getNamedGraphURIs() != null)
+            for (String g : bq.getNamedGraphURIs()) {
+                log.info(g);
+                if (!isWindow(bq.getNamedwindows().keySet(), g)) {
+                    Model m = ModelFactory.createDefaultModel().read(g);
+                    TimeVaryingInfGraph bind = (TimeVaryingInfGraph) reasoner.bind(m.getGraph());
+                    sds.addNamedModel(g, new InfModelImpl(bind));
+                }
+            }
+    }
+
+    private Model loadStaticGraph(RSPQuery bq, Model def) {
         //Default Static Graph
         if (bq.getGraphURIs() != null)
             for (String g : bq.getGraphURIs()) {
@@ -93,93 +179,7 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
                     def = def.read(g);
                 }
             }
-
-        sds.rebind(def);
-
-        //Named Static Graphs
-        if (bq.getNamedGraphURIs() != null)
-            for (String g : bq.getNamedGraphURIs()) {
-                log.info(g);
-                if (!isWindow(bq.getNamedwindows().keySet(), g)) {
-                    Model m = ModelFactory.createDefaultModel().read(g);
-                    m = sds.rebind(m);
-                    sds.addNamedModel(g, m);
-                }
-            }
-
-        //Default Time-Varying Graph
-        int i = 0;
-        DefaultTVG defTVG = new DefaultTVG(sds.getMaintenanceType(), sds.getDefaultModel().getGraph(), Collections.EMPTY_SET);
-        sds.addTimeVaryingGraph(defTVG);
-
-        if (bq.getWindows() != null) {
-            for (Window window : bq.getWindows()) {
-                log.info(window.getStream().toEPLSchema());
-                cepAdm.createEPL(window.getStream().toEPLSchema());
-                String stream = EncodingUtils.encode(window.getStreamURI());
-
-                if (!sds.addDefaultWindowStream(stream)) {
-                    throw new StreamRegistrationException("Impossible to register stream [" + stream + "]");
-                }
-                String statementName = "QUERY" + "STMT_" + i;
-                EPStatementObjectModel sodaStatement;
-                if (sds.getMaintenanceType().equals(Maintenance.INCREMENTAL)) {
-                    sodaStatement = window.toIREPL();
-                } else {
-                    sodaStatement = window.toEPL();
-                }
-                log.info(sodaStatement.toEPL());
-
-                EPStatement epl = cepAdm.create(sodaStatement, statementName);
-                epl.addListener(defTVG);
-                sds.addStatementName(statementName);
-
-                i++;
-            }
-        }
-
-        // Named Time-Varying Graph
-
-        int j = 0;
-
-
-        if (bq.getNamedwindows() != null) {
-            for (Map.Entry<Node, Window> entry : bq.getNamedwindows().entrySet()) {
-                Window w = entry.getValue();
-                String stream = EncodingUtils.encode(w.getStreamURI());
-                String window = w.getIri().getURI();
-                log.info(w.getStream().toEPLSchema());
-                cepAdm.createEPL(w.getStream().toEPLSchema());
-                log.info("creating named graph " + window + "");
-
-                String statementName = "QUERY" + bq.getId() + "STMT_NDM" + j;
-
-                EPStatementObjectModel sodaStatement;
-                if (sds.getMaintenanceType().equals(Maintenance.INCREMENTAL)) {
-                    sodaStatement = w.toIREPL();
-                } else {
-                    sodaStatement = w.toEPL();
-                }
-                log.info(sodaStatement.toEPL());
-
-
-                EPStatement epl = cepAdm.create(sodaStatement, statementName);
-                NamedTVG tvg = new NamedTVG(sds.getMaintenanceType(), epl);
-
-                Model bind = sds.bind(tvg.getGraph());
-                tvg.setGraph(bind.getGraph());
-                if (!sds.addNamedWindowStream(window, stream, bind)) {
-                    throw new StreamRegistrationException(
-                            "Impossible to register window named  [" + window + "] on stream [" + stream + "]");
-                }
-
-                sds.addNamedTimeVaryingGraph(window, tvg);
-
-                epl.addListener(tvg);
-                sds.addStatementName(statementName);
-                j++;
-            }
-        }
+        return def;
     }
 
     private boolean isWindow(Set<?> windows, String g) {
@@ -201,34 +201,5 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
         return queries.get(q);
     }
 
-    public void registerObserver(ContinuousQueryExecution ceq, QueryResponseObserver o) {
-        ceq.addObserver(o);
-    }
 
-    public ContinuousQueryExecution registerQuery(RSPQuery bq, SDS sds, Entailment e) {
-        //TODO check compatibility
-        queries.put(bq, sds);
-        ContinuousQueryExecution qe = ContinuousQueryExecutionFactory.ccreate(bq, sds, e);
-        sds.addQueryExecutor(qe);
-        return qe;
-    }
-
-    public boolean process(Stimulus e) {
-        log.info("Current runtime is  [" + cepRT.getCurrentTime() + "]");
-        this.currentEvent = e;
-        StreamItem g = (StreamItem) e;
-        if (cepRT.getCurrentTime() < g.getAppTimestamp()) {
-            log.info("Sent time event with current [" + (g.getAppTimestamp()) + "]");
-            cepRT.sendEvent(new CurrentTimeEvent(g.getAppTimestamp()));
-            currentTimestamp = g.getAppTimestamp();// TODO
-            log.info("Current runtime is now [" + cepRT.getCurrentTime() + "]");
-        }
-        cepRT.sendEvent(g, EncodingUtils.encode(g.getStreamURI()));
-
-
-        log.info("Received Stimulus [" + g + "]");
-        rspEventsNumber++;
-        log.info("Current runtime is  [" + this.cepRT.getCurrentTime() + "]");
-        return true;
-    }
 }
