@@ -34,7 +34,7 @@ public abstract class RSPEsperEngine implements RSPEngine {
         this.currentTimestamp = 0L;
 
         cepConfig.getEngineDefaults().getThreading().setInternalTimerEnabled(false);
-        cepConfig.getEngineDefaults().getThreading().setThreadPoolOutbound(true);
+        cepConfig.getEngineDefaults().getThreading().setThreadPoolInbound(true);
         cepConfig.getEngineDefaults().getLogging().setEnableExecutionDebug(true);
         cepConfig.getEngineDefaults().getLogging().setEnableTimerDebug(true);
         cepConfig.getEngineDefaults().getLogging().setEnableQueryPlan(true);
@@ -62,7 +62,7 @@ public abstract class RSPEsperEngine implements RSPEngine {
         StreamItem g = (StreamItem) e;
         if (cepRT.getCurrentTime() < g.getAppTimestamp()) {
             log.info("Sent time event with current [" + (g.getAppTimestamp()) + "]");
-            cepRT.sendEvent(new CurrentTimeEvent(g.getAppTimestamp()));
+            cepRT.sendEvent(new CurrentTimeEvent(g.getAppTimestamp()+ 1));
             currentTimestamp = g.getAppTimestamp();// TODO
             log.info("Current runtime is now [" + cepRT.getCurrentTime() + "]");
         }

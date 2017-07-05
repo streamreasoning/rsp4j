@@ -77,26 +77,28 @@ public abstract class WindowOperator extends WindowModel {
     }
 
     protected void DStreamUpdate(EventBean[] oldData) {
-        if (oldData != null && Maintenance.INCREMENTAL.equals(maintenanceType)) { // TODO
-            log.debug("[" + oldData.length + "] Old Events of type ["
-                    + oldData[0].getUnderlying().getClass().getSimpleName() + "]");
-            for (EventBean e : oldData) {
-                if (e instanceof MapEventBean) {
-                    MapEventBean meb = (MapEventBean) e;
-                    if (meb.getProperties() instanceof StreamItem) {
-                        handleSingleDStream((StreamItem) e.getUnderlying());
-                    } else {
-                        for (int i = 0; i < meb.getProperties().size(); i++) {
-                            StreamItem underlying = (StreamItem) meb.get("stream_" + i);
-                            handleSingleDStream(underlying);
+        if (Maintenance.NAIVE.equals(maintenanceType)) {
+            graph.clear();
+        } else {
+            if (oldData != null) {
+                log.debug("[" + oldData.length + "] Old Events of type ["
+                        + oldData[0].getUnderlying().getClass().getSimpleName() + "]");
+                for (EventBean e : oldData) {
+                    if (e instanceof MapEventBean) {
+                        MapEventBean meb = (MapEventBean) e;
+                        if (meb.getProperties() instanceof StreamItem) {
+                            handleSingleDStream((StreamItem) e.getUnderlying());
+                        } else {
+                            for (int i = 0; i < meb.getProperties().size(); i++) {
+                                StreamItem underlying = (StreamItem) meb.get("stream_" + i);
+                                handleSingleDStream(underlying);
+                            }
                         }
                     }
                 }
             }
-        } else {
-            //Remove all the data
-            graph.clear();
-        }
+        } //Remove all the data
+
     }
 
     public abstract EPStatement getTriggeringStatement();

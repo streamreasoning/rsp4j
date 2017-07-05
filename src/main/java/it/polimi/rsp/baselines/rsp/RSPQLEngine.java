@@ -149,10 +149,10 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
         EPStatement epl;
         if (Maintenance.INCREMENTAL.equals(sds.getMaintenanceType())) {
             epl = cepAdm.create(w.toIREPL(), statementName);
-            log.debug(w.toIREPL().toEPL());
+            log.info(w.toIREPL().toEPL());
         } else {
             epl = cepAdm.create(w.toEPL(), statementName);
-            log.debug(w.toEPL().toEPL());
+            log.info(w.toEPL().toEPL());
         }
         return epl;
     }
