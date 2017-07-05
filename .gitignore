@@ -1,5 +1,7 @@
 *.class
+*.DS_Store
 
+*.iml
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
@@ -13,3 +15,9 @@ hs_err_pid*
 /bin/
 /target/
 /generated/
+
+
+.classpath
+.idea/
+.project
+.settings/
