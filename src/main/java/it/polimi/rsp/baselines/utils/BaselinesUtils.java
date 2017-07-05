@@ -14,7 +14,7 @@ public class BaselinesUtils {
 			+ beta + " msec";
 
 	public static final String RHODF_RULE_SET = "/data/inference/rules/rdfs-rules-rhodf.rules";
-	public static final String RHODF_RULE_SET_RUNTIME = "/data/inference/rules/rdfs-rules-rhodf-runtime.rules";
+	public static final String RHODF_RULE_SET_RUNTIME = "data/inference/rules/rdfs-rules-rhodf-runtime.rules";
 
 	public static final String UNIV_BENCH = "/data/inference/univ-bench-rdfs.rdf";
 
