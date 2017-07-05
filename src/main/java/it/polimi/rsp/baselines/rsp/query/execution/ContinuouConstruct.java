@@ -1,6 +1,7 @@
 package it.polimi.rsp.baselines.rsp.query.execution;
 
 import com.espertech.esper.client.EPStatement;
+import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasoner;
 import it.polimi.rsp.baselines.rsp.query.response.ConstructResponse;
 import it.polimi.rsp.baselines.rsp.sds.SDS;
 import it.polimi.sr.rsp.RSPQuery;
@@ -11,7 +12,7 @@ import org.apache.jena.reasoner.Reasoner;
  * Created by riccardo on 03/07/2017.
  */
 public class ContinuouConstruct extends ContinuousJenaQueryExecution {
-    public ContinuouConstruct(RSPQuery query, SDS sds, Reasoner reasoner) {
+    public ContinuouConstruct(RSPQuery query, SDS sds, TVGReasoner reasoner) {
         super(query, sds, reasoner);
     }
 

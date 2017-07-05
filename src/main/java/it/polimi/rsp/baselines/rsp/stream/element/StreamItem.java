@@ -1,6 +1,7 @@
 package it.polimi.rsp.baselines.rsp.stream.element;
 
 import it.polimi.rdf.RDFLine;
+import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
 import it.polimi.streaming.Stimulus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,9 +47,9 @@ public abstract class StreamItem extends HashMap<String, Object> implements Stim
         return this.containsKey(content) && this.getContent() != null ? this.get(content) : null;
     }
 
-    public abstract Graph addTo(Graph abox);
+    public abstract TimeVaryingGraph addTo(TimeVaryingGraph abox);
 
-    public abstract Graph removeFrom(Graph abox);
+    public abstract TimeVaryingGraph removeFrom(TimeVaryingGraph abox);
 
     public abstract Set<RDFLine> serialize();
 

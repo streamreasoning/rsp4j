@@ -1,14 +1,16 @@
 package it.polimi.rsp.baselines.rsp.query.execution;
 
+import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasoner;
 import it.polimi.rsp.baselines.rsp.sds.SDS;
+import it.polimi.rsp.baselines.rsp.sds.graphs.BasicForwardRuleInfTVGraph;
 import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
+import it.polimi.rsp.baselines.rsp.sds.windows.WindowModel;
 import it.polimi.sr.rsp.RSPQuery;
 import it.polimi.streaming.Response;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.reasoner.InfGraph;
-import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.sparql.core.Quad;
 import org.apache.jena.sparql.util.Context;
 
@@ -25,9 +27,9 @@ public abstract class ContinuousJenaQueryExecution extends ContinuousQueryExecut
     protected SDS sds;
     protected Response last_response = null;
     protected QueryExecution execution;
-    protected Reasoner reasoner;
+    protected TVGReasoner reasoner;
 
-    public ContinuousJenaQueryExecution(RSPQuery query, SDS sds, Reasoner reasoner) {
+    public ContinuousJenaQueryExecution(RSPQuery query, SDS sds, TVGReasoner reasoner) {
         this.query = query;
         this.q = query.getQ();
         this.sds = sds;
@@ -40,23 +42,19 @@ public abstract class ContinuousJenaQueryExecution extends ContinuousQueryExecut
 
 
     @Override
-    public void materialize(TimeVaryingGraph tvg) {
+    public void materialize(WindowModel tvg) {
         if (reasoner != null) {
-            InfGraph g = reasoner.bind(tvg.getGraph());
-            tvg.setGraph(g);
-            g.rebind();
+            TimeVaryingGraph g = tvg.getGraph();
+            if (g instanceof InfGraph) {
+                InfGraph graph = (InfGraph) g;
+                graph.rebind();
+            }
         }
     }
 
     @Override
     public void eval(SDS sds, long ts) {
         eval(sds, null, ts);
-    }
-
-    @Override
-    public void bindTbox(Model tbox) {
-        if(reasoner!=null)
-            this.reasoner = this.reasoner.bindSchema(tbox);
     }
 
     @Override
