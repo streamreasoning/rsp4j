@@ -60,7 +60,7 @@
         <dependency>
             <groupId>com.github.streamreasoning</groupId>
             <artifactId>rsp-baseline-parser</artifactId>
-            <version>0.4</version>
+            <version>0.4.3</version>
         </dependency>
 
         <dependency>
