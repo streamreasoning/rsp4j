@@ -35,7 +35,7 @@ public class IncrementalGraph {
 
         RSPQLEngine sr = (RSPQLEngine) e;
         sr.startProcessing();
-        ContinuousQueryExecution cqe = sr.registerQuery(q, Maintenance.INCREMENTAL, Entailment.NONE);
+        ContinuousQueryExecution cqe = sr.registerQuery(q, Maintenance.INCREMENTAL, Entailment.RHODF);
 
         // SDS sds = sr.getSDS(q);
         // sr.registerQuery(q1, sds);

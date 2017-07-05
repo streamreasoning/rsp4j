@@ -21,10 +21,9 @@ public class SelectResponseSysOutObserver extends QueryResponseObserver {
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("[" + System.currentTimeMillis() + "] Result");
         SelectResponse sr = (SelectResponse) arg;
-
         if (sr.getCep_timestamp() != last_result && distinct) {
+            System.out.println("[" + System.currentTimeMillis() + "] Result at [" + last_result + "]");
             ResultSetFormatter.out(System.out, sr.getResults());
             last_result = sr.getCep_timestamp();
         }
