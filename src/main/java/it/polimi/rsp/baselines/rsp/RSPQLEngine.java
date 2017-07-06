@@ -22,14 +22,12 @@ import it.polimi.sr.rsp.RSPQuery;
 import it.polimi.sr.rsp.streams.Window;
 import it.polimi.sr.rsp.utils.EncodingUtils;
 import lombok.extern.log4j.Log4j;
-import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;
 import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.impl.InfModelImpl;
 import org.apache.jena.rdf.model.impl.ModelCom;
-import org.apache.jena.reasoner.InfGraph;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -53,20 +51,17 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
     }
 
     public ContinuousQueryExecution registerQuery(Query q) {
-        return registerQuery((RSPQuery) q, Maintenance.NAIVE, Entailment.NONE);
+        return registerQuery((RSPQuery) q, ModelFactory.createDefaultModel(), Maintenance.NAIVE, Entailment.NONE);
     }
 
-    public ContinuousQueryExecution registerQuery(RSPQuery bq, Maintenance maintenance, Entailment entailment) {
+    public ContinuousQueryExecution registerQuery(RSPQuery bq, Model tbox, Maintenance maintenance, Entailment entailment) {
         log.info(bq.getQ().toString());
 
-        Model tbox = ModelFactory.createMemModelMaker().createDefaultModel();
         Model def = loadStaticGraph(bq, new ModelCom(new TimeVaryingGraphBase(-1, null)));
 
-        TVGReasoner reasoner = ContinuousQueryExecutionFactory.getGenericRuleReasoner(entailment);
-        reasoner = (TVGReasoner) reasoner.bindSchema(tbox);
+        TVGReasoner reasoner = ContinuousQueryExecutionFactory.getGenericRuleReasoner(entailment, tbox);
 
-        TimeVaryingInfGraph bind = (TimeVaryingInfGraph) reasoner.bind(def.getGraph());
-        InfModel kb_star = ModelFactory.createInfModel(bind);
+        InfModel kb_star = ModelFactory.createInfModel(reasoner.bind(def.getGraph()));
 
         SDSImpl sds = new SDSImpl(tbox, kb_star, bq.getResolver(), maintenance, "", cep);
         ContinuousQueryExecution qe = ContinuousQueryExecutionFactory.create(bq, sds, reasoner);
@@ -85,7 +80,7 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
     public ContinuousQueryExecution registerQuery(RSPQuery bq, SDS sds, Entailment e) {
         //TODO check compatibility
         queries.put(bq, sds);
-        ContinuousQueryExecution qe = ContinuousQueryExecutionFactory.create(bq, sds, ContinuousQueryExecutionFactory.getGenericRuleReasoner(e));
+        ContinuousQueryExecution qe = ContinuousQueryExecutionFactory.create(bq, sds, ContinuousQueryExecutionFactory.getGenericRuleReasoner(e, ModelFactory.createDefaultModel()));
         sds.addQueryExecutor(qe);
         return qe;
     }

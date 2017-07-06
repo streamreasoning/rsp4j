@@ -3,7 +3,6 @@ package it.polimi.rsp.baselines.rsp.query.reasoning;
 import it.polimi.rsp.baselines.rsp.sds.graphs.BasicForwardRuleInfTVGraph;
 import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
 import it.polimi.rsp.baselines.rsp.sds.windows.WindowModel;
-import it.polimi.rsp.baselines.rsp.sds.windows.WindowOperator;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.reasoner.InfGraph;
