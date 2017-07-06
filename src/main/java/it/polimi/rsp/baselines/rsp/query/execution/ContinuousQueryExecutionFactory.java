@@ -1,19 +1,15 @@
 package it.polimi.rsp.baselines.rsp.query.execution;
 
 import it.polimi.rsp.baselines.enums.Entailment;
-import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasoner;
+import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasonerJena;
 import it.polimi.rsp.baselines.rsp.sds.SDS;
 import it.polimi.rsp.baselines.utils.BaselinesUtils;
 import it.polimi.sr.rsp.RSPQuery;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.reasoner.Reasoner;
-import org.apache.jena.reasoner.ReasonerFactory;
-import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
 import org.apache.jena.reasoner.rulesys.RDFSRuleReasoner;
 import org.apache.jena.reasoner.rulesys.Rule;
-import org.apache.jena.vocabulary.ReasonerVocabulary;
 
 import java.util.List;
 
@@ -23,7 +19,7 @@ import java.util.List;
 public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory {
 
 
-    static public ContinuousQueryExecution create(RSPQuery query, SDS sds, TVGReasoner r) {
+    static public ContinuousQueryExecution create(RSPQuery query, SDS sds, TVGReasonerJena r) {
         ContinuousQueryExecution cqe;
         if (query.isSelectType()) {
             cqe = new ContinuousSelect(query, sds, r);
@@ -35,8 +31,8 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
         return cqe;
     }
 
-    public static TVGReasoner getGenericRuleReasoner(Entailment ent, Model tbox) {
-        TVGReasoner reasoner = null;
+    public static TVGReasonerJena getGenericRuleReasoner(Entailment ent, Model tbox) {
+        TVGReasonerJena reasoner = null;
         switch (ent) {
             case OWL2DL:
                 break;
@@ -60,9 +56,9 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
 
     }
 
-    private static TVGReasoner getTvgReasoner(Model tbox, List<Rule> rules) {
-        TVGReasoner reasoner;
-        reasoner = new TVGReasoner(rules);
+    private static TVGReasonerJena getTvgReasoner(Model tbox, List<Rule> rules) {
+        TVGReasonerJena reasoner;
+        reasoner = new TVGReasonerJena(rules);
         reasoner.setMode(GenericRuleReasoner.HYBRID);
         reasoner.bindSchema(tbox.getGraph());
         return reasoner;

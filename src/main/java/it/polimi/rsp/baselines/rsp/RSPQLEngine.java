@@ -8,7 +8,7 @@ import it.polimi.rsp.baselines.enums.Maintenance;
 import it.polimi.rsp.baselines.rsp.query.execution.ContinuousQueryExecution;
 import it.polimi.rsp.baselines.rsp.query.execution.ContinuousQueryExecutionFactory;
 import it.polimi.rsp.baselines.rsp.query.observer.QueryResponseObserver;
-import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasoner;
+import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasonerJena;
 import it.polimi.rsp.baselines.rsp.sds.SDS;
 import it.polimi.rsp.baselines.rsp.sds.SDSImpl;
 import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
@@ -59,7 +59,7 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
 
         Model def = loadStaticGraph(bq, new ModelCom(new TimeVaryingGraphBase(-1, null)));
 
-        TVGReasoner reasoner = ContinuousQueryExecutionFactory.getGenericRuleReasoner(entailment, tbox);
+        TVGReasonerJena reasoner = ContinuousQueryExecutionFactory.getGenericRuleReasoner(entailment, tbox);
 
         InfModel kb_star = ModelFactory.createInfModel(reasoner.bind(def.getGraph()));
 
@@ -89,7 +89,7 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
         ceq.addObserver(o);
     }
 
-    private void addWindows(RSPQuery bq, SDS sds, TVGReasoner reasoner) {
+    private void addWindows(RSPQuery bq, SDS sds, TVGReasonerJena reasoner) {
         //Default Time-Varying Graph
         int i = 0;
         TimeVaryingGraph graph = new TimeVaryingGraphBase(-1, null);
@@ -114,7 +114,7 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
         }
     }
 
-    private void addNamedWindows(SDS sds, RSPQuery bq, TVGReasoner reasoner) {
+    private void addNamedWindows(SDS sds, RSPQuery bq, TVGReasonerJena reasoner) {
         int j = 0;
         if (bq.getNamedwindows() != null) {
             for (Map.Entry<Node, Window> entry : bq.getNamedwindows().entrySet()) {
@@ -152,7 +152,7 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
         return epl;
     }
 
-    private void addNamedStaticGraph(RSPQuery bq, SDS sds, TVGReasoner reasoner) {
+    private void addNamedStaticGraph(RSPQuery bq, SDS sds, TVGReasonerJena reasoner) {
         //Named Static Graphs
         if (bq.getNamedGraphURIs() != null)
             for (String g : bq.getNamedGraphURIs()) {

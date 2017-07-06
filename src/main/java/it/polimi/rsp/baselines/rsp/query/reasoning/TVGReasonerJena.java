@@ -17,22 +17,22 @@ import java.util.List;
 /**
  * Created by riccardo on 05/07/2017.
  */
-public class TVGReasoner extends GenericRuleReasoner {
+public class TVGReasonerJena extends GenericRuleReasoner {
 
 
-    public TVGReasoner(List<Rule> rules) {
+    public TVGReasonerJena(List<Rule> rules) {
         super(rules);
     }
 
-    public TVGReasoner(ReasonerFactory factory, Resource configuration) {
+    public TVGReasonerJena(ReasonerFactory factory, Resource configuration) {
         super(factory, configuration);
     }
 
-    public TVGReasoner(List<Rule> rules, ReasonerFactory factory) {
+    public TVGReasonerJena(List<Rule> rules, ReasonerFactory factory) {
         super(rules, factory);
     }
 
-    protected TVGReasoner(List<Rule> rules, Graph schemaGraph, ReasonerFactory factory, RuleMode mode) {
+    protected TVGReasonerJena(List<Rule> rules, Graph schemaGraph, ReasonerFactory factory, RuleMode mode) {
         super(rules, schemaGraph, factory, mode);
     }
 
@@ -113,7 +113,7 @@ public class TVGReasoner extends GenericRuleReasoner {
             if (enableTGCCaching) ((FBRuleInfGraph) graph).setUseTGCCache();
             ((FBRuleInfGraph) graph).prepare();
         }
-        TVGReasoner grr = new TVGReasoner(rules, graph, factory, mode);
+        TVGReasonerJena grr = new TVGReasonerJena(rules, graph, factory, mode);
         grr.setDerivationLogging(recordDerivations);
         grr.setTraceOn(super.isTraceOn());
         grr.setTransitiveClosureCaching(enableTGCCaching);

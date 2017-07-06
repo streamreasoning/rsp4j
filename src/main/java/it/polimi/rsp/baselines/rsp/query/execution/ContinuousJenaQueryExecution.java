@@ -1,8 +1,7 @@
 package it.polimi.rsp.baselines.rsp.query.execution;
 
-import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasoner;
+import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasonerJena;
 import it.polimi.rsp.baselines.rsp.sds.SDS;
-import it.polimi.rsp.baselines.rsp.sds.graphs.BasicForwardRuleInfTVGraph;
 import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
 import it.polimi.rsp.baselines.rsp.sds.windows.WindowModel;
 import it.polimi.sr.rsp.RSPQuery;
@@ -27,9 +26,9 @@ public abstract class ContinuousJenaQueryExecution extends ContinuousQueryExecut
     protected SDS sds;
     protected Response last_response = null;
     protected QueryExecution execution;
-    protected TVGReasoner reasoner;
+    protected TVGReasonerJena reasoner;
 
-    public ContinuousJenaQueryExecution(RSPQuery query, SDS sds, TVGReasoner reasoner) {
+    public ContinuousJenaQueryExecution(RSPQuery query, SDS sds, TVGReasonerJena reasoner) {
         this.query = query;
         this.q = query.getQ();
         this.sds = sds;
