@@ -63,7 +63,7 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
     private static TVGReasoner getTvgReasoner(Model tbox, List<Rule> rules) {
         TVGReasoner reasoner;
         reasoner = new TVGReasoner(rules);
-        reasoner.setMode(GenericRuleReasoner.FORWARD);
+        reasoner.setMode(GenericRuleReasoner.HYBRID);
         reasoner.bindSchema(tbox.getGraph());
         return reasoner;
     }

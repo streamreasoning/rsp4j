@@ -1,6 +1,7 @@
 package it.polimi.rsp.baselines.rsp.query.reasoning;
 
 import it.polimi.rsp.baselines.rsp.sds.graphs.BasicForwardRuleInfTVGraph;
+import it.polimi.rsp.baselines.rsp.sds.graphs.FBRuleInfTVGraph;
 import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
 import it.polimi.rsp.baselines.rsp.sds.windows.WindowModel;
 import org.apache.jena.graph.Graph;
@@ -72,7 +73,7 @@ public class TVGReasoner extends GenericRuleReasoner {
             ((LPBackwardRuleInfGraph) graph).setTraceOn(super.isTraceOn());
         } else {
             List<Rule> ruleSet = ((FBRuleInfGraph) schemaArg).getRules();
-            FBRuleInfGraph fbgraph = new FBRuleInfGraph(this, ruleSet, schemaArg);
+            FBRuleInfTVGraph fbgraph = new FBRuleInfTVGraph(this, ruleSet, schemaArg, data.getTimestamp(), data.getWindowOperator());
             graph = fbgraph;
             if (enableTGCCaching) fbgraph.setUseTGCCache();
             fbgraph.setTraceOn(super.isTraceOn());
