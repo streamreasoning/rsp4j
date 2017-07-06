@@ -1,6 +1,5 @@
 package test.reasoning.rhod.multistream;
 
-import it.polimi.heaven.rsp.rsp.querying.Query;
 import it.polimi.rsp.baselines.enums.Entailment;
 import it.polimi.rsp.baselines.enums.Maintenance;
 import it.polimi.rsp.baselines.rsp.RSPEVA;
@@ -8,18 +7,18 @@ import it.polimi.rsp.baselines.rsp.RSPQLEngine;
 import it.polimi.rsp.baselines.rsp.query.execution.ContinuousQueryExecution;
 import it.polimi.rsp.baselines.rsp.query.observer.ConstructResponseSysOutObserver;
 import it.polimi.rsp.baselines.rsp.query.observer.SelectResponseSysOutObserver;
-import it.polimi.rsp.baselines.rsp.sds.SDS;
 import it.polimi.rsp.baselines.rsp.stream.RSPEsperEngine;
 import it.polimi.sr.rsp.RSPQLParser;
 import it.polimi.sr.rsp.RSPQuery;
 import org.apache.commons.io.FileUtils;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.system.IRIResolver;
 import org.parboiled.Parboiled;
 import org.parboiled.errors.ParseError;
 import org.parboiled.parserunners.ReportingParseRunner;
 import org.parboiled.support.ParsingResult;
 import test.GraphStream;
-import test.StatementStream;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,16 +35,17 @@ public class NaiveGraph {
 
         RSPQLEngine sr = (RSPQLEngine) e;
         sr.startProcessing();
-        ContinuousQueryExecution cqe = sr.registerQuery(q, Maintenance.NAIVE, Entailment.RHODF);
+
+        Model tbox = ModelFactory.createDefaultModel().read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/arist.tbox.owl");
+        ContinuousQueryExecution cqe = sr.registerQuery(q, tbox, Maintenance.NAIVE, Entailment.RHODF);
 
         if (q.isSelectType())
             sr.registerObserver(cqe, new SelectResponseSysOutObserver(true)); // attaches a new *RSP-QL query to the SDS
         if (q.isConstructType())
             sr.registerObserver(cqe, new ConstructResponseSysOutObserver(true)); // attaches a new *RSP-QL query to the SDS
 
-        (new Thread(new GraphStream(sr, "A", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
-        (new Thread(new StatementStream(sr, "B", "http://streamreasoning.org/iminds/massif/stream2", 1))).start();
-
+        (new Thread(new GraphStream(sr, "Painter", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
+        //(new Thread(new GraphStream(sr, "Writer", "http://streamreasoning.org/iminds/massif/stream2", 1))).start();
 
     }
 

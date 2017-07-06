@@ -4,6 +4,9 @@ import it.polimi.rsp.baselines.rsp.RSPQLEngine;
 import it.polimi.rsp.baselines.rsp.stream.element.GraphStimulus;
 import lombok.AllArgsConstructor;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
+
+import java.util.Random;
 
 /**
  * Created by Riccardo on 13/08/16.
@@ -24,12 +27,23 @@ public class GraphStream implements Runnable {
         int j = 1;
         while (true) {
             Model m = ModelFactory.createDefaultModel();
-            Property predicate = ResourceFactory.createProperty("http://somewhere/num");
-            Literal object = m.createTypedLiteral(new Integer(i * 1000));
-            Resource subject = ResourceFactory.createResource("http://somewhere/" + name + j);
-            GraphStimulus t = new GraphStimulus(i * 1000, m.add(ResourceFactory.createStatement(subject, predicate, object)).getGraph(), stream_uri);
+            Random r = new Random();
+
+            String uri = "http://www.streamreasoning/test/artist#";
+            Resource person = ResourceFactory.createResource(stream_uri + "/artist" + i);
+            Resource type = ResourceFactory.createResource(uri + name);
+            Property hasAge = ResourceFactory.createProperty(uri + "hasAge");
+            Property hasTimestamp = ResourceFactory.createProperty(uri + "generatedAt");
+            Literal age = m.createTypedLiteral(r.nextInt(99));
+            Literal ts = m.createTypedLiteral(new Integer(i * 1000));
+
+            m.add(m.createStatement(person, RDF.type, type));
+            m.add(m.createStatement(person, hasAge, age));
+            m.add(m.createStatement(person, hasTimestamp, ts));
+
+            GraphStimulus t = new GraphStimulus(i * 1000, m.getGraph(), stream_uri);
             System.out.println("[" + System.currentTimeMillis() + "] Sending [" + t + "] on " + stream_uri + " at " + i * 1000);
-            e.process(t);
+            this.e.process(t);
             try {
                 Thread.sleep(grow_rate * 998);
             } catch (InterruptedException e) {
