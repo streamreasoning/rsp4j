@@ -1,6 +1,6 @@
 package test.experiments;
 
-import it.polimi.rsp.baselines.utils.BaselinesUtils;
+import it.polimi.rsp.core.utils.BaselinesUtils;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.reasoner.InfGraph;
 import org.apache.jena.reasoner.Reasoner;
