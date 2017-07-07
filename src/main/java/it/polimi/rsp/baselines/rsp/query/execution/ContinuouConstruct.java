@@ -1,6 +1,7 @@
 package it.polimi.rsp.baselines.rsp.query.execution;
 
 import com.espertech.esper.client.EPStatement;
+import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasoner;
 import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasonerJena;
 import it.polimi.rsp.baselines.rsp.query.response.ConstructResponse;
 import it.polimi.rsp.baselines.rsp.sds.SDS;

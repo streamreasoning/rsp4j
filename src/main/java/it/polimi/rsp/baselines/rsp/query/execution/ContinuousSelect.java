@@ -1,11 +1,13 @@
 package it.polimi.rsp.baselines.rsp.query.execution;
 
 import com.espertech.esper.client.EPStatement;
+import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasoner;
 import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasonerJena;
 import it.polimi.rsp.baselines.rsp.query.response.SelectResponse;
 import it.polimi.rsp.baselines.rsp.sds.SDS;
 import it.polimi.sr.rsp.RSPQuery;
 import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.ResultSet;
 
 /**
  * Created by riccardo on 03/07/2017.

@@ -12,6 +12,11 @@ public class TimeVaryingGraphBase extends GraphMem implements TimeVaryingGraph {
     private WindowModel window;
 
 
+    public TimeVaryingGraphBase() {
+        this.last_timestamp = -1;
+        this.window = null;
+    }
+
     public TimeVaryingGraphBase(long last_timestamp, WindowModel window) {
         this.last_timestamp = last_timestamp;
         this.window = window;

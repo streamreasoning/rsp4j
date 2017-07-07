@@ -1,0 +1,96 @@
+package it.polimi.rsp.baselines.rsp.query.reasoning;
+
+<<<<<<< Updated upstream
+import it.polimi.rsp.baselines.rsp.sds.graphs.BasicForwardRuleInfTVGraph;
+import it.polimi.rsp.baselines.rsp.sds.graphs.FBRuleInfTVGraph;
+import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
+import it.polimi.rsp.baselines.rsp.sds.windows.WindowModel;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.reasoner.InfGraph;
+=======
+>>>>>>> Stashed changes
+import org.apache.jena.reasoner.Reasoner;
+
+/**
+ * Created by riccardo on 06/07/2017.
+ */
+<<<<<<< Updated upstream
+public class TVGReasoner extends GenericRuleReasoner {
+
+
+    public TVGReasoner(List<Rule> rules) {
+        super(rules);
+    }
+
+    public TVGReasoner(ReasonerFactory factory, Resource configuration) {
+        super(factory, configuration);
+    }
+
+    public TVGReasoner(List<Rule> rules, ReasonerFactory factory) {
+        super(rules, factory);
+    }
+
+    protected TVGReasoner(List<Rule> rules, Graph schemaGraph, ReasonerFactory factory, RuleMode mode) {
+        super(rules, schemaGraph, factory, mode);
+    }
+
+    public InfGraph bind(WindowModel w) {
+        return bind(w.getGraph());
+    }
+
+    @Override
+    public InfGraph bind(Graph data) throws ReasonerException {
+        return bind((TimeVaryingGraph) data);
+    }
+
+    /**
+     * Attach the reasoner to a set of RDF data to process.
+     * The reasoner may already have been bound to specific rules or ontology
+     * axioms (encoded in RDF) through earlier bindRuleset calls.
+     *
+     * @param data the RDF data to be processed, some reasoners may restrict
+     *             the range of RDF which is legal here (e.g. syntactic restrictions in OWL).
+     * @return an inference graph through which the data+reasoner can be queried.
+     * @throws ReasonerException if the data is ill-formed according to the
+     *                           constraints imposed by this reasoner.
+     */
+
+
+    public InfGraph bind(TimeVaryingGraph data) throws ReasonerException {
+        Graph schemaArg = schemaGraph == null ? getPreload() : schemaGraph;
+        InfGraph graph = null;
+        if (mode == FORWARD) {
+            graph = new BasicForwardRuleInfTVGraph(this, rules, schemaArg, data.getTimestamp(), data.getWindowOperator());
+            ((BasicForwardRuleInfGraph) graph).setTraceOn(super.isTraceOn());
+        } else if (mode == FORWARD_RETE) {
+            graph = new RETERuleInfGraph(this, rules, schemaArg);
+            ((BasicForwardRuleInfGraph) graph).setTraceOn(super.isTraceOn());
+            ((BasicForwardRuleInfGraph) graph).setFunctorFiltering(filterFunctors);
+        } else if (mode == BACKWARD) {
+            graph = new LPBackwardRuleInfGraph(this, getBruleStore(), data, schemaArg);
+            ((LPBackwardRuleInfGraph) graph).setTraceOn(super.isTraceOn());
+        } else {
+            List<Rule> ruleSet = ((FBRuleInfGraph) schemaArg).getRules();
+            FBRuleInfTVGraph fbgraph = new FBRuleInfTVGraph(this, ruleSet, schemaArg, data.getTimestamp(), data.getWindowOperator());
+            graph = fbgraph;
+            if (enableTGCCaching) fbgraph.setUseTGCCache();
+            fbgraph.setTraceOn(super.isTraceOn());
+            fbgraph.setFunctorFiltering(filterFunctors);
+            if (preprocessorHooks != null) {
+                for (RulePreprocessHook preprocessorHook : preprocessorHooks) {
+                    fbgraph.addPreprocessingHook(preprocessorHook);
+                }
+            }
+        }
+        graph.setDerivationLogging(recordDerivations);
+        graph.rebind(data);
+        return graph;
+    }
+=======
+public interface TVGReasoner extends Reasoner {
+>>>>>>> Stashed changes
+
+    //public TimeVaryingInfGraph bind(TimeVaryingGraph data);
+//    public TVGReasoner bindSchema(TimeVaryingGraph data);
+}

@@ -1,6 +1,7 @@
 package it.polimi.rsp.baselines.rsp.query.execution;
 
 import it.polimi.rsp.baselines.enums.Entailment;
+import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasoner;
 import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasonerJena;
 import it.polimi.rsp.baselines.rsp.sds.SDS;
 import it.polimi.rsp.baselines.utils.BaselinesUtils;
@@ -12,6 +13,7 @@ import org.apache.jena.reasoner.rulesys.RDFSRuleReasoner;
 import org.apache.jena.reasoner.rulesys.Rule;
 
 import java.util.List;
+
 
 /**
  * Created by riccardo on 04/07/2017.
@@ -57,10 +59,8 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
     }
 
     private static TVGReasonerJena getTvgReasoner(Model tbox, List<Rule> rules) {
-        TVGReasonerJena reasoner;
-        reasoner = new TVGReasonerJena(rules);
+        TVGReasonerJena reasoner = new TVGReasonerJena(rules);
         reasoner.setMode(GenericRuleReasoner.HYBRID);
-        reasoner.bindSchema(tbox.getGraph());
-        return reasoner;
+        return (TVGReasonerJena) reasoner.bindSchema(tbox);
     }
 }

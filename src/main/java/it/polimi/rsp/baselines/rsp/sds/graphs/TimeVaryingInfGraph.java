@@ -10,4 +10,5 @@ import org.apache.jena.reasoner.InfGraph;
 public interface TimeVaryingInfGraph extends TimeVaryingGraph, InfGraph {
 
 
+
 }

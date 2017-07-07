@@ -8,6 +8,7 @@ import it.polimi.rsp.baselines.enums.Maintenance;
 import it.polimi.rsp.baselines.rsp.query.execution.ContinuousQueryExecution;
 import it.polimi.rsp.baselines.rsp.query.execution.ContinuousQueryExecutionFactory;
 import it.polimi.rsp.baselines.rsp.query.observer.QueryResponseObserver;
+import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasoner;
 import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasonerJena;
 import it.polimi.rsp.baselines.rsp.sds.SDS;
 import it.polimi.rsp.baselines.rsp.sds.SDSImpl;
@@ -131,7 +132,7 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
                 EPStatement epl = getEpStatement(sds, w, statementName);
                 log.info(epl.toString());
 
-                TimeVaryingGraph bind = (TimeVaryingGraph) reasoner.bind(new TimeVaryingGraphBase(-1, null));
+                TimeVaryingGraph bind = (TimeVaryingGraph) reasoner.bind(new TimeVaryingGraphBase());
                 NamedWindow tvg = new NamedWindow(sds.getMaintenanceType(), bind, epl);
                 sds.addNamedTimeVaryingGraph(statementName, window_uri, stream_uri, tvg);
                 epl.addListener(tvg);

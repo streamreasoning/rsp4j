@@ -50,39 +50,37 @@
             <artifactId>jena-arq</artifactId>
             <version>3.1.0</version>
         </dependency>
-
         <dependency>
             <groupId>com.espertech</groupId>
             <artifactId>esper</artifactId>
             <version>6.1.0</version>
         </dependency>
-
         <dependency>
             <groupId>com.github.streamreasoning</groupId>
             <artifactId>rsp-baseline-parser</artifactId>
             <version>0.4.3</version>
         </dependency>
-
         <dependency>
             <groupId>com.github.streamreasoning.heaven</groupId>
             <artifactId>heaven-commons</artifactId>
             <version>0.9.3</version>
         </dependency>
-
         <dependency>
             <groupId>com.github.streamreasoning.heaven</groupId>
             <artifactId>heaven-rsp</artifactId>
             <version>0.9.3</version>
         </dependency>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.16.10</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/log4j/log4j -->
+        <dependency>
+            <groupId>com.github.galigator.openllet</groupId>
+            <artifactId>openllet-jena</artifactId>
+            <version>2.6.1</version>
+        </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
