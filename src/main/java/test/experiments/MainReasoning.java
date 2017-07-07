@@ -1,10 +1,5 @@
 package test.experiments;
 
-import com.espertech.esper.client.Configuration;
-import com.espertech.esper.client.EPServiceProvider;
-import com.espertech.esper.client.EPServiceProviderManager;
-import com.espertech.esper.client.soda.EPStatementObjectModel;
-import it.polimi.rsp.baselines.rsp.stream.element.GraphStimulus;
 import it.polimi.rsp.baselines.utils.BaselinesUtils;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.reasoner.InfGraph;

@@ -1,7 +1,7 @@
 package test;
 
 import it.polimi.rsp.baselines.rsp.RSPQLEngine;
-import it.polimi.rsp.baselines.rsp.stream.element.GraphStimulus;
+import it.polimi.rsp.baselines.rsp.stream.item.jena.GraphStimulus;
 import lombok.AllArgsConstructor;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;

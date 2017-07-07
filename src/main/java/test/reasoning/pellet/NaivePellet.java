@@ -1,4 +1,4 @@
-package test.reasoning.rhod.multistream;
+package test.reasoning.pellet;
 
 import it.polimi.rsp.baselines.enums.Entailment;
 import it.polimi.rsp.baselines.enums.Maintenance;
@@ -26,7 +26,7 @@ import java.io.IOException;
 /**
  * Created by Riccardo on 03/08/16.
  */
-public class NaiveGraph {
+public class NaivePellet {
 
     public static void main(String[] args) throws InterruptedException, IOException {
 
@@ -37,7 +37,7 @@ public class NaiveGraph {
         sr.startProcessing();
 
         Model tbox = ModelFactory.createDefaultModel().read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/arist.tbox.owl");
-        ContinuousQueryExecution cqe = sr.registerQuery(q, tbox, Maintenance.NAIVE, Entailment.RHODF);
+        ContinuousQueryExecution cqe = sr.registerQuery(q, tbox, Maintenance.NAIVE, Entailment.PELLET);
 
         if (q.isSelectType())
             sr.registerObserver(cqe, new SelectResponseSysOutObserver(true)); // attaches a new *RSP-QL query to the SDS

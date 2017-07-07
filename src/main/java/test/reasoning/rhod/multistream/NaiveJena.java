@@ -3,14 +3,16 @@ package test.reasoning.rhod.multistream;
 import it.polimi.rsp.baselines.enums.Entailment;
 import it.polimi.rsp.baselines.enums.Maintenance;
 import it.polimi.rsp.baselines.rsp.RSPEVA;
-import it.polimi.rsp.baselines.rsp.stream.RSPEsperEngine;
 import it.polimi.rsp.baselines.rsp.RSPQLEngine;
 import it.polimi.rsp.baselines.rsp.query.execution.ContinuousQueryExecution;
 import it.polimi.rsp.baselines.rsp.query.observer.ConstructResponseSysOutObserver;
 import it.polimi.rsp.baselines.rsp.query.observer.SelectResponseSysOutObserver;
+import it.polimi.rsp.baselines.rsp.stream.RSPEsperEngine;
 import it.polimi.sr.rsp.RSPQLParser;
 import it.polimi.sr.rsp.RSPQuery;
 import org.apache.commons.io.FileUtils;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.system.IRIResolver;
 import org.parboiled.Parboiled;
 import org.parboiled.errors.ParseError;
@@ -24,34 +26,26 @@ import java.io.IOException;
 /**
  * Created by Riccardo on 03/08/16.
  */
-public class IncrementalGraph {
+public class NaiveJena {
 
     public static void main(String[] args) throws InterruptedException, IOException {
 
-
         RSPEsperEngine e = new RSPEVA();
         RSPQuery q = getRspQuery();
-        // RSPQuery q1 = getRspQuery();
 
         RSPQLEngine sr = (RSPQLEngine) e;
         sr.startProcessing();
-        ContinuousQueryExecution cqe = sr.registerQuery(q, null, Maintenance.INCREMENTAL, Entailment.RHODF);
 
-        // SDS sds = sr.getSDS(q);
-        // sr.registerQuery(q1, sds);
-
-        //executes a query creating the SDS (if it does not exists yet)
-        // ContinuousQueryExecutionImpl cqe = je.registerQuery(q, SDS); //executes the query on the given SDS (if compatible)
+        Model tbox = ModelFactory.createDefaultModel().read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/arist.tbox.owl");
+        ContinuousQueryExecution cqe = sr.registerQuery(q, tbox, Maintenance.NAIVE, Entailment.RHODF);
 
         if (q.isSelectType())
             sr.registerObserver(cqe, new SelectResponseSysOutObserver(true)); // attaches a new *RSP-QL query to the SDS
         if (q.isConstructType())
             sr.registerObserver(cqe, new ConstructResponseSysOutObserver(true)); // attaches a new *RSP-QL query to the SDS
 
-        //      (new Thread(new GraphStream(je, "D", "http://streamreasoning.org/iminds/massif/stream0", 1))).start();
-        (new Thread(new GraphStream(sr, "A", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
-        (new Thread(new GraphStream(sr, "B", "http://streamreasoning.org/iminds/massif/stream2", 1))).start();
-
+        (new Thread(new GraphStream(sr, "Painter", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
+        //(new Thread(new GraphStream(sr, "Writer", "http://streamreasoning.org/iminds/massif/stream2", 1))).start();
 
     }
 
