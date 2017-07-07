@@ -20,6 +20,8 @@ import it.polimi.rsp.baselines.rsp.sds.windows.DefaultWindow;
 import it.polimi.rsp.baselines.rsp.sds.windows.NamedWindow;
 import it.polimi.rsp.baselines.rsp.stream.RSPEsperEngine;
 import it.polimi.rsp.baselines.rsp.stream.item.StreamItem;
+import it.polimi.rsp.baselines.rsp.stream.item.jena.GraphStimulus;
+import it.polimi.rsp.baselines.rsp.stream.item.jena.StatementStimulus;
 import it.polimi.sr.rsp.RSPQuery;
 import it.polimi.sr.rsp.streams.Window;
 import it.polimi.sr.rsp.utils.EncodingUtils;
@@ -37,15 +39,16 @@ import java.util.Map;
 import java.util.Set;
 
 @Log4j
-public abstract class RSPQLEngine extends RSPEsperEngine {
+public class RSPQLEngine extends RSPEsperEngine {
 
     private Map<Query, SDS> queries;
 
-    public RSPQLEngine(StreamItem eventType, long t0) {
+    public RSPQLEngine(long t0) {
         this.queries = new HashMap<>();
         this.t0 = t0;
-        log.info("Added [" + eventType.getClass() + "] as TStream");
-        cepConfig.addEventType("TStream", eventType);
+        StreamItem typeMap = new GraphStimulus();
+        log.info("Added [" + typeMap.getClass() + "] as TStream");
+        cepConfig.addEventType("TStream", typeMap);
         cep = EPServiceProviderManager.getProvider(this.getClass().getCanonicalName(), cepConfig);
         cepAdm = cep.getEPAdministrator();
         cepRT = cep.getEPRuntime();
