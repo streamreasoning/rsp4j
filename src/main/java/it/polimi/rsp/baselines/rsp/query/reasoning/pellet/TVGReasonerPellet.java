@@ -1,9 +1,9 @@
-package it.polimi.rsp.baselines.rsp.query.reasoning;
+package it.polimi.rsp.baselines.rsp.query.reasoning.pellet;
 
 
-import it.polimi.rsp.baselines.rsp.sds.graphs.PelletInfTVGraph;
+import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasoner;
+import it.polimi.rsp.baselines.rsp.query.reasoning.TimeVaryingInfGraph;
 import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
-import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingInfGraph;
 import openllet.jena.PelletInfGraph;
 import openllet.jena.PelletReasoner;
 import openllet.jena.graph.loader.DefaultGraphLoader;

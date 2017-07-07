@@ -1,37 +1,37 @@
-package it.polimi.rsp.baselines.rsp.query.reasoning;
+package it.polimi.rsp.baselines.rsp.query.reasoning.jena;
 
-<<<<<<< Updated upstream
-import it.polimi.rsp.baselines.rsp.sds.graphs.BasicForwardRuleInfTVGraph;
-import it.polimi.rsp.baselines.rsp.sds.graphs.FBRuleInfTVGraph;
+import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasoner;
 import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
 import it.polimi.rsp.baselines.rsp.sds.windows.WindowModel;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.reasoner.InfGraph;
-=======
->>>>>>> Stashed changes
 import org.apache.jena.reasoner.Reasoner;
+import org.apache.jena.reasoner.ReasonerException;
+import org.apache.jena.reasoner.ReasonerFactory;
+import org.apache.jena.reasoner.rulesys.*;
+
+import java.util.List;
 
 /**
- * Created by riccardo on 06/07/2017.
+ * Created by riccardo on 05/07/2017.
  */
-<<<<<<< Updated upstream
-public class TVGReasoner extends GenericRuleReasoner {
+public class TVGReasonerJena extends GenericRuleReasoner implements TVGReasoner {
 
 
-    public TVGReasoner(List<Rule> rules) {
+    public TVGReasonerJena(List<Rule> rules) {
         super(rules);
     }
 
-    public TVGReasoner(ReasonerFactory factory, Resource configuration) {
+    public TVGReasonerJena(ReasonerFactory factory, Resource configuration) {
         super(factory, configuration);
     }
 
-    public TVGReasoner(List<Rule> rules, ReasonerFactory factory) {
+    public TVGReasonerJena(List<Rule> rules, ReasonerFactory factory) {
         super(rules, factory);
     }
 
-    protected TVGReasoner(List<Rule> rules, Graph schemaGraph, ReasonerFactory factory, RuleMode mode) {
+    protected TVGReasonerJena(List<Rule> rules, Graph schemaGraph, ReasonerFactory factory, RuleMode mode) {
         super(rules, schemaGraph, factory, mode);
     }
 
@@ -87,10 +87,41 @@ public class TVGReasoner extends GenericRuleReasoner {
         graph.rebind(data);
         return graph;
     }
-=======
-public interface TVGReasoner extends Reasoner {
->>>>>>> Stashed changes
 
-    //public TimeVaryingInfGraph bind(TimeVaryingGraph data);
-//    public TVGReasoner bindSchema(TimeVaryingGraph data);
+    /**
+     * Precompute the implications of a schema graph. The statements in the graph
+     * will be combined with the data when the final InfGraph is created.
+     */
+    @Override
+    public Reasoner bindSchema(Graph tbox) throws ReasonerException {
+        if (schemaGraph != null) {
+            throw new ReasonerException("Can only bind one schema at a time to a GenericRuleReasoner");
+        }
+        Graph graph = null;
+        if (mode == FORWARD) {
+            graph = new BasicForwardRuleInfTVGraph(this, rules, null, tbox, -1, null);
+            ((InfGraph) graph).prepare();
+        } else if (mode == FORWARD_RETE) {
+            graph = new RETERuleInfGraph(this, rules, null, tbox);
+            ((InfGraph) graph).prepare();
+        } else if (mode == BACKWARD) {
+            graph = tbox;
+        } else {
+            List<Rule> ruleSet = rules;
+            graph = new FBRuleInfGraph(this, ruleSet, getPreload(), tbox);
+            if (enableTGCCaching) ((FBRuleInfGraph) graph).setUseTGCCache();
+            ((FBRuleInfGraph) graph).prepare();
+        }
+        TVGReasonerJena grr = new TVGReasonerJena(rules, graph, factory, mode);
+        grr.setDerivationLogging(recordDerivations);
+        grr.setTraceOn(super.isTraceOn());
+        grr.setTransitiveClosureCaching(enableTGCCaching);
+        grr.setFunctorFiltering(filterFunctors);
+        if (preprocessorHooks != null) {
+            for (RulePreprocessHook preprocessorHook : preprocessorHooks) {
+                grr.addPreprocessingHook(preprocessorHook);
+            }
+        }
+        return grr;
+    }
 }

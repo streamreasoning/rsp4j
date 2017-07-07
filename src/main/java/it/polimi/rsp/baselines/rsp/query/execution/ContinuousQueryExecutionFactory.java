@@ -1,13 +1,16 @@
 package it.polimi.rsp.baselines.rsp.query.execution;
 
 import it.polimi.rsp.baselines.enums.Entailment;
+import it.polimi.rsp.baselines.rsp.query.reasoning.IdentityTVGReasoner;
 import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasoner;
-import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasonerJena;
+import it.polimi.rsp.baselines.rsp.query.reasoning.jena.TVGReasonerJena;
+import it.polimi.rsp.baselines.rsp.query.reasoning.pellet.TVGReasonerPellet;
 import it.polimi.rsp.baselines.rsp.sds.SDS;
 import it.polimi.rsp.baselines.utils.BaselinesUtils;
 import it.polimi.sr.rsp.RSPQuery;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
 import org.apache.jena.reasoner.rulesys.RDFSRuleReasoner;
 import org.apache.jena.reasoner.rulesys.Rule;
@@ -21,7 +24,7 @@ import java.util.List;
 public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory {
 
 
-    static public ContinuousQueryExecution create(RSPQuery query, SDS sds, TVGReasonerJena r) {
+    static public ContinuousQueryExecution create(RSPQuery query, SDS sds, TVGReasoner r) {
         ContinuousQueryExecution cqe;
         if (query.isSelectType()) {
             cqe = new ContinuousSelect(query, sds, r);
@@ -33,8 +36,8 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
         return cqe;
     }
 
-    public static TVGReasonerJena getGenericRuleReasoner(Entailment ent, Model tbox) {
-        TVGReasonerJena reasoner = null;
+    public static TVGReasoner getGenericRuleReasoner(Entailment ent, Model tbox) {
+        TVGReasoner reasoner = null;
         switch (ent) {
             case OWL2DL:
                 break;
@@ -44,7 +47,12 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
                 break;
             case OWL2RL:
                 break;
+            case PELLET:
+                reasoner = new TVGReasonerPellet();
+                reasoner.bindSchema(tbox);
+                break;
             case RDFS:
+                ReasonerRegistry.getRDFSSimpleReasoner();
                 reasoner = getTvgReasoner(tbox, Rule.rulesFromURL(RDFSRuleReasoner.DEFAULT_RULES));
                 break;
             case RHODF:
@@ -52,7 +60,7 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
                 break;
             case NONE:
             default:
-                reasoner = null;
+                reasoner = new IdentityTVGReasoner();
         }
         return reasoner;
 

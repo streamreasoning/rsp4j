@@ -2,6 +2,8 @@ package it.polimi.rsp.baselines.rsp;
 
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
+import com.espertech.esper.core.service.EPStatementImpl;
+import com.espertech.esper.view.View;
 import it.polimi.heaven.rsp.rsp.querying.Query;
 import it.polimi.rsp.baselines.enums.Entailment;
 import it.polimi.rsp.baselines.enums.Maintenance;
@@ -9,16 +11,15 @@ import it.polimi.rsp.baselines.rsp.query.execution.ContinuousQueryExecution;
 import it.polimi.rsp.baselines.rsp.query.execution.ContinuousQueryExecutionFactory;
 import it.polimi.rsp.baselines.rsp.query.observer.QueryResponseObserver;
 import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasoner;
-import it.polimi.rsp.baselines.rsp.query.reasoning.TVGReasonerJena;
 import it.polimi.rsp.baselines.rsp.sds.SDS;
 import it.polimi.rsp.baselines.rsp.sds.SDSImpl;
 import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
 import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraphBase;
-import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingInfGraph;
+import it.polimi.rsp.baselines.rsp.query.reasoning.TimeVaryingInfGraph;
 import it.polimi.rsp.baselines.rsp.sds.windows.DefaultWindow;
 import it.polimi.rsp.baselines.rsp.sds.windows.NamedWindow;
 import it.polimi.rsp.baselines.rsp.stream.RSPEsperEngine;
-import it.polimi.rsp.baselines.rsp.stream.element.StreamItem;
+import it.polimi.rsp.baselines.rsp.stream.item.StreamItem;
 import it.polimi.sr.rsp.RSPQuery;
 import it.polimi.sr.rsp.streams.Window;
 import it.polimi.sr.rsp.utils.EncodingUtils;
@@ -60,7 +61,7 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
 
         Model def = loadStaticGraph(bq, new ModelCom(new TimeVaryingGraphBase(-1, null)));
 
-        TVGReasonerJena reasoner = ContinuousQueryExecutionFactory.getGenericRuleReasoner(entailment, tbox);
+        TVGReasoner reasoner = ContinuousQueryExecutionFactory.getGenericRuleReasoner(entailment, tbox);
 
         InfModel kb_star = ModelFactory.createInfModel(reasoner.bind(def.getGraph()));
 
@@ -90,7 +91,7 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
         ceq.addObserver(o);
     }
 
-    private void addWindows(RSPQuery bq, SDS sds, TVGReasonerJena reasoner) {
+    private void addWindows(RSPQuery bq, SDS sds, TVGReasoner reasoner) {
         //Default Time-Varying Graph
         int i = 0;
         TimeVaryingGraph graph = new TimeVaryingGraphBase(-1, null);
@@ -115,7 +116,7 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
         }
     }
 
-    private void addNamedWindows(SDS sds, RSPQuery bq, TVGReasonerJena reasoner) {
+    private void addNamedWindows(SDS sds, RSPQuery bq, TVGReasoner reasoner) {
         int j = 0;
         if (bq.getNamedwindows() != null) {
             for (Map.Entry<Node, Window> entry : bq.getNamedwindows().entrySet()) {
@@ -129,7 +130,9 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
                 log.info(w.getStream().toEPLSchema());
                 log.info("creating named graph " + window_uri + "");
 
-                EPStatement epl = getEpStatement(sds, w, statementName);
+                EPStatementImpl epl = (EPStatementImpl) getEpStatement(sds, w, statementName);
+                View[] views = epl.getParentView().getViews();
+
                 log.info(epl.toString());
 
                 TimeVaryingGraph bind = (TimeVaryingGraph) reasoner.bind(new TimeVaryingGraphBase());
@@ -153,7 +156,7 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
         return epl;
     }
 
-    private void addNamedStaticGraph(RSPQuery bq, SDS sds, TVGReasonerJena reasoner) {
+    private void addNamedStaticGraph(RSPQuery bq, SDS sds, TVGReasoner reasoner) {
         //Named Static Graphs
         if (bq.getNamedGraphURIs() != null)
             for (String g : bq.getNamedGraphURIs()) {
