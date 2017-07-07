@@ -1,26 +1,26 @@
-package it.polimi.rsp.baselines.rsp.sds.graphs;
+package it.polimi.rsp.baselines.rsp.query.reasoning.pellet;
 
+import it.polimi.rsp.baselines.rsp.query.reasoning.TimeVaryingInfGraph;
 import it.polimi.rsp.baselines.rsp.sds.windows.WindowModel;
-import org.apache.jena.mem.GraphMem;
+import openllet.jena.PelletInfGraph;
+import openllet.jena.PelletReasoner;
+import openllet.jena.graph.loader.GraphLoader;
+import org.apache.jena.graph.Graph;
 
 /**
  * Created by riccardo on 05/07/2017.
  */
-public class TimeVaryingGraphBase extends GraphMem implements TimeVaryingGraph {
+public class PelletInfTVGraph extends PelletInfGraph implements TimeVaryingInfGraph {
 
     private long last_timestamp;
     private WindowModel window;
 
-
-    public TimeVaryingGraphBase() {
-        this.last_timestamp = -1;
-        this.window = null;
-    }
-
-    public TimeVaryingGraphBase(long last_timestamp, WindowModel window) {
+    public PelletInfTVGraph(Graph graph, PelletReasoner pellet, GraphLoader loader, WindowModel w, long last_timestamp) {
+        super(graph, pellet, loader);
         this.last_timestamp = last_timestamp;
-        this.window = window;
+        this.window = w;
     }
+
 
     @Override
     public long getTimestamp() {

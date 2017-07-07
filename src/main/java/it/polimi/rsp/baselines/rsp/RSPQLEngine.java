@@ -2,6 +2,8 @@ package it.polimi.rsp.baselines.rsp;
 
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
+import com.espertech.esper.core.service.EPStatementImpl;
+import com.espertech.esper.view.View;
 import it.polimi.heaven.rsp.rsp.querying.Query;
 import it.polimi.rsp.baselines.enums.Entailment;
 import it.polimi.rsp.baselines.enums.Maintenance;
@@ -13,23 +15,23 @@ import it.polimi.rsp.baselines.rsp.sds.SDS;
 import it.polimi.rsp.baselines.rsp.sds.SDSImpl;
 import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
 import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraphBase;
-import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingInfGraph;
+import it.polimi.rsp.baselines.rsp.query.reasoning.TimeVaryingInfGraph;
 import it.polimi.rsp.baselines.rsp.sds.windows.DefaultWindow;
 import it.polimi.rsp.baselines.rsp.sds.windows.NamedWindow;
 import it.polimi.rsp.baselines.rsp.stream.RSPEsperEngine;
-import it.polimi.rsp.baselines.rsp.stream.element.StreamItem;
+import it.polimi.rsp.baselines.rsp.stream.item.StreamItem;
+import it.polimi.rsp.baselines.rsp.stream.item.jena.GraphStimulus;
+import it.polimi.rsp.baselines.rsp.stream.item.jena.StatementStimulus;
 import it.polimi.sr.rsp.RSPQuery;
 import it.polimi.sr.rsp.streams.Window;
 import it.polimi.sr.rsp.utils.EncodingUtils;
 import lombok.extern.log4j.Log4j;
-import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;
 import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.impl.InfModelImpl;
 import org.apache.jena.rdf.model.impl.ModelCom;
-import org.apache.jena.reasoner.InfGraph;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -37,15 +39,16 @@ import java.util.Map;
 import java.util.Set;
 
 @Log4j
-public abstract class RSPQLEngine extends RSPEsperEngine {
+public class RSPQLEngine extends RSPEsperEngine {
 
     private Map<Query, SDS> queries;
 
-    public RSPQLEngine(StreamItem eventType, long t0) {
+    public RSPQLEngine(long t0) {
         this.queries = new HashMap<>();
         this.t0 = t0;
-        log.info("Added [" + eventType.getClass() + "] as TStream");
-        cepConfig.addEventType("TStream", eventType);
+        StreamItem typeMap = new GraphStimulus();
+        log.info("Added [" + typeMap.getClass() + "] as TStream");
+        cepConfig.addEventType("TStream", typeMap);
         cep = EPServiceProviderManager.getProvider(this.getClass().getCanonicalName(), cepConfig);
         cepAdm = cep.getEPAdministrator();
         cepRT = cep.getEPRuntime();
@@ -53,20 +56,17 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
     }
 
     public ContinuousQueryExecution registerQuery(Query q) {
-        return registerQuery((RSPQuery) q, Maintenance.NAIVE, Entailment.NONE);
+        return registerQuery((RSPQuery) q, ModelFactory.createDefaultModel(), Maintenance.NAIVE, Entailment.NONE);
     }
 
-    public ContinuousQueryExecution registerQuery(RSPQuery bq, Maintenance maintenance, Entailment entailment) {
+    public ContinuousQueryExecution registerQuery(RSPQuery bq, Model tbox, Maintenance maintenance, Entailment entailment) {
         log.info(bq.getQ().toString());
 
-        Model tbox = ModelFactory.createMemModelMaker().createDefaultModel();
         Model def = loadStaticGraph(bq, new ModelCom(new TimeVaryingGraphBase(-1, null)));
 
-        TVGReasoner reasoner = ContinuousQueryExecutionFactory.getGenericRuleReasoner(entailment);
-        reasoner = (TVGReasoner) reasoner.bindSchema(tbox);
+        TVGReasoner reasoner = ContinuousQueryExecutionFactory.getGenericRuleReasoner(entailment, tbox);
 
-        TimeVaryingInfGraph bind = (TimeVaryingInfGraph) reasoner.bind(def.getGraph());
-        InfModel kb_star = ModelFactory.createInfModel(bind);
+        InfModel kb_star = ModelFactory.createInfModel(reasoner.bind(def.getGraph()));
 
         SDSImpl sds = new SDSImpl(tbox, kb_star, bq.getResolver(), maintenance, "", cep);
         ContinuousQueryExecution qe = ContinuousQueryExecutionFactory.create(bq, sds, reasoner);
@@ -85,7 +85,7 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
     public ContinuousQueryExecution registerQuery(RSPQuery bq, SDS sds, Entailment e) {
         //TODO check compatibility
         queries.put(bq, sds);
-        ContinuousQueryExecution qe = ContinuousQueryExecutionFactory.create(bq, sds, ContinuousQueryExecutionFactory.getGenericRuleReasoner(e));
+        ContinuousQueryExecution qe = ContinuousQueryExecutionFactory.create(bq, sds, ContinuousQueryExecutionFactory.getGenericRuleReasoner(e, ModelFactory.createDefaultModel()));
         sds.addQueryExecutor(qe);
         return qe;
     }
@@ -133,10 +133,12 @@ public abstract class RSPQLEngine extends RSPEsperEngine {
                 log.info(w.getStream().toEPLSchema());
                 log.info("creating named graph " + window_uri + "");
 
-                EPStatement epl = getEpStatement(sds, w, statementName);
+                EPStatementImpl epl = (EPStatementImpl) getEpStatement(sds, w, statementName);
+                View[] views = epl.getParentView().getViews();
+
                 log.info(epl.toString());
 
-                TimeVaryingGraph bind = (TimeVaryingGraph) reasoner.bind(new TimeVaryingGraphBase(-1, null));
+                TimeVaryingGraph bind = (TimeVaryingGraph) reasoner.bind(new TimeVaryingGraphBase());
                 NamedWindow tvg = new NamedWindow(sds.getMaintenanceType(), bind, epl);
                 sds.addNamedTimeVaryingGraph(statementName, window_uri, stream_uri, tvg);
                 epl.addListener(tvg);

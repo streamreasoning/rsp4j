@@ -5,9 +5,7 @@ import it.polimi.rsp.baselines.rsp.query.execution.ContinuousQueryExecution;
 import it.polimi.rsp.baselines.rsp.sds.windows.DefaultWindow;
 import it.polimi.rsp.baselines.rsp.sds.windows.NamedWindow;
 import it.polimi.rsp.baselines.rsp.sds.windows.WindowModel;
-import org.apache.jena.graph.Graph;
 import org.apache.jena.query.Dataset;
-import org.apache.jena.rdf.model.Model;
 
 /**
  * Created by riccardo on 01/07/2017.

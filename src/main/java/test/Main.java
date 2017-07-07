@@ -4,7 +4,7 @@ import com.espertech.esper.client.Configuration;
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.soda.EPStatementObjectModel;
-import it.polimi.rsp.baselines.rsp.stream.element.GraphStimulus;
+import it.polimi.rsp.baselines.rsp.stream.item.jena.GraphStimulus;
 
 /**
  * Created by riccardo on 04/07/2017.

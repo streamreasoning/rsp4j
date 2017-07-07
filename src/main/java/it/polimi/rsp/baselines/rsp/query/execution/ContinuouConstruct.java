@@ -6,7 +6,6 @@ import it.polimi.rsp.baselines.rsp.query.response.ConstructResponse;
 import it.polimi.rsp.baselines.rsp.sds.SDS;
 import it.polimi.sr.rsp.RSPQuery;
 import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.reasoner.Reasoner;
 
 /**
  * Created by riccardo on 03/07/2017.
