@@ -1,9 +1,9 @@
-package it.polimi.rsp.baselines.rsp.stream.element;
+package it.polimi.rsp.baselines.rsp.stream.item.jena;
 
 import it.polimi.rdf.RDFLine;
 import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
+import it.polimi.rsp.baselines.rsp.stream.item.StreamItem;
 import lombok.NoArgsConstructor;
-import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;

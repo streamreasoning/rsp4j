@@ -1,4 +1,4 @@
-package it.polimi.rsp.baselines.rsp.stream.element;
+package it.polimi.rsp.baselines.rsp.stream.item;
 
 import it.polimi.rdf.RDFLine;
 import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
@@ -6,7 +6,6 @@ import it.polimi.streaming.Stimulus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.jena.graph.Graph;
 
 import java.util.HashMap;
 import java.util.Set;
