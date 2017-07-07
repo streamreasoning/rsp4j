@@ -2,7 +2,6 @@ package test.reasoning.rhod.multistream;
 
 import it.polimi.rsp.baselines.enums.Entailment;
 import it.polimi.rsp.baselines.enums.Maintenance;
-import it.polimi.rsp.baselines.rsp.RSPEVA;
 import it.polimi.rsp.baselines.rsp.RSPQLEngine;
 import it.polimi.rsp.baselines.rsp.query.execution.ContinuousQueryExecution;
 import it.polimi.rsp.baselines.rsp.query.observer.ConstructResponseSysOutObserver;
@@ -30,7 +29,7 @@ public class NaiveJena {
 
     public static void main(String[] args) throws InterruptedException, IOException {
 
-        RSPEsperEngine e = new RSPEVA();
+        RSPEsperEngine e = new RSPQLEngine(0);
         RSPQuery q = getRspQuery();
 
         RSPQLEngine sr = (RSPQLEngine) e;

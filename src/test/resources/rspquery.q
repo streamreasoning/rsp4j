@@ -1,7 +1,7 @@
 PREFIX : <http://streamreasoning.org/iminds/massif/>
 
 SELECT *
-FROM NAMED WINDOW  :win1 [RANGE 8 s, SLIDE 2s] ON STREAM :stream1
+FROM NAMED WINDOW  :win1 [RANGE 5 s, SLIDE 5s] ON STREAM :stream1
 WHERE  {
 
     WINDOW ?w {
