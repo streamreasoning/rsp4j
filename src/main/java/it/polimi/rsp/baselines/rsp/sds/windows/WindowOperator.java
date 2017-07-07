@@ -6,7 +6,7 @@ import com.espertech.esper.client.EventBean;
 import com.espertech.esper.event.map.MapEventBean;
 import it.polimi.rsp.baselines.enums.Maintenance;
 import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
-import it.polimi.rsp.baselines.rsp.stream.element.StreamItem;
+import it.polimi.rsp.baselines.rsp.stream.item.StreamItem;
 import lombok.extern.log4j.Log4j;
 
 /**

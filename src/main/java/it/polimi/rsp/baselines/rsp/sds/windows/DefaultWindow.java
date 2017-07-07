@@ -5,10 +5,9 @@ import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import it.polimi.rsp.baselines.enums.Maintenance;
 import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingGraph;
-import it.polimi.rsp.baselines.rsp.sds.graphs.TimeVaryingInfGraph;
+import it.polimi.rsp.baselines.rsp.query.reasoning.TimeVaryingInfGraph;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
-import org.apache.jena.graph.Graph;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -2,8 +2,10 @@ package it.polimi.rsp.baselines.rsp.stream;
 
 import com.espertech.esper.client.*;
 import com.espertech.esper.client.time.CurrentTimeEvent;
+import com.espertech.esper.core.service.EPServiceProviderImpl;
+import com.espertech.esper.view.ViewServiceProvider;
 import it.polimi.heaven.rsp.rsp.RSPEngine;
-import it.polimi.rsp.baselines.rsp.stream.element.StreamItem;
+import it.polimi.rsp.baselines.rsp.stream.item.StreamItem;
 import it.polimi.sr.rsp.utils.EncodingUtils;
 import it.polimi.streaming.EventProcessor;
 import it.polimi.streaming.Stimulus;
@@ -39,6 +41,8 @@ public abstract class RSPEsperEngine implements RSPEngine {
         cepConfig.getEngineDefaults().getLogging().setEnableTimerDebug(true);
         cepConfig.getEngineDefaults().getLogging().setEnableQueryPlan(true);
         cepConfig.getEngineDefaults().getMetricsReporting().setEnableMetricsReporting(true);
+        //cepConfig.addPlugInView("rspql", "win", "rspqlfact");
+
     }
 
     public void startProcessing() {
@@ -62,7 +66,7 @@ public abstract class RSPEsperEngine implements RSPEngine {
         StreamItem g = (StreamItem) e;
         if (cepRT.getCurrentTime() < g.getAppTimestamp()) {
             log.info("Sent time event with current [" + (g.getAppTimestamp()) + "]");
-            cepRT.sendEvent(new CurrentTimeEvent(g.getAppTimestamp()+ 1));
+            cepRT.sendEvent(new CurrentTimeEvent(g.getAppTimestamp() + 1));
             currentTimestamp = g.getAppTimestamp();// TODO
             log.info("Current runtime is now [" + cepRT.getCurrentTime() + "]");
         }
