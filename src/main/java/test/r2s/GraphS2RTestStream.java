@@ -4,6 +4,7 @@ import it.polimi.rsp.core.rsp.RSPQLEngine;
 import it.polimi.rsp.core.rsp.stream.item.jena.GraphStimulus;
 import lombok.AllArgsConstructor;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 
 import java.util.Random;
 
@@ -24,27 +25,29 @@ public class GraphS2RTestStream implements Runnable {
 
         Model m = ModelFactory.createDefaultModel();
 
-        genAndSend("A", hasTimestamp, 1);
-        genAndSend("B", hasTimestamp, 2);
-        genAndSend("A", hasTimestamp, 3);
-        genAndSend("B", hasTimestamp, 4);
-        genAndSend("A", hasTimestamp, 5);
-        genAndSend("B", hasTimestamp, 6);
-        genAndSend("A", hasTimestamp, 7);
-        genAndSend("C", hasTimestamp, 8);
-        genAndSend("A", hasTimestamp, 9);
-        genAndSend("C", hasTimestamp, 10);
-        genAndSend("D", hasTimestamp, 11);
-        genAndSend("C", hasTimestamp, 12);
+        genAndSend("A", RDF.type, 1);
+        genAndSend("B", RDF.type, 2);
+        genAndSend("A", RDF.type, 3);  //1 AND 3 COLLAPSE
+        genAndSend("B", RDF.type, 4);
+        genAndSend("A", RDF.type, 5);  //5 AND 3 COLLAPSE
+        genAndSend("B", RDF.type, 6);
+        genAndSend("A", RDF.type, 7);  //5 AND 7 COLLAPSE
+        genAndSend("A", RDF.type, 8);
+        genAndSend("C", RDF.type, 9);  //7 AND 8 COLLAPSE
+        genAndSend("A", RDF.type, 10);
+        genAndSend("C", RDF.type, 11); //11 AND 9 COLLAPSE
+        genAndSend("D", RDF.type, 12);
+        genAndSend("C", RDF.type, 13); //7 AND 8 COLLAPSE
 
 
     }
 
-    private void genAndSend(String name, Property hasTimestamp, int i) {
+    private void genAndSend(String name, Property p, int i) {
         Model m = ModelFactory.createDefaultModel();
-        Resource token = ResourceFactory.createResource(stream_uri + "#" + name );
-        Literal ts = m.createTypedLiteral(new Integer(i * 1000));
-        m.add(m.createStatement(token, hasTimestamp, ts));
+        Resource s = ResourceFactory.createResource(stream_uri + "#" + name);
+        Resource o = ResourceFactory.createResource(stream_uri + "#Sample");
+        //Literal ts = m.createTypedLiteral(new Integer(i * 1000));
+        m.add(m.createStatement(s, p, o));
         GraphStimulus t = new GraphStimulus(i * 1000, m.getGraph(), stream_uri);
         System.err.println("[" + System.currentTimeMillis() + "] Sending [" + t + "] on " + stream_uri + " at " + i * 1000);
 

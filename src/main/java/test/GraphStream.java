@@ -37,8 +37,8 @@ public class GraphStream implements Runnable {
             Literal age = m.createTypedLiteral(r.nextInt(99));
             Literal ts = m.createTypedLiteral(new Integer(i * 1000));
 
-            m.add(m.createStatement(person, RDF.type, type));
-            m.add(m.createStatement(person, hasAge, age));
+            //m.add(m.createStatement(person, RDF.type, type));
+            // m.add(m.createStatement(person, hasAge, age));
             m.add(m.createStatement(person, hasTimestamp, ts));
 
             GraphStimulus t = new GraphStimulus(i * 1000, m.getGraph(), stream_uri);

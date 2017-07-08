@@ -4,8 +4,8 @@ import it.polimi.rsp.core.enums.Entailment;
 import it.polimi.rsp.core.enums.Maintenance;
 import it.polimi.rsp.core.rsp.RSPQLEngine;
 import it.polimi.rsp.core.rsp.query.execution.ContinuousQueryExecution;
-import it.polimi.rsp.core.rsp.query.observer.ConstructResponseSysOutObserver;
-import it.polimi.rsp.core.rsp.query.observer.SelectResponseSysOutObserver;
+import it.polimi.rsp.core.rsp.query.formatter.ConstructResponseSysOutFormatter;
+import it.polimi.rsp.core.rsp.query.formatter.SelectResponseSysOutFormatter;
 import it.polimi.rsp.core.rsp.stream.RSPEsperEngine;
 import it.polimi.sr.rsp.RSPQLParser;
 import it.polimi.sr.rsp.RSPQuery;
@@ -39,12 +39,11 @@ public class NaiveJena {
         ContinuousQueryExecution cqe = sr.registerQuery(q, tbox, Maintenance.NAIVE, Entailment.RHODF);
 
         if (q.isSelectType())
-            sr.registerObserver(cqe, new SelectResponseSysOutObserver(true)); // attaches a new *RSP-QL query to the SDS
+            sr.registerObserver(cqe, new SelectResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
         if (q.isConstructType())
-            sr.registerObserver(cqe, new ConstructResponseSysOutObserver(true)); // attaches a new *RSP-QL query to the SDS
+            sr.registerObserver(cqe, new ConstructResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
 
         (new Thread(new GraphStream(sr, "Painter", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
-        //(new Thread(new GraphS2RTestStream(sr, "Writer", "http://streamreasoning.org/iminds/massif/stream2", 1))).start();
 
     }
 
@@ -66,7 +65,7 @@ public class NaiveJena {
     }
 
     public static String getInput() throws IOException {
-        File file = new File("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/test/resources/rspquery.q");
+        File file = new File("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/test/resources/q52.rspql");
         return FileUtils.readFileToString(file);
     }
 }
