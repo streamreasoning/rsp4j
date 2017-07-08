@@ -1,4 +1,4 @@
-package it.polimi.rsp.core.rsp.query.observer;
+package it.polimi.rsp.core.rsp.query.formatter;
 
 import it.polimi.rsp.core.rsp.query.response.ConstructResponse;
 import it.polimi.rsp.core.rsp.query.response.SelectResponse;
@@ -8,14 +8,13 @@ import lombok.RequiredArgsConstructor;
 import org.apache.jena.query.ResultSetFormatter;
 
 import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Created by riccardo on 03/07/2017.
  */
 
 @RequiredArgsConstructor
-public class GenericResponseSysOutObserver extends QueryResponseObserver {
+public class GenericResponseSysOutFormatter extends QueryResponseFormatter {
 
     long last_result = -1L;
 

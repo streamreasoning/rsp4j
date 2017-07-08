@@ -1,4 +1,4 @@
-package it.polimi.rsp.core.rsp.query.observer;
+package it.polimi.rsp.core.rsp.query.formatter;
 
 import it.polimi.rsp.core.rsp.query.response.ConstructResponse;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import java.util.Observable;
  */
 
 @RequiredArgsConstructor
-public class ConstructResponseSysOutObserver extends QueryResponseObserver {
+public class ConstructResponseSysOutFormatter extends QueryResponseFormatter {
 
     long last_result = -1L;
 
