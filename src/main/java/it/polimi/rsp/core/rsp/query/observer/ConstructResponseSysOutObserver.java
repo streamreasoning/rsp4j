@@ -22,12 +22,11 @@ public class ConstructResponseSysOutObserver extends QueryResponseObserver {
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("[" + System.currentTimeMillis() + "] Result");
         ConstructResponse sr = (ConstructResponse) arg;
-
         if (sr.getCep_timestamp() != last_result && distinct) {
-            sr.getResults().write(System.out, "TTL");
             last_result = sr.getCep_timestamp();
+            System.out.println("[" + last_result + "] Result");
+            sr.getResults().write(System.out, "TTL");
         }
 
     }
