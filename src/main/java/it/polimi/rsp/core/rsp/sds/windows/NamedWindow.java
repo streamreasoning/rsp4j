@@ -29,20 +29,16 @@ public class NamedWindow extends WindowOperator {
 
     @Override
     public synchronized void update(EventBean[] newData, EventBean[] oldData, EPStatement stmt, EPServiceProvider esp) {
-        EPStatementImpl epli = (EPStatementImpl) stmt;
-        View o = (OutputProcessViewConditionSnapshot) epli.getParentView();
-        TimeWindowView views = (TimeWindowView) o.getParent();
-
+//        EPStatementImpl epli = (EPStatementImpl) stmt;
+//        View o = (OutputProcessViewConditionSnapshot) epli.getParentView();
+//        TimeWindowView views = (TimeWindowView) o.getParent();
         long currentTime = esp.getEPRuntime().getCurrentTime();
-        log.info("[" + Thread.currentThread() + "][" + System.currentTimeMillis() + "] FROM STATEMENT: " + stmt.getText() + " AT "
-                + currentTime);
 
         if (stmt != statement) {
             throw new RuntimeException("Wrong Statement");
         } else {
             super.update(newData, oldData, stmt, esp);
-            notifyObservers(currentTime);
-            log.info("NOTIFY");
+            notifyObservers(this);
         }
     }
 

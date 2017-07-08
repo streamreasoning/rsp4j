@@ -1,4 +1,4 @@
-package it.polimi.rsp.core.rsp.query.observer;
+package it.polimi.rsp.core.rsp.query.formatter;
 
 import it.polimi.rsp.core.rsp.query.response.ConstructResponse;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import java.util.Observable;
  */
 
 @RequiredArgsConstructor
-public class ConstructResponseSysOutObserver extends QueryResponseObserver {
+public class ConstructResponseSysOutFormatter extends QueryResponseFormatter {
 
     long last_result = -1L;
 
@@ -22,12 +22,11 @@ public class ConstructResponseSysOutObserver extends QueryResponseObserver {
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("[" + System.currentTimeMillis() + "] Result");
         ConstructResponse sr = (ConstructResponse) arg;
-
         if (sr.getCep_timestamp() != last_result && distinct) {
-            sr.getResults().write(System.out, "JSON-LD");
             last_result = sr.getCep_timestamp();
+            System.out.println("[" + last_result + "] Result");
+            sr.getResults().write(System.out, "TTL");
         }
 
     }
