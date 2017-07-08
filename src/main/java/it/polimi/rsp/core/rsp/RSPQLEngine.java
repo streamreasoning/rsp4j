@@ -7,7 +7,7 @@ import it.polimi.rsp.core.enums.Entailment;
 import it.polimi.rsp.core.enums.Maintenance;
 import it.polimi.rsp.core.rsp.query.execution.ContinuousQueryExecution;
 import it.polimi.rsp.core.rsp.query.execution.jena.ContinuousQueryExecutionFactory;
-import it.polimi.rsp.core.rsp.query.observer.QueryResponseObserver;
+import it.polimi.rsp.core.rsp.query.formatter.QueryResponseFormatter;
 import it.polimi.rsp.core.rsp.query.reasoning.TVGReasoner;
 import it.polimi.rsp.core.rsp.query.reasoning.TimeVaryingInfGraph;
 import it.polimi.rsp.core.rsp.sds.SDS;
@@ -79,7 +79,7 @@ public class RSPQLEngine extends RSPEsperEngine {
         return qe;
     }
 
-    public void registerObserver(ContinuousQueryExecution ceq, QueryResponseObserver o) {
+    public void registerObserver(ContinuousQueryExecution ceq, QueryResponseFormatter o) {
         ceq.addObserver(o);
     }
 
