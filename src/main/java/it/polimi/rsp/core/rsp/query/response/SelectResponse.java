@@ -1,31 +1,32 @@
 package it.polimi.rsp.core.rsp.query.response;
 
+import it.polimi.rsp.core.rsp.query.execution.jena.TimeVaryingResultSetMem;
 import it.polimi.services.FileService;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import it.polimi.sr.rsp.RSPQuery;
 import lombok.Getter;
+import lombok.extern.java.Log;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFactory;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.sparql.engine.ResultSetStream;
+import org.apache.jena.query.ResultSetRewindable;
 import org.apache.jena.sparql.engine.binding.Binding;
-import org.apache.jena.sparql.util.ResultSetUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Log
 @Getter
 public final class SelectResponse extends InstantaneousResponse {
 
+    private List<Binding> solutionSet;
     private ResultSet results;
 
     public SelectResponse(String id, RSPQuery query, ResultSet results, long cep_timestamp) {
         super(id, System.currentTimeMillis(), cep_timestamp, query);
-        this.results = results;
+        ResultSetRewindable resultSetRewindable = ResultSetFactory.copyResults(results);
+        this.results = resultSetRewindable;
+        this.solutionSet = getSolutionSet(resultSetRewindable);
+
     }
 
     @Override
@@ -54,19 +55,59 @@ public final class SelectResponse extends InstantaneousResponse {
     }
 
     @Override
-    public InstantaneousResponse minus(InstantaneousResponse r) {
-        SelectResponse r1 = (SelectResponse) r;
-        ResultSet res = r1.getResults();
-        Set<QuerySolution> query_solutions = new HashSet<QuerySolution>();
-        while (res.hasNext()) {
-            QuerySolution qs = this.results.next();
-            query_solutions.add(qs);
-        }
-        ResultSetFactory.makeRewindable(this.results);
+    public InstantaneousResponse minus(InstantaneousResponse new_response) {
+        TimeVaryingResultSetMem tvResultSet;
+        if (new_response == null) {
+            tvResultSet = new TimeVaryingResultSetMem(new ArrayList<Binding>(), getQuery().getResultVars());
+        } else {
 
-        while (results.hasNext()) {
+            SelectResponse remove1 = (SelectResponse) new_response;
+            ResultSetRewindable resultSetRewindable = ResultSetFactory.makeRewindable(remove1.getResults());
+            resultSetRewindable.reset();
+
+            List<Binding> removeSolutionSet = getSolutionSet(resultSetRewindable);
+            resultSetRewindable.reset();
+
+            this.solutionSet.removeAll(removeSolutionSet);
+
+            tvResultSet = new TimeVaryingResultSetMem(this.solutionSet, this.getResults().getResultVars());
         }
-        return r;
+        return new SelectResponse(getId(), getQuery(), tvResultSet, getCep_timestamp());
+    }
+
+    @Override
+    public InstantaneousResponse and(InstantaneousResponse new_response) {
+        TimeVaryingResultSetMem tvResultSet;
+        if (new_response == null) {
+            tvResultSet = new TimeVaryingResultSetMem(new ArrayList<Binding>(), getQuery().getResultVars());
+        } else {
+
+            SelectResponse remove1 = (SelectResponse) new_response;
+            ResultSetRewindable rs = ResultSetFactory.makeRewindable(remove1.getResults());
+            rs.reset();
+
+            List<Binding> newSolutionBindings = getSolutionSet(rs);
+            rs.reset();
+
+            List<Binding> copy = new ArrayList<>(this.solutionSet);
+            copy.removeAll(newSolutionBindings);
+
+            this.solutionSet.removeAll(copy);
+
+            tvResultSet = new TimeVaryingResultSetMem(this.solutionSet, getQuery().getResultVars());
+        }
+
+        return new SelectResponse(getId(), getQuery(), tvResultSet, getCep_timestamp());
 
     }
+
+    private List<Binding> getSolutionSet(ResultSet results) {
+        List<Binding> solutions = new ArrayList<>();
+        while (results.hasNext()) {
+            solutions.add(results.nextBinding());
+        }
+        return solutions;
+    }
+
+
 }

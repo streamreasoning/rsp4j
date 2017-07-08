@@ -26,4 +26,6 @@ public abstract class InstantaneousResponse implements Response, Collectable {
 	}
 
 	public abstract InstantaneousResponse minus(InstantaneousResponse r);
+
+    public abstract InstantaneousResponse and(InstantaneousResponse new_response);
 }

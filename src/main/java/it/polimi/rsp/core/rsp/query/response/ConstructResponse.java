@@ -46,8 +46,19 @@ public final class ConstructResponse extends InstantaneousResponse {
 
     @Override
     public InstantaneousResponse minus(InstantaneousResponse r) {
-        ConstructResponse cr = (ConstructResponse) r;
-        Model copy = ModelFactory.createModelForGraph(results.getGraph());
-        return new ConstructResponse(getId(), getQuery(), copy.difference(((ConstructResponse) r).getResults()), getCep_timestamp());
+        return new ConstructResponse(getId(), getQuery(), results.difference(((ConstructResponse) r).getResults()), getCep_timestamp());
+    }
+
+    @Override
+    public InstantaneousResponse and(InstantaneousResponse new_response) {
+        Model intersection;
+        if (new_response == null) {
+            intersection = ModelFactory.createDefaultModel();
+        } else {
+            Model r = ((ConstructResponse) new_response).getResults();
+            Model difference = this.results.difference(r);
+            intersection = this.results.difference(difference);
+        }
+        return new ConstructResponse(getId(), getQuery(), intersection, getCep_timestamp());
     }
 }

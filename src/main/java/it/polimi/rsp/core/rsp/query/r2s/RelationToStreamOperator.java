@@ -23,7 +23,7 @@ public interface RelationToStreamOperator {
 
 
     public class ISTREAM implements RelationToStreamOperator {
-        private InstantaneousResponse r;
+        private InstantaneousResponse last_response;
         private final int i;
 
         public ISTREAM(int i) {
@@ -35,12 +35,12 @@ public interface RelationToStreamOperator {
         }
 
         @Override
-        public InstantaneousResponse eval(InstantaneousResponse last_response) {
-            if (r == null) {
-                return r = last_response;
+        public InstantaneousResponse eval(InstantaneousResponse new_response) {
+            if (last_response == null) {
+                return last_response = new_response;
             } else {
-                InstantaneousResponse diff = last_response.minus(r);
-                r = last_response;
+                InstantaneousResponse diff = new_response.minus(last_response);
+                last_response = new_response;
                 return diff;
             }
         }
@@ -48,7 +48,7 @@ public interface RelationToStreamOperator {
 
 
     public class DSTREAM implements RelationToStreamOperator {
-        private InstantaneousResponse r;
+        private InstantaneousResponse last_response;
         private final int i;
 
         public DSTREAM(int i) {
@@ -60,15 +60,10 @@ public interface RelationToStreamOperator {
         }
 
         @Override
-        public InstantaneousResponse eval(InstantaneousResponse last_response) {
-            if (r == null) {
-                r = last_response;
-                return null;
-            } else {
-                InstantaneousResponse diff = r.minus(last_response);
-                r = last_response;
-                return diff;
-            }
+        public InstantaneousResponse eval(InstantaneousResponse new_response) {
+            InstantaneousResponse diff = new_response.and(last_response);
+            last_response = new_response;
+            return diff;
         }
     }
 }
