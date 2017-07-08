@@ -5,6 +5,7 @@ import it.polimi.sr.rsp.RSPQuery;
 import it.polimi.streaming.Response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apache.jena.reasoner.InfGraph;
 
 @Getter
 @AllArgsConstructor
@@ -23,4 +24,6 @@ public abstract class InstantaneousResponse implements Response, Collectable {
 	public String getQueryString() {
 		return query.toString();
 	}
+
+	public abstract InstantaneousResponse minus(InstantaneousResponse r);
 }

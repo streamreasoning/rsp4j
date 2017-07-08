@@ -4,9 +4,13 @@ import it.polimi.services.FileService;
 import it.polimi.sr.rsp.RSPQuery;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.graph.GraphUtil;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.sparql.util.ModelUtils;
 
 
 @Getter
@@ -38,5 +42,12 @@ public final class ConstructResponse extends InstantaneousResponse {
         }
         trig += eol + "}" + eol;
         return trig;
+    }
+
+    @Override
+    public InstantaneousResponse minus(InstantaneousResponse r) {
+        ConstructResponse cr = (ConstructResponse) r;
+        Model copy = ModelFactory.createModelForGraph(results.getGraph());
+        return new ConstructResponse(getId(), getQuery(), copy.difference(((ConstructResponse) r).getResults()), getCep_timestamp());
     }
 }

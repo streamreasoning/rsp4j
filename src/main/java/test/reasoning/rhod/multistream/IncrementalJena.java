@@ -47,7 +47,7 @@ public class IncrementalJena {
         if (q.isConstructType())
             sr.registerObserver(cqe, new ConstructResponseSysOutObserver(true)); // attaches a new *RSP-QL query to the SDS
 
-        //      (new Thread(new GraphStream(je, "D", "http://streamreasoning.org/iminds/massif/stream0", 1))).start();
+        //      (new Thread(new GraphS2RTestStream(je, "D", "http://streamreasoning.org/iminds/massif/stream0", 1))).start();
         (new Thread(new GraphStream(sr, "A", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
         (new Thread(new GraphStream(sr, "B", "http://streamreasoning.org/iminds/massif/stream2", 1))).start();
 

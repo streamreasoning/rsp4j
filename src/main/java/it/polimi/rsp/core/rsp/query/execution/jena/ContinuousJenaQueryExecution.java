@@ -1,6 +1,9 @@
-package it.polimi.rsp.core.rsp.query.execution;
+package it.polimi.rsp.core.rsp.query.execution.jena;
 
+import it.polimi.rsp.core.rsp.query.execution.ContinuousQueryExecutionImpl;
+import it.polimi.rsp.core.rsp.query.r2s.RelationToStreamOperator;
 import it.polimi.rsp.core.rsp.query.reasoning.TVGReasoner;
+import it.polimi.rsp.core.rsp.query.response.InstantaneousResponse;
 import it.polimi.rsp.core.rsp.sds.SDS;
 import it.polimi.rsp.core.rsp.sds.graphs.TimeVaryingGraph;
 import it.polimi.rsp.core.rsp.query.reasoning.TimeVaryingInfGraph;
@@ -21,24 +24,14 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class ContinuousJenaQueryExecution extends ContinuousQueryExecutionImpl {
 
-    protected RSPQuery query;
     protected Query q;
-    protected SDS sds;
-    protected Response last_response = null;
+    protected InstantaneousResponse last_response = null;
     protected QueryExecution execution;
-    protected TVGReasoner reasoner;
 
-    public ContinuousJenaQueryExecution(RSPQuery query, SDS sds, TVGReasoner reasoner) {
-        this.query = query;
-        this.q = query.getQ();
-        this.sds = sds;
-        this.reasoner = reasoner;
+    public ContinuousJenaQueryExecution(RSPQuery query, Query q, SDS sds, TVGReasoner reasoner, RelationToStreamOperator s2r) {
+        super(query, sds, reasoner, s2r);
+        this.q = q;
     }
-
-    public ContinuousJenaQueryExecution(RSPQuery query, SDS sds) {
-        this(query, sds, null);
-    }
-
 
     @Override
     public void materialize(WindowModel tvg) {

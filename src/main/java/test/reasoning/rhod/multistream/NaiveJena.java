@@ -35,7 +35,7 @@ public class NaiveJena {
         RSPQLEngine sr = (RSPQLEngine) e;
         sr.startProcessing();
 
-        Model tbox = ModelFactory.createDefaultModel().read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/arist.tbox.owl");
+        Model tbox = ModelFactory.createDefaultModel();//.read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/arist.tbox.owl");
         ContinuousQueryExecution cqe = sr.registerQuery(q, tbox, Maintenance.NAIVE, Entailment.RHODF);
 
         if (q.isSelectType())
@@ -44,7 +44,7 @@ public class NaiveJena {
             sr.registerObserver(cqe, new ConstructResponseSysOutObserver(true)); // attaches a new *RSP-QL query to the SDS
 
         (new Thread(new GraphStream(sr, "Painter", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
-        //(new Thread(new GraphStream(sr, "Writer", "http://streamreasoning.org/iminds/massif/stream2", 1))).start();
+        //(new Thread(new GraphS2RTestStream(sr, "Writer", "http://streamreasoning.org/iminds/massif/stream2", 1))).start();
 
     }
 

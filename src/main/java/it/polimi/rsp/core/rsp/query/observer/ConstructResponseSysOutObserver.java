@@ -26,7 +26,7 @@ public class ConstructResponseSysOutObserver extends QueryResponseObserver {
         ConstructResponse sr = (ConstructResponse) arg;
 
         if (sr.getCep_timestamp() != last_result && distinct) {
-            sr.getResults().write(System.out, "JSON-LD");
+            sr.getResults().write(System.out, "TTL");
             last_result = sr.getCep_timestamp();
         }
 

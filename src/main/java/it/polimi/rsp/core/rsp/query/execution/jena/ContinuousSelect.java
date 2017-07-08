@@ -1,23 +1,27 @@
-package it.polimi.rsp.core.rsp.query.execution;
+package it.polimi.rsp.core.rsp.query.execution.jena;
 
-import com.espertech.esper.client.EPStatement;
+import it.polimi.rsp.core.rsp.query.r2s.RelationToStreamOperator;
 import it.polimi.rsp.core.rsp.query.reasoning.TVGReasoner;
 import it.polimi.rsp.core.rsp.query.response.SelectResponse;
 import it.polimi.rsp.core.rsp.sds.SDS;
+import it.polimi.rsp.core.rsp.sds.windows.WindowOperator;
 import it.polimi.sr.rsp.RSPQuery;
+import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.ResultSet;
 
 /**
  * Created by riccardo on 03/07/2017.
  */
 public class ContinuousSelect extends ContinuousJenaQueryExecution {
 
-    public ContinuousSelect(RSPQuery query, SDS sds, TVGReasoner reasone) {
-        super(query, sds,reasone);
+
+    public ContinuousSelect(RSPQuery query, Query q, SDS sds, TVGReasoner reasoner, RelationToStreamOperator s2r) {
+        super(query, q, sds, reasoner, s2r);
     }
 
     @Override
-    public void eval(SDS sds, EPStatement stmt, long ts) {
+    public void eval(SDS sds, WindowOperator stmt, long ts, RelationToStreamOperator r2s) {
         //TODO check if execution should be recreated
 
         if (stmt != null) {
@@ -27,8 +31,8 @@ public class ContinuousSelect extends ContinuousJenaQueryExecution {
         }
 
         this.execution = QueryExecutionFactory.create(q, sds);
-        last_response = new SelectResponse("http://streamreasoning.org/heaven/", query, execution.execSelect(), ts);
-
+        ResultSet results = execution.execSelect();
+        last_response = new SelectResponse("http://streamreasoning.org/heaven/", query, results, ts);
         setChanged();
         notifyObservers(last_response);
     }

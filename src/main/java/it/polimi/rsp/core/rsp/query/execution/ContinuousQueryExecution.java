@@ -1,8 +1,9 @@
 package it.polimi.rsp.core.rsp.query.execution;
 
-import com.espertech.esper.client.EPStatement;
+import it.polimi.rsp.core.rsp.query.r2s.RelationToStreamOperator;
 import it.polimi.rsp.core.rsp.sds.SDS;
 import it.polimi.rsp.core.rsp.sds.windows.WindowModel;
+import it.polimi.rsp.core.rsp.sds.windows.WindowOperator;
 import org.apache.jena.query.QueryExecution;
 
 import java.util.Observer;
@@ -15,7 +16,9 @@ public interface ContinuousQueryExecution extends QueryExecution, it.polimi.heav
 
     public void addObserver(Observer o);
 
-    public void eval(SDS sds, EPStatement stm, long ts);
+    public void eval(SDS sds, WindowOperator w, long ts);
+
+    public void eval(SDS sds, WindowOperator w, long ts, RelationToStreamOperator s2r);
 
     public void eval(SDS sds, long ts);
 

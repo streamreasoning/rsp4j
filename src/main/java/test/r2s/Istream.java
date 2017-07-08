@@ -1,4 +1,4 @@
-package test.reasoning.pellet;
+package test.r2s;
 
 import it.polimi.rsp.core.enums.Entailment;
 import it.polimi.rsp.core.enums.Maintenance;
@@ -17,7 +17,6 @@ import org.parboiled.Parboiled;
 import org.parboiled.errors.ParseError;
 import org.parboiled.parserunners.ReportingParseRunner;
 import org.parboiled.support.ParsingResult;
-import test.GraphStream;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +24,7 @@ import java.io.IOException;
 /**
  * Created by Riccardo on 03/08/16.
  */
-public class NaivePellet {
+public class Istream {
 
     public static void main(String[] args) throws InterruptedException, IOException {
 
@@ -35,15 +34,15 @@ public class NaivePellet {
         RSPQLEngine sr = (RSPQLEngine) e;
         sr.startProcessing();
 
-        Model tbox = ModelFactory.createDefaultModel().read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/arist.tbox.owl");
-        ContinuousQueryExecution cqe = sr.registerQuery(q, tbox, Maintenance.NAIVE, Entailment.PELLET);
+        Model tbox = ModelFactory.createDefaultModel();//.read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/arist.tbox.owl");
+        ContinuousQueryExecution cqe = sr.registerQuery(q, tbox, Maintenance.NAIVE, Entailment.RHODF);
 
         if (q.isSelectType())
             sr.registerObserver(cqe, new SelectResponseSysOutObserver(true)); // attaches a new *RSP-QL query to the SDS
         if (q.isConstructType())
             sr.registerObserver(cqe, new ConstructResponseSysOutObserver(true)); // attaches a new *RSP-QL query to the SDS
 
-        (new Thread(new GraphStream(sr, "Painter", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
+        (new Thread(new GraphS2RTestStream(sr, "http://streamreasoning.org/iminds/massif/stream1"))).start();
         //(new Thread(new GraphS2RTestStream(sr, "Writer", "http://streamreasoning.org/iminds/massif/stream2", 1))).start();
 
     }
@@ -66,7 +65,7 @@ public class NaivePellet {
     }
 
     public static String getInput() throws IOException {
-        File file = new File("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/test/resources/rspquery.q");
+        File file = new File("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/queries/istreamTestConstruct.rspql");
         return FileUtils.readFileToString(file);
     }
 }
