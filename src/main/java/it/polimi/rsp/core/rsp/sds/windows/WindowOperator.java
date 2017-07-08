@@ -47,7 +47,7 @@ public abstract class WindowOperator extends WindowModel {
 
 
     protected void handleSingleIStream(StreamItem underlying) {
-        log.debug("Handling single Istream [" + underlying + "]");
+        log.debug("Handling single IStreamTest [" + underlying + "]");
         graph = underlying.addTo(graph);
     }
 
@@ -72,7 +72,7 @@ public abstract class WindowOperator extends WindowModel {
     }
 
     protected void handleSingleDStream(StreamItem underlying) {
-        log.debug("Handling single Istream [" + underlying + "]");
+        log.debug("Handling single IStreamTest [" + underlying + "]");
         graph = underlying.removeFrom(graph);
     }
 

@@ -1,6 +1,8 @@
-package it.polimi.rsp.core.rsp.query.execution;
+package it.polimi.rsp.core.rsp.query.execution.jena;
 
 import it.polimi.rsp.core.enums.Entailment;
+import it.polimi.rsp.core.rsp.query.execution.ContinuousQueryExecution;
+import it.polimi.rsp.core.rsp.query.r2s.RelationToStreamOperator;
 import it.polimi.rsp.core.rsp.query.reasoning.IdentityTVGReasoner;
 import it.polimi.rsp.core.rsp.query.reasoning.TVGReasoner;
 import it.polimi.rsp.core.rsp.query.reasoning.jena.TVGReasonerJena;
@@ -27,9 +29,9 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
     static public ContinuousQueryExecution create(RSPQuery query, SDS sds, TVGReasoner r) {
         ContinuousQueryExecution cqe;
         if (query.isSelectType()) {
-            cqe = new ContinuousSelect(query, sds, r);
+            cqe = new ContinuousSelect(query, query.getQ(), sds, r, RelationToStreamOperator.RSTREAM.get());
         } else if (query.isConstructType()) {
-            cqe = new ContinuouConstruct(query, sds, r);
+            cqe = new ContinuouConstruct(query, query.getQ(), sds, r, RelationToStreamOperator.RSTREAM.get());
         } else {
             throw new RuntimeException("Unsupported Query Type [" + query.getQueryType() + "]");
         }

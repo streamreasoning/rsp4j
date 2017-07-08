@@ -37,7 +37,7 @@ public class FederatedTVG extends NamedWindow {
 
     @Override
     protected void handleSingleIStream(StreamItem underlying) {
-        log.debug("Handling single Istream [" + underlying + "]");
+        log.debug("Handling single IStreamTest [" + underlying + "]");
         //TODO INSERT DATA
         /*PREFIX dc: <http://purl.org/dc/elements/1.1/>
             INSERT { <http://example/egbook> dc:title  "This is an example title" } WHERE {}*/

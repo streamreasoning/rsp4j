@@ -7,11 +7,13 @@ import com.espertech.esper.client.SafeIterator;
 import it.polimi.rsp.core.enums.Entailment;
 import it.polimi.rsp.core.enums.Maintenance;
 import it.polimi.rsp.core.exceptions.UnregisteredStreamExeception;
+import it.polimi.rsp.core.rsp.RSPQLEngine;
 import it.polimi.rsp.core.rsp.query.execution.ContinuousQueryExecution;
 import it.polimi.rsp.core.rsp.sds.windows.DefaultWindow;
 import it.polimi.rsp.core.rsp.sds.windows.NamedWindow;
 import it.polimi.rsp.core.rsp.sds.windows.WindowModel;
 import it.polimi.rsp.core.rsp.sds.windows.WindowOperator;
+import it.polimi.sr.rsp.RSPQuery;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -30,9 +32,10 @@ import java.util.*;
 public class SDSImpl extends DatasetImpl implements Observer, SDS {
 
     private final EPServiceProvider cep;
-    private Set<ContinuousQueryExecution> observers;
+    private final RSPQLEngine rsp;
     private final IRIResolver resolver;
     private final String resolvedDefaultStream;
+    private Map<RSPQuery, ContinuousQueryExecution> executions;
     protected Model knowledge_base;
     protected Model tbox;
     @Getter
@@ -51,10 +54,10 @@ public class SDSImpl extends DatasetImpl implements Observer, SDS {
     private boolean global_tick;
 
 
-    public SDSImpl(Model tbox_star, Model knowledge_base_star, IRIResolver r, Maintenance maintenanceType, String id_base, EPServiceProvider esp) {
+    public SDSImpl(Model tbox_star, Model knowledge_base_star, IRIResolver r, Maintenance maintenanceType, String id_base, EPServiceProvider esp, RSPQLEngine rsp) {
         super(ModelFactory.createDefaultModel());
+        this.executions = new HashMap<>();
         this.cep = esp;
-        this.observers = new HashSet<>();
         this.resolver = r;
         this.maintenanceType = maintenanceType;
         this.tbox = tbox_star;
@@ -66,13 +69,13 @@ public class SDSImpl extends DatasetImpl implements Observer, SDS {
         this.resolvedDefaultStreamSet = new HashSet<>();
         this.resolvedDefaultStreamSet.add(resolvedDefaultStream);
         this.global_tick = false;
+        this.rsp = rsp;
     }
 
 
     @Override
     public synchronized void update(Observable o, Object _ts) {
         WindowOperator tvg = (WindowOperator) o;
-        EPStatement stmt = tvg.getTriggeringStatement();
         long cep_time = tvg.getTimestamp();
         long sys_time = System.currentTimeMillis();
 
@@ -85,12 +88,8 @@ public class SDSImpl extends DatasetImpl implements Observer, SDS {
             updateDataset(tvg, cep);
         }
 
-        if (observers != null) {
-            for (ContinuousQueryExecution qe : observers) {
-                qe.materialize(tvg);
-                qe.eval(this, stmt, cep_time);
-            }
-        }
+        consolidate(this, tvg, cep_time);
+
         setDefaultModel(getDefaultModel().difference(knowledge_base));
     }
 
@@ -123,7 +122,7 @@ public class SDSImpl extends DatasetImpl implements Observer, SDS {
         } else if (namedWindowStreamNames.containsKey(stream_uri)) {
             return namedWindowStreamNames.get(stream_uri);
         } else {
-            throw new UnregisteredStreamExeception("GraphStream [" + stream_uri + "] is unregistered");
+            throw new UnregisteredStreamExeception("GraphS2RTestStream [" + stream_uri + "] is unregistered");
         }
     }
 
@@ -147,11 +146,6 @@ public class SDSImpl extends DatasetImpl implements Observer, SDS {
         }
     }
 
-    @Override
-    public void addQueryExecutor(ContinuousQueryExecution o) {
-        observers.add(o);
-    }
-
     public void addTimeVaryingGraph(DefaultWindow defTVG) {
         defTVG.addObserver(this);
     }
@@ -161,5 +155,18 @@ public class SDSImpl extends DatasetImpl implements Observer, SDS {
         addNamedWindowStream(window_uri, stream_uri, namedTVG);
         namedTVG.addObserver(this);
     }
-}
 
+
+    private void consolidate(SDS sds, WindowOperator tvg, long cep_time) {
+        if (executions != null && !executions.isEmpty()) {
+            for (Map.Entry<RSPQuery, ContinuousQueryExecution> e : executions.entrySet()) {
+                e.getValue().eval(sds, tvg, cep_time);
+                //e.getValue().eval(sds, tvg, bq.getR2S, cep_time);
+            }
+        }
+    }
+@Override
+    public void addQueryExecutor(RSPQuery bq, ContinuousQueryExecution o) {
+        executions.put(bq, o);
+    }
+}

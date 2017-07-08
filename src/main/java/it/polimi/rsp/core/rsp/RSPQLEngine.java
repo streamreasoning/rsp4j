@@ -2,20 +2,18 @@ package it.polimi.rsp.core.rsp;
 
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
-import com.espertech.esper.core.service.EPStatementImpl;
-import com.espertech.esper.view.View;
 import it.polimi.heaven.rsp.rsp.querying.Query;
 import it.polimi.rsp.core.enums.Entailment;
 import it.polimi.rsp.core.enums.Maintenance;
 import it.polimi.rsp.core.rsp.query.execution.ContinuousQueryExecution;
-import it.polimi.rsp.core.rsp.query.execution.ContinuousQueryExecutionFactory;
-import it.polimi.rsp.core.rsp.query.observer.QueryResponseObserver;
+import it.polimi.rsp.core.rsp.query.execution.jena.ContinuousQueryExecutionFactory;
+import it.polimi.rsp.core.rsp.query.formatter.QueryResponseFormatter;
 import it.polimi.rsp.core.rsp.query.reasoning.TVGReasoner;
+import it.polimi.rsp.core.rsp.query.reasoning.TimeVaryingInfGraph;
 import it.polimi.rsp.core.rsp.sds.SDS;
 import it.polimi.rsp.core.rsp.sds.SDSImpl;
 import it.polimi.rsp.core.rsp.sds.graphs.TimeVaryingGraph;
 import it.polimi.rsp.core.rsp.sds.graphs.TimeVaryingGraphBase;
-import it.polimi.rsp.core.rsp.query.reasoning.TimeVaryingInfGraph;
 import it.polimi.rsp.core.rsp.sds.windows.DefaultWindow;
 import it.polimi.rsp.core.rsp.sds.windows.NamedWindow;
 import it.polimi.rsp.core.rsp.stream.RSPEsperEngine;
@@ -67,29 +65,21 @@ public class RSPQLEngine extends RSPEsperEngine {
 
         InfModel kb_star = ModelFactory.createInfModel(reasoner.bind(def.getGraph()));
 
-        SDSImpl sds = new SDSImpl(tbox, kb_star, bq.getResolver(), maintenance, "", cep);
+        SDSImpl sds = new SDSImpl(tbox, kb_star, bq.getResolver(), maintenance, "", cep, this);
         ContinuousQueryExecution qe = ContinuousQueryExecutionFactory.create(bq, sds, reasoner);
 
         addNamedStaticGraph(bq, sds, reasoner);
         addWindows(bq, sds, reasoner);
         addNamedWindows(sds, bq, reasoner);
 
-        sds.addQueryExecutor(qe);
+        sds.addQueryExecutor(bq, qe);
 
         queries.put(bq, sds);
 
         return qe;
     }
 
-    public ContinuousQueryExecution registerQuery(RSPQuery bq, SDS sds, Entailment e) {
-        //TODO check compatibility
-        queries.put(bq, sds);
-        ContinuousQueryExecution qe = ContinuousQueryExecutionFactory.create(bq, sds, ContinuousQueryExecutionFactory.getGenericRuleReasoner(e, ModelFactory.createDefaultModel()));
-        sds.addQueryExecutor(qe);
-        return qe;
-    }
-
-    public void registerObserver(ContinuousQueryExecution ceq, QueryResponseObserver o) {
+    public void registerObserver(ContinuousQueryExecution ceq, QueryResponseFormatter o) {
         ceq.addObserver(o);
     }
 
@@ -132,8 +122,7 @@ public class RSPQLEngine extends RSPEsperEngine {
                 log.info(w.getStream().toEPLSchema());
                 log.info("creating named graph " + window_uri + "");
 
-                EPStatementImpl epl = (EPStatementImpl) getEpStatement(sds, w, statementName);
-                View[] views = epl.getParentView().getViews();
+                EPStatement epl = getEpStatement(sds, w, statementName);
 
                 log.info(epl.toString());
 
@@ -183,6 +172,7 @@ public class RSPQLEngine extends RSPEsperEngine {
         return def;
     }
 
+
     private boolean isWindow(Set<?> windows, String g) {
         if (windows != null) {
             Iterator<?> iterator = windows.iterator();
@@ -201,6 +191,7 @@ public class RSPQLEngine extends RSPEsperEngine {
     public SDS getSDS(Query q) {
         return queries.get(q);
     }
+
 
 
 }
