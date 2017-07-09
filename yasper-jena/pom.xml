@@ -30,5 +30,15 @@
             <artifactId>openllet-jena</artifactId>
             <version>2.6.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.parboiled</groupId>
+            <artifactId>parboiled-core</artifactId>
+            <version>1.1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.parboiled</groupId>
+            <artifactId>parboiled-java</artifactId>
+            <version>1.1.7</version>
+        </dependency>
     </dependencies>
 </project>

@@ -1,7 +1,7 @@
 package it.polimi.yasper.core;
 
-import it.polimi.sr.rsp.RSPQuery;
 import it.polimi.yasper.core.enums.Maintenance;
+import it.polimi.yasper.core.query.ContinuousQuery;
 import it.polimi.yasper.core.query.operators.s2r.DefaultWindow;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.query.operators.s2r.NamedWindow;
@@ -19,6 +19,6 @@ public interface SDS  {
 
     void addNamedTimeVaryingGraph(String statementName, String window_uri, String window, NamedWindow tvg);
 
-    public void addQueryExecutor(RSPQuery bq, ContinuousQueryExecution o);
+    public void addQueryExecutor(ContinuousQuery bq, ContinuousQueryExecution o);
 
 }

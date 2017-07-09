@@ -1,8 +1,8 @@
 package it.polimi.yasper.core.query.response;
 
 import it.polimi.data.Collectable;
-import it.polimi.sr.rsp.RSPQuery;
 import it.polimi.streaming.Response;
+import it.polimi.yasper.core.query.ContinuousQuery;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,7 +12,7 @@ public abstract class InstantaneousResponse implements Response, Collectable {
 
     private String id;
     private long creation_timestamp, cep_timestamp;
-    private RSPQuery query;
+    private ContinuousQuery query;
 
     @Override
     public long getCreationTime() {

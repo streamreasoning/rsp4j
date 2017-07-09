@@ -2,30 +2,25 @@ package it.polimi.yasper.core.engine;
 
 import com.espertech.esper.client.*;
 import com.espertech.esper.client.time.CurrentTimeEvent;
-import it.polimi.heaven.rsp.rsp.RSPEngine;
-import it.polimi.heaven.rsp.rsp.querying.Query;
-import it.polimi.sr.rsp.streams.Window;
-import it.polimi.sr.rsp.utils.EncodingUtils;
 import it.polimi.streaming.EventProcessor;
 import it.polimi.streaming.Stimulus;
+import it.polimi.yasper.core.EncodingUtils;
+import it.polimi.yasper.core.SDS;
+import it.polimi.yasper.core.query.ContinuousQuery;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.stream.StreamItem;
-import it.polimi.yasper.core.SDS;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
-import org.apache.jena.graph.Node;
 
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 @Getter
 @Log4j
 public abstract class RSPQLEngine implements RSPEngine {
 
-    protected Map<Query, SDS> queries;
+    protected Map<ContinuousQuery, SDS> queries;
 
     protected Configuration cepConfig;
     protected EPServiceProvider cep;
@@ -94,26 +89,13 @@ public abstract class RSPQLEngine implements RSPEngine {
         return false;
     }
 
-    protected boolean isWindow(Set<?> windows, String g) {
-        if (windows != null) {
-            Iterator<?> iterator = windows.iterator();
-            while (iterator.hasNext()) {
-                Object next = iterator.next();
-                if (next instanceof Window && ((Window) next).getStreamURI().equals(g)) {
-                    return true;
-                } else if (next instanceof Node && ((Node) next).getURI().equals(g)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+
 
     public void registerObserver(ContinuousQueryExecution ceq, QueryResponseFormatter o) {
         ceq.addObserver(o);
     }
 
-    public SDS getSDS(Query q) {
+    public SDS getSDS(ContinuousQuery q) {
         return queries.get(q);
     }
 }

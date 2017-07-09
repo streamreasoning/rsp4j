@@ -1,7 +1,7 @@
 package it.polimi.yasper.core.query.execution;
 
-import it.polimi.sr.rsp.RSPQuery;
 import it.polimi.yasper.core.SDS;
+import it.polimi.yasper.core.query.ContinuousQuery;
 import it.polimi.yasper.core.query.operators.r2s.RelationToStreamOperator;
 import it.polimi.yasper.core.query.operators.s2r.WindowOperator;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
@@ -14,11 +14,11 @@ import java.util.Observer;
  */
 public abstract class ContinuousQueryExecutionImpl extends Observable implements ContinuousQueryExecution {
 
-    protected RSPQuery query;
+    protected ContinuousQuery query;
     protected TVGReasoner reasoner;
     protected RelationToStreamOperator s2r;
 
-    public ContinuousQueryExecutionImpl(RSPQuery query, TVGReasoner reasoner, RelationToStreamOperator s2r) {
+    public ContinuousQueryExecutionImpl(ContinuousQuery query, TVGReasoner reasoner, RelationToStreamOperator s2r) {
         this.query = query;
         this.reasoner = reasoner;
         this.s2r = s2r;

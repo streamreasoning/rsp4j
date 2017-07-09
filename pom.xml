@@ -72,18 +72,8 @@
             <version>6.1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.github.streamreasoning</groupId>
-            <artifactId>rsp-baseline-parser</artifactId>
-            <version>0.4.3</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.streamreasoning.heaven</groupId>
             <artifactId>heaven-commons</artifactId>
-            <version>0.9.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.streamreasoning.heaven</groupId>
-            <artifactId>heaven-rsp</artifactId>
             <version>0.9.3</version>
         </dependency>
         <dependency>
@@ -92,7 +82,6 @@
             <version>1.16.10</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
