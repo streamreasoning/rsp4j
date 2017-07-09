@@ -33,7 +33,7 @@ public class NaivePellet {
         JenaRSPQLEngineImpl sr = new JenaRSPQLEngineImpl(0);
         sr.startProcessing();
 
-        Model tbox = ModelFactory.createDefaultModel().read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/arist.tbox.owl");
+        Model tbox = ModelFactory.createDefaultModel().read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/artist.tbox.owl");
         ContinuousQueryExecution cqe = sr.registerQuery(q, tbox, Maintenance.NAIVE, Entailment.PELLET);
 
         if (q.isSelectType())

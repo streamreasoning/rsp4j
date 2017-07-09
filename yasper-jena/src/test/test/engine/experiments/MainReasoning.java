@@ -16,7 +16,7 @@ public class MainReasoning {
 
     public static void main(String[] argvs) {
 
-        Model tbox = ModelFactory.createDefaultModel().read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/arist.tbox.owl");
+        Model tbox = ModelFactory.createDefaultModel().read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/artist.tbox.owl");
         Reasoner reasoner = new GenericRuleReasoner(Rule.rulesFromURL(BaselinesUtils.RHODF_RULE_SET_RUNTIME)).bindSchema(tbox);
         Reasoner reasoner2 = ReasonerRegistry.getOWLReasoner();
 

@@ -31,7 +31,7 @@ public class IStreamTest {
         JenaRSPQLEngineImpl sr = new JenaRSPQLEngineImpl(0);
         sr.startProcessing();
 
-        Model tbox = ModelFactory.createDefaultModel();//.read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/arist.tbox.owl");
+        Model tbox = ModelFactory.createDefaultModel();//.read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/artist.tbox.owl");
         ContinuousQueryExecution cqe = sr.registerQuery(q, tbox, Maintenance.NAIVE, Entailment.RHODF);
 
         sr.registerObserver(cqe, new GenericResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
