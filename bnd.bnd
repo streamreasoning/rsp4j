@@ -14,10 +14,10 @@ Export-Package: \
 src: src/main/java
 bin: target/classes
 target-dir: generated
-testsrc: src/test/java
-testbin: target/test-classes
+testsrc: src/it.polimi.jasper.test/java
+testbin: target/it.polimi.jasper.test-classes
 -buildpath: cglib.cglib-nodep
 Private-Package: \
-	test,\
-	test.collector,\
-	test.multistream
+	it.polimi.jasper.test,\
+	it.polimi.jasper.test.collector,\
+	it.polimi.jasper.test.multistream
