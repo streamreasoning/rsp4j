@@ -11,6 +11,7 @@ import java.util.Observer;
  */
 
 public interface ContinuousQueryExecution {
+
     public void addObserver(Observer o);
 
     public void eval(SDS sds, WindowOperator w, long ts);

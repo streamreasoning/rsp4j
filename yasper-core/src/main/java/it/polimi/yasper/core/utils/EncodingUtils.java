@@ -1,4 +1,4 @@
-package it.polimi.yasper.core;
+package it.polimi.yasper.core.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

@@ -1,20 +1,11 @@
 package it.polimi.yasper.core.enums;
 
 public enum Maintenance {
-    INCREMENTAL("RSTREAM_ISTREAM_BOTH"), NAIVE("ISTREAM_ONLY");
+    INCREMENTAL("INCREMENTAL"), NAIVE("NAIVE");
 
-    private final String epl;
+    private final String name;
 
-    Maintenance(String epl) {
-        this.epl = epl;
-    }
-
-    /**
-     * Returns syntactic text
-     *
-     * @return epl text
-     */
-    public String selector() {
-        return epl;
+    Maintenance(String name) {
+        this.name=name;
     }
 }

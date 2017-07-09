@@ -5,6 +5,7 @@ import it.polimi.streaming.EventProcessor;
 import it.polimi.streaming.Stimulus;
 import it.polimi.yasper.core.query.ContinuousQuery;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.utils.QueryConfiguration;
 
 
 /**
@@ -12,7 +13,11 @@ import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
  */
 public interface RSPEngine extends EventProcessor<Stimulus> {
 
+
     ContinuousQueryExecution registerQuery(ContinuousQuery q);
+
+    ContinuousQueryExecution registerQuery(ContinuousQuery q, QueryConfiguration c);
+
 
     // TODO is reasoning enabled
     // TODO is external time control enabled
