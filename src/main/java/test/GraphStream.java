@@ -4,7 +4,6 @@ import it.polimi.rsp.core.rsp.RSPQLEngine;
 import it.polimi.rsp.core.rsp.stream.item.jena.GraphStimulus;
 import lombok.AllArgsConstructor;
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.vocabulary.RDF;
 
 import java.util.Random;
 

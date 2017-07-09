@@ -2,11 +2,11 @@ package test.reasoning.rhod.multistream;
 
 import it.polimi.rsp.core.enums.Entailment;
 import it.polimi.rsp.core.enums.Maintenance;
-import it.polimi.rsp.core.rsp.stream.RSPEsperEngine;
 import it.polimi.rsp.core.rsp.RSPQLEngine;
 import it.polimi.rsp.core.rsp.query.execution.ContinuousQueryExecution;
 import it.polimi.rsp.core.rsp.query.formatter.ConstructResponseSysOutFormatter;
 import it.polimi.rsp.core.rsp.query.formatter.SelectResponseSysOutFormatter;
+import it.polimi.rsp.core.rsp.stream.RSPEsperEngine;
 import it.polimi.sr.rsp.RSPQLParser;
 import it.polimi.sr.rsp.RSPQuery;
 import org.apache.commons.io.FileUtils;
