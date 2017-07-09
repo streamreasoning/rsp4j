@@ -9,15 +9,17 @@ import it.polimi.jasper.engine.reasoning.JenaTimeVaryingInfGraph;
 import it.polimi.jasper.engine.sds.*;
 import it.polimi.jasper.engine.stream.GraphStimulus;
 import it.polimi.jasper.parser.streams.Window;
-import it.polimi.yasper.core.EncodingUtils;
 import it.polimi.yasper.core.engine.RSPQLEngine;
 import it.polimi.yasper.core.enums.Entailment;
 import it.polimi.yasper.core.enums.Maintenance;
+import it.polimi.yasper.core.exceptions.UnsuportedQueryClassExecption;
 import it.polimi.yasper.core.query.ContinuousQuery;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.query.operators.s2r.DefaultWindow;
 import it.polimi.yasper.core.query.operators.s2r.NamedWindow;
 import it.polimi.yasper.core.stream.StreamItem;
+import it.polimi.yasper.core.utils.EncodingUtils;
+import it.polimi.yasper.core.utils.QueryConfiguration;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Node;
 import org.apache.jena.rdf.model.InfModel;
@@ -43,17 +45,28 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
         cep = EPServiceProviderManager.getProvider(this.getClass().getCanonicalName(), cepConfig);
         cepAdm = cep.getEPAdministrator();
         cepRT = cep.getEPRuntime();
-
     }
 
     public ContinuousQueryExecution registerQuery(ContinuousQuery q) {
         return registerQuery((RSPQuery) q, ModelFactory.createDefaultModel(), Maintenance.NAIVE, Entailment.NONE);
     }
 
+    @Override
+    public ContinuousQueryExecution registerQuery(ContinuousQuery q, QueryConfiguration c) {
+        Model tbox = ModelFactory.createDefaultModel().read(c.getTboxLocation());
+        Maintenance maintenance = c.getSdsMaintainance();
+        Entailment entailment = c.getReasoningEntailment();
+        if ("it.polimi.jasper.engine.query.RSPQuery".equals(c.getQueryClass())) {
+            return registerQuery((RSPQuery) q, tbox, maintenance, entailment);
+        } else {
+            throw new UnsuportedQueryClassExecption();
+        }
+    }
+
     public ContinuousQueryExecution registerQuery(RSPQuery bq, Model tbox, Maintenance maintenance, Entailment entailment) {
         log.info(bq.getQ().toString());
 
-        Model def = loadStaticGraph(bq, new ModelCom(new TimeVaryingGraphBase(-1, null)));
+        Model def = loadStaticGraph(bq, new ModelCom(new TimeVaryingGraphBase()));
 
         JenaTVGReasoner reasoner = ContinuousQueryExecutionFactory.getGenericRuleReasoner(entailment, tbox);
 
@@ -72,7 +85,6 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
 
         return qe;
     }
-
 
     private void addWindows(RSPQuery bq, JenaSDS sds, JenaTVGReasoner reasoner) {
         //Default Time-Varying Graph

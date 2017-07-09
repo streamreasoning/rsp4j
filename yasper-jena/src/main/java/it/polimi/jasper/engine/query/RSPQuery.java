@@ -3,6 +3,7 @@ package it.polimi.jasper.engine.query;
 import it.polimi.jasper.parser.SPARQLQuery;
 import it.polimi.jasper.parser.streams.Register;
 import it.polimi.jasper.parser.streams.Window;
+import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.query.ContinuousQuery;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,12 +21,13 @@ import java.util.*;
  */
 @Data
 @NoArgsConstructor
-public class RSPQuery extends SPARQLQuery implements ContinuousQuery{
+public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
 
     private Map<Node, Window> namedwindows;
     private Set<Window> windows;
     private List<ElementNamedGraph> windowGraphElements;
     private Register header;
+    private StreamOperator r2s;
 
     public RSPQuery(Prologue prologue) {
         super(prologue);
@@ -33,6 +35,12 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery{
 
     public RSPQuery setSelectQuery() {
         setQuerySelectType();
+        return this;
+    }
+
+    public RSPQuery setConstructQuery(StreamOperator r2s) {
+        this.r2s = r2s;
+        setQueryConstructType();
         return this;
     }
 
@@ -138,5 +146,15 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery{
     @Override
     public String toString() {
         return super.toString();
+    }
+
+    @Override
+    public String getName() {
+        return this.header.getId();
+    }
+
+    @Override
+    public StreamOperator getR2S() {
+        return r2s;
     }
 }

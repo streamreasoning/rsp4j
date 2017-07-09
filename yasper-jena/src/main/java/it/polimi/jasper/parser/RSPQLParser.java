@@ -3,16 +3,17 @@ package it.polimi.jasper.parser;
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.jasper.parser.streams.Register;
 import it.polimi.jasper.parser.streams.Window;
-import it.polimi.yasper.core.query.ContinuousQuery;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Node_URI;
 import org.apache.jena.sparql.syntax.ElementNamedGraph;
 import org.parboiled.Rule;
 
+import static it.polimi.yasper.core.enums.StreamOperator.*;
+
 /**
  * Created by Riccardo on 09/08/16.
  */
-public class RSPQLParser extends SPARQLParser implements ContinuousQuery{
+public class RSPQLParser extends SPARQLParser {
 
     @Override
     public Rule Query() {
@@ -88,6 +89,24 @@ public class RSPQLParser extends SPARQLParser implements ContinuousQuery{
         return Sequence(WINDOW(), VarOrIRIref(), GroupGraphPattern(), swap(), addNamedWindowElement());
     }
 
+    @Override
+    public Rule ConstructClause() {
+        return Sequence(FirstOf(ConstructIStream(), ConstructDStream(), ConstructRStream()), ConstructTemplate(),
+                addTemplateToQuery());
+    }
+
+    public Rule ConstructRStream() {
+        return Sequence(CONSTRUCT(), Optional(RSTREAM()), pushQuery(((RSPQuery) popQuery(0)).setConstructQuery(RSTREAM)));
+    }
+
+
+    public Rule ConstructIStream() {
+        return Sequence(CONSTRUCT(), ISTREAM(), pushQuery(((RSPQuery) popQuery(0)).setConstructQuery(ISTREAM)));
+    }
+
+    public Rule ConstructDStream() {
+        return Sequence(CONSTRUCT(), DSTREAM(), pushQuery(((RSPQuery) popQuery(0)).setConstructQuery(DSTREAM)));
+    }
 
     //Utility Methods
 
@@ -152,5 +171,18 @@ public class RSPQLParser extends SPARQLParser implements ContinuousQuery{
     public Rule STREAM() {
         return StringIgnoreCaseWS("STREAM");
     }
+
+    public Rule ISTREAM() {
+        return StringIgnoreCaseWS("ISTREAM");
+    }
+
+    public Rule RSTREAM() {
+        return StringIgnoreCaseWS("RSTREAM");
+    }
+
+    public Rule DSTREAM() {
+        return StringIgnoreCaseWS("DSTREAM");
+    }
+
 
 }

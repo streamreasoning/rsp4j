@@ -38,24 +38,15 @@ public abstract class RSPQLEngine implements RSPEngine {
     protected int rspEventsNumber = 0, esperEventsNumber = 0;
     protected long currentTimestamp;
 
-    public RSPQLEngine(long t0, StreamItem item) {
+    public RSPQLEngine() {
         this.cepConfig = new Configuration();
         this.currentTimestamp = 0L;
-        this.t0 = t0;
         cepConfig.getEngineDefaults().getThreading().setInternalTimerEnabled(false);
         cepConfig.getEngineDefaults().getLogging().setEnableExecutionDebug(true);
         cepConfig.getEngineDefaults().getLogging().setEnableTimerDebug(true);
         cepConfig.getEngineDefaults().getLogging().setEnableQueryPlan(true);
         cepConfig.getEngineDefaults().getMetricsReporting().setEnableMetricsReporting(true);
         //cepConfig.addPlugInView("rspql", "win", "rspqlfact");
-
-        this.queries = new HashMap<>();
-        log.info("Added [" + item.getClass() + "] as TStream");
-        cepConfig.addEventType("TStream", item.getClass());
-        cep = EPServiceProviderManager.getProvider(this.getClass().getCanonicalName(), cepConfig);
-        cepAdm = cep.getEPAdministrator();
-        cepRT = cep.getEPRuntime();
-
 
     }
 

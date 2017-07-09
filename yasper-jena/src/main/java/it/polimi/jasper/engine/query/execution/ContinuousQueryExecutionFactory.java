@@ -2,12 +2,12 @@ package it.polimi.jasper.engine.query.execution;
 
 import it.polimi.jasper.engine.BaselinesUtils;
 import it.polimi.jasper.engine.query.RSPQuery;
+import it.polimi.jasper.engine.reasoning.GenericRuleJenaTVGReasoner;
 import it.polimi.jasper.engine.reasoning.JenaTVGReasoner;
 import it.polimi.jasper.engine.reasoning.pellet.TVGReasonerPellet;
-import it.polimi.jasper.engine.reasoning.GenericRuleJenaTVGReasoner;
 import it.polimi.jasper.engine.sds.JenaSDS;
 import it.polimi.yasper.core.enums.Entailment;
-import it.polimi.yasper.core.query.ContinuousQuery;
+import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.query.operators.r2s.RelationToStreamOperator;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
@@ -29,10 +29,27 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
 
     static public ContinuousQueryExecution create(RSPQuery query, JenaSDS sds, TVGReasoner r) {
         ContinuousQueryExecution cqe;
+        StreamOperator r2S = query.getR2S();
+        RelationToStreamOperator s2r;
+        switch (r2S) {
+            case DSTREAM:
+                s2r = RelationToStreamOperator.DSTREAM.get();
+                break;
+            case ISTREAM:
+                s2r = RelationToStreamOperator.ISTREAM.get();
+                break;
+            case RSTREAM:
+                s2r = RelationToStreamOperator.RSTREAM.get();
+                break;
+            default:
+                s2r = RelationToStreamOperator.RSTREAM.get();
+                break;
+        }
+
         if (query.isSelectType()) {
-            cqe = new ContinuousSelect(query, query.getQ(), sds, r, RelationToStreamOperator.RSTREAM.get());
+            cqe = new ContinuousSelect(query, query.getQ(), sds, r, s2r);
         } else if (query.isConstructType()) {
-            cqe = new ContinuouConstruct(query, query.getQ(), sds, r, RelationToStreamOperator.RSTREAM.get());
+            cqe = new ContinuouConstruct(query, query.getQ(), sds, r, s2r);
         } else {
             throw new RuntimeException("Unsupported ContinuousQuery Type [" + query.getQueryType() + "]");
         }

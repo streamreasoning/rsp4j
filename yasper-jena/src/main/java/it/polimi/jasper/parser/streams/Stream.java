@@ -2,7 +2,7 @@ package it.polimi.jasper.parser.streams;
 
 import com.espertech.esper.client.soda.CreateSchemaClause;
 import com.espertech.esper.client.soda.SchemaColumnDesc;
-import it.polimi.yasper.core.EncodingUtils;
+import it.polimi.yasper.core.utils.EncodingUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

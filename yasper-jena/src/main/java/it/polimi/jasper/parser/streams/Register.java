@@ -1,5 +1,6 @@
 package it.polimi.jasper.parser.streams;
 
+import it.polimi.yasper.core.query.operators.r2s.RelationToStreamOperator;
 import lombok.*;
 
 import java.util.regex.MatchResult;

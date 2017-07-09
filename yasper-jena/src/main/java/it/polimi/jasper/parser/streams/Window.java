@@ -1,7 +1,7 @@
 package it.polimi.jasper.parser.streams;
 
 import com.espertech.esper.client.soda.*;
-import it.polimi.yasper.core.EncodingUtils;
+import it.polimi.yasper.core.utils.EncodingUtils;
 import lombok.*;
 import org.apache.jena.graph.Node_URI;
 
