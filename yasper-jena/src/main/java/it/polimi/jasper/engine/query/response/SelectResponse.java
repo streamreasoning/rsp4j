@@ -38,7 +38,7 @@ public final class SelectResponse extends InstantaneousResponse {
     private String getData() {
 
         String eol = System.getProperty("line.separator");
-        String select = "SELECTION getId()" + eol;
+        String select = "SELECTION getName()" + eol;
 
         List<String> resultVars = results.getResultVars();
         if (resultVars != null) {

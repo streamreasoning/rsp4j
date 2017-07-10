@@ -12,7 +12,6 @@ import lombok.extern.log4j.Log4j;
 @Getter
 public class NamedWindow extends WindowOperator {
 
-
     public NamedWindow(Maintenance maintenance, TimeVaryingItem g, EPStatement statement) {
         super(maintenance, g, statement);
         statement.addListener(this);

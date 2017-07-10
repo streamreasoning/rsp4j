@@ -3,6 +3,7 @@ package test.engine;
 import it.polimi.jasper.engine.stream.StatementStimulus;
 import it.polimi.yasper.core.engine.RSPQLEngine;
 import lombok.AllArgsConstructor;
+import org.apache.jena.rdf.model.*;
 
 /**
  * Created by Riccardo on 13/08/16.

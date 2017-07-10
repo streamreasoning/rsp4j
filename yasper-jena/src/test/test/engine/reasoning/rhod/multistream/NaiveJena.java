@@ -2,8 +2,7 @@ package test.engine.reasoning.rhod.multistream;
 
 import it.polimi.jasper.engine.JenaRSPQLEngineImpl;
 import it.polimi.jasper.engine.query.RSPQuery;
-import it.polimi.jasper.engine.query.formatter.ConstructResponseSysOutFormatter;
-import it.polimi.jasper.engine.query.formatter.SelectResponseSysOutFormatter;
+import it.polimi.jasper.engine.query.formatter.ResponseFormatterFactory;
 import it.polimi.jasper.parser.RSPQLParser;
 import it.polimi.yasper.core.enums.Entailment;
 import it.polimi.yasper.core.enums.Maintenance;
@@ -42,11 +41,11 @@ public class NaiveJena {
         // ContinuousQueryExecutionImpl cqe = je.registerQuery(q, SDS); //executes the query on the given SDS (if compatible)
 
         if (q.isSelectType())
-            sr.registerObserver(cqe, new SelectResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
+            sr.registerObserver(q.getName(), ResponseFormatterFactory.getSelectResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
         if (q.isConstructType())
-            sr.registerObserver(cqe, new ConstructResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
+            sr.registerObserver(q.getName(), ResponseFormatterFactory.getConstructResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
 
-        (new Thread(new GraphStream(sr, "Painter", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
+        (new Thread(new GraphStream( "Painter", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
 
     }
 

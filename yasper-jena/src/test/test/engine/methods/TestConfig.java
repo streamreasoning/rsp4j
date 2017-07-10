@@ -1,4 +1,4 @@
-package test.engine.reasoning.rhod.multistream;
+package test.engine.methods;
 
 import it.polimi.jasper.engine.JenaRSPQLEngineImpl;
 import it.polimi.jasper.engine.query.formatter.ResponseFormatterFactory;
@@ -41,10 +41,13 @@ public class TestConfig {
         (new Thread(painter)).start();
         (new Thread(writer)).start();
 
-        Thread.sleep(30000);
+        Thread.sleep(10000);
 
         sr.unregisterQuery(queryId);
+        sr.unregisterStream(painter.getURI());
+        sr.unregisterStream(writer.getURI());
 
+        System.out.println("Unregistered");
     }
 
     public static String getInput() throws IOException {

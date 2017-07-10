@@ -8,15 +8,21 @@ import it.polimi.jasper.engine.reasoning.JenaTVGReasoner;
 import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
 import it.polimi.jasper.engine.sds.*;
 import it.polimi.jasper.engine.stream.GraphStimulus;
+import it.polimi.jasper.parser.RSPQLParser;
 import it.polimi.jasper.parser.streams.Window;
+import it.polimi.yasper.core.SDS;
 import it.polimi.yasper.core.engine.RSPQLEngine;
 import it.polimi.yasper.core.enums.Entailment;
 import it.polimi.yasper.core.enums.Maintenance;
+import it.polimi.yasper.core.exceptions.UnregisteredQueryExeception;
+import it.polimi.yasper.core.exceptions.UnregisteredStreamExeception;
 import it.polimi.yasper.core.exceptions.UnsuportedQueryClassExecption;
 import it.polimi.yasper.core.query.ContinuousQuery;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.query.operators.s2r.DefaultWindow;
 import it.polimi.yasper.core.query.operators.s2r.NamedWindow;
+import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.stream.StreamItem;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import it.polimi.yasper.core.utils.QueryConfiguration;
@@ -27,17 +33,18 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.impl.InfModelImpl;
 import org.apache.jena.rdf.model.impl.ModelCom;
+import org.apache.jena.riot.system.IRIResolver;
+import org.parboiled.Parboiled;
+import org.parboiled.errors.ParseError;
+import org.parboiled.parserunners.ReportingParseRunner;
+import org.parboiled.support.ParsingResult;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Log4j
 public class JenaRSPQLEngineImpl extends RSPQLEngine {
 
     public JenaRSPQLEngineImpl(long t0) {
-        this.queries = new HashMap<>();
         this.t0 = t0;
         StreamItem typeMap = new GraphStimulus();
         log.info("Added [" + typeMap.getClass() + "] as TStream");
@@ -47,8 +54,27 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
         cepRT = cep.getEPRuntime();
     }
 
-    public ContinuousQueryExecution registerQuery(ContinuousQuery q) {
-        return registerQuery((RSPQuery) q, ModelFactory.createDefaultModel(), Maintenance.NAIVE, Entailment.NONE);
+    @Override
+    public void registerStream(Stream s) {
+        log.info("Registering Stream [" + s.getURI() + "]");
+        s.setRSPEngine(this);
+        cepAdm.createEPL(s.toEPLSchema(), EncodingUtils.encode(s.getURI()));
+        registeredStreams.put(EncodingUtils.encode(s.getURI()), s);
+    }
+
+    @Override
+    public void unregisterStream(String s) {
+        log.info("Unregistering Stream [" + s + "]");
+        EPStatement statement = cepAdm.getStatement(EncodingUtils.encode(s));
+        statement.removeAllListeners();
+        statement.destroy();
+        Stream remove = registeredStreams.remove(EncodingUtils.encode(s));
+        remove.setRSPEngine(null);
+    }
+
+    @Override
+    public ContinuousQueryExecution registerQuery(String q, QueryConfiguration c) {
+        return registerQuery(parseQuery(q), c);
     }
 
     @Override
@@ -64,6 +90,11 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
     }
 
     public ContinuousQueryExecution registerQuery(RSPQuery bq, Model tbox, Maintenance maintenance, Entailment entailment) {
+        log.info("Registering Query [" + bq.getName() + "]");
+
+        registeredQueries.put(bq.getName(), bq);
+        queryObservers.put(bq.getName(), new ArrayList<QueryResponseFormatter>());
+
         log.info(bq.getQ().toString());
 
         Model def = loadStaticGraph(bq, new ModelCom(new TimeVaryingGraphBase()));
@@ -75,15 +106,87 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
         JenaSDS sds = new JenaSDSImpl(tbox, kb_star, bq.getResolver(), maintenance, "", cep, this);
         ContinuousQueryExecution qe = ContinuousQueryExecutionFactory.create(bq, sds, reasoner);
 
+        sds.addQueryExecutor(bq, qe);
+
         addNamedStaticGraph(bq, sds, reasoner);
         addWindows(bq, sds, reasoner);
         addNamedWindows(sds, bq, reasoner);
 
-        sds.addQueryExecutor(bq, qe);
-
-        queries.put(bq, sds);
+        assignedSDS.put(bq.getName(), sds);
+        registeredQueries.put(bq.getName(), bq);
+        queryExecutions.put(bq.getName(), qe);
 
         return qe;
+    }
+
+    @Override
+    public void unregisterQuery(String qId) {
+        if (registeredQueries.containsKey(qId)) {
+            ContinuousQuery query = registeredQueries.remove(qId);
+            ContinuousQueryExecution ceq = queryExecutions.remove(qId);
+            List<QueryResponseFormatter> l = queryObservers.remove(qId);
+            if (l != null) {
+                for (QueryResponseFormatter f : l) {
+                    ceq.removeObserver(f);
+                }
+            }
+            SDS sds = assignedSDS.remove(query);
+        } else
+            throw new UnregisteredQueryExeception(qId);
+    }
+
+    @Override
+    public void registerObserver(String q, QueryResponseFormatter o) {
+        log.info("Registering Observer [" + o.getClass() + "] to Query [" + q + "]");
+        if (!registeredQueries.containsKey(q))
+            throw new UnregisteredQueryExeception(q);
+        else {
+            ContinuousQueryExecution ceq = queryExecutions.get(q);
+            ceq.addObserver(o);
+            if (queryObservers.containsKey(q)) {
+                List<QueryResponseFormatter> l = queryObservers.get(q);
+                if (l != null) {
+                    l.add(o);
+                } else {
+                    l = new ArrayList<>();
+                    l.add(o);
+                    queryObservers.put(q, l);
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void unregisterObserver(String q, QueryResponseFormatter o) {
+        log.info("Unregistering Observer [" + o.getClass() + "] from Query [" + q + "]");
+        if (queryExecutions.containsKey(q)) {
+            queryExecutions.get(q).removeObserver(o);
+            if (queryObservers.containsKey(q)) {
+                queryObservers.get(q).remove(o);
+            }
+        }
+        throw new UnregisteredQueryExeception(q);
+    }
+
+    @Override
+    public ContinuousQuery parseQuery(String input) {
+        log.info("Parsing Query [" + input + "]");
+
+        RSPQLParser parser = Parboiled.createParser(RSPQLParser.class);
+
+        parser.setResolver(IRIResolver.create());
+
+        ParsingResult<RSPQuery> result = new ReportingParseRunner(parser.Query()).run(input);
+
+        if (result.hasErrors()) {
+            for (ParseError arg : result.parseErrors) {
+                System.out.println(input.substring(0, arg.getStartIndex()) + "|->" + input.substring(arg.getStartIndex(), arg.getEndIndex()) + "<-|" + input.substring(arg.getEndIndex() + 1, input.length() - 1));
+            }
+        }
+        RSPQuery query = result.resultValue;
+        log.info("Final Query ID is [" + query.getID() + "]");
+        return query;
     }
 
     private void addWindows(RSPQuery bq, JenaSDS sds, JenaTVGReasoner reasoner) {
@@ -117,34 +220,40 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
         if (bq.getNamedwindows() != null) {
             for (Map.Entry<Node, Window> entry : bq.getNamedwindows().entrySet()) {
                 Window w = entry.getValue();
-                String stream_uri = EncodingUtils.encode(w.getStreamURI());
-                String window_uri = w.getIri().getURI();
-                String statementName = "QUERY" + bq.getId() + "STMT_NDM" + j;
+                String epl_stream_uri = EncodingUtils.encode(w.getStreamURI());
 
-                cepAdm.createEPL(w.getStream().toEPLSchema());
+                EPStatement stream_schema = cepAdm.getStatement(epl_stream_uri);
+                if (stream_schema == null) {
+                    throw new UnregisteredStreamExeception(w.getStreamURI());
+                }
+                // cepAdm.createEPL(w.getStream().toEPLSchema(), epl_stream_uri);
+
+                String window_uri = w.getIri().getURI();
+                String epl_statement_name = "QUERY" + bq.getName() + "STMT_NDM" + j;
+
 
                 log.info(w.getStream().toEPLSchema());
                 log.info("creating named graph " + window_uri + "");
 
                 TimeVaryingGraph bind = (TimeVaryingGraph) reasoner.bind(new TimeVaryingGraphBase());
 
-                NamedWindow tvg = new NamedWindow(sds.getMaintenanceType(), bind, getEpStatement(sds, w, statementName));
+                NamedWindow tvg = new NamedWindow(sds.getMaintenanceType(), bind, getEpStatement(sds, w, epl_statement_name));
 
-                sds.addNamedTimeVaryingGraph(statementName, window_uri, stream_uri, tvg);//SDS
-                sds.addNamedWindowStream(window_uri, stream_uri, new WindowModelCom(bind));//JenaSDS
+                sds.addNamedTimeVaryingGraph(epl_statement_name, window_uri, epl_stream_uri, tvg);//SDS
+                sds.addNamedWindowStream(window_uri, epl_stream_uri, new WindowModelCom(bind));//JenaSDS
 
                 j++;
             }
         }
     }
 
-    private EPStatement getEpStatement(JenaSDS sds, Window w, String statementName) {
+    private EPStatement getEpStatement(JenaSDS sds, Window w, String epl_statement_name) {
         EPStatement epl;
         if (Maintenance.INCREMENTAL.equals(sds.getMaintenanceType())) {
-            epl = cepAdm.create(w.toIREPL(), statementName);
+            epl = cepAdm.create(w.toIREPL(), epl_statement_name);
             log.info(w.toIREPL().toEPL());
         } else {
-            epl = cepAdm.create(w.toEPL(), statementName);
+            epl = cepAdm.create(w.toEPL(), epl_statement_name);
             log.info(w.toEPL().toEPL());
         }
         return epl;

@@ -30,7 +30,17 @@ public abstract class ContinuousQueryExecutionImpl extends Observable implements
     }
 
     @Override
+    public synchronized void removeObserver(Observer o) {
+        super.deleteObserver(o);
+    }
+
+    @Override
     public void eval(SDS sds, WindowOperator w, long ts) {
         eval(sds, w, ts, s2r);
+    }
+
+    @Override
+    public String getQueryID() {
+        return query.getID();
     }
 }

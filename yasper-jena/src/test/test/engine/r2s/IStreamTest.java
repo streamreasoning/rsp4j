@@ -2,11 +2,10 @@ package test.engine.r2s;
 
 import it.polimi.jasper.engine.JenaRSPQLEngineImpl;
 import it.polimi.jasper.engine.query.RSPQuery;
-import it.polimi.jasper.engine.query.formatter.GenericResponseSysOutFormatter;
+import it.polimi.jasper.engine.query.formatter.ResponseFormatterFactory;
 import it.polimi.jasper.parser.RSPQLParser;
 import it.polimi.yasper.core.enums.Entailment;
 import it.polimi.yasper.core.enums.Maintenance;
-import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -32,9 +31,9 @@ public class IStreamTest {
         sr.startProcessing();
 
         Model tbox = ModelFactory.createDefaultModel();//.read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/artist.tbox.owl");
-        ContinuousQueryExecution cqe = sr.registerQuery(q, tbox, Maintenance.NAIVE, Entailment.RHODF);
+        sr.registerQuery(q, tbox, Maintenance.NAIVE, Entailment.RHODF);
 
-        sr.registerObserver(cqe, new GenericResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
+        sr.registerObserver(q.getName(), ResponseFormatterFactory.getGenericResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
 
         (new Thread(new GraphS2RTestStream(sr, "http://streamreasoning.org/iminds/massif/stream1"))).start();
         //(new Thread(new GraphS2RTestStream(sr, "Writer", "http://streamreasoning.org/iminds/massif/stream2", 1))).start();

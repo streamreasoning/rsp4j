@@ -1,26 +1,24 @@
 package test.engine;
 
 import it.polimi.jasper.engine.stream.GraphStimulus;
-import it.polimi.yasper.core.engine.RSPQLEngine;
-import lombok.AllArgsConstructor;
+import it.polimi.jasper.engine.stream.RDFStream;
+import lombok.extern.log4j.Log4j;
+import org.apache.jena.rdf.model.*;
 
 import java.util.Random;
 
 /**
  * Created by Riccardo on 13/08/16.
  */
-@AllArgsConstructor
-public class GraphStream implements Runnable {
+@Log4j
+public class GraphStream extends RDFStream {
 
-    RSPQLEngine e;
-    private String name;
-    private String stream_uri;
-    private int grow_rate;
+    public GraphStream(String name, String stream_uri, int grow_rate) {
+        super(name, stream_uri, grow_rate);
+    }
 
     @Override
-    public void run() {
-
-
+    protected void update() {
         int i = 1;
         int j = 1;
         while (true) {
@@ -41,8 +39,12 @@ public class GraphStream implements Runnable {
 
             GraphStimulus t = new GraphStimulus(i * 1000, m.getGraph(), stream_uri);
             System.out.println("[" + System.currentTimeMillis() + "] Sending [" + t + "] on " + stream_uri + " at " + i * 1000);
-            this.e.process(t);
+
+            if (e != null)
+                this.e.process(t);
+
             try {
+                log.info("Sleep");
                 Thread.sleep(grow_rate * 998);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -50,6 +52,7 @@ public class GraphStream implements Runnable {
             i += grow_rate;
             j++;
         }
-
     }
+
+
 }
