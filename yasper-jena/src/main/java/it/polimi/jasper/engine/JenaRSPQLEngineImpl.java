@@ -90,10 +90,17 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
     }
 
     public ContinuousQueryExecution registerQuery(RSPQuery bq, Model tbox, Maintenance maintenance, Entailment entailment) {
+<<<<<<< HEAD
         log.info("Registering Query [" + bq.getName() + "]");
 
         registeredQueries.put(bq.getName(), bq);
         queryObservers.put(bq.getName(), new ArrayList<QueryResponseFormatter>());
+=======
+        log.info("Registering Query [" + bq.getId() + "]");
+
+        registeredQueries.put(bq.getId(), bq);
+        queryObservers.put(bq.getId(), new ArrayList<QueryResponseFormatter>());
+>>>>>>> 0d0d3db19324bd0be27b794b12ae18bae86a2475
 
         log.info(bq.getQ().toString());
 
@@ -112,9 +119,15 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
         addWindows(bq, sds, reasoner);
         addNamedWindows(sds, bq, reasoner);
 
+<<<<<<< HEAD
         assignedSDS.put(bq.getName(), sds);
         registeredQueries.put(bq.getName(), bq);
         queryExecutions.put(bq.getName(), qe);
+=======
+        assignedSDS.put(bq.getId(), sds);
+        registeredQueries.put(bq.getId(), bq);
+        queryExecutions.put(bq.getId(), qe);
+>>>>>>> 0d0d3db19324bd0be27b794b12ae18bae86a2475
 
         return qe;
     }
@@ -137,7 +150,10 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
 
     @Override
     public void registerObserver(String q, QueryResponseFormatter o) {
+<<<<<<< HEAD
         log.info("Registering Observer [" + o.getClass() + "] to Query [" + q + "]");
+=======
+>>>>>>> 0d0d3db19324bd0be27b794b12ae18bae86a2475
         if (!registeredQueries.containsKey(q))
             throw new UnregisteredQueryExeception(q);
         else {
@@ -159,7 +175,10 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
 
     @Override
     public void unregisterObserver(String q, QueryResponseFormatter o) {
+<<<<<<< HEAD
         log.info("Unregistering Observer [" + o.getClass() + "] from Query [" + q + "]");
+=======
+>>>>>>> 0d0d3db19324bd0be27b794b12ae18bae86a2475
         if (queryExecutions.containsKey(q)) {
             queryExecutions.get(q).removeObserver(o);
             if (queryObservers.containsKey(q)) {
@@ -171,8 +190,11 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
 
     @Override
     public ContinuousQuery parseQuery(String input) {
+<<<<<<< HEAD
         log.info("Parsing Query [" + input + "]");
 
+=======
+>>>>>>> 0d0d3db19324bd0be27b794b12ae18bae86a2475
         RSPQLParser parser = Parboiled.createParser(RSPQLParser.class);
 
         parser.setResolver(IRIResolver.create());
@@ -184,9 +206,13 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
                 System.out.println(input.substring(0, arg.getStartIndex()) + "|->" + input.substring(arg.getStartIndex(), arg.getEndIndex()) + "<-|" + input.substring(arg.getEndIndex() + 1, input.length() - 1));
             }
         }
+<<<<<<< HEAD
         RSPQuery query = result.resultValue;
         log.info("Final Query ID is [" + query.getID() + "]");
         return query;
+=======
+        return result.resultValue;
+>>>>>>> 0d0d3db19324bd0be27b794b12ae18bae86a2475
     }
 
     private void addWindows(RSPQuery bq, JenaSDS sds, JenaTVGReasoner reasoner) {
@@ -229,7 +255,11 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
                 // cepAdm.createEPL(w.getStream().toEPLSchema(), epl_stream_uri);
 
                 String window_uri = w.getIri().getURI();
+<<<<<<< HEAD
                 String epl_statement_name = "QUERY" + bq.getName() + "STMT_NDM" + j;
+=======
+                String epl_statement_name = "QUERY" + bq.getId() + "STMT_NDM" + j;
+>>>>>>> 0d0d3db19324bd0be27b794b12ae18bae86a2475
 
 
                 log.info(w.getStream().toEPLSchema());

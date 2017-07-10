@@ -33,7 +33,11 @@ public class IStreamTest {
         Model tbox = ModelFactory.createDefaultModel();//.read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/artist.tbox.owl");
         sr.registerQuery(q, tbox, Maintenance.NAIVE, Entailment.RHODF);
 
+<<<<<<< HEAD
         sr.registerObserver(q.getName(), ResponseFormatterFactory.getGenericResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
+=======
+        sr.registerObserver(q.getId(), ResponseFormatterFactory.getGenericResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
+>>>>>>> 0d0d3db19324bd0be27b794b12ae18bae86a2475
 
         (new Thread(new GraphS2RTestStream(sr, "http://streamreasoning.org/iminds/massif/stream1"))).start();
         //(new Thread(new GraphS2RTestStream(sr, "Writer", "http://streamreasoning.org/iminds/massif/stream2", 1))).start();

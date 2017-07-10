@@ -41,9 +41,15 @@ public class IncrementalJena {
         // ContinuousQueryExecutionImpl cqe = je.registerQuery(q, SDS); //executes the query on the given SDS (if compatible)
 
         if (q.isSelectType())
+<<<<<<< HEAD
             sr.registerObserver(q.getName(), ResponseFormatterFactory.getSelectResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
         if (q.isConstructType())
             sr.registerObserver(q.getName(), ResponseFormatterFactory.getConstructResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
+=======
+            sr.registerObserver(q.getId(), ResponseFormatterFactory.getSelectResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
+        if (q.isConstructType())
+            sr.registerObserver(q.getId(), ResponseFormatterFactory.getConstructResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
+>>>>>>> 0d0d3db19324bd0be27b794b12ae18bae86a2475
 
         (new Thread(new GraphStream("Painter", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
 

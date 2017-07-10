@@ -152,7 +152,11 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
 
     @Override
     public String getID() {
+<<<<<<< HEAD
         return getName();
+=======
+        return this.header.getId();
+>>>>>>> 0d0d3db19324bd0be27b794b12ae18bae86a2475
     }
 
     @Override
