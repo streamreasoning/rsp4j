@@ -3,7 +3,6 @@ package test.engine;
 import it.polimi.jasper.engine.stream.GraphStimulus;
 import it.polimi.yasper.core.engine.RSPQLEngine;
 import lombok.AllArgsConstructor;
-import org.apache.jena.rdf.model.*;
 
 import java.util.Random;
 

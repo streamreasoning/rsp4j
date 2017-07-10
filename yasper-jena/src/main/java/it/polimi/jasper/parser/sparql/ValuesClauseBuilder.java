@@ -12,8 +12,8 @@ import org.apache.jena.sparql.syntax.ElementData;
 @Data
 public class ValuesClauseBuilder {
 
-    private ElementData elm;
     public int currentColumn;
+    private ElementData elm;
 
     public ValuesClauseBuilder() {
         elm = new ElementData();

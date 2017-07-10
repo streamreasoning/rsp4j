@@ -1,7 +1,7 @@
 package it.polimi.jasper.parser.run;
 
-import it.polimi.jasper.parser.RSPQLParser;
 import it.polimi.jasper.engine.query.RSPQuery;
+import it.polimi.jasper.parser.RSPQLParser;
 import it.polimi.jasper.parser.streams.Window;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.graph.Node;

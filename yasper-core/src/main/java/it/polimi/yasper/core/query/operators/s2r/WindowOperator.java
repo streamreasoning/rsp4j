@@ -6,7 +6,7 @@ import com.espertech.esper.client.EventBean;
 import com.espertech.esper.event.map.MapEventBean;
 import it.polimi.yasper.core.engine.RSPListener;
 import it.polimi.yasper.core.enums.Maintenance;
-import it.polimi.yasper.core.query.TimeVaryingGraph;
+import it.polimi.yasper.core.query.TimeVaryingItem;
 import it.polimi.yasper.core.stream.StreamItem;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
@@ -21,10 +21,10 @@ import java.util.Observable;
 public abstract class WindowOperator extends Observable implements RSPListener {
 
     protected EPStatement statement;
-    protected TimeVaryingGraph graph;
+    protected TimeVaryingItem graph;
     protected Maintenance maintenance;
 
-    public WindowOperator(Maintenance maintenance, TimeVaryingGraph g, EPStatement statement) {
+    public WindowOperator(Maintenance maintenance, TimeVaryingItem g, EPStatement statement) {
         this.statement = statement;
         this.maintenance = maintenance;
         this.graph = g;

@@ -1,8 +1,8 @@
 package it.polimi.jasper.engine.stream;
 
-import it.polimi.jasper.engine.sds.JenaTimeVaryingGraph;
+import it.polimi.jasper.engine.sds.TimeVaryingGraph;
 import it.polimi.rdf.RDFLine;
-import it.polimi.yasper.core.query.TimeVaryingGraph;
+import it.polimi.yasper.core.query.TimeVaryingItem;
 import it.polimi.yasper.core.stream.StreamItem;
 import lombok.NoArgsConstructor;
 import org.apache.jena.rdf.model.Property;
@@ -39,9 +39,9 @@ public class StatementStimulus extends StreamItem {
     }
 
     @Override
-    public JenaTimeVaryingGraph addTo(TimeVaryingGraph abox) {
+    public TimeVaryingGraph addTo(TimeVaryingItem abox) {
         //TODO remove cast
-        JenaTimeVaryingGraph abox1 = (JenaTimeVaryingGraph) abox;
+        TimeVaryingGraph abox1 = (TimeVaryingGraph) abox;
         abox1.add(getContent().asTriple());
         return abox1;
     }
@@ -54,9 +54,9 @@ public class StatementStimulus extends StreamItem {
     }
 
     @Override
-    public JenaTimeVaryingGraph removeFrom(TimeVaryingGraph abox) {
+    public TimeVaryingGraph removeFrom(TimeVaryingItem abox) {
         //TODO remove cast
-        JenaTimeVaryingGraph abox1 = (JenaTimeVaryingGraph) abox;
+        TimeVaryingGraph abox1 = (TimeVaryingGraph) abox;
         abox1.remove(getS().asNode(), getP().asNode(), getO().asNode());
         return abox1;
     }

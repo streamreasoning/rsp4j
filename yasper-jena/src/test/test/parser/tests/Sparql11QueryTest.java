@@ -34,9 +34,16 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Parameterized.class)
 public class Sparql11QueryTest {
 
+    private static final String folder = "tests/";
+    static String input;
+    static org.apache.jena.query.Query toCompare;
     private static boolean res;
     private static String f;
-    private static final String folder = "tests/";
+
+    public Sparql11QueryTest(String f, boolean res) {
+        this.res = res;
+        this.f = f;
+    }
 
     @Parameters
     public static Collection<Object[]> data() throws IOException {
@@ -53,33 +60,6 @@ public class Sparql11QueryTest {
             }
         }
         return obj;
-    }
-
-    public Sparql11QueryTest(String f, boolean res) {
-        this.res = res;
-        this.f = f;
-    }
-
-    static String input;
-    static org.apache.jena.query.Query toCompare;
-
-    @Before
-    public void load() throws URISyntaxException, IOException {
-
-
-    }
-
-    @Test
-    public void test() {
-        try {
-            (new Sparql11QueryTest(f, res)).process();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (QueryParseException epe) {
-            epe.printStackTrace();
-        }
     }
 
     public static void process() throws URISyntaxException, IOException {
@@ -100,6 +80,25 @@ public class Sparql11QueryTest {
         org.apache.jena.query.Query q = result.parseTreeRoot.getChildren().get(0).getValue().getQ();
         QueryCompare.PrintMessages = true;
         assertEquals(res, QueryCompare.equals(toCompare, q));
+    }
+
+    @Before
+    public void load() throws URISyntaxException, IOException {
+
+
+    }
+
+    @Test
+    public void test() {
+        try {
+            (new Sparql11QueryTest(f, res)).process();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (QueryParseException epe) {
+            epe.printStackTrace();
+        }
     }
 
 

@@ -39,26 +39,21 @@ public class ParserUtils extends BaseParser<Object> {
     protected final Node nRDFsubject = RDF.Nodes.subject;
     protected final Node nRDFpredicate = RDF.Nodes.predicate;
     protected final Node nRDFobject = RDF.Nodes.object;
-
-    // Graph patterns, true; in templates, false.
-    private boolean bNodesAreVariables = true;
-    // In DELETE, false.
-    private boolean bNodesAreAllowed = true;
-
     // label => bNode for construct templates patterns
     final LabelToNodeMap bNodeLabels = LabelToNodeMap.createBNodeMap();
-
     // label => bNode (as variable) for graph patterns
     final LabelToNodeMap anonVarLabels = LabelToNodeMap.createVarMap();
+    protected LabelToNodeMap activeLabelMap = anonVarLabels;
+    protected Set<String> previousLabels = new HashSet<String>();
 
     // This is the map used allocate blank node labels during sparql11.
     // 1/ It is different between CONSTRUCT and the query pattern
     // 2/ Each BasicGraphPattern is a scope for blank node labels so each
     // BGP causes the map to be cleared at the start of the BGP
-
-    protected LabelToNodeMap activeLabelMap = anonVarLabels;
-    protected Set<String> previousLabels = new HashSet<String>();
-
+    // Graph patterns, true; in templates, false.
+    private boolean bNodesAreVariables = true;
+    // In DELETE, false.
+    private boolean bNodesAreAllowed = true;
     private IRIResolver resolver;
 
     public boolean bNodeOff() {
@@ -196,12 +191,12 @@ public class ParserUtils extends BaseParser<Object> {
         return safeTypeByName;
     }
 
-    public void setResolver(IRIResolver resolver) {
-        this.resolver = resolver;
-    }
-
     public IRIResolver getResolver() {
         return resolver;
+    }
+
+    public void setResolver(IRIResolver resolver) {
+        this.resolver = resolver;
     }
 
     public boolean addValuesToQuery() {
@@ -241,9 +236,6 @@ public class ParserUtils extends BaseParser<Object> {
     public boolean endSubQuery() {
         return push(new ElementSubQuery(popQuery(0).getQ()));
     }
-
-
-
 
 
 }

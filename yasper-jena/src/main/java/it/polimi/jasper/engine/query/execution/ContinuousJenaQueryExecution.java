@@ -1,10 +1,10 @@
 package it.polimi.jasper.engine.query.execution;
 
 import it.polimi.jasper.engine.query.RSPQuery;
-import it.polimi.jasper.engine.reasoning.JenaTimeVaryingInfGraph;
+import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
 import it.polimi.jasper.engine.sds.JenaSDS;
 import it.polimi.yasper.core.SDS;
-import it.polimi.yasper.core.query.TimeVaryingGraph;
+import it.polimi.yasper.core.query.TimeVaryingItem;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecutionImpl;
 import it.polimi.yasper.core.query.operators.r2s.RelationToStreamOperator;
 import it.polimi.yasper.core.query.operators.s2r.WindowOperator;
@@ -37,9 +37,9 @@ public abstract class ContinuousJenaQueryExecution extends ContinuousQueryExecut
 
     public void materialize(WindowOperator tvg) {
         if (reasoner != null) {
-            TimeVaryingGraph g = tvg.getGraph();
-            if (g instanceof JenaTimeVaryingInfGraph) {
-                ((JenaTimeVaryingInfGraph) g).rebind();
+            TimeVaryingItem g = tvg.getGraph();
+            if (g instanceof TimeVaryingInfGraph) {
+                ((TimeVaryingInfGraph) g).rebind();
             }
         }
     }

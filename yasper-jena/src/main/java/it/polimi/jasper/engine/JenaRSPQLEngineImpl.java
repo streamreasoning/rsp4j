@@ -5,7 +5,7 @@ import com.espertech.esper.client.EPStatement;
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.jasper.engine.query.execution.ContinuousQueryExecutionFactory;
 import it.polimi.jasper.engine.reasoning.JenaTVGReasoner;
-import it.polimi.jasper.engine.reasoning.JenaTimeVaryingInfGraph;
+import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
 import it.polimi.jasper.engine.sds.*;
 import it.polimi.jasper.engine.stream.GraphStimulus;
 import it.polimi.jasper.parser.streams.Window;
@@ -89,7 +89,7 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
     private void addWindows(RSPQuery bq, JenaSDS sds, JenaTVGReasoner reasoner) {
         //Default Time-Varying Graph
         int i = 0;
-        JenaTimeVaryingInfGraph bind = (JenaTimeVaryingInfGraph) reasoner.bind(new TimeVaryingGraphBase());
+        TimeVaryingInfGraph bind = (TimeVaryingInfGraph) reasoner.bind(new TimeVaryingGraphBase());
 
         sds.addDefaultWindow(new WindowModelCom(bind)); //JenaSDS
 
@@ -126,7 +126,7 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
                 log.info(w.getStream().toEPLSchema());
                 log.info("creating named graph " + window_uri + "");
 
-                JenaTimeVaryingGraph bind = (JenaTimeVaryingGraph) reasoner.bind(new TimeVaryingGraphBase());
+                TimeVaryingGraph bind = (TimeVaryingGraph) reasoner.bind(new TimeVaryingGraphBase());
 
                 NamedWindow tvg = new NamedWindow(sds.getMaintenanceType(), bind, getEpStatement(sds, w, statementName));
 
@@ -157,7 +157,7 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
                 log.info(g);
                 if (!isWindow(bq.getNamedwindows().keySet(), g)) {
                     Model m = ModelFactory.createDefaultModel().read(g);
-                    JenaTimeVaryingInfGraph bind = (JenaTimeVaryingInfGraph) reasoner.bind(m.getGraph());
+                    TimeVaryingInfGraph bind = (TimeVaryingInfGraph) reasoner.bind(m.getGraph());
                     sds.addNamedModel(g, new InfModelImpl(bind));
                 }
             }

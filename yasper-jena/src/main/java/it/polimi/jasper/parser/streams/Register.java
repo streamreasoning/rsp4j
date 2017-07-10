@@ -1,6 +1,5 @@
 package it.polimi.jasper.parser.streams;
 
-import it.polimi.yasper.core.query.operators.r2s.RelationToStreamOperator;
 import lombok.*;
 
 import java.util.regex.MatchResult;
@@ -15,18 +14,16 @@ import java.util.regex.Pattern;
 @ToString(exclude = {"regex", "p"})
 public class Register {
 
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    final private String regex = "([0-9]+)\\s*(ms|s|m|h|d|GRAPH|TRIPLES)";
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    final private Pattern p = Pattern.compile(regex);
     private String id;
     private Integer every;
     private String unit;
     private Type type;
-
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    final private String regex = "([0-9]+)\\s*(ms|s|m|h|d|GRAPH|TRIPLES)";
-
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    final private Pattern p = Pattern.compile(regex);
 
     public Register setId(String id) {
         this.id = id;

@@ -4,7 +4,7 @@ import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import it.polimi.yasper.core.enums.Maintenance;
-import it.polimi.yasper.core.query.TimeVaryingGraph;
+import it.polimi.yasper.core.query.TimeVaryingItem;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 
@@ -17,7 +17,7 @@ public class DefaultWindow extends WindowOperator {
 
     private Set<EPStatement> statements;
 
-    public DefaultWindow(Maintenance maintenance, TimeVaryingGraph g) {
+    public DefaultWindow(Maintenance maintenance, TimeVaryingItem g) {
         super(maintenance, g, null);
         this.statements = new HashSet<>();
     }

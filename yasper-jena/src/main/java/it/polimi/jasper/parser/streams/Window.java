@@ -19,6 +19,12 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class Window {
 
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    final private String regex = "([0-9]+)\\s*(ms|s|m|h|d|GRAPH|TRIPLES)";
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    final private Pattern p = Pattern.compile(regex);
     @NonNull
     private Node_URI iri;
     private Integer beta;
@@ -26,15 +32,6 @@ public class Window {
     private String unit_omega;
     private String unit_beta;
     private it.polimi.jasper.parser.streams.Stream stream;
-
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    final private String regex = "([0-9]+)\\s*(ms|s|m|h|d|GRAPH|TRIPLES)";
-
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    final private Pattern p = Pattern.compile(regex);
-
     private WindowType type = WindowType.Logical;
     private View window;
 
@@ -141,15 +138,9 @@ public class Window {
         return null;
     }
 
-
-    public enum WindowType {
-        Logical, Physical;
-    }
-
     public boolean isNamed() {
         return iri != null;
     }
-
 
     public EPStatementObjectModel toEPL() {
         EPStatementObjectModel stmt = new EPStatementObjectModel();
@@ -198,6 +189,10 @@ public class Window {
 
     public String getStreamURI() {
         return stream.getIri().getURI();
+    }
+
+    public enum WindowType {
+        Logical, Physical;
     }
 
 }

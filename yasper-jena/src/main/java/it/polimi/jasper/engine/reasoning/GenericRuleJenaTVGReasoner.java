@@ -2,7 +2,7 @@ package it.polimi.jasper.engine.reasoning;
 
 import it.polimi.jasper.engine.reasoning.rulesys.BasicForwardRuleInfTVGraph;
 import it.polimi.jasper.engine.reasoning.rulesys.FBRuleInfTVGraph;
-import it.polimi.jasper.engine.sds.JenaTimeVaryingGraph;
+import it.polimi.jasper.engine.sds.TimeVaryingGraph;
 import it.polimi.jasper.engine.sds.WindowModel;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.Resource;
@@ -42,7 +42,7 @@ public class GenericRuleJenaTVGReasoner extends GenericRuleReasoner implements J
 
     @Override
     public InfGraph bind(Graph data) throws ReasonerException {
-        return bind((JenaTimeVaryingGraph) data);
+        return bind((TimeVaryingGraph) data);
     }
 
     /**
@@ -58,7 +58,7 @@ public class GenericRuleJenaTVGReasoner extends GenericRuleReasoner implements J
      */
 
 
-    public InfGraph bind(JenaTimeVaryingGraph data) throws ReasonerException {
+    public InfGraph bind(TimeVaryingGraph data) throws ReasonerException {
         Graph schemaArg = schemaGraph == null ? getPreload() : schemaGraph;
         InfGraph graph = null;
         if (mode == FORWARD) {

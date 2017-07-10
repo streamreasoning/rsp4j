@@ -4,7 +4,6 @@ import it.polimi.jasper.engine.JenaRSPQLEngineImpl;
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.jasper.engine.query.formatter.ConstructResponseSysOutFormatter;
 import it.polimi.jasper.engine.query.formatter.SelectResponseSysOutFormatter;
-import test.engine.GraphStream;
 import it.polimi.jasper.parser.RSPQLParser;
 import it.polimi.yasper.core.enums.Entailment;
 import it.polimi.yasper.core.enums.Maintenance;
@@ -17,6 +16,7 @@ import org.parboiled.Parboiled;
 import org.parboiled.errors.ParseError;
 import org.parboiled.parserunners.ReportingParseRunner;
 import org.parboiled.support.ParsingResult;
+import test.engine.GraphStream;
 
 import java.io.File;
 import java.io.IOException;

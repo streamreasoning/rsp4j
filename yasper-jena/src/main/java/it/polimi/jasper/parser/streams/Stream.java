@@ -19,6 +19,11 @@ import java.util.List;
  */
 @AllArgsConstructor
 public class Stream {
+    @Getter
+    @Setter
+
+    private Node_URI iri;
+
     @Override
 
 
@@ -35,11 +40,6 @@ public class Stream {
     public int hashCode() {
         return iri != null ? iri.hashCode() : 0;
     }
-
-    @Getter
-    @Setter
-
-    private Node_URI iri;
 
     public String toEPLSchema() {
         CreateSchemaClause schema = new CreateSchemaClause();

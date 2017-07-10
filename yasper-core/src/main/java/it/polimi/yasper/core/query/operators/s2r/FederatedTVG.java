@@ -4,7 +4,7 @@ import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.event.map.MapEventBean;
 import it.polimi.yasper.core.enums.Maintenance;
-import it.polimi.yasper.core.query.TimeVaryingGraph;
+import it.polimi.yasper.core.query.TimeVaryingItem;
 import it.polimi.yasper.core.stream.StreamItem;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
@@ -21,7 +21,7 @@ import lombok.extern.log4j.Log4j;
 public class FederatedTVG extends NamedWindow {
     private EPStatement statement;
 
-    public FederatedTVG(Maintenance maintenance, TimeVaryingGraph g, EPStatement stmt) {
+    public FederatedTVG(Maintenance maintenance, TimeVaryingItem g, EPStatement stmt) {
         super(maintenance, g, stmt);
     }
 

@@ -6,7 +6,7 @@ import org.apache.jena.mem.GraphMem;
 /**
  * Created by riccardo on 05/07/2017.
  */
-public class TimeVaryingGraphBase extends GraphMem implements JenaTimeVaryingGraph {
+public class TimeVaryingGraphBase extends GraphMem implements TimeVaryingGraph {
 
     private long last_timestamp;
     private WindowOperator window;

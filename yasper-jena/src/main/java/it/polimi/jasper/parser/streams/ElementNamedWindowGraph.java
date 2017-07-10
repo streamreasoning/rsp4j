@@ -12,11 +12,11 @@ import org.apache.jena.sparql.syntax.ElementVisitor;
 @Getter
 public class ElementNamedWindowGraph extends ElementNamedGraph {
 
-	public ElementNamedWindowGraph(Node source_name, Element el) {
-		super(source_name, el);
-	}
+    public ElementNamedWindowGraph(Node source_name, Element el) {
+        super(source_name, el);
+    }
 
-	public void visit(ElementVisitor v) {
-		super.visit(v);
-	}
+    public void visit(ElementVisitor v) {
+        super.visit(v);
+    }
 }

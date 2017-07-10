@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 @Setter
 public class WindowModelCom extends WindowModel {
 
-    public WindowModelCom(JenaTimeVaryingGraph base) {
+    public WindowModelCom(TimeVaryingGraph base) {
         super(base);
         this.model = new ModelCom(base);
     }

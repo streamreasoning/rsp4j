@@ -1,7 +1,6 @@
 package test.engine.experiments;
 
 import it.polimi.jasper.engine.BaselinesUtils;
-import org.apache.jena.rdf.model.*;
 import org.apache.jena.reasoner.InfGraph;
 import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.reasoner.ReasonerRegistry;

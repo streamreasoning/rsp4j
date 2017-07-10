@@ -4,7 +4,7 @@ import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import it.polimi.yasper.core.enums.Maintenance;
-import it.polimi.yasper.core.query.TimeVaryingGraph;
+import it.polimi.yasper.core.query.TimeVaryingItem;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 
@@ -13,7 +13,7 @@ import lombok.extern.log4j.Log4j;
 public class NamedWindow extends WindowOperator {
 
 
-    public NamedWindow(Maintenance maintenance, TimeVaryingGraph g, EPStatement statement) {
+    public NamedWindow(Maintenance maintenance, TimeVaryingItem g, EPStatement statement) {
         super(maintenance, g, statement);
         statement.addListener(this);
     }

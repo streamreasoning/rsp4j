@@ -5,7 +5,7 @@ import it.polimi.yasper.core.query.operators.s2r.WindowOperator;
 /**
  * Created by riccardo on 05/07/2017.
  */
-public interface TimeVaryingGraph {
+public interface TimeVaryingItem {
 
     public long getTimestamp();
 

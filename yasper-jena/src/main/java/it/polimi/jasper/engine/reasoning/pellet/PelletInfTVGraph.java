@@ -1,6 +1,6 @@
 package it.polimi.jasper.engine.reasoning.pellet;
 
-import it.polimi.jasper.engine.reasoning.JenaTimeVaryingInfGraph;
+import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
 import it.polimi.yasper.core.query.operators.s2r.WindowOperator;
 import openllet.jena.PelletInfGraph;
 import openllet.jena.PelletReasoner;
@@ -10,7 +10,7 @@ import org.apache.jena.graph.Graph;
 /**
  * Created by riccardo on 05/07/2017.
  */
-public class PelletInfTVGraph extends PelletInfGraph implements JenaTimeVaryingInfGraph {
+public class PelletInfTVGraph extends PelletInfGraph implements TimeVaryingInfGraph {
 
     private long last_timestamp;
     private WindowOperator window;

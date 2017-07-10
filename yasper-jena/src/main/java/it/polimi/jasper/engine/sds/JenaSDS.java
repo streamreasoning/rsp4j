@@ -10,6 +10,7 @@ import org.apache.jena.rdf.model.Model;
 public interface JenaSDS extends SDS, Dataset {
 
     public void addDefaultWindow(WindowModel m);
+
     public boolean addNamedWindowStream(String w, String s, Model m);
 
 }

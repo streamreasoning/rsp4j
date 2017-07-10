@@ -1,6 +1,6 @@
 package it.polimi.jasper.engine.reasoning.rulesys;
 
-import it.polimi.jasper.engine.reasoning.JenaTimeVaryingInfGraph;
+import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
 import it.polimi.yasper.core.query.operators.s2r.WindowOperator;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.reasoner.Reasoner;
@@ -10,7 +10,7 @@ import org.apache.jena.reasoner.rulesys.impl.LPRuleStore;
 /**
  * Created by riccardo on 05/07/2017.
  */
-public class LPBackwardRuleInfTvGraph extends LPBackwardRuleInfGraph implements JenaTimeVaryingInfGraph {
+public class LPBackwardRuleInfTvGraph extends LPBackwardRuleInfGraph implements TimeVaryingInfGraph {
 
     private long last_timestamp;
     private WindowOperator window;

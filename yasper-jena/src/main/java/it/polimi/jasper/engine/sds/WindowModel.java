@@ -27,10 +27,10 @@ import java.util.Map;
 @Setter
 public abstract class WindowModel implements Model {
 
-    protected JenaTimeVaryingGraph graph;
+    protected TimeVaryingGraph graph;
     protected Model model;
 
-    public WindowModel(JenaTimeVaryingGraph base) {
+    public WindowModel(TimeVaryingGraph base) {
         graph = base;
     }
 
@@ -416,12 +416,12 @@ public abstract class WindowModel implements Model {
 
     @Override
     public StmtIterator listLiteralStatements(Resource subject, Property predicate, long object) {
-        return  model.listLiteralStatements(subject, predicate, object);
+        return model.listLiteralStatements(subject, predicate, object);
     }
 
     @Override
     public StmtIterator listLiteralStatements(Resource subject, Property predicate, int object) {
-        return  model.listLiteralStatements(subject, predicate, object);
+        return model.listLiteralStatements(subject, predicate, object);
     }
 
     @Override

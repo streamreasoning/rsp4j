@@ -1,6 +1,6 @@
 package it.polimi.jasper.engine.reasoning.rulesys;
 
-import it.polimi.jasper.engine.reasoning.JenaTimeVaryingInfGraph;
+import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
 import it.polimi.yasper.core.query.operators.s2r.WindowOperator;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Triple;
@@ -13,7 +13,7 @@ import org.apache.jena.util.iterator.ExtendedIterator;
 /**
  * Created by riccardo on 06/07/2017.
  */
-public class BaseInfTVGraph extends BaseInfGraph implements JenaTimeVaryingInfGraph {
+public class BaseInfTVGraph extends BaseInfGraph implements TimeVaryingInfGraph {
     private long last_timestamp;
     private WindowOperator window;
 
