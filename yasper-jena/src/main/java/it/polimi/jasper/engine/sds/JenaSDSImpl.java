@@ -41,6 +41,7 @@ public class JenaSDSImpl extends DatasetImpl implements Observer, JenaSDS {
     @Getter
     protected Reasoner reasoner;
     private Map<RSPQuery, ContinuousQueryExecution> executions;
+    private Map<RSPQuery, List<WindowOperator>> windows;
     @Setter
     @Getter
     private Maintenance maintenanceType;
@@ -58,6 +59,7 @@ public class JenaSDSImpl extends DatasetImpl implements Observer, JenaSDS {
     public JenaSDSImpl(Model tbox_star, Model knowledge_base_star, IRIResolver r, Maintenance maintenanceType, String id_base, EPServiceProvider esp, JenaRSPQLEngineImpl rsp) {
         super(ModelFactory.createDefaultModel());
         this.executions = new HashMap<>();
+        this.windows = new HashMap<RSPQuery, List<WindowOperator>>();
         this.cep = esp;
         this.resolver = r;
         this.maintenanceType = maintenanceType;

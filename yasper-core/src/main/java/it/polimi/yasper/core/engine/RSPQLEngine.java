@@ -8,6 +8,7 @@ import it.polimi.yasper.core.SDS;
 import it.polimi.yasper.core.query.ContinuousQuery;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.stream.StreamItem;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import lombok.Getter;
@@ -15,13 +16,19 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
 @Log4j
 public abstract class RSPQLEngine implements RSPEngine {
 
-    protected Map<ContinuousQuery, SDS> queries;
+    protected Map<String, Stream> registeredStreams;
+
+    protected Map<String, SDS> assignedSDS;
+    protected Map<String, ContinuousQueryExecution> queryExecutions;
+    protected Map<String, ContinuousQuery> registeredQueries;
+    protected Map<String, List<QueryResponseFormatter>> queryObservers;
 
     protected Configuration cepConfig;
     protected EPServiceProvider cep;
@@ -39,6 +46,11 @@ public abstract class RSPQLEngine implements RSPEngine {
     protected long currentTimestamp;
 
     public RSPQLEngine() {
+        this.assignedSDS = new HashMap<>();
+        this.registeredQueries = new HashMap<>();
+        this.registeredStreams = new HashMap<>();
+        this.queryObservers = new HashMap<>();
+        this.queryExecutions = new HashMap<>();
         this.cepConfig = new Configuration();
         this.currentTimestamp = 0L;
         cepConfig.getEngineDefaults().getThreading().setInternalTimerEnabled(false);
@@ -47,7 +59,6 @@ public abstract class RSPQLEngine implements RSPEngine {
         cepConfig.getEngineDefaults().getLogging().setEnableQueryPlan(true);
         cepConfig.getEngineDefaults().getMetricsReporting().setEnableMetricsReporting(true);
         //cepConfig.addPlugInView("rspql", "win", "rspqlfact");
-
     }
 
     public void startProcessing() {
@@ -90,11 +101,7 @@ public abstract class RSPQLEngine implements RSPEngine {
         return false;
     }
 
-    public void registerObserver(ContinuousQueryExecution ceq, QueryResponseFormatter o) {
-        ceq.addObserver(o);
-    }
-
     public SDS getSDS(ContinuousQuery q) {
-        return queries.get(q);
+        return assignedSDS.get(q);
     }
 }

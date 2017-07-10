@@ -14,10 +14,14 @@ public interface ContinuousQueryExecution {
 
     public void addObserver(Observer o);
 
+    public void removeObserver(Observer o);
+
     public void eval(SDS sds, WindowOperator w, long ts);
 
     public void eval(SDS sds, WindowOperator w, long ts, RelationToStreamOperator s2r);
 
     public void eval(SDS sds, long ts);
+
+    public String getQueryID();
 }
 

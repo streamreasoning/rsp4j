@@ -48,7 +48,9 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
         if (header != null) {
             return header.getId();
         }
-        return (new Random()).nextInt(9999) + "";
+        String id = hashCode() + "";
+        this.header = new Register().setId(id);
+        return id;
     }
 
     public Query getQ() {
@@ -149,7 +151,7 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
     }
 
     @Override
-    public String getName() {
+    public String getID() {
         return this.header.getId();
     }
 
