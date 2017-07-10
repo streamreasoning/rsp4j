@@ -1,9 +1,9 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>it.polimi.rsp.baselines</groupId>
-    <artifactId>RSP-Baselines</artifactId>
-    <version>0.1</version>
+    <groupId>it.polimi.sr.yasper</groupId>
+    <artifactId>yasper</artifactId>
+    <version>1.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,6 +16,28 @@
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
+
+    <packaging>pom</packaging>
+    <modules>
+        <module>yasper-core</module>
+        <module>yasper-jena</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>it.polimi.sr.yasper</groupId>
+                <artifactId>jasper-core</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>it.polimi.sr.yasper</groupId>
+                <artifactId>yasper-jena</artifactId>
+                <version>1.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 
     <build>
         <plugins>
@@ -43,31 +65,15 @@
             </plugin>
         </plugins>
     </build>
-    <packaging>jar</packaging>
     <dependencies>
-        <dependency>
-            <groupId>org.apache.jena</groupId>
-            <artifactId>jena-arq</artifactId>
-            <version>3.1.0</version>
-        </dependency>
         <dependency>
             <groupId>com.espertech</groupId>
             <artifactId>esper</artifactId>
             <version>6.1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.github.streamreasoning</groupId>
-            <artifactId>rsp-baseline-parser</artifactId>
-            <version>0.4.3</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.streamreasoning.heaven</groupId>
             <artifactId>heaven-commons</artifactId>
-            <version>0.9.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.streamreasoning.heaven</groupId>
-            <artifactId>heaven-rsp</artifactId>
             <version>0.9.3</version>
         </dependency>
         <dependency>
@@ -77,15 +83,14 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.galigator.openllet</groupId>
-            <artifactId>openllet-jena</artifactId>
-            <version>2.6.1</version>
-        </dependency>
-        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
         </dependency>
-
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.10</version>
+        </dependency>
     </dependencies>
 </project>
