@@ -5,7 +5,7 @@ import it.polimi.jasper.engine.query.response.ConstructResponse;
 import it.polimi.jasper.engine.sds.JenaSDS;
 import it.polimi.yasper.core.SDS;
 import it.polimi.yasper.core.query.operators.r2s.RelationToStreamOperator;
-import it.polimi.yasper.core.query.operators.s2r.WindowOperator;
+import it.polimi.yasper.core.timevarying.TimeVaryingGraph;
 import it.polimi.yasper.core.query.response.InstantaneousResponse;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
 import org.apache.jena.query.Query;
@@ -21,7 +21,7 @@ public class ContinuouConstruct extends ContinuousJenaQueryExecution {
     }
 
     @Override
-    public void eval(SDS sds, WindowOperator stmt, long ts, RelationToStreamOperator r2s) {
+    public void eval(SDS sds, TimeVaryingGraph stmt, long ts, RelationToStreamOperator r2s) {
         if (stmt != null) {
         /*
         TODO if a two RSPQL eval on the same SDS I can use the stmt that triggerd the evaluation to discriminate if a query has to be evaluated or not
