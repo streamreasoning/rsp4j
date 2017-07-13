@@ -6,7 +6,9 @@ import it.polimi.jasper.parser.streams.Window;
 import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.query.ContinuousQuery;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.query.Query;
@@ -20,6 +22,7 @@ import java.util.*;
  * Created by Riccardo on 05/08/16.
  */
 @Data
+@Log4j
 @NoArgsConstructor
 public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
 
@@ -28,6 +31,8 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
     private List<ElementNamedGraph> windowGraphElements;
     private Register header;
     private StreamOperator r2s;
+    @Getter
+    private boolean recursive;
 
     public RSPQuery(Prologue prologue) {
         super(prologue);
@@ -46,10 +51,10 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
 
     public String getName() {
         if (header != null) {
-            return header.getId();
+            return header.getId().getURI();
         }
         String id = hashCode() + "";
-        this.header = new Register().setId(id);
+        this.header = new Register().setId(NodeFactory.createURI(id));
         return id;
     }
 
@@ -64,6 +69,7 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
             throw new QueryException("Window [" + nw.getIri() +
                     " ] already opened on a stream: " + namedwindows.get(nw.getIri()));
 
+
         addNamedGraphURI(nw.getIri());
         namedwindows.put(nw.getIri(), nw);
         return this;
@@ -71,9 +77,14 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
 
     public RSPQuery addWindow(Window w) {
 
+        if(!isRecursive() && w.getStreamURI().equals(getID())){
+            setRecursive(true);
+        }
+
         if (w.isNamed()) {
             return addNamedWindow(w);
         }
+
 
         if (windows == null)
             windows = new HashSet<Window>();
@@ -83,6 +94,7 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
         addGraphURI(w.getStream().getIri());
         windows.add(w);
         return this;
+
     }
 
     public RSPQuery addElement(ElementNamedGraph elm) {

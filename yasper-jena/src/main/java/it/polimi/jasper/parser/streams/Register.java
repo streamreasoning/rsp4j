@@ -1,6 +1,7 @@
 package it.polimi.jasper.parser.streams;
 
 import lombok.*;
+import org.apache.jena.graph.Node;
 
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -20,12 +21,12 @@ public class Register {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     final private Pattern p = Pattern.compile(regex);
-    private String id;
+    private Node id;
     private Integer every;
     private String unit;
     private Type type;
 
-    public Register setId(String id) {
+    public Register setId(Node id) {
         this.id = id;
         return this;
     }

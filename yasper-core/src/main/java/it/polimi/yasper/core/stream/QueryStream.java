@@ -4,6 +4,7 @@ import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.soda.CreateSchemaClause;
 import com.espertech.esper.client.soda.SchemaColumnDesc;
 import it.polimi.yasper.core.engine.RSPEngine;
+import it.polimi.yasper.core.query.ContinuousQuery;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import lombok.Getter;
 import lombok.NonNull;
@@ -18,23 +19,25 @@ import java.util.List;
 /**
  * Created by riccardo on 10/07/2017.
  */
-public class StreamImpl implements Stream {
+public class QueryStream extends StreamImpl {
 
     protected RSPEngine e;
     @NonNull
-    protected String stream_uri;
+    protected String query_id;
     @Setter
     @Getter
     protected EPStatement streamStatemnt;
+    protected ContinuousQuery q;
 
-    public StreamImpl(String stream_uri, EPStatement streamStatemnt) {
-        this.stream_uri = stream_uri;
-        this.streamStatemnt = streamStatemnt;
+    public QueryStream(RSPEngine e, String stream_uri, EPStatement streamStatemnt) {
+        super(stream_uri, streamStatemnt);
+        this.e = e;
     }
 
-    public StreamImpl(String stream_uri) {
-        this.stream_uri = stream_uri;
-        this.streamStatemnt = streamStatemnt;
+    public QueryStream(RSPEngine e, String stream_uri) {
+        super(stream_uri);
+        this.query_id = stream_uri;
+        this.e = e;
     }
 
     @Override
@@ -55,7 +58,7 @@ public class StreamImpl implements Stream {
 
     public String toEPLSchema() {
         CreateSchemaClause schema = new CreateSchemaClause();
-        schema.setSchemaName(EncodingUtils.encode(stream_uri));
+        schema.setSchemaName(EncodingUtils.encode(query_id));
         schema.setInherits(new HashSet<String>(Arrays.asList(new String[]{"TStream"})));
         List<SchemaColumnDesc> columns = new ArrayList<SchemaColumnDesc>();
         schema.setColumns(columns);

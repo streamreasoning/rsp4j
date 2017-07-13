@@ -41,9 +41,9 @@ public class TestConfig {
         (new Thread(painter)).start();
         (new Thread(writer)).start();
 
-        Thread.sleep(30000);
+        //Thread.sleep(30000);
 
-        sr.unregisterQuery(queryId);
+        //sr.unregisterQuery(queryId);
 
     }
 

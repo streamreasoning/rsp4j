@@ -17,17 +17,16 @@ public class RSPQLParser extends SPARQLParser {
 
     @Override
     public Rule Query() {
-        return Sequence(push(new RSPQuery()), WS(), Optional(Registration()), Prologue(),
+        return Sequence(push(new RSPQuery()), WS(), Optional(Prologue(), Registration()),
                 FirstOf(SelectQuery(), ConstructQuery(), AskQuery(), DescribeQuery()), EOI);
     }
 
     public Rule Registration() {
         return Sequence(REGISTER(), push(new Register()), FirstOf(STREAM(), QUERY()),
                 push(((Register) pop()).setType(trimMatch())),
-                FirstOf(String(), VARNAME()),
-                push(((Register) pop()).setId((match()))),
-                WS(), COMPUTED(), EVERY(), TimeConstrain(),
-                push(((Register) pop()).addCompute((match()))), AS(), WS(),
+                Sequence(SourceSelector(), swap(), push(((Register) pop()).setId((Node) pop()))), Optional(
+                        WS(), COMPUTED(), EVERY(), TimeConstrain(),
+                        push(((Register) pop()).addCompute((match())))), AS(), WS(),
                 pushQuery(((RSPQuery) popQuery(1)).setRegister((Register) pop())));
     }
 

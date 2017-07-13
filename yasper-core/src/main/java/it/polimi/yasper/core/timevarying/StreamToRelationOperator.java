@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.query.operators.s2r;
+package it.polimi.yasper.core.timevarying;
 
 /**
  * Created by riccardo on 07/07/2017.

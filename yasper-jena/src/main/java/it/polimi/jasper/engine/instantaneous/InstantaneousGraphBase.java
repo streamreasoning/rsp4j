@@ -1,43 +1,28 @@
-package it.polimi.jasper.engine.reasoning.rulesys;
+package it.polimi.jasper.engine.instantaneous;
 
-import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
 import it.polimi.yasper.core.timevarying.TimeVaryingGraph;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.GraphUtil;
 import org.apache.jena.graph.Triple;
+import org.apache.jena.mem.GraphMem;
 import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.reasoner.Reasoner;
-import org.apache.jena.reasoner.rulesys.BasicForwardRuleInfGraph;
-import org.apache.jena.reasoner.rulesys.Rule;
-
-import java.util.List;
 
 /**
  * Created by riccardo on 05/07/2017.
  */
-public class BasicForwardRuleInfTVGraph extends BasicForwardRuleInfGraph implements TimeVaryingInfGraph {
+public class InstantaneousGraphBase extends GraphMem implements InstantaneousGraph {
 
     private long last_timestamp;
     private TimeVaryingGraph window;
 
-    public BasicForwardRuleInfTVGraph(Reasoner reasoner, Graph schema, long last_timestamp, TimeVaryingGraph w) {
-        super(reasoner, schema);
-        this.last_timestamp = last_timestamp;
-        this.window = w;
+    public InstantaneousGraphBase() {
+        this.last_timestamp = -1;
+        this.window = null;
     }
 
-
-    public BasicForwardRuleInfTVGraph(Reasoner reasoner, List<Rule> rules, Graph schema, long last_timestamp, TimeVaryingGraph w) {
-        super(reasoner, rules, schema);
+    public InstantaneousGraphBase(long last_timestamp, TimeVaryingGraph window) {
         this.last_timestamp = last_timestamp;
-        this.window = w;
-    }
-
-    public BasicForwardRuleInfTVGraph(Reasoner reasoner, List<Rule> rules, Graph schema, Graph data,
-                                      long last_timestamp, TimeVaryingGraph w) {
-        super(reasoner, rules, schema, data);
-        this.last_timestamp = last_timestamp;
-        this.window = w;
+        this.window = window;
     }
 
     @Override
@@ -57,9 +42,8 @@ public class BasicForwardRuleInfTVGraph extends BasicForwardRuleInfGraph impleme
 
     @Override
     public void setWindowOperator(TimeVaryingGraph w) {
-        this.window = w;
-    }
 
+    }
 
     @Override
     public void addContent(Object o) {
@@ -79,4 +63,5 @@ public class BasicForwardRuleInfTVGraph extends BasicForwardRuleInfGraph impleme
             GraphUtil.deleteFrom(this, (Graph) o);
         }
     }
+
 }

@@ -1,6 +1,6 @@
 package test.engine;
 
-import it.polimi.jasper.engine.stream.GraphStimulus;
+import it.polimi.jasper.engine.stream.GraphStreamItem;
 import it.polimi.jasper.engine.stream.RDFStream;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.rdf.model.*;
@@ -13,8 +13,11 @@ import java.util.Random;
 @Log4j
 public class GraphStream extends RDFStream {
 
+    protected int grow_rate;
+
     public GraphStream(String name, String stream_uri, int grow_rate) {
-        super(name, stream_uri, grow_rate);
+        super(name, stream_uri);
+        this.grow_rate=grow_rate;
     }
 
     @Override
@@ -37,12 +40,11 @@ public class GraphStream extends RDFStream {
             // m.add(m.createStatement(person, hasAge, age));
             m.add(m.createStatement(person, hasTimestamp, ts));
 
-            GraphStimulus t = new GraphStimulus(i * 1000, m.getGraph(), stream_uri);
+            GraphStreamItem t = new GraphStreamItem(i * 1000, m.getGraph(), stream_uri);
             System.out.println("[" + System.currentTimeMillis() + "] Sending [" + t + "] on " + stream_uri + " at " + i * 1000);
 
             if (e != null)
                 this.e.process(t);
-
             try {
                 log.info("Sleep");
                 Thread.sleep(grow_rate * 998);
@@ -53,6 +55,4 @@ public class GraphStream extends RDFStream {
             j++;
         }
     }
-
-
 }

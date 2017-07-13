@@ -34,7 +34,7 @@ public class IncrementalPellet {
         sr.startProcessing();
 
         Model tbox = ModelFactory.createDefaultModel().read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/artist.tbox.owl");
-        ContinuousQueryExecution cqe = sr.registerQuery(q, tbox, Maintenance.INCREMENTAL, Entailment.PELLET);
+        ContinuousQueryExecution cqe = sr.registerQuery(q, tbox, Maintenance.INCREMENTAL, Entailment.PELLET, false);
 
         if (q.isSelectType())
             sr.registerObserver(q.getName(), new SelectResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS

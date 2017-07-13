@@ -33,7 +33,7 @@ public class NaiveJena {
 
         JenaRSPQLEngineImpl sr = new JenaRSPQLEngineImpl(0);
         sr.startProcessing();
-        ContinuousQueryExecution cqe = sr.registerQuery(q, ModelFactory.createDefaultModel(), Maintenance.NAIVE, Entailment.RHODF);
+        ContinuousQueryExecution cqe = sr.registerQuery(q, ModelFactory.createDefaultModel(), Maintenance.NAIVE, Entailment.RHODF, false);
 
         // SDS sds = sr.getSDS(q);
         // sr.registerQuery(q1, sds);
