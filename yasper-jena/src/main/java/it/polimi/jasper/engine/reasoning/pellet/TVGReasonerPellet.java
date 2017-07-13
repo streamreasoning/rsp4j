@@ -3,7 +3,7 @@ package it.polimi.jasper.engine.reasoning.pellet;
 
 import it.polimi.jasper.engine.reasoning.JenaTVGReasoner;
 import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
-import it.polimi.jasper.engine.sds.TimeVaryingGraph;
+import it.polimi.jasper.engine.instantaneous.InstantaneousGraph;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
 import openllet.jena.PelletInfGraph;
 import openllet.jena.PelletReasoner;
@@ -29,11 +29,11 @@ public class TVGReasonerPellet extends PelletReasoner implements JenaTVGReasoner
         return new PelletInfTVGraph(graph, this, new DefaultGraphLoader(), null, -1);
     }
 
-    public TimeVaryingInfGraph bind(TimeVaryingGraph graph) {
+    public TimeVaryingInfGraph bind(InstantaneousGraph graph) {
         return bind(graph);
     }
 
-    public TVGReasoner bindSchema(TimeVaryingGraph data) {
+    public TVGReasoner bindSchema(InstantaneousGraph data) {
         return bindSchema(data);
     }
 }

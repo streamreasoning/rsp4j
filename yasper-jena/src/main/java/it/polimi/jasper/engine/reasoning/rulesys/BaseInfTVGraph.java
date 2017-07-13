@@ -1,9 +1,11 @@
 package it.polimi.jasper.engine.reasoning.rulesys;
 
 import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
-import it.polimi.yasper.core.query.operators.s2r.WindowOperator;
+import it.polimi.yasper.core.timevarying.TimeVaryingGraph;
 import org.apache.jena.graph.Graph;
+import org.apache.jena.graph.GraphUtil;
 import org.apache.jena.graph.Triple;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.reasoner.BaseInfGraph;
 import org.apache.jena.reasoner.Finder;
 import org.apache.jena.reasoner.Reasoner;
@@ -15,7 +17,7 @@ import org.apache.jena.util.iterator.ExtendedIterator;
  */
 public class BaseInfTVGraph extends BaseInfGraph implements TimeVaryingInfGraph {
     private long last_timestamp;
-    private WindowOperator window;
+    private TimeVaryingGraph window;
 
     /**
      * Constructor
@@ -23,7 +25,7 @@ public class BaseInfTVGraph extends BaseInfGraph implements TimeVaryingInfGraph 
      * @param data     the raw data file to be augmented with entailments
      * @param reasoner the engine, with associated tbox data, whose find interface
      */
-    public BaseInfTVGraph(Graph data, Reasoner reasoner, long timestamp, WindowOperator w) {
+    public BaseInfTVGraph(Graph data, Reasoner reasoner, long timestamp, TimeVaryingGraph w) {
         super(data, reasoner);
         this.last_timestamp = last_timestamp;
         this.window = w;
@@ -40,12 +42,12 @@ public class BaseInfTVGraph extends BaseInfGraph implements TimeVaryingInfGraph 
     }
 
     @Override
-    public WindowOperator getWindowOperator() {
+    public TimeVaryingGraph getWindowOperator() {
         return window;
     }
 
     @Override
-    public void setWindowOperator(WindowOperator w) {
+    public void setWindowOperator(TimeVaryingGraph w) {
         this.window = w;
     }
 
@@ -57,5 +59,25 @@ public class BaseInfTVGraph extends BaseInfGraph implements TimeVaryingInfGraph 
     @Override
     public Graph getSchemaGraph() {
         return null;
+    }
+
+
+    @Override
+    public void addContent(Object o) {
+        if (o instanceof Triple) {
+            add((Triple) o);
+        } else if (o instanceof Graph) {
+            GraphUtil.addInto(this, (Graph) o);
+        }
+    }
+
+    @Override
+    public void removeContent(Object o) {
+        if (o instanceof Statement) {
+            Statement s = (Statement) o;
+            remove(s.getSubject().asNode(), s.getPredicate().asNode(), s.getObject().asNode());
+        } else if (o instanceof Graph) {
+            GraphUtil.deleteFrom(this, (Graph) o);
+        }
     }
 }
