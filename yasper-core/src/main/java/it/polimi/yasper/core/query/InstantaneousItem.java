@@ -17,4 +17,7 @@ public interface InstantaneousItem {
 
     public void clear();
 
+    public void addContent(Object o);
+
+    public void removeContent(Object o);
 }
