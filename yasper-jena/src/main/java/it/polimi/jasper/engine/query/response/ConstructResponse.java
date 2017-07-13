@@ -43,20 +43,20 @@ public final class ConstructResponse extends InstantaneousResponse {
     }
 
     @Override
-    public InstantaneousResponse minus(InstantaneousResponse r) {
+    public InstantaneousResponse difference(InstantaneousResponse r) {
         return new ConstructResponse(getId(), (RSPQuery) getQuery(), results.difference(((ConstructResponse) r).getResults()), getCep_timestamp());
     }
 
     @Override
-    public InstantaneousResponse and(InstantaneousResponse new_response) {
-        Model intersection;
+    public InstantaneousResponse intersection(InstantaneousResponse new_response) {
+        Model i;
         if (new_response == null) {
-            intersection = ModelFactory.createDefaultModel();
+            i = ModelFactory.createDefaultModel();
         } else {
             Model r = ((ConstructResponse) new_response).getResults();
-            Model difference = this.results.difference(r);
-            intersection = this.results.difference(difference);
+            i = this.results.intersection(r);
+            i = r.difference(i);
         }
-        return new ConstructResponse(getId(), (RSPQuery) getQuery(), intersection, getCep_timestamp());
+        return new ConstructResponse(getId(), (RSPQuery) getQuery(), i, getCep_timestamp());
     }
 }
