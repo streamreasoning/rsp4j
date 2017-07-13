@@ -12,6 +12,6 @@ public interface JenaSDS extends SDS, Dataset {
 
     public void addDefaultWindow(InstantaneousModel m);
 
-    public boolean addNamedWindowStream(String w, String s, Model m);
+    public void addNamedWindowStream(String w, Model m);
 
 }
