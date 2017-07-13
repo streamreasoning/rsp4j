@@ -1,7 +1,6 @@
 package it.polimi.yasper.core.stream;
 
 import it.polimi.rdf.RDFLine;
-import it.polimi.streaming.Stimulus;
 import it.polimi.yasper.core.query.InstantaneousItem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,13 +10,14 @@ import java.util.HashMap;
 import java.util.Set;
 
 @NoArgsConstructor
-public abstract class StreamItem extends HashMap<String, Object> implements Stimulus {
+public abstract class StreamItem<T> extends HashMap<String, Object> {
 
     private static final long serialVersionUID = 1L;
 
     protected final String appTimestamp = "app_timestamp";
     protected final String sysTimestamp = "sys_timestamp";
     protected final String content = "content";
+    protected final String type = "class";
 
     @Setter
     @Getter
@@ -43,7 +43,11 @@ public abstract class StreamItem extends HashMap<String, Object> implements Stim
     }
 
     public Object getContent() {
-        return this.containsKey(content) && this.getContent() != null ? this.get(content) : null;
+        return this.containsKey(content) ? this.get(content) : null;
+    }
+
+    public T getTypedContent() {
+        return this.containsKey(content) ? (T) this.get(content) : null;
     }
 
     public abstract InstantaneousItem addTo(InstantaneousItem abox);

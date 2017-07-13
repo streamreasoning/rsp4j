@@ -1,8 +1,8 @@
 package it.polimi.jasper.engine.stream;
 
-import it.polimi.jasper.engine.sds.TimeVaryingGraph;
+import it.polimi.jasper.engine.sds.InstantaneousGraph;
 import it.polimi.rdf.RDFLine;
-import it.polimi.yasper.core.query.TimeVaryingItem;
+import it.polimi.yasper.core.query.InstantaneousItem;
 import it.polimi.yasper.core.stream.StreamItem;
 import lombok.NoArgsConstructor;
 import org.apache.jena.rdf.model.Property;
@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
-public class StatementStimulus extends StreamItem {
+public class StatementStimulus extends StreamItem<Statement> {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,28 +22,28 @@ public class StatementStimulus extends StreamItem {
         super(appTimestamp1, content1, stream_uri);
     }
 
-    public Statement getContent() {
-        return (Statement) super.get(content);
-    }
-
     public Resource getS() {
-        return getContent().getSubject();
+        return getTypedContent().getSubject();
     }
 
     public Property getP() {
-        return getContent().getPredicate();
+        return getTypedContent().getPredicate();
     }
 
     public RDFNode getO() {
-        return getContent().getObject();
+        return getTypedContent().getObject();
     }
 
     @Override
-    public TimeVaryingGraph addTo(TimeVaryingItem abox) {
-        //TODO remove cast
-        TimeVaryingGraph abox1 = (TimeVaryingGraph) abox;
-        abox1.add(getContent().asTriple());
-        return abox1;
+    public InstantaneousGraph addTo(InstantaneousItem abox) {
+        //abox.addContent(this);
+        if (abox instanceof InstantaneousGraph) {
+            InstantaneousGraph abox1 = (InstantaneousGraph) abox;
+            abox1.add(getTypedContent().asTriple());
+            return abox1;
+        } else {
+            throw new UnsupportedOperationException("[" + abox.getClass() + "] addTo [" + this.getClass() + "] ");
+        }
     }
 
     @Override
@@ -54,18 +54,23 @@ public class StatementStimulus extends StreamItem {
     }
 
     @Override
-    public TimeVaryingGraph removeFrom(TimeVaryingItem abox) {
-        //TODO remove cast
-        TimeVaryingGraph abox1 = (TimeVaryingGraph) abox;
-        abox1.remove(getS().asNode(), getP().asNode(), getO().asNode());
-        return abox1;
+    public InstantaneousGraph removeFrom(InstantaneousItem abox) {
+        // abox.removeContent(this);
+        if (abox instanceof InstantaneousGraph) {
+            InstantaneousGraph abox1 = (InstantaneousGraph) abox;
+            abox1.remove(getS().asNode(), getP().asNode(), getO().asNode());
+            return abox1;
+        } else {
+            throw new UnsupportedOperationException("[" + abox.getClass() + "] removeFrom [" + this.getClass() + "] ");
+        }
+
     }
 
 
     @Override
     public String toString() {
         return "StatementStimulus {" + "appTimestamp='" + getAppTimestamp() + '\'' + ", sysTimestamp='" + getSysTimestamp()
-                + '\'' + ", content='" + getContent() + '\'' + ", stream_uri='" + getStream_uri() + '\'' + '}';
+                + '\'' + ", content='" + getTypedContent() + '\'' + ", stream_uri='" + getStream_uri() + '\'' + '}';
     }
 
     @Override
