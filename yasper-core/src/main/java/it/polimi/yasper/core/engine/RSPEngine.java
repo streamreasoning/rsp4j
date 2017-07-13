@@ -7,13 +7,14 @@ import it.polimi.yasper.core.query.ContinuousQuery;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.stream.Stream;
+import it.polimi.yasper.core.stream.StreamItem;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 
 
 /**
  * @author Riccardo
  */
-public interface RSPEngine extends EventProcessor<Stimulus> {
+public interface RSPEngine extends EventProcessor<StreamItem> {
 
     void registerStream(Stream s);
 
