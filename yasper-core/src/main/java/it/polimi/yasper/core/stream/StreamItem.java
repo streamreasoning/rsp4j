@@ -2,7 +2,7 @@ package it.polimi.yasper.core.stream;
 
 import it.polimi.rdf.RDFLine;
 import it.polimi.streaming.Stimulus;
-import it.polimi.yasper.core.query.TimeVaryingItem;
+import it.polimi.yasper.core.query.InstantaneousItem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -46,9 +46,9 @@ public abstract class StreamItem extends HashMap<String, Object> implements Stim
         return this.containsKey(content) && this.getContent() != null ? this.get(content) : null;
     }
 
-    public abstract TimeVaryingItem addTo(TimeVaryingItem abox);
+    public abstract InstantaneousItem addTo(InstantaneousItem abox);
 
-    public abstract TimeVaryingItem removeFrom(TimeVaryingItem abox);
+    public abstract InstantaneousItem removeFrom(InstantaneousItem abox);
 
     public abstract Set<RDFLine> serialize();
 
