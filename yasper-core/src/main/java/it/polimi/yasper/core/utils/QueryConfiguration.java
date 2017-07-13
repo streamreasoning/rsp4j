@@ -42,6 +42,10 @@ public class QueryConfiguration extends PropertiesConfiguration {
     }
 
     public String getQueryClass() {
-      return this.getString(QUERY_CLASS);
+        return this.getString(QUERY_CLASS);
+    }
+
+    public boolean isRecursionEnables() {
+        return this.getBoolean(QUERY_RECURSION);
     }
 }

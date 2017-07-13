@@ -16,6 +16,7 @@ public class ConfigurationUtils {
     public static final String QUERY_CLASS = "rsp_engine.query_class";
     public static final String TBOX_LOCATION = "rsp_engine.tbox_location";
     public static final String SDS_MAINTAINANCE = "rsp_engine.sds.mantainance";
+    public static final String QUERY_RECURSION = "rsp_engine.query.recursion";
     public static final String REASONING_ACTIVE = "rsp_engine.reasoning.active";
     public static final String REASONING_ENTAILMENT = "rsp_engine.reasoning.entailment";
     public static final String REASONING_RULE_PATH = "rsp_engine.reasoning.rulepath";
