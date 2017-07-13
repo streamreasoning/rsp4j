@@ -39,7 +39,7 @@ public interface RelationToStreamOperator {
             if (last_response == null) {
                 return last_response = new_response;
             } else {
-                InstantaneousResponse diff = new_response.minus(last_response);
+                InstantaneousResponse diff = new_response.difference(last_response);
                 last_response = new_response;
                 return diff;
             }
@@ -61,7 +61,7 @@ public interface RelationToStreamOperator {
 
         @Override
         public InstantaneousResponse eval(InstantaneousResponse new_response) {
-            InstantaneousResponse diff = new_response.and(last_response);
+            InstantaneousResponse diff = last_response.difference(new_response);
             last_response = new_response;
             return diff;
         }
