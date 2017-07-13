@@ -1,4 +1,4 @@
-package it.polimi.jasper.engine.sds;
+package it.polimi.jasper.engine.instantaneous;
 
 import lombok.Data;
 import lombok.Getter;
@@ -25,12 +25,12 @@ import java.util.Map;
 @Data
 @Getter
 @Setter
-public abstract class WindowModel implements Model {
+public abstract class InstantaneousModel implements Model {
 
-    protected TimeVaryingGraph graph;
+    protected InstantaneousGraph graph;
     protected Model model;
 
-    public WindowModel(TimeVaryingGraph base) {
+    public InstantaneousModel(InstantaneousGraph base) {
         graph = base;
     }
 
