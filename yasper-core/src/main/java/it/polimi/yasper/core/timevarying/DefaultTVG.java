@@ -1,10 +1,11 @@
-package it.polimi.yasper.core.query.operators.s2r;
+package it.polimi.yasper.core.timevarying;
 
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import it.polimi.yasper.core.enums.Maintenance;
-import it.polimi.yasper.core.query.TimeVaryingItem;
+import it.polimi.yasper.core.query.InstantaneousItem;
+import it.polimi.yasper.core.query.operators.s2r.WindowOperator;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 
@@ -13,11 +14,11 @@ import java.util.Set;
 
 @Log4j
 @Getter
-public class DefaultWindow extends WindowOperator {
+public class DefaultTVG extends TimeVaryingGraph {
 
-    private Set<EPStatement> statements;
+    private Set<WindowOperator> statements;
 
-    public DefaultWindow(Maintenance maintenance, TimeVaryingItem g) {
+    public DefaultTVG(Maintenance maintenance, InstantaneousItem g) {
         super(maintenance, g, null);
         this.statements = new HashSet<>();
     }
@@ -29,19 +30,18 @@ public class DefaultWindow extends WindowOperator {
 
         super.update(newData, oldData, stmt, esp);
 
-        this.statement = stmt;
         notifyObservers(esp);
 
     }
 
-    public void addStatement(EPStatement stmt) {
+    public void addStatement(WindowOperator stmt) {
         statements.add(stmt);
         stmt.addListener(this);
     }
 
     @Override
-    public EPStatement getTriggeringStatement() {
-        return statement;
+    public WindowOperator getTriggeringStatement() {
+        return window_operator;
     }
 
 

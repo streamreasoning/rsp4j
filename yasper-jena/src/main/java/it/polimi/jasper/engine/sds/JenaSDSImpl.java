@@ -5,16 +5,17 @@ import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.SafeIterator;
 import it.polimi.jasper.engine.JenaRSPQLEngineImpl;
+import it.polimi.jasper.engine.instantaneous.InstantaneousModel;
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.yasper.core.SDS;
 import it.polimi.yasper.core.enums.Entailment;
 import it.polimi.yasper.core.enums.Maintenance;
-import it.polimi.yasper.core.exceptions.UnregisteredStreamExeception;
 import it.polimi.yasper.core.query.ContinuousQuery;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.query.operators.s2r.DefaultWindow;
-import it.polimi.yasper.core.query.operators.s2r.NamedWindow;
 import it.polimi.yasper.core.query.operators.s2r.WindowOperator;
+import it.polimi.yasper.core.timevarying.DefaultTVG;
+import it.polimi.yasper.core.timevarying.NamedTVG;
+import it.polimi.yasper.core.timevarying.TimeVaryingGraph;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -41,7 +42,7 @@ public class JenaSDSImpl extends DatasetImpl implements Observer, JenaSDS {
     @Getter
     protected Reasoner reasoner;
     private Map<RSPQuery, ContinuousQueryExecution> executions;
-    private Map<RSPQuery, List<WindowOperator>> windows;
+    private Map<RSPQuery, List<TimeVaryingGraph>> windows;
     @Setter
     @Getter
     private Maintenance maintenanceType;
@@ -54,14 +55,17 @@ public class JenaSDSImpl extends DatasetImpl implements Observer, JenaSDS {
     private Set<String> statementNames;
     private Set<String> resolvedDefaultStreamSet;
     private boolean global_tick;
+    private List<NamedTVG> namedTVGs;
+    private DefaultTVG defTVG;
 
 
     public JenaSDSImpl(Model tbox_star, Model knowledge_base_star, IRIResolver r, Maintenance maintenanceType, String id_base, EPServiceProvider esp, JenaRSPQLEngineImpl rsp) {
         super(ModelFactory.createDefaultModel());
         this.executions = new HashMap<>();
-        this.windows = new HashMap<RSPQuery, List<WindowOperator>>();
+        this.windows = new HashMap<RSPQuery, List<TimeVaryingGraph>>();
         this.cep = esp;
         this.resolver = r;
+        this.namedTVGs = new ArrayList<>();
         this.maintenanceType = maintenanceType;
         this.tbox = tbox_star;
         this.knowledge_base = knowledge_base_star;
@@ -78,7 +82,7 @@ public class JenaSDSImpl extends DatasetImpl implements Observer, JenaSDS {
 
     @Override
     public synchronized void update(Observable o, Object _ts) {
-        WindowOperator tvg = (WindowOperator) o;
+        TimeVaryingGraph tvg = (TimeVaryingGraph) o;
         long cep_time = tvg.getTimestamp();
         long sys_time = System.currentTimeMillis();
 
@@ -96,8 +100,8 @@ public class JenaSDSImpl extends DatasetImpl implements Observer, JenaSDS {
         setDefaultModel(getDefaultModel().difference(knowledge_base));
     }
 
-    private void updateDataset(WindowOperator tvg, EPServiceProvider esp) {
-        EPStatement stmt = tvg.getTriggeringStatement();
+    private void updateDataset(TimeVaryingGraph tvg, EPServiceProvider esp) {
+        WindowOperator stmt = tvg.getTriggeringStatement();
         List<EventBean> events = new ArrayList<EventBean>();
         for (String stmtName : statementNames) {
             if (!stmtName.equals(stmt.getName())) {
@@ -118,50 +122,30 @@ public class JenaSDSImpl extends DatasetImpl implements Observer, JenaSDS {
 
     }
 
-    private String resolveWindowUri(String stream_uri) {
-
-        if (defaultWindowStreamNames.contains(stream_uri)) {
-            return resolvedDefaultStream;
-        } else if (namedWindowStreamNames.containsKey(stream_uri)) {
-            return namedWindowStreamNames.get(stream_uri);
-        } else {
-            throw new UnregisteredStreamExeception("GraphS2RTestStream [" + stream_uri + "] is unregistered");
-        }
-    }
-
     @Override
-    public boolean addDefaultWindowStream(String statementName, String uri) {
-        resolvedDefaultStreamSet.add(statementName);
-        defaultWindowStreamNames.add(uri);
+    public boolean addDefaultWindowStream(String uri) {
         return defaultWindowStreamNames.contains(uri);
     }
 
     @Override
-    public void addDefaultWindow(WindowModel m) {
+    public void addDefaultWindow(InstantaneousModel m) {
         setDefaultModel(m);
     }
 
     @Override
-    public boolean addNamedWindowStream(String w, String s, Model model) {
-        //TODO remove cast
-        log.info("Added named window [" + w + "] on stream [" + s + " ]");
-        final String uri = resolver.resolveToStringSilent(w);
-        addNamedModel(uri, model);
-        if (namedWindowStreamNames.containsKey(s)) {
-            return false;
-        } else {
-            namedWindowStreamNames.put(s, uri);
-            return true;
-        }
+    public void addNamedWindowStream(String w, Model model) {
+        log.info("Added named window [" + w + "] model [" + model + " ]");
+        addNamedModel(resolver.resolveToStringSilent(w), model);
     }
 
-    public void addTimeVaryingGraph(DefaultWindow defTVG) {
+    public void addTimeVaryingGraph(DefaultTVG defTVG) {
         defTVG.addObserver(this);
+        this.defTVG = defTVG;
     }
 
-    public void addNamedTimeVaryingGraph(String statementName, String window_uri, String stream_uri, NamedWindow namedTVG) {
-        statementNames.add(statementName);
+    public void addNamedTimeVaryingGraph(String uri, NamedTVG namedTVG) {
         namedTVG.addObserver(this);
+        namedTVGs.add(namedTVG);
     }
 
     @Override
@@ -169,7 +153,7 @@ public class JenaSDSImpl extends DatasetImpl implements Observer, JenaSDS {
         executions.put((RSPQuery) bq, o);
     }
 
-    private void consolidate(SDS sds, WindowOperator tvg, long cep_time) {
+    private void consolidate(SDS sds, TimeVaryingGraph tvg, long cep_time) {
         if (executions != null && !executions.isEmpty()) {
             for (Map.Entry<RSPQuery, ContinuousQueryExecution> e : executions.entrySet()) {
                 e.getValue().eval(sds, tvg, cep_time);

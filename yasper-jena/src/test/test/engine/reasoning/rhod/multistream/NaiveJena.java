@@ -2,9 +2,7 @@ package test.engine.reasoning.rhod.multistream;
 
 import it.polimi.jasper.engine.JenaRSPQLEngineImpl;
 import it.polimi.jasper.engine.query.RSPQuery;
-import it.polimi.jasper.engine.query.formatter.ConstructResponseSysOutFormatter;
 import it.polimi.jasper.engine.query.formatter.ResponseFormatterFactory;
-import it.polimi.jasper.engine.query.formatter.SelectResponseSysOutFormatter;
 import it.polimi.jasper.parser.RSPQLParser;
 import it.polimi.yasper.core.enums.Entailment;
 import it.polimi.yasper.core.enums.Maintenance;
@@ -21,6 +19,7 @@ import test.engine.GraphStream;
 import java.io.File;
 import java.io.IOException;
 
+
 /**
  * Created by Riccardo on 03/08/16.
  */
@@ -34,7 +33,7 @@ public class NaiveJena {
 
         JenaRSPQLEngineImpl sr = new JenaRSPQLEngineImpl(0);
         sr.startProcessing();
-        ContinuousQueryExecution cqe = sr.registerQuery(q, ModelFactory.createDefaultModel(), Maintenance.NAIVE, Entailment.RHODF);
+        ContinuousQueryExecution cqe = sr.registerQuery(q, ModelFactory.createDefaultModel(), Maintenance.NAIVE, Entailment.RHODF, false);
 
         // SDS sds = sr.getSDS(q);
         // sr.registerQuery(q1, sds);
@@ -43,11 +42,11 @@ public class NaiveJena {
         // ContinuousQueryExecutionImpl cqe = je.registerQuery(q, SDS); //executes the query on the given SDS (if compatible)
 
         if (q.isSelectType())
-            sr.registerObserver(q.getId(), ResponseFormatterFactory.getSelectResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
+            sr.registerObserver(q.getName(), ResponseFormatterFactory.getSelectResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
         if (q.isConstructType())
-            sr.registerObserver(q.getId(), ResponseFormatterFactory.getConstructResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
+            sr.registerObserver(q.getName(), ResponseFormatterFactory.getConstructResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
 
-        (new Thread(new GraphStream( "Painter", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
+        (new Thread(new GraphStream("Painter", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
 
     }
 

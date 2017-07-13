@@ -1,4 +1,4 @@
-package it.polimi.jasper.engine.sds;
+package it.polimi.jasper.engine.instantaneous;
 
 import lombok.Data;
 import lombok.Getter;
@@ -12,9 +12,9 @@ import java.util.function.Supplier;
 @Data
 @Getter
 @Setter
-public class WindowModelCom extends WindowModel {
+public class InstantaneousModelCom extends InstantaneousModel {
 
-    public WindowModelCom(TimeVaryingGraph base) {
+    public InstantaneousModelCom(InstantaneousGraph base) {
         super(base);
         this.model = new ModelCom(base);
     }

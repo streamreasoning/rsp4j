@@ -1,5 +1,6 @@
 package it.polimi.jasper.engine.stream;
 
+import com.espertech.esper.client.EPStatement;
 import it.polimi.yasper.core.stream.StreamImpl;
 import lombok.Getter;
 
@@ -11,13 +12,15 @@ public abstract class RDFStream extends StreamImpl implements Runnable {
 
     protected String name;
 
-    public RDFStream(String name, String stream_uri, int grow_rate) {
+    public RDFStream(String name, String stream_uri) {
+        super(stream_uri);
         this.name = name;
-        this.stream_uri = stream_uri;
-        this.grow_rate = grow_rate;
     }
 
-    protected int grow_rate;
+    public RDFStream(String stream_uri, String name, EPStatement s) {
+        super(stream_uri, s);
+        this.name = name;
+    }
 
     @Override
     public void run() {

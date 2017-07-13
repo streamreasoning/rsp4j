@@ -1,6 +1,6 @@
 package test.engine.r2s;
 
-import it.polimi.jasper.engine.stream.GraphStimulus;
+import it.polimi.jasper.engine.stream.GraphStreamItem;
 import it.polimi.yasper.core.engine.RSPQLEngine;
 import lombok.AllArgsConstructor;
 import org.apache.jena.rdf.model.*;
@@ -48,7 +48,7 @@ public class GraphS2RTestStream implements Runnable {
         Resource o = ResourceFactory.createResource(stream_uri + "#Sample");
         //Literal ts = m.createTypedLiteral(new Integer(i * 1000));
         m.add(m.createStatement(s, p, o));
-        GraphStimulus t = new GraphStimulus(i * 1000, m.getGraph(), stream_uri);
+        GraphStreamItem t = new GraphStreamItem(i * 1000, m.getGraph(), stream_uri);
         System.err.println("[" + System.currentTimeMillis() + "] Sending [" + t + "] on " + stream_uri + " at " + i * 1000);
 
         e.process(t);

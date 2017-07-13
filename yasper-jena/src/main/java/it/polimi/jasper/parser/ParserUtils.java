@@ -47,7 +47,7 @@ public class ParserUtils extends BaseParser<Object> {
     protected Set<String> previousLabels = new HashSet<String>();
 
     // This is the map used allocate blank node labels during sparql11.
-    // 1/ It is different between CONSTRUCT and the query pattern
+    // 1/ It is different between CONSTRUCT intersection the query pattern
     // 2/ Each BasicGraphPattern is a scope for blank node labels so each
     // BGP causes the map to be cleared at the start of the BGP
     // Graph patterns, true; in templates, false.

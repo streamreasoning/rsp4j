@@ -24,7 +24,7 @@ public abstract class InstantaneousResponse implements Response, Collectable {
         return query.toString();
     }
 
-    public abstract InstantaneousResponse minus(InstantaneousResponse r);
+    public abstract InstantaneousResponse difference(InstantaneousResponse r);
 
-    public abstract InstantaneousResponse and(InstantaneousResponse new_response);
+    public abstract InstantaneousResponse intersection(InstantaneousResponse new_response);
 }

@@ -7,9 +7,9 @@ import it.polimi.yasper.core.query.response.InstantaneousResponse;
  */
 public interface RelationToStreamOperator {
 
-    public InstantaneousResponse eval(InstantaneousResponse last_response);
+    InstantaneousResponse eval(InstantaneousResponse last_response);
 
-    public class RSTREAM implements RelationToStreamOperator {
+    class RSTREAM implements RelationToStreamOperator {
 
         public static RelationToStreamOperator get() {
             return new RSTREAM();
@@ -22,7 +22,7 @@ public interface RelationToStreamOperator {
     }
 
 
-    public class ISTREAM implements RelationToStreamOperator {
+    class ISTREAM implements RelationToStreamOperator {
         private final int i;
         private InstantaneousResponse last_response;
 
@@ -39,7 +39,7 @@ public interface RelationToStreamOperator {
             if (last_response == null) {
                 return last_response = new_response;
             } else {
-                InstantaneousResponse diff = new_response.minus(last_response);
+                InstantaneousResponse diff = new_response.difference(last_response);
                 last_response = new_response;
                 return diff;
             }
@@ -47,7 +47,7 @@ public interface RelationToStreamOperator {
     }
 
 
-    public class DSTREAM implements RelationToStreamOperator {
+    class DSTREAM implements RelationToStreamOperator {
         private final int i;
         private InstantaneousResponse last_response;
 
@@ -61,7 +61,7 @@ public interface RelationToStreamOperator {
 
         @Override
         public InstantaneousResponse eval(InstantaneousResponse new_response) {
-            InstantaneousResponse diff = new_response.and(last_response);
+            InstantaneousResponse diff = last_response.difference(new_response);
             last_response = new_response;
             return diff;
         }

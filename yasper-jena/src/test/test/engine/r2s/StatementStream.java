@@ -1,6 +1,6 @@
 package test.engine.r2s;
 
-import it.polimi.jasper.engine.stream.StatementStimulus;
+import it.polimi.jasper.engine.stream.StatementStreamItem;
 import it.polimi.yasper.core.engine.RSPQLEngine;
 import lombok.AllArgsConstructor;
 import org.apache.jena.rdf.model.*;
@@ -27,7 +27,7 @@ public class StatementStream implements Runnable {
             Property predicate = ResourceFactory.createProperty("http://somewhere/num");
             Literal object = m.createTypedLiteral(new Integer(i * 1000));
             Resource subject = ResourceFactory.createResource("http://somewhere/" + name + j);
-            StatementStimulus t = new StatementStimulus(i * 1000, ResourceFactory.createStatement(subject, predicate, object), stream_uri);
+            StatementStreamItem t = new StatementStreamItem(i * 1000, ResourceFactory.createStatement(subject, predicate, object), stream_uri);
             System.out.println("[" + System.currentTimeMillis() + "] Sending [" + t + "] on " + stream_uri + " at " + i * 1000);
             e.process(t);
             try {

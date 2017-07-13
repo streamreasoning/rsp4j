@@ -1,10 +1,10 @@
-package it.polimi.yasper.core.query.operators.s2r;
+package it.polimi.yasper.core.timevarying;
 
-import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.event.map.MapEventBean;
 import it.polimi.yasper.core.enums.Maintenance;
-import it.polimi.yasper.core.query.TimeVaryingItem;
+import it.polimi.yasper.core.query.InstantaneousItem;
+import it.polimi.yasper.core.query.operators.s2r.WindowOperator;
 import it.polimi.yasper.core.stream.StreamItem;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
@@ -13,22 +13,21 @@ import lombok.extern.log4j.Log4j;
 @Getter
 /*Idea is to produces a serie of SPARQL update to target a remote dataset
  *this would allow to distribute the SDS
- * in Naive mode produced two updates DROPALL and INSERT DATA
- * in Incremental mode produce two updates DROP and DELETE
+ * in Naive mode produced two updates DROPALL intersection INSERT DATA
+ * in Incremental mode produce two updates DROP intersection DELETE
  * In would be nice to investigate how does this interact with the
  * stream representation Statement/vs triples */
 
-public class FederatedTVG extends NamedWindow {
-    private EPStatement statement;
+public class FederatedTVG extends NamedTVG {
 
-    public FederatedTVG(Maintenance maintenance, TimeVaryingItem g, EPStatement stmt) {
-        super(maintenance, g, stmt);
+    public FederatedTVG(Maintenance maintenance, InstantaneousItem g, WindowOperator windowOperator) {
+        super(maintenance, g, windowOperator);
     }
 
 
     @Override
-    public EPStatement getTriggeringStatement() {
-        return statement;
+    public WindowOperator getTriggeringStatement() {
+        return this.window_operator;
     }
 
     @Override

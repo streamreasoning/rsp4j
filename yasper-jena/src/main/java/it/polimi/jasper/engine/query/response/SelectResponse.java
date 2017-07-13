@@ -38,7 +38,7 @@ public final class SelectResponse extends InstantaneousResponse {
     private String getData() {
 
         String eol = System.getProperty("line.separator");
-        String select = "SELECTION getId()" + eol;
+        String select = "SELECTION getName()" + eol;
 
         List<String> resultVars = results.getResultVars();
         if (resultVars != null) {
@@ -56,7 +56,7 @@ public final class SelectResponse extends InstantaneousResponse {
     }
 
     @Override
-    public InstantaneousResponse minus(InstantaneousResponse new_response) {
+    public InstantaneousResponse difference(InstantaneousResponse new_response) {
         TimeVaryingResultSetMem tvResultSet;
         if (new_response == null) {
             tvResultSet = new TimeVaryingResultSetMem(new ArrayList<Binding>(), ((RSPQuery) getQuery()).getResultVars());
@@ -77,7 +77,7 @@ public final class SelectResponse extends InstantaneousResponse {
     }
 
     @Override
-    public InstantaneousResponse and(InstantaneousResponse new_response) {
+    public InstantaneousResponse intersection(InstantaneousResponse new_response) {
         TimeVaryingResultSetMem tvResultSet;
         if (new_response == null) {
             tvResultSet = new TimeVaryingResultSetMem(new ArrayList<Binding>(), ((RSPQuery) getQuery()).getResultVars());
