@@ -111,6 +111,9 @@ public abstract class RSPQLEngine implements RSPEngine {
         return cepAdm.createEPL(stream, s);
     }
 
+    public boolean checkStreamExistence(String uri) {
+        return cepAdm.getStatement(EncodingUtils.encode(uri)) != null;
+    }
 
     protected WindowOperator createWindow(String windowEPL, String name) {
         log.info("Stream [ " + windowEPL + "] uri [" + name + "]");
