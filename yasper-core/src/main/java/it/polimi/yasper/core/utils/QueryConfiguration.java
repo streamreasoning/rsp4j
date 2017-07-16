@@ -2,22 +2,33 @@ package it.polimi.yasper.core.utils;
 
 import it.polimi.yasper.core.enums.Entailment;
 import it.polimi.yasper.core.enums.Maintenance;
+import lombok.extern.log4j.Log4j;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+
+import java.net.URL;
 
 import static it.polimi.yasper.core.utils.ConfigurationUtils.*;
 
 /**
  * Created by riccardo on 10/07/2017.
  */
+@Log4j
 public class QueryConfiguration extends PropertiesConfiguration {
+
 
     public QueryConfiguration(String fileName) throws ConfigurationException {
         super(fileName);
     }
 
+
+    public boolean hasTboxLocation() {
+        return this.containsKey(TBOX_LOCATION);
+
+    }
+
     public String getTboxLocation() {
-        return this.getString(TBOX_LOCATION);
+        return this.getString(TBOX_LOCATION, "");
 
     }
 
@@ -47,5 +58,10 @@ public class QueryConfiguration extends PropertiesConfiguration {
 
     public boolean isRecursionEnables() {
         return this.getBoolean(QUERY_RECURSION);
+    }
+
+    public static QueryConfiguration getDefault() throws ConfigurationException {
+        URL resource = QueryConfiguration.class.getResource("/default.properties");
+        return new QueryConfiguration(resource.getPath());
     }
 }

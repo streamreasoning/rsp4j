@@ -13,13 +13,18 @@ import java.util.Iterator;
 @Log4j
 public class ConfigurationUtils {
 
-    public static final String QUERY_CLASS = "rsp_engine.query_class";
-    public static final String TBOX_LOCATION = "rsp_engine.tbox_location";
-    public static final String SDS_MAINTAINANCE = "rsp_engine.sds.mantainance";
-    public static final String QUERY_RECURSION = "rsp_engine.query.recursion";
-    public static final String REASONING_ACTIVE = "rsp_engine.reasoning.active";
-    public static final String REASONING_ENTAILMENT = "rsp_engine.reasoning.entailment";
-    public static final String REASONING_RULE_PATH = "rsp_engine.reasoning.rulepath";
+    public static final String ENGINE = "rsp_engine.";
+    public static final String QUERY = "rsp_query.";
+    public static final String QUERY_CLASS = ENGINE + "query_class";
+    public static final String TBOX_LOCATION = ENGINE + "tbox_location";
+    public static final String SDS_MAINTAINANCE = ENGINE + "sds.mantainance";
+    public static final String QUERY_RECURSION = ENGINE + "query.recursion";
+    public static final String REASONING_ACTIVE = ENGINE + "reasoning.active";
+    public static final String REASONING_ENTAILMENT = ENGINE + "reasoning.entailment";
+    public static final String REASONING_RULE_PATH = ENGINE + "reasoning.rulepath";
+    public static final String TIME = ENGINE + "time";
+    public static final String PARTIAL_WINDOW = ENGINE + "partialwindow";
+
 
 //    rspengine.tbox_location=/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/arist.tbox.owl
 //    rspengine.graph_mantainance=naive

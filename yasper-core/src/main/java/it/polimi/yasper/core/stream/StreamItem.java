@@ -17,7 +17,6 @@ public abstract class StreamItem<T> extends HashMap<String, Object> {
     protected final String appTimestamp = "app_timestamp";
     protected final String sysTimestamp = "sys_timestamp";
     protected final String content = "content";
-    protected final String type = "class";
 
     @Setter
     @Getter

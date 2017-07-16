@@ -1,9 +1,6 @@
 package it.polimi.jasper.engine.sds;
 
 import com.espertech.esper.client.EPServiceProvider;
-import com.espertech.esper.client.EPStatement;
-import com.espertech.esper.client.EventBean;
-import com.espertech.esper.client.SafeIterator;
 import it.polimi.jasper.engine.JenaRSPQLEngineImpl;
 import it.polimi.jasper.engine.instantaneous.InstantaneousModel;
 import it.polimi.jasper.engine.query.RSPQuery;
@@ -12,7 +9,6 @@ import it.polimi.yasper.core.enums.Entailment;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.query.ContinuousQuery;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.query.operators.s2r.WindowOperator;
 import it.polimi.yasper.core.timevarying.DefaultTVG;
 import it.polimi.yasper.core.timevarying.NamedTVG;
 import it.polimi.yasper.core.timevarying.TimeVaryingGraph;
@@ -26,6 +22,7 @@ import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.sparql.core.DatasetImpl;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Created by riccardo on 01/07/2017.
@@ -81,7 +78,7 @@ public class JenaSDSImpl extends DatasetImpl implements Observer, JenaSDS {
 
 
     @Override
-    public synchronized void update(Observable o, Object _ts) {
+    public synchronized void update(Observable o, Object a) {
         TimeVaryingGraph tvg = (TimeVaryingGraph) o;
         long cep_time = tvg.getTimestamp();
         long sys_time = System.currentTimeMillis();
@@ -91,8 +88,8 @@ public class JenaSDSImpl extends DatasetImpl implements Observer, JenaSDS {
 
         setDefaultModel(getDefaultModel().union(knowledge_base));
 
-        if (global_tick) {
-            updateDataset(tvg, cep);
+        if (rsp.getRsp_config().partialWindowsEnabled()) {
+            applyPartialDatasets(tvg);
         }
 
         consolidate(this, tvg, cep_time);
@@ -100,25 +97,9 @@ public class JenaSDSImpl extends DatasetImpl implements Observer, JenaSDS {
         setDefaultModel(getDefaultModel().difference(knowledge_base));
     }
 
-    private void updateDataset(TimeVaryingGraph tvg, EPServiceProvider esp) {
-        WindowOperator stmt = tvg.getTriggeringStatement();
-        List<EventBean> events = new ArrayList<EventBean>();
-        for (String stmtName : statementNames) {
-            if (!stmtName.equals(stmt.getName())) {
-                EPStatement statement1 = esp.getEPAdministrator().getStatement(stmtName);
-                log.debug("[" + System.currentTimeMillis() + "] Polling STATEMENT: " + statement1.getText() + " "
-                        + statement1.getTimeLastStateChange());
-                SafeIterator<EventBean> it = statement1.safeIterator();
-                while (it.hasNext()) {
-                    EventBean next = it.next();
-                    log.info(next.getUnderlying());
-                    events.add(next);
-                }
-
-                it.close();
-            }
-        }
-
+    private void applyPartialDatasets(TimeVaryingGraph tvg) {
+        Stream<NamedTVG> namedTVGStream = namedTVGs.stream().filter(g -> !g.equals(tvg));
+        namedTVGStream.forEach(namedTVG -> namedTVG.update(tvg.getTimestamp()));
 
     }
 

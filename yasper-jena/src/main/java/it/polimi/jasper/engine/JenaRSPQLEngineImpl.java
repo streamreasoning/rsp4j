@@ -30,6 +30,7 @@ import it.polimi.yasper.core.stream.StreamItem;
 import it.polimi.yasper.core.timevarying.DefaultTVG;
 import it.polimi.yasper.core.timevarying.NamedTVG;
 import it.polimi.yasper.core.utils.EncodingUtils;
+import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Node;
@@ -49,15 +50,18 @@ import java.util.*;
 @Log4j
 public class JenaRSPQLEngineImpl extends RSPQLEngine {
 
-    public JenaRSPQLEngineImpl(long t0) {
-        this.t0 = t0;
+    public JenaRSPQLEngineImpl(long t0, EngineConfiguration ec) {
+        super(t0, ec);
         StreamItem typeMap = new GraphStreamItem();
         log.info("Added [" + typeMap.getClass() + "] as TStream");
-        cepConfig.addEventType("TStream", typeMap);
-
-        cep = EPServiceProviderManager.getProvider(this.getClass().getCanonicalName(), cepConfig);
+        cep_config.addEventType("TStream", typeMap);
+        cep = EPServiceProviderManager.getProvider(this.getClass().getCanonicalName(), cep_config);
         cepAdm = cep.getEPAdministrator();
         cepRT = cep.getEPRuntime();
+    }
+
+    public JenaRSPQLEngineImpl(long t0) {
+        this(t0, EngineConfiguration.getDefault());
     }
 
     @Override
@@ -85,11 +89,12 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
 
     @Override
     public ContinuousQueryExecution registerQuery(ContinuousQuery q, QueryConfiguration c) {
-        Model tbox = ModelFactory.createDefaultModel().read(c.getTboxLocation());
+        String tboxLocation = c.getTboxLocation();
+        Model tbox = ModelFactory.createDefaultModel().read(tboxLocation);
         Maintenance maintenance = c.getSdsMaintainance();
         Entailment entailment = c.getReasoningEntailment();
         if ("it.polimi.jasper.engine.query.RSPQuery".equals(c.getQueryClass())) {
-            return registerQuery((RSPQuery) q, tbox, maintenance, entailment, c.isRecursionEnables());
+            return registerQuery((RSPQuery) q, tbox, maintenance, entailment, rsp_config.isRecursionEnables());
         } else {
             throw new UnsuportedQueryClassExecption();
         }
@@ -221,8 +226,7 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
             for (Window window : bq.getWindows()) {
                 String stream = EncodingUtils.encode(window.getStreamURI());
                 String statementName = "QUERY" + "STMT_" + i;
-                createWindow(window.getStream().toEPLSchema());
-
+                createWindow(t0, window.getOmega().longValue(), window.getBeta().longValue(), window.getStream().toEPLSchema());
                 defTVG.addStatement(getEpStatement(sds, window, statementName));
                 sds.addDefaultWindowStream(stream);
                 i++;
@@ -250,7 +254,8 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
 
                 InstantaneousGraph bind = (InstantaneousGraph) reasoner.bind(new InstantaneousGraphBase());
 
-                NamedTVG tvg = new NamedTVG(sds.getMaintenanceType(), bind, getEpStatement(sds, w, epl_statement_name));
+                WindowOperator wo = getEpStatement(sds, w, epl_statement_name);
+                NamedTVG tvg = new NamedTVG(sds.getMaintenanceType(), bind, wo);
 
                 sds.addNamedTimeVaryingGraph(window_uri, tvg);//SDS
                 sds.addNamedWindowStream(window_uri, new InstantaneousModelCom(bind));//JenaSDS
@@ -263,10 +268,10 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
     private WindowOperator getEpStatement(JenaSDS sds, Window w, String epl_statement_name) {
         WindowOperator wo;
         if (Maintenance.INCREMENTAL.equals(sds.getMaintenanceType())) {
-            wo = createWindow(w.toIREPL(), epl_statement_name);
+            wo = createWindow(t0, w.getOmega().longValue(), w.getBeta().longValue(), w.toIREPL(), epl_statement_name);
             log.info(w.toIREPL().toEPL());
         } else {
-            wo = createWindow(w.toEPL(), epl_statement_name);
+            wo = createWindow(t0, w.getOmega().longValue(), w.getBeta().longValue(), w.toEPL(), epl_statement_name);
             log.info(w.toEPL().toEPL());
         }
         return wo;
