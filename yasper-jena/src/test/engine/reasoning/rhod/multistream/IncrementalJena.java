@@ -1,22 +1,20 @@
-package test.engine.reasoning.pellet;
+package engine.reasoning.rhod.multistream;
 
 import it.polimi.jasper.engine.JenaRSPQLEngineImpl;
 import it.polimi.jasper.engine.query.RSPQuery;
-import it.polimi.jasper.engine.query.formatter.ConstructResponseSysOutFormatter;
-import it.polimi.jasper.engine.query.formatter.SelectResponseSysOutFormatter;
+import it.polimi.jasper.engine.query.formatter.ResponseFormatterFactory;
 import it.polimi.jasper.parser.RSPQLParser;
 import it.polimi.yasper.core.enums.Entailment;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
 import org.apache.commons.io.FileUtils;
-import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.system.IRIResolver;
 import org.parboiled.Parboiled;
 import org.parboiled.errors.ParseError;
 import org.parboiled.parserunners.ReportingParseRunner;
 import org.parboiled.support.ParsingResult;
-import test.engine.GraphStream;
+import engine.GraphStream;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,25 +22,31 @@ import java.io.IOException;
 /**
  * Created by Riccardo on 03/08/16.
  */
-public class NaivePellet {
+public class IncrementalJena {
 
     public static void main(String[] args) throws InterruptedException, IOException {
 
+
         RSPQuery q = getRspQuery();
+        // RSPQuery q1 = getRspQuery();
 
         JenaRSPQLEngineImpl sr = new JenaRSPQLEngineImpl(0);
         sr.startProcessing();
+        ContinuousQueryExecution cqe = sr.registerQuery(q, ModelFactory.createDefaultModel(), Maintenance.INCREMENTAL, Entailment.RHODF, false);
 
-        Model tbox = ModelFactory.createDefaultModel().read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/artist.tbox.owl");
-        ContinuousQueryExecution cqe = sr.registerQuery(q, tbox, Maintenance.NAIVE, Entailment.PELLET, false);
+        // SDS sds = sr.getSDS(q);
+        // sr.registerQuery(q1, sds);
+
+        //executes a query creating the SDS (if it does not exists yet)
+        // ContinuousQueryExecutionImpl cqe = je.registerQuery(q, SDS); //executes the query on the given SDS (if compatible)
 
         if (q.isSelectType())
-            sr.registerObserver(q.getName(), new SelectResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
+            sr.registerObserver(q.getName(), ResponseFormatterFactory.getSelectResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
         if (q.isConstructType())
-            sr.registerObserver(q.getName(), new ConstructResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
+            sr.registerObserver(q.getName(), ResponseFormatterFactory.getConstructResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
+
 
         (new Thread(new GraphStream("Painter", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
-        //(new Thread(new GraphS2RTestStream(sr, "Writer", "http://streamreasoning.org/iminds/massif/stream2", 1))).start();
 
     }
 
@@ -64,7 +68,7 @@ public class NaivePellet {
     }
 
     public static String getInput() throws IOException {
-        File file = new File("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/it.polimi.jasper.test/resources/rspquery.q");
+        File file = new File("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/it.polimi.jasper.test/resources/q52.rspql");
         return FileUtils.readFileToString(file);
     }
 }

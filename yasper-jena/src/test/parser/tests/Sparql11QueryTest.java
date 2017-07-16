@@ -1,4 +1,4 @@
-package test.parser.tests;
+package parser.tests;
 
 import it.polimi.jasper.parser.SPARQLParser;
 import it.polimi.jasper.parser.SPARQLQuery;
@@ -34,7 +34,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Parameterized.class)
 public class Sparql11QueryTest {
 
-    private static final String folder = "tests/";
+    private static final String folder = "test/parser/tests/";
     static String input;
     static org.apache.jena.query.Query toCompare;
     private static boolean res;

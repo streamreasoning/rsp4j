@@ -1,4 +1,4 @@
-package test.engine.reasoning.pellet;
+package engine.reasoning.pellet;
 
 import it.polimi.jasper.engine.JenaRSPQLEngineImpl;
 import it.polimi.jasper.engine.query.RSPQuery;
@@ -16,7 +16,7 @@ import org.parboiled.Parboiled;
 import org.parboiled.errors.ParseError;
 import org.parboiled.parserunners.ReportingParseRunner;
 import org.parboiled.support.ParsingResult;
-import test.engine.GraphStream;
+import engine.GraphStream;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +24,7 @@ import java.io.IOException;
 /**
  * Created by Riccardo on 03/08/16.
  */
-public class IncrementalPellet {
+public class NaivePellet {
 
     public static void main(String[] args) throws InterruptedException, IOException {
 
@@ -34,7 +34,7 @@ public class IncrementalPellet {
         sr.startProcessing();
 
         Model tbox = ModelFactory.createDefaultModel().read("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/artist.tbox.owl");
-        ContinuousQueryExecution cqe = sr.registerQuery(q, tbox, Maintenance.INCREMENTAL, Entailment.PELLET, false);
+        ContinuousQueryExecution cqe = sr.registerQuery(q, tbox, Maintenance.NAIVE, Entailment.PELLET, false);
 
         if (q.isSelectType())
             sr.registerObserver(q.getName(), new SelectResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS

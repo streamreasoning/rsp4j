@@ -1,4 +1,4 @@
-package test.engine.reasoning.rhod.multistream;
+package engine.reasoning.rhod.multistream;
 
 import it.polimi.jasper.engine.JenaRSPQLEngineImpl;
 import it.polimi.jasper.engine.query.formatter.ResponseFormatterFactory;
@@ -6,7 +6,7 @@ import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
-import test.engine.GraphStream;
+import engine.GraphStream;
 
 import java.io.File;
 import java.io.IOException;

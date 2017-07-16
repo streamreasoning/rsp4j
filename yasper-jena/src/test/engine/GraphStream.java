@@ -1,4 +1,4 @@
-package test.engine;
+package engine;
 
 import it.polimi.jasper.engine.stream.GraphStreamItem;
 import it.polimi.jasper.engine.stream.RDFStream;
