@@ -4,6 +4,7 @@ import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import it.polimi.yasper.core.enums.Maintenance;
+import it.polimi.yasper.core.enums.Report;
 import it.polimi.yasper.core.query.InstantaneousItem;
 import it.polimi.yasper.core.query.operators.s2r.WindowOperator;
 import lombok.Getter;
@@ -16,11 +17,11 @@ import java.util.Set;
 @Getter
 public class DefaultTVG extends TimeVaryingGraph {
 
-    private Set<WindowOperator> statements;
+    private Set<WindowOperator> windowOperatorSet;
 
     public DefaultTVG(Maintenance maintenance, InstantaneousItem g) {
         super(maintenance, g, null);
-        this.statements = new HashSet<>();
+        this.windowOperatorSet = new HashSet<>();
     }
 
     @Override
@@ -30,13 +31,13 @@ public class DefaultTVG extends TimeVaryingGraph {
 
         super.update(newData, oldData, stmt, esp);
 
-        notifyObservers(esp);
+        notifyObservers(Report.WINDOW_CLOSE);
 
     }
 
-    public void addStatement(WindowOperator stmt) {
-        statements.add(stmt);
-        stmt.addListener(this);
+    public void addStatement(WindowOperator wo) {
+        windowOperatorSet.add(wo);
+        wo.addListener(this);
     }
 
     @Override

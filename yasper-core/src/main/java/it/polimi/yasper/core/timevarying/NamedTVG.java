@@ -4,6 +4,7 @@ import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import it.polimi.yasper.core.enums.Maintenance;
+import it.polimi.yasper.core.enums.Report;
 import it.polimi.yasper.core.query.InstantaneousItem;
 import it.polimi.yasper.core.query.operators.s2r.WindowOperator;
 import lombok.Getter;
@@ -13,9 +14,9 @@ import lombok.extern.log4j.Log4j;
 @Getter
 public class NamedTVG extends TimeVaryingGraph {
 
-    public NamedTVG(Maintenance maintenance, InstantaneousItem g, WindowOperator statement) {
-        super(maintenance, g, statement);
-        statement.addListener(this);
+    public NamedTVG(Maintenance maintenance, InstantaneousItem g, WindowOperator wo) {
+        super(maintenance, g, wo);
+        wo.addListener(this);
     }
 
     @Override
@@ -29,7 +30,7 @@ public class NamedTVG extends TimeVaryingGraph {
             throw new RuntimeException("Wrong Statement");
         } else {
             super.update(newData, oldData, stmt, esp);
-            notifyObservers(this);
+            notifyObservers(Report.WINDOW_CLOSE);
         }
     }
 
