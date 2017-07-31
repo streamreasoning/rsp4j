@@ -1,5 +1,1 @@
-
-
-
-
-# RSP-Baselines
+# Yet Another RDF Stream Processing Engine: YASPER
