@@ -1,7 +1,7 @@
 package it.polimi.jasper.parser.run;
 
-import it.polimi.jasper.parser.SPARQLParser;
 import it.polimi.jasper.parser.SPARQLQuery;
+import it.polimi.jasper.parser.SPARQLParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.graph.Node;
 import org.apache.jena.query.SortCondition;

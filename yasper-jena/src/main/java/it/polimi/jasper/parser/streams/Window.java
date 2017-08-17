@@ -31,7 +31,7 @@ public class Window {
     private Integer omega;
     private String unit_omega;
     private String unit_beta;
-    private it.polimi.jasper.parser.streams.Stream stream;
+    private Stream stream;
     private WindowType type = WindowType.Logical;
     private View window;
 
@@ -67,7 +67,7 @@ public class Window {
     public Window addStreamUri(Node_URI uri) {
         // TODO hide visibility out of the package
         if (stream == null) {
-            stream = new it.polimi.jasper.parser.streams.Stream(uri);
+            stream = new Stream(uri);
         }
         stream.setIri(uri);
         return this;
