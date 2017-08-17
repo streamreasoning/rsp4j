@@ -1,0 +1,6 @@
+PREFIX  jfn:  <http://jena.apache.org/test.java.parser.tests/function#>
+
+SELECT ?v
+{ ?x ?p ?v .
+  FILTER ( ! jfn:langeq(?v, "en" ) )
+}

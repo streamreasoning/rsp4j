@@ -1,3 +1,0 @@
-# More a test that bad syntax test.parser.tests work!
-PREFIX ex:   <http://example/ns#>
-SELECT *

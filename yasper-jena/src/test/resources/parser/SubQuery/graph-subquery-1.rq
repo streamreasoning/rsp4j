@@ -1,0 +1,10 @@
+# Take local name to make a more portable test
+PREFIX  afn:     <http://jena.apache.org/test.java.parser.tests/function#>
+
+SELECT ?x (afn:localname(?g) AS ?gn)
+{
+  GRAPH ?g
+  { SELECT ?x { ?x ?p ?g1 } }
+}
+
+# Scope: different ?g
