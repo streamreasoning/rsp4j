@@ -1,7 +1,7 @@
-package it.polimi.jasper.tests;
+package it.polimi.jasper;
 
-import it.polimi.jasper.tests.engine.stream.GraphStreamItem;
-import it.polimi.jasper.tests.engine.stream.RDFStream;
+import it.polimi.jasper.engine.stream.GraphStreamItem;
+import it.polimi.jasper.engine.stream.RDFStream;
 import it.polimi.yasper.core.engine.RSPEngine;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.rdf.model.*;

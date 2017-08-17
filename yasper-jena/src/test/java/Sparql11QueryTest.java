@@ -1,5 +1,5 @@
-import it.polimi.jasper.tests.parser.SPARQLParser;
-import it.polimi.jasper.tests.parser.SPARQLQuery;
+import it.polimi.jasper.parser.SPARQLParser;
+import it.polimi.jasper.parser.SPARQLQuery;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.query.QueryFactory;

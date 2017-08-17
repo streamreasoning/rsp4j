@@ -1,7 +1,7 @@
-package it.polimi.jasper.tests;
+package it.polimi.jasper;
 
-import it.polimi.jasper.tests.engine.JenaRSPQLEngineImpl;
-import it.polimi.jasper.tests.engine.query.formatter.ResponseFormatterFactory;
+import it.polimi.jasper.engine.JenaRSPQLEngineImpl;
+import it.polimi.jasper.engine.query.formatter.ResponseFormatterFactory;
 import it.polimi.yasper.core.query.ContinuousQuery;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.utils.QueryConfiguration;

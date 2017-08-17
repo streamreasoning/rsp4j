@@ -17,7 +17,7 @@
 #------------------------------------------------------------------
 # OWL rule set v0.1
 # This rule set is design to implement owl(f)lite using pure
-# forward chaining. It is sufficient to pass the working group tests
+# forward chaining. It is sufficient to pass the working group parser.tests
 # for this OWL subset but some of the bug fixes applied to owl-fb 
 # have may not yet have migrated back here.
 # $Id: $
