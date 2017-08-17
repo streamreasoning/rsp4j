@@ -2,7 +2,6 @@ package it.polimi.yasper.core.engine;
 
 
 import it.polimi.streaming.EventProcessor;
-import it.polimi.streaming.Stimulus;
 import it.polimi.yasper.core.query.ContinuousQuery;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
@@ -16,24 +15,21 @@ import it.polimi.yasper.core.utils.QueryConfiguration;
  */
 public interface RSPEngine extends EventProcessor<StreamItem> {
 
-    void registerStream(Stream s);
+    Stream register(Stream s);
 
-    void unregisterStream(String s);
+    void unregister(Stream s);
 
     ContinuousQuery parseQuery(String input);
 
-    ContinuousQueryExecution registerQuery(ContinuousQuery q, QueryConfiguration c);
+    ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c);
 
-    ContinuousQueryExecution registerQuery(String q, QueryConfiguration c);
+    ContinuousQueryExecution register(String q, QueryConfiguration c);
 
-    void unregisterQuery(String qId);
+    void unregister(ContinuousQuery qId);
 
-    void registerObserver(String q, QueryResponseFormatter o);
+    void register(ContinuousQuery q, QueryResponseFormatter o);
 
-    void unregisterObserver(String q, QueryResponseFormatter o);
-
-
-
+    void unregister(ContinuousQuery q, QueryResponseFormatter o);
 
 
     // TODO is reasoning enabled

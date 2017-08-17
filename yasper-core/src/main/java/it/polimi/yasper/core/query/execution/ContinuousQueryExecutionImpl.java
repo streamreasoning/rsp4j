@@ -43,4 +43,11 @@ public abstract class ContinuousQueryExecutionImpl extends Observable implements
     public String getQueryID() {
         return query.getID();
     }
+
+    @Override
+    public ContinuousQuery getContinuousQuery() {
+        return query;
+    }
+
+
 }

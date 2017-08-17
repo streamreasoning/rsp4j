@@ -1,6 +1,7 @@
 package it.polimi.yasper.core.query.execution;
 
 import it.polimi.yasper.core.SDS;
+import it.polimi.yasper.core.query.ContinuousQuery;
 import it.polimi.yasper.core.query.operators.r2s.RelationToStreamOperator;
 import it.polimi.yasper.core.timevarying.TimeVaryingGraph;
 
@@ -23,5 +24,7 @@ public interface ContinuousQueryExecution {
     public void eval(SDS sds, long ts);
 
     public String getQueryID();
+
+    public ContinuousQuery getContinuousQuery();
 }
 
