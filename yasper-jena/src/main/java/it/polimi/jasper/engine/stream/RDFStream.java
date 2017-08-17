@@ -8,7 +8,7 @@ import lombok.Getter;
  * Created by riccardo on 10/07/2017.
  */
 @Getter
-public abstract class RDFStream extends StreamImpl implements Runnable {
+public class RDFStream extends StreamImpl {
 
     protected String name;
 
@@ -16,20 +16,6 @@ public abstract class RDFStream extends StreamImpl implements Runnable {
         super(stream_uri);
         this.name = name;
     }
-
-    public RDFStream(String stream_uri, String name, EPStatement s) {
-        super(stream_uri, s);
-        this.name = name;
-    }
-
-    @Override
-    public void run() {
-
-        update();
-
-    }
-
-    protected abstract void update();
 
     @Override
     public String getURI() {

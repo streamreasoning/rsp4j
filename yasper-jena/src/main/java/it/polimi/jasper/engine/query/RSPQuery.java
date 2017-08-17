@@ -1,8 +1,8 @@
 package it.polimi.jasper.engine.query;
 
 import it.polimi.jasper.parser.SPARQLQuery;
-import it.polimi.jasper.parser.streams.Register;
 import it.polimi.jasper.parser.streams.Window;
+import it.polimi.jasper.parser.streams.Register;
 import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.query.ContinuousQuery;
 import lombok.Data;

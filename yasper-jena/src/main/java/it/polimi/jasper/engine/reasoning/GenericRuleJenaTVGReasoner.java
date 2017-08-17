@@ -1,9 +1,9 @@
 package it.polimi.jasper.engine.reasoning;
 
-import it.polimi.jasper.engine.reasoning.rulesys.BasicForwardRuleInfTVGraph;
-import it.polimi.jasper.engine.reasoning.rulesys.FBRuleInfTVGraph;
 import it.polimi.jasper.engine.instantaneous.InstantaneousGraph;
 import it.polimi.jasper.engine.instantaneous.InstantaneousModel;
+import it.polimi.jasper.engine.reasoning.rulesys.BasicForwardRuleInfTVGraph;
+import it.polimi.jasper.engine.reasoning.rulesys.FBRuleInfTVGraph;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.reasoner.InfGraph;

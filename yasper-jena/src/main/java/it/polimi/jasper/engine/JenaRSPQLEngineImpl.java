@@ -2,6 +2,8 @@ package it.polimi.jasper.engine;
 
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
+import it.polimi.jasper.engine.sds.JenaSDSImpl;
+import it.polimi.jasper.parser.streams.Window;
 import it.polimi.jasper.engine.instantaneous.InstantaneousGraph;
 import it.polimi.jasper.engine.instantaneous.InstantaneousGraphBase;
 import it.polimi.jasper.engine.instantaneous.InstantaneousModelCom;
@@ -10,10 +12,8 @@ import it.polimi.jasper.engine.query.execution.ContinuousQueryExecutionFactory;
 import it.polimi.jasper.engine.reasoning.JenaTVGReasoner;
 import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
 import it.polimi.jasper.engine.sds.JenaSDS;
-import it.polimi.jasper.engine.sds.JenaSDSImpl;
 import it.polimi.jasper.engine.stream.GraphStreamItem;
 import it.polimi.jasper.parser.RSPQLParser;
-import it.polimi.jasper.parser.streams.Window;
 import it.polimi.yasper.core.engine.RSPQLEngine;
 import it.polimi.yasper.core.enums.Entailment;
 import it.polimi.yasper.core.enums.Maintenance;
@@ -25,6 +25,7 @@ import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.query.operators.s2r.WindowOperator;
 import it.polimi.yasper.core.stream.QueryStream;
+import it.polimi.yasper.core.stream.RegisteredStream;
 import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.stream.StreamItem;
 import it.polimi.yasper.core.timevarying.DefaultTVG;
@@ -65,42 +66,41 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
     }
 
     @Override
-    public void registerStream(Stream s) {
+    public Stream register(Stream s) {
         log.info("Registering Stream [" + s.getURI() + "]");
-        s.setRSPEngine(this);
-        createStream(s.toEPLSchema(), s.getURI());
+        EPStatement e = createStream(s.toEPLSchema(), s.getURI());
         registeredStreams.put(s.getURI(), s);
+        return new RegisteredStream(s, e);
     }
 
     @Override
-    public void unregisterStream(String s) {
+    public void unregister(Stream s) {
         log.info("Unregistering Stream [" + s + "]");
-        EPStatement statement = cepAdm.getStatement(EncodingUtils.encode(s));
+        EPStatement statement = cepAdm.getStatement(EncodingUtils.encode(s.getURI()));
         statement.removeAllListeners();
         statement.destroy();
-        Stream remove = registeredStreams.remove(EncodingUtils.encode(s));
-        remove.setRSPEngine(null);
+        Stream remove = registeredStreams.remove(EncodingUtils.encode(s.getURI()));
     }
 
     @Override
-    public ContinuousQueryExecution registerQuery(String q, QueryConfiguration c) {
-        return registerQuery(parseQuery(q), c);
+    public ContinuousQueryExecution register(String q, QueryConfiguration c) {
+        return register(parseQuery(q), c);
     }
 
     @Override
-    public ContinuousQueryExecution registerQuery(ContinuousQuery q, QueryConfiguration c) {
+    public ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c) {
         String tboxLocation = c.getTboxLocation();
         Model tbox = ModelFactory.createDefaultModel().read(tboxLocation);
         Maintenance maintenance = c.getSdsMaintainance();
         Entailment entailment = c.getReasoningEntailment();
         if ("it.polimi.jasper.engine.query.RSPQuery".equals(c.getQueryClass())) {
-            return registerQuery((RSPQuery) q, tbox, maintenance, entailment, rsp_config.isRecursionEnables());
+            return register((RSPQuery) q, tbox, maintenance, entailment, rsp_config.isRecursionEnables());
         } else {
             throw new UnsuportedQueryClassExecption();
         }
     }
 
-    public ContinuousQueryExecution registerQuery(RSPQuery bq, Model tbox, Maintenance maintenance, Entailment entailment, boolean recursionEnabled) {
+    public ContinuousQueryExecution register(RSPQuery bq, Model tbox, Maintenance maintenance, Entailment entailment, boolean recursionEnabled) {
         log.info("Registering Query [" + bq.getName() + "]");
 
         registeredQueries.put(bq.getID(), bq);
@@ -109,7 +109,7 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
         log.info(bq.getQ().toString());
 
         if (bq.getHeader() != null) {
-            registerStream(new QueryStream(this, bq.getID()));
+            register(new QueryStream(this, bq.getID()));
         }
 
         if (bq.isRecursive() && !recursionEnabled) {
@@ -140,7 +140,8 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
     }
 
     @Override
-    public void unregisterQuery(String qId) {
+    public void unregister(ContinuousQuery q) {
+        String qId = q.getID();
         if (registeredQueries.containsKey(qId)) {
             ContinuousQuery query = registeredQueries.remove(qId);
             ContinuousQueryExecution ceq = queryExecutions.remove(qId);
@@ -156,37 +157,38 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
     }
 
     @Override
-    public void registerObserver(String q, QueryResponseFormatter o) {
-        log.info("Registering Observer [" + o.getClass() + "] to Query [" + q + "]");
-        if (!registeredQueries.containsKey(q))
-            throw new UnregisteredQueryExeception(q);
+    public void register(ContinuousQuery q, QueryResponseFormatter o) {
+        String qID = q.getID();
+        log.info("Registering Observer [" + o.getClass() + "] to Query [" + qID + "]");
+        if (!registeredQueries.containsKey(qID))
+            throw new UnregisteredQueryExeception(qID);
         else {
-            ContinuousQueryExecution ceq = queryExecutions.get(q);
+            ContinuousQueryExecution ceq = queryExecutions.get(qID);
             ceq.addObserver(o);
-            if (queryObservers.containsKey(q)) {
-                List<QueryResponseFormatter> l = queryObservers.get(q);
+            if (queryObservers.containsKey(qID)) {
+                List<QueryResponseFormatter> l = queryObservers.get(qID);
                 if (l != null) {
                     l.add(o);
                 } else {
                     l = new ArrayList<>();
                     l.add(o);
-                    queryObservers.put(q, l);
+                    queryObservers.put(qID, l);
                 }
             }
         }
-
     }
 
     @Override
-    public void unregisterObserver(String q, QueryResponseFormatter o) {
-        log.info("Unregistering Observer [" + o.getClass() + "] from Query [" + q + "]");
-        if (queryExecutions.containsKey(q)) {
-            queryExecutions.get(q).removeObserver(o);
-            if (queryObservers.containsKey(q)) {
-                queryObservers.get(q).remove(o);
+    public void unregister(ContinuousQuery q, QueryResponseFormatter o) {
+        String qId = q.getID();
+        log.info("Unregistering Observer [" + o.getClass() + "] from Query [" + qId + "]");
+        if (queryExecutions.containsKey(qId)) {
+            queryExecutions.get(qId).removeObserver(o);
+            if (queryObservers.containsKey(qId)) {
+                queryObservers.get(qId).remove(o);
             }
         }
-        throw new UnregisteredQueryExeception(q);
+        throw new UnregisteredQueryExeception(qId);
     }
 
     @Override

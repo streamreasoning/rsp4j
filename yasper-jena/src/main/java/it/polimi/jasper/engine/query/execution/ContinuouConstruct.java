@@ -24,16 +24,19 @@ public class ContinuouConstruct extends ContinuousJenaQueryExecution {
     public void eval(SDS sds, TimeVaryingGraph stmt, long ts, RelationToStreamOperator r2s) {
         if (stmt != null) {
         /*
-        TODO if a two RSPQL eval on the same SDS I can use the stmt that triggerd the evaluation to discriminate if a query has to be evaluated or not
+        TODO if a two RSPQL eval on the same SDS I can use the stmt that
+        triggerd the evaluation to discriminate if a query has to be evaluated or not
          */
         }
 
+
+        //TODO reasoning
+
         this.execution = QueryExecutionFactory.create(q, getDataset());
-        this.last_response = new ConstructResponse("http://streamreasoning.org/heaven/", (RSPQuery) query, execution.execConstruct(), ts);
+        this.last_response = new ConstructResponse("http://streamreasoning.org/yasper/", (RSPQuery) query, execution.execConstruct(), ts);
         InstantaneousResponse eval = r2s.eval(last_response);
 
         setChanged();
         notifyObservers(eval);
     }
-
 }
