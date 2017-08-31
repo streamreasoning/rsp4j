@@ -1,10 +1,14 @@
 package it.polimi.jasper.parser;
 
 import it.polimi.jasper.engine.query.RSPQuery;
-import it.polimi.jasper.parser.streams.Window;
 import it.polimi.jasper.parser.streams.Register;
+import it.polimi.jasper.parser.streams.Window;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.jena.graph.Node;
+import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Node_URI;
+import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.sparql.syntax.ElementNamedGraph;
 import org.parboiled.Rule;
 
@@ -15,16 +19,21 @@ import static it.polimi.yasper.core.enums.StreamOperator.*;
  */
 public class RSPQLParser extends SPARQLParser {
 
+    @Getter
+    @Setter
+    private IRIResolver resolver;
+
+
     @Override
     public Rule Query() {
-        return Sequence(push(new RSPQuery()), WS(), Optional(Prologue(), Registration()),
+        return Sequence(push(new RSPQuery(getResolver())), WS(), Optional(Prologue(), Registration()),
                 FirstOf(SelectQuery(), ConstructQuery(), AskQuery(), DescribeQuery()), EOI);
     }
 
     public Rule Registration() {
         return Sequence(REGISTER(), push(new Register()), FirstOf(STREAM(), QUERY()),
                 push(((Register) pop()).setType(trimMatch())),
-                Sequence(SourceSelector(), swap(), push(((Register) pop()).setId((Node) pop()))), Optional(
+                Sequence(QuerySourceSelector(), swap(), push(((Register) pop()).setId((Node) pop()))), Optional(
                         WS(), COMPUTED(), EVERY(), TimeConstrain(),
                         push(((Register) pop()).addCompute((match())))), AS(), WS(),
                 pushQuery(((RSPQuery) popQuery(1)).setRegister((Register) pop())));
@@ -42,14 +51,35 @@ public class RSPQLParser extends SPARQLParser {
     }
 
     public Rule DefaultStreamClause() {
-        return Sequence(WINDOW(), push(new Window()), WindowClause(), ON(), STREAM(), SourceSelector(),
+        return Sequence(WINDOW(), push(new Window()), WindowClause(), ON(), STREAM(), StreamSourceSelector(),
                 push(((Window) pop(1)).addStreamUri(((Node_URI) pop()))));
     }
 
     public Rule NamedStreamClause() {
-        return Sequence(NAMED(), WINDOW(), SourceSelector(), push(new Window((Node_URI) pop())), WindowClause(), ON(),
-                STREAM(), SourceSelector(), push(((Window) pop(1)).addStreamUri(((Node_URI) pop()))));
+        return Sequence(NAMED(), WINDOW(), WindowSourceSelector(), push(new Window((Node_URI) pop())), WindowClause(), ON(),
+                STREAM(), StreamSourceSelector(), push(((Window) pop(1)).addStreamUri(((Node_URI) pop()))));
     }
+
+    public Rule ParametricSourceSelector(String s) {
+        return Sequence(
+                FirstOf(Sequence(IRI_REF(), push(URIMatch(s))),
+                        Sequence(PrefixedName(), push(resolvePNAME(URIMatch())))),
+                push(NodeFactory.createURI(pop().toString())));
+    }
+
+    public Rule WindowSourceSelector() {
+        return ParametricSourceSelector("windows");
+    }
+
+    public Rule StreamSourceSelector() {
+        return ParametricSourceSelector("streams");
+
+    }
+
+    public Rule QuerySourceSelector() {
+        return ParametricSourceSelector("queries");
+    }
+
 
     public Rule WindowClause() {
         return Sequence(OPEN_SQUARE_BRACE(), RANGE(), WindowDef(), CLOSE_SQUARE_BRACE());
