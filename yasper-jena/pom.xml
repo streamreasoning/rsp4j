@@ -19,18 +19,17 @@
     <parent>
         <groupId>it.polimi.sr.yasper</groupId>
         <artifactId>yasper</artifactId>
-        <version>1.0</version>
+        <version>1.0.1</version>
     </parent>
 
     <groupId>it.polimi.sr.yasper</groupId>
     <artifactId>yasper-jena</artifactId>
-    <version>1.0</version>
 
     <dependencies>
         <dependency>
             <groupId>it.polimi.sr.yasper</groupId>
             <artifactId>yasper-core</artifactId>
-            <version>1.0</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.jena</groupId>

@@ -1,18 +1,18 @@
 package it.polimi.jasper.engine.query;
 
 import it.polimi.jasper.parser.SPARQLQuery;
-import it.polimi.jasper.parser.streams.Window;
 import it.polimi.jasper.parser.streams.Register;
+import it.polimi.jasper.parser.streams.Window;
 import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.query.ContinuousQuery;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryException;
+import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.sparql.core.Prologue;
 import org.apache.jena.sparql.syntax.ElementNamedGraph;
 
@@ -23,7 +23,7 @@ import java.util.*;
  */
 @Data
 @Log4j
-@NoArgsConstructor
+
 public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
 
     private Map<Node, Window> namedwindows;
@@ -36,6 +36,14 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
 
     public RSPQuery(Prologue prologue) {
         super(prologue);
+    }
+
+    public RSPQuery() {
+        setBaseURI(IRIResolver.createNoResolve());
+    }
+
+    public RSPQuery(IRIResolver r) {
+        setBaseURI(r);
     }
 
     public RSPQuery setSelectQuery() {
@@ -77,7 +85,7 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
 
     public RSPQuery addWindow(Window w) {
 
-        if(!isRecursive() && w.getStreamURI().equals(getID())){
+        if (!isRecursive() && w.getStreamURI().equals(getID())) {
             setRecursive(true);
         }
 

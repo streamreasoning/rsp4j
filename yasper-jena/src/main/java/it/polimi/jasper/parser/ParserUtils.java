@@ -6,7 +6,6 @@ import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.TypeMapper;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
-import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.expr.ExprList;
@@ -54,7 +53,6 @@ public class ParserUtils extends BaseParser<Object> {
     private boolean bNodesAreVariables = true;
     // In DELETE, false.
     private boolean bNodesAreAllowed = true;
-    private IRIResolver resolver;
 
     public boolean bNodeOff() {
         activeLabelMap = bNodeLabels;
@@ -179,6 +177,10 @@ public class ParserUtils extends BaseParser<Object> {
         return getQuery(-1).resolveSilent(trimMatch().replace(">", "").replace("<", ""));
     }
 
+    public String URIMatch(String s) {
+        return getQuery(-1).resolveSilent(s + "/" + trimMatch().replace(">", "").replace("<", ""));
+    }
+
     public String resolvePNAME(String match) {
         // TODO I think this is correct beacause subqueries refer to the same
         // prologue
@@ -189,14 +191,6 @@ public class ParserUtils extends BaseParser<Object> {
     public RDFDatatype getSafeTypeByName(String uri) {
         RDFDatatype safeTypeByName = TypeMapper.getInstance().getSafeTypeByName(uri);
         return safeTypeByName;
-    }
-
-    public IRIResolver getResolver() {
-        return resolver;
-    }
-
-    public void setResolver(IRIResolver resolver) {
-        this.resolver = resolver;
     }
 
     public boolean addValuesToQuery() {

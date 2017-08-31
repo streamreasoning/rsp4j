@@ -2,8 +2,6 @@ package it.polimi.jasper.engine;
 
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
-import it.polimi.jasper.engine.sds.JenaSDSImpl;
-import it.polimi.jasper.parser.streams.Window;
 import it.polimi.jasper.engine.instantaneous.InstantaneousGraph;
 import it.polimi.jasper.engine.instantaneous.InstantaneousGraphBase;
 import it.polimi.jasper.engine.instantaneous.InstantaneousModelCom;
@@ -12,8 +10,10 @@ import it.polimi.jasper.engine.query.execution.ContinuousQueryExecutionFactory;
 import it.polimi.jasper.engine.reasoning.JenaTVGReasoner;
 import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
 import it.polimi.jasper.engine.sds.JenaSDS;
+import it.polimi.jasper.engine.sds.JenaSDSImpl;
 import it.polimi.jasper.engine.stream.GraphStreamItem;
 import it.polimi.jasper.parser.RSPQLParser;
+import it.polimi.jasper.parser.streams.Window;
 import it.polimi.yasper.core.engine.RSPQLEngine;
 import it.polimi.yasper.core.enums.Entailment;
 import it.polimi.yasper.core.enums.Maintenance;
@@ -33,6 +33,7 @@ import it.polimi.yasper.core.timevarying.NamedTVG;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Node;
 import org.apache.jena.rdf.model.InfModel;
@@ -51,17 +52,18 @@ import java.util.*;
 @Log4j
 public class JenaRSPQLEngineImpl extends RSPQLEngine {
 
+    @Getter
+    private IRIResolver resolver;
+    private  RSPQLParser parser;
+
     public JenaRSPQLEngineImpl(long t0, EngineConfiguration ec) {
         super(t0, ec);
-        StreamItem typeMap = new GraphStreamItem();
-        log.info("Added [" + typeMap.getClass() + "] as TStream");
-        cep_config.addEventType("TStream", typeMap);
-        cep = EPServiceProviderManager.getProvider(this.getClass().getCanonicalName(), cep_config);
-        cepAdm = cep.getEPAdministrator();
-        cepRT = cep.getEPRuntime();
+        resolver = IRIResolver.create(ec.getBaseURI());
+        parser = Parboiled.createParser(RSPQLParser.class);
+        parser.setResolver(resolver);
     }
 
-    public JenaRSPQLEngineImpl(long t0) {
+    public JenaRSPQLEngineImpl(long t0, String baseUri) {
         this(t0, EngineConfiguration.getDefault());
     }
 
@@ -131,7 +133,6 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
         addWindows(bq, sds, reasoner);
         addNamedWindows(sds, bq, reasoner);
 
-
         assignedSDS.put(bq.getID(), sds);
         registeredQueries.put(bq.getID(), bq);
         queryExecutions.put(bq.getID(), qe);
@@ -192,23 +193,48 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
     }
 
     @Override
+    public void register(ContinuousQueryExecution ceq, QueryResponseFormatter o) {
+        String qID = ceq.getQueryID();
+        log.info("Registering Observer [" + o.getClass() + "] to Query [" + qID + "]");
+        if (!registeredQueries.containsKey(qID))
+            throw new UnregisteredQueryExeception(qID);
+        else {
+            ceq.addObserver(o);
+            if (queryObservers.containsKey(qID)) {
+                List<QueryResponseFormatter> l = queryObservers.get(qID);
+                if (l != null) {
+                    l.add(o);
+                } else {
+                    l = new ArrayList<>();
+                    l.add(o);
+                    queryObservers.put(qID, l);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void unregister(ContinuousQueryExecution cqe, QueryResponseFormatter o) {
+        cqe.removeObserver(o);
+        if (queryObservers.containsKey(cqe.getQueryID())) {
+            queryObservers.get(cqe.getQueryID()).remove(o);
+            throw new UnregisteredQueryExeception(cqe.getQueryID());
+        }
+    }
+
+    @Override
     public ContinuousQuery parseQuery(String input) {
         log.info("Parsing Query [" + input + "]");
-
-        RSPQLParser parser = Parboiled.createParser(RSPQLParser.class);
-
-        parser.setResolver(IRIResolver.create());
 
         ParsingResult<RSPQuery> result = new ReportingParseRunner(parser.Query()).run(input);
 
         if (result.hasErrors()) {
             for (ParseError arg : result.parseErrors) {
-                System.out.println(input.substring(0, arg.getStartIndex()) + "|->" + input.substring(arg.getStartIndex(), arg.getEndIndex()) + "<-|" + input.substring(arg.getEndIndex() + 1, input.length() - 1));
+                log.info(input.substring(0, arg.getStartIndex()) + "|->" + input.substring(arg.getStartIndex(), arg.getEndIndex()) + "<-|" + input.substring(arg.getEndIndex() + 1, input.length() - 1));
             }
         }
         RSPQuery query = result.resultValue;
-        log.info("Final Query <[" + query + "]");
-        log.info("Final Query ID is [" + query.getID() + "]");
+        log.info("Final Query [" + query + "]");
         return query;
     }
 

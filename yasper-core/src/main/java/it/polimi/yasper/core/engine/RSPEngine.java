@@ -31,6 +31,10 @@ public interface RSPEngine extends EventProcessor<StreamItem> {
 
     void unregister(ContinuousQuery q, QueryResponseFormatter o);
 
+    void register(ContinuousQueryExecution cqe, QueryResponseFormatter o);
+
+    void unregister(ContinuousQueryExecution cqe, QueryResponseFormatter o);
+
 
     // TODO is reasoning enabled
     // TODO is external time control enabled
