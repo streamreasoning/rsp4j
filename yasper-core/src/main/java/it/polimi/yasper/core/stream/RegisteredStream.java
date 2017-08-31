@@ -12,6 +12,10 @@ public class RegisteredStream implements Stream {
     private Stream s;
     private EPStatement e;
 
+    public String getInternalName() {
+        return e.getName();
+    }
+
     @Override
     public String getURI() {
         return s.getURI();

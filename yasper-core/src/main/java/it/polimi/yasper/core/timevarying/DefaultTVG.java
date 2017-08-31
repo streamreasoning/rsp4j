@@ -26,7 +26,7 @@ public class DefaultTVG extends TimeVaryingGraph {
 
     @Override
     public synchronized void update(EventBean[] newData, EventBean[] oldData, EPStatement stmt, EPServiceProvider esp) {
-        log.info("[" + Thread.currentThread() + "][" + System.currentTimeMillis() + "] FROM STATEMENT: " + stmt.getText() + " AT "
+        log.debug("[" + Thread.currentThread() + "][" + System.currentTimeMillis() + "] FROM STATEMENT: " + stmt.getText() + " AT "
                 + esp.getEPRuntime().getCurrentTime());
 
         super.update(newData, oldData, stmt, esp);

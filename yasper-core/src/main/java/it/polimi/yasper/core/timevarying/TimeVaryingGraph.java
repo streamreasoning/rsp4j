@@ -37,7 +37,7 @@ public abstract class TimeVaryingGraph extends Observable implements RSPListener
         long currentTime = esp.getEPRuntime().getCurrentTime();
         long l = System.currentTimeMillis();
 
-        log.info("[" + Thread.currentThread() + "][" + l + "] FROM STATEMENT: " + stmt.getText() + " AT "
+        log.debug("[" + Thread.currentThread() + "][" + l + "] FROM STATEMENT: " + stmt.getText() + " AT "
                 + currentTime);
 
         //TODO

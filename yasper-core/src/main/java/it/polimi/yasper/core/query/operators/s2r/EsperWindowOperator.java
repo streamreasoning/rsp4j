@@ -47,7 +47,7 @@ public class EsperWindowOperator extends WindowOperatorImpl {
 
         while (it.hasNext()) {
             EventBean next = it.next();
-            log.info(next.getUnderlying());
+            log.debug(next.getUnderlying());
             events.add(next);
         }
         it.close();
@@ -64,24 +64,24 @@ public class EsperWindowOperator extends WindowOperatorImpl {
         return eps.getText();
     }
 
-    private void handleSingleIStream(InstantaneousItem graph, StreamItem underlying) {
-        log.debug("Handling single IStreamTest [" + underlying + "]");
-        graph = underlying.addTo(graph);
+    private void handleSingleIStream(InstantaneousItem ii, StreamItem st) {
+        log.debug("Handling single IStreamTest [" + st + "]");
+        st.addTo(ii);
     }
 
-    public void IStreamUpdate(InstantaneousItem graph, EventBean[] newData) {
+    public void IStreamUpdate(InstantaneousItem ii, EventBean[] newData) {
         if (newData != null && newData.length != 0) {
-            log.info("[" + newData.length + "] New Events of type ["
+            log.debug("[" + newData.length + "] New Events of type ["
                     + newData[0].getUnderlying().getClass().getSimpleName() + "]");
             for (EventBean e : newData) {
                 if (e instanceof MapEventBean) {
                     MapEventBean meb = (MapEventBean) e;
                     if (meb.getProperties() instanceof StreamItem) {
-                        handleSingleIStream(graph, (StreamItem) e.getUnderlying());
+                        handleSingleIStream(ii, (StreamItem) e.getUnderlying());
                     } else {
                         for (int i = 0; i < meb.getProperties().size(); i++) {
-                            StreamItem underlying = (StreamItem) meb.get("stream_" + i);
-                            handleSingleIStream(graph, underlying);
+                            StreamItem st = (StreamItem) meb.get("stream_" + i);
+                            handleSingleIStream(ii, st);
                         }
                     }
                 }
@@ -89,14 +89,14 @@ public class EsperWindowOperator extends WindowOperatorImpl {
         }
     }
 
-    private void handleSingleDStream(InstantaneousItem graph, StreamItem underlying) {
-        log.debug("Handling single IStreamTest [" + underlying + "]");
-        graph = underlying.removeFrom(graph);
+    private void handleSingleDStream(InstantaneousItem ii, StreamItem st) {
+        log.debug("Handling single IStreamTest [" + st + "]");
+        st.removeFrom(ii);
     }
 
-    public void DStreamUpdate(InstantaneousItem graph, EventBean[] oldData, Maintenance m) {
+    public void DStreamUpdate(InstantaneousItem ii, EventBean[] oldData, Maintenance m) {
         if (Maintenance.NAIVE.equals(m)) {
-            graph.clear();
+            ii.clear();
         } else {
             if (oldData != null) {
                 log.debug("[" + oldData.length + "] Old Events of type ["
@@ -105,11 +105,11 @@ public class EsperWindowOperator extends WindowOperatorImpl {
                     if (e instanceof MapEventBean) {
                         MapEventBean meb = (MapEventBean) e;
                         if (meb.getProperties() instanceof StreamItem) {
-                            handleSingleDStream(graph, (StreamItem) e.getUnderlying());
+                            handleSingleDStream(ii, (StreamItem) e.getUnderlying());
                         } else {
                             for (int i = 0; i < meb.getProperties().size(); i++) {
-                                StreamItem underlying = (StreamItem) meb.get("stream_" + i);
-                                handleSingleDStream(graph, underlying);
+                                StreamItem st = (StreamItem) meb.get("stream_" + i);
+                                handleSingleDStream(ii, st);
                             }
                         }
                     }

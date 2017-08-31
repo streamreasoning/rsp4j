@@ -5,6 +5,8 @@ package it.polimi.yasper.core.exceptions;
  */
 public class UnregisteredStreamExeception extends RuntimeException {
     public UnregisteredStreamExeception(String s) {
+        super(s);
     }
+
 }
 

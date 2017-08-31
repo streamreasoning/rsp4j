@@ -63,6 +63,11 @@ public abstract class RSPQLEngine extends Observable implements RSPEngine {
         cep_config.getEngineDefaults().getMetricsReporting().setEnableMetricsReporting(true);
         cep_config.getEngineDefaults().getLogging().setEnableQueryPlan(true);
 
+        cep_config.addEventType("TStream", new HashMap<String, Object>());
+        cep = EPServiceProviderManager.getProvider(this.getClass().getCanonicalName(), cep_config);
+        cepAdm = cep.getEPAdministrator();
+        cepRT = cep.getEPRuntime();
+
         rsp_config = configuration != null ? configuration : EngineConfiguration.getDefault();
 
         log.debug("Running Configuration ]");
@@ -95,22 +100,22 @@ public abstract class RSPQLEngine extends Observable implements RSPEngine {
     }
 
     public boolean process(StreamItem g) {
-        log.info("Current runtime is  [" + cepRT.getCurrentTime() + "]");
+        log.debug("Current runtime is  [" + cepRT.getCurrentTime() + "]");
 
         //Event time vs ingestion time
         long time = rsp_config.isUsingEventTime() ? g.getAppTimestamp() : g.getSysTimestamp();
 
         if (cepRT.getCurrentTime() < time) {
-            log.info("Sent time event with current [" + time + "]");
+            log.debug("Sent time event with current [" + time + "]");
             cepRT.sendEvent(new CurrentTimeEvent(time));
             currentTimestamp = time;// TODO
-            log.info("Current runtime is now [" + cepRT.getCurrentTime() + "]");
+            log.debug("Current runtime is now [" + cepRT.getCurrentTime() + "]");
         }
 
         cepRT.sendEvent(g, EncodingUtils.encode(g.getStreamURI()));
-        log.info("Received Stimulus [" + g + "]");
+        log.debug("Received Stimulus [" + g + "]");
         rspEventsNumber++;
-        log.info("Current runtime is  [" + this.cepRT.getCurrentTime() + "]");
+        log.debug("Current runtime is  [" + this.cepRT.getCurrentTime() + "]");
 
         return true;
     }
@@ -126,7 +131,7 @@ public abstract class RSPQLEngine extends Observable implements RSPEngine {
     }
 
     protected EPStatement createStream(String stream, String uri) {
-        log.info("Stream [ " + stream + "] uri [" + uri + "]");
+        log.debug("Stream [ " + stream + "] uri [" + uri + "]");
         String s = EncodingUtils.encode(uri);
         return cepAdm.createEPL(stream, s);
     }
@@ -136,24 +141,24 @@ public abstract class RSPQLEngine extends Observable implements RSPEngine {
     }
 
     protected WindowOperator createWindow(long t0, long range, long step, String windowEPL, String name) {
-        log.info("Stream [ " + windowEPL + "] uri [" + name + "]");
+        log.debug("Stream [ " + windowEPL + "] uri [" + name + "]");
         return new EsperWindowOperator(cepAdm.createEPL(windowEPL, name), t0, range, step);
     }
 
 
     protected WindowOperator createWindow(long t0, long range, long step, EPStatementObjectModel windowEPL, String name) {
-        log.info("Stream [ " + windowEPL.toEPL() + "] name [" + name + "]");
+        log.debug("Stream [ " + windowEPL.toEPL() + "] name [" + name + "]");
         return new EsperWindowOperator(cepAdm.create(windowEPL, name), t0, range, step);
     }
 
     protected WindowOperator createWindow(long t0, long range, long step, String windowEPL) {
-        log.info("Stream [ " + windowEPL + "]");
+        log.debug("Stream [ " + windowEPL + "]");
         return new EsperWindowOperator(cepAdm.createEPL(windowEPL), t0, range, step);
     }
 
 
     protected WindowOperator createWindow(long t0, long range, long step, EPStatementObjectModel windowEPL) {
-        log.info("Stream [ " + windowEPL.toEPL() + "]");
+        log.debug("Stream [ " + windowEPL.toEPL() + "]");
         return new EsperWindowOperator(cepAdm.create(windowEPL), t0, range, step);
     }
 
