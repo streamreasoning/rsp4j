@@ -1,7 +1,7 @@
 PREFIX : <http://streamreasoning.org/iminds/massif/>
 
 CONSTRUCT {?s ?p ?o}
-FROM NAMED WINDOW  :win1 [RANGE 2s, SLIDE 2s] ON STREAM :stream1
+FROM NAMED WINDOW :win1 [RANGE 2s, SLIDE 2s] ON STREAM :stream1
 WHERE  {
 
     WINDOW ?w {

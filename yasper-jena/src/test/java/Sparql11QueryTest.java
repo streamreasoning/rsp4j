@@ -67,7 +67,6 @@ public class Sparql11QueryTest {
         toCompare = QueryFactory.create(input);
 
         SPARQLParser parser = Parboiled.createParser(SPARQLParser.class);
-        parser.setResolver(IRIResolver.create());
         ReportingParseRunner reportingParseRunner = new ReportingParseRunner(parser.Query());
         ParsingResult<SPARQLQuery> result = reportingParseRunner.run(input);
         if (result.hasErrors()) {
