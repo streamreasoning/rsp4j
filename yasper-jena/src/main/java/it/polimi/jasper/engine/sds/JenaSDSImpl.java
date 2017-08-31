@@ -83,7 +83,7 @@ public class JenaSDSImpl extends DatasetImpl implements Observer, JenaSDS {
         long cep_time = tvg.getTimestamp();
         long sys_time = System.currentTimeMillis();
 
-        log.info("[" + Thread.currentThread() + "][" + sys_time + "] " +
+        log.debug("[" + Thread.currentThread() + "][" + sys_time + "] " +
                 "From Statement [ " + tvg.getTriggeringStatement().getText() + "] at " + cep_time);
 
         setDefaultModel(getDefaultModel().union(knowledge_base));
@@ -115,7 +115,7 @@ public class JenaSDSImpl extends DatasetImpl implements Observer, JenaSDS {
 
     @Override
     public void addNamedWindowStream(String w, Model model) {
-        log.info("Added named window [" + w + "] model [" + model + " ]");
+        log.debug("Added named window [" + w + "] model [" + model + " ]");
         addNamedModel(resolver.resolveToStringSilent(w), model);
     }
 

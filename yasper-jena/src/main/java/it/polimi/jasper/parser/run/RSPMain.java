@@ -34,8 +34,6 @@ public class RSPMain {
 
         RSPQLParser parser = Parboiled.createParser(RSPQLParser.class);
 
-        parser.setResolver(IRIResolver.create());
-
         ParsingResult<RSPQuery> result = new ReportingParseRunner(parser.Query()).run(input);
 
         if (result.hasErrors()) {

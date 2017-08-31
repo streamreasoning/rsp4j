@@ -31,8 +31,6 @@ public class SPARQLMain {
 
         SPARQLParser parser = Parboiled.createParser(SPARQLParser.class);
 
-        parser.setResolver(IRIResolver.create());
-
         ParsingResult<SPARQLQuery> result = new ReportingParseRunner(parser.Query()).run(input);
 
         if (result.hasErrors()) {

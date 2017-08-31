@@ -8,6 +8,8 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.jena.query.ResultSetFormatter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.util.Observable;
 
 /**
@@ -23,6 +25,9 @@ public class GenericResponseSysOutFormatter extends QueryResponseFormatter {
     @Getter
     boolean distinct;
 
+    @NonNull
+    private OutputStream os;
+
     @Override
     public void update(Observable o, Object arg) {
         if (arg instanceof SelectResponse) {
@@ -30,13 +35,13 @@ public class GenericResponseSysOutFormatter extends QueryResponseFormatter {
             if (sr.getCep_timestamp() != last_result && distinct) {
                 last_result = sr.getCep_timestamp();
                 System.out.println("[" + System.currentTimeMillis() + "] Result at [" + last_result + "]");
-                ResultSetFormatter.out(System.out, sr.getResults());
+                ResultSetFormatter.out(os, sr.getResults());
             }
         } else if (arg instanceof ConstructResponse) {
             ConstructResponse sr = (ConstructResponse) arg;
 
             if (sr.getCep_timestamp() != last_result && distinct) {
-                sr.getResults().write(System.out, "TTL");
+                sr.getResults().write(os, "TTL");
                 last_result = sr.getCep_timestamp();
             }
         }

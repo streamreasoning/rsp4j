@@ -16,6 +16,6 @@ public class ResponseFormatterFactory {
     }
 
     public static QueryResponseFormatter getGenericResponseSysOutFormatter(boolean distinct) {
-        return new GenericResponseSysOutFormatter(distinct);
+        return new GenericResponseSysOutFormatter(distinct, System.out);
     }
 }
