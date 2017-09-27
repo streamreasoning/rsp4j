@@ -1,7 +1,8 @@
 package it.polimi.yasper.core.utils;
 
+import it.polimi.rspql.querying.ContinuousQuery;
 import it.polimi.yasper.core.enums.Time;
-import it.polimi.yasper.core.query.ContinuousQuery;
+import it.polimi.yasper.core.stream.StreamSchema;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
@@ -53,5 +54,18 @@ public class EngineConfiguration extends PropertiesConfiguration {
 
     public String getBaseURI() {
         return this.getString("rsp_engine.base_uri");
+    }
+
+    public StreamSchema getStreamSchema() {
+        try {
+            return (StreamSchema) Class.forName(this.getString("rsp_engine.stream.item.class")).newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return StreamSchema.UNKNOWN;
     }
 }
