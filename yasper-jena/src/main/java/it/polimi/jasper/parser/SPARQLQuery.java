@@ -2,14 +2,10 @@ package it.polimi.jasper.parser;
 
 import it.polimi.jasper.parser.sparql.Prefix;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Node_URI;
 import org.apache.jena.graph.Triple;
-import org.apache.jena.iri.IRI;
 import org.apache.jena.query.Query;
-import org.apache.jena.riot.checker.CheckerIRI;
-import org.apache.jena.riot.system.ErrorHandlerFactory;
 import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.sparql.core.Prologue;
 import org.apache.jena.sparql.core.Var;
@@ -19,63 +15,72 @@ import org.apache.jena.sparql.syntax.ElementGroup;
 import org.apache.jena.sparql.syntax.Template;
 import org.apache.jena.sparql.syntax.TripleCollectorMark;
 
+import static org.apache.jena.query.Query.*;
+
 /**
  * Created by Riccardo on 05/08/16.
  */
 @Data
-@NoArgsConstructor
-public class SPARQLQuery extends Query {
+public class SPARQLQuery {
 
-    public SPARQLQuery(Prologue prologue) {
-        super(prologue);
+    protected Query query;
+
+
+    public SPARQLQuery(Prologue p) {
+        this.query = new Query();
+        this.query.usePrologueFrom(p);
+    }
+
+    public SPARQLQuery() {
+        this.query = new Query();
     }
 
     public SPARQLQuery setSelectQuery() {
-        setQuerySelectType();
+        query.setQuerySelectType();
         return this;
     }
 
     public Query getQ() {
-        return this;
+        return query;
     }
 
     public SPARQLQuery setConstructQuery() {
-        setQueryConstructType();
+        query.setQueryConstructType();
         return this;
     }
 
     public SPARQLQuery setDescribeQuery() {
-        setQueryDescribeType();
+        query.setQueryDescribeType();
         return this;
     }
 
     public SPARQLQuery setAskQuery() {
-        setQueryAskType();
+        query.setQueryAskType();
         return this;
     }
 
     public SPARQLQuery setDistinct() {
-        setDistinct(true);
+        query.setDistinct(true);
         return this;
     }
 
     public SPARQLQuery setQueryStar() {
-        setQueryResultStar(true);
+        query.setQueryResultStar(true);
         return this;
     }
 
     public SPARQLQuery addNamedGraphURI(Node_URI match) {
-        addNamedGraphURI(match.getURI());
+        query.addNamedGraphURI(match.getURI());
         return this;
     }
 
     public SPARQLQuery addGraphURI(Node_URI match) {
-        addGraphURI(match.getURI());
+        query.addGraphURI(match.getURI());
         return this;
     }
 
     public SPARQLQuery addElement(ElementGroup sub) {
-        setQueryPattern(sub);
+        query.setQueryPattern(sub);
         return this;
     }
 
@@ -85,17 +90,17 @@ public class SPARQLQuery extends Query {
     }
 
     public SPARQLQuery setQBaseURI(String match) {
-        setBaseURI(match);
+        query.setBaseURI(match);
         return this;
     }
 
     public SPARQLQuery setPrefix(Prefix pop) {
-        setPrefix(pop.getPrefix(), pop.getUri());
+        query.setPrefix(pop.getPrefix(), pop.getUri());
         return this;
     }
 
     public Expr allocQAggregate(Aggregator custom) {
-        return allocAggregate(custom);
+        return query.allocAggregate(custom);
 
     }
 
@@ -104,89 +109,84 @@ public class SPARQLQuery extends Query {
     }
 
     public SPARQLQuery addOrderBy(Node n) {
-        addOrderBy(n, ORDER_DEFAULT);
+        query.addOrderBy(n, ORDER_DEFAULT);
         return this;
     }
 
     public SPARQLQuery addOrderBy(Expr n) {
-        addOrderBy(n, ORDER_DEFAULT);
+        query.addOrderBy(n, ORDER_DEFAULT);
         return this;
     }
 
     public SPARQLQuery addOrderBy(Expr pop, String s) {
-        addOrderBy(pop, "DESC".equals(s) ? ORDER_DESCENDING : ORDER_ASCENDING);
+        query.addOrderBy(pop, "DESC".equals(s) ? ORDER_DESCENDING : ORDER_ASCENDING);
         return this;
     }
 
     public SPARQLQuery setLimit(String limit) {
-        setLimit(Integer.parseInt(limit.trim()));
+        query.setLimit(Integer.parseInt(limit.trim()));
         return this;
     }
 
     public SPARQLQuery setOffset(String offset) {
-        setOffset(Integer.parseInt(offset.trim()));
+        query.setOffset(Integer.parseInt(offset.trim()));
         return this;
     }
 
     public SPARQLQuery addQGroupBy(Expr pop) {
-        addGroupBy((Var) null, pop);
+        query.addGroupBy(null, pop);
         return this;
     }
 
     public SPARQLQuery addQGroupBy(Var v, Expr pop) {
-        addGroupBy(v, pop);
+        query.addGroupBy(v, pop);
         return this;
     }
 
     public SPARQLQuery addQGroupBy(Var v) {
-        addGroupBy(v);
+        query.addGroupBy(v);
         return this;
     }
 
     public SPARQLQuery setReduced() {
-        setReduced(true);
+        query.setReduced(true);
         return this;
     }
 
     public SPARQLQuery addQCResultVar(Node pop, Expr pop1) {
         addQCResultVar(pop, pop1);
-        setQueryResultStar(false);
+        query.setQueryResultStar(false);
         return this;
     }
 
     public SPARQLQuery addQCResultVar(Node pop) {
-        addResultVar(pop);
-        setQueryResultStar(false);
+        query.addResultVar(pop);
+        query.setQueryResultStar(false);
         return this;
     }
 
     public SPARQLQuery addQHavingCondition(Expr pop) {
-        addHavingCondition(pop);
+        query.addHavingCondition(pop);
         return this;
     }
 
     public SPARQLQuery setQConstructTemplate(Template template) {
-        setConstructTemplate(template);
+        query.setConstructTemplate(template);
         return this;
     }
 
     public SPARQLQuery addQDescribeNode(Node pop) {
-        addDescribeNode(pop);
-        setQueryResultStar(false);
+        query.addDescribeNode(pop);
+        query.setQueryResultStar(false);
         return this;
     }
 
     public String resolveSilent(String iriStr) {
-        if (resolver == null) {
-            resolver = IRIResolver.create();
-        }
-        IRI iri = resolver.resolveSilent(iriStr);
-        CheckerIRI.iriViolations(iri, ErrorHandlerFactory.getDefaultErrorHandler());
-        return iri.toString();
+        return query.getResolver().resolveSilent(iriStr).toString();
     }
 
     public SPARQLQuery setQResolver(IRIResolver resolver) {
-        setResolver(resolver);
+        query.setResolver(resolver);
         return this;
     }
 

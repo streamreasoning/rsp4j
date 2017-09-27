@@ -2,6 +2,7 @@ package it.polimi.jasper.parser.streams;
 
 import com.espertech.esper.client.soda.CreateSchemaClause;
 import com.espertech.esper.client.soda.SchemaColumnDesc;
+import it.polimi.rspql.Stream;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +19,7 @@ import java.util.List;
  * Created by Riccardo on 14/08/16.
  */
 @AllArgsConstructor
-public class Stream {
+public class StreamNode implements Stream {
     @Getter
     @Setter
 
@@ -31,7 +32,7 @@ public class Stream {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Stream stream = (Stream) o;
+        StreamNode stream = (StreamNode) o;
 
         return iri != null ? iri.equals(stream.iri) : stream.iri == null;
     }
@@ -39,6 +40,16 @@ public class Stream {
     @Override
     public int hashCode() {
         return iri != null ? iri.hashCode() : 0;
+    }
+
+    @Override
+    public String getTboxUri() {
+        return null;
+    }
+
+    @Override
+    public String getURI() {
+        return iri.getURI();
     }
 
     public String toEPLSchema() {
@@ -54,7 +65,7 @@ public class Stream {
 
     @Override
     public String toString() {
-        return "Stream{" + "iri=" + iri + '}';
+        return "StreamNode{" + "iri=" + iri + '}';
     }
 
 }

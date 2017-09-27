@@ -2,11 +2,11 @@ package it.polimi.jasper.parser.run;
 
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.jasper.parser.RSPQLParser;
-import it.polimi.jasper.parser.streams.Window;
+import it.polimi.jasper.parser.streams.WindowedStreamNode;
+import it.polimi.yasper.core.query.operators.s2r.EPLFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.graph.Node;
 import org.apache.jena.query.SortCondition;
-import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.sparql.core.BasicPattern;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.core.VarExprList;
@@ -45,44 +45,44 @@ public class RSPMain {
 
         print(q);
         System.out.println("Check valid");
-        SyntaxVarScope.check(q);
+        SyntaxVarScope.check(q.getQ());
     }
 
     private static void print(RSPQuery q) throws UnsupportedEncodingException {
         System.out.println("--MQL--");
         System.out.println(q.getGraphURIs());
-        System.out.println(q.getQueryType());
+        System.out.println(q.getQ().getQueryType());
         System.out.println(q.getNamedGraphURIs());
 
-        VarExprList project = q.getProject();
+        VarExprList project = q.getQ().getProject();
 
-        if (q.isSelectType()) {
+        if (q.getQ().isSelectType()) {
 
             for (Var v : project.getVars()) {
                 System.out.println("Project Var " + v.toString() + " Expr " + project.getExpr(v));
             }
-            for (String v : q.getResultVars()) {
+            for (String v : q.getQ().getResultVars()) {
                 System.out.println("Result Var " + v);
             }
-        } else if (q.isConstructType()) {
-            Map<Node, BasicPattern> graphPattern = q.getConstructTemplate().getGraphPattern();
+        } else if (q.getQ().isConstructType()) {
+            Map<Node, BasicPattern> graphPattern = q.getQ().getConstructTemplate().getGraphPattern();
             for (Node b : graphPattern.keySet()) {
                 System.out.println("Node " + b + " Pattern " + graphPattern.get(b));
             }
         }
 
-        Element queryPattern = q.getQueryPattern();
+        Element queryPattern = q.getQ().getQueryPattern();
         System.out.println("queryPattern " + queryPattern);
 
         System.out.println("PREFIXES");
 
-        Map<String, String> nsPrefixMap = q.getPrologue().getPrefixMapping().getNsPrefixMap();
+        Map<String, String> nsPrefixMap = q.getQ().getPrologue().getPrefixMapping().getNsPrefixMap();
         for (String prefix : nsPrefixMap.keySet()) {
             String uri = nsPrefixMap.get(prefix);
             System.out.println(prefix + ":" + uri);
         }
 
-        List<SortCondition> orderBy = q.getOrderBy();
+        List<SortCondition> orderBy = q.getQ().getOrderBy();
 
         if (orderBy != null && !orderBy.isEmpty())
             for (SortCondition sc : orderBy) {
@@ -90,10 +90,10 @@ public class RSPMain {
                         + ((org.apache.jena.query.Query.ORDER_DESCENDING == sc.direction) ? "DESC" : "ASC"));
             }
 
-        System.out.println("LIMIT " + q.getLimit());
-        System.out.println("OFFSET " + q.getOffset());
+        System.out.println("LIMIT " + q.getQ().getLimit());
+        System.out.println("OFFSET " + q.getQ().getOffset());
 
-        VarExprList groupBy = q.getGroupBy();
+        VarExprList groupBy = q.getQ().getGroupBy();
 
         System.out.println("GROUP BY");
         List<Var> vars = groupBy.getVars();
@@ -102,7 +102,7 @@ public class RSPMain {
         }
 
         System.out.println("HAVING");
-        List<Expr> havingExprs = q.getHavingExprs();
+        List<Expr> havingExprs = q.getQ().getHavingExprs();
         for (Expr e : havingExprs) {
             System.out.println("EXPR " + e.toString());
         }
@@ -110,17 +110,17 @@ public class RSPMain {
 
         if (q.getNamedwindows() != null) {
 
-            for (Map.Entry<Node, Window> e : q.getNamedwindows().entrySet()) {
+            for (Map.Entry<Node, WindowedStreamNode> e : q.getNamedwindows().entrySet()) {
                 String stream = e.getKey().getURI();
                 System.out.println(stream);
-                Window w = e.getValue();
-                System.out.println(w.toEPL().toEPL());
+                WindowedStreamNode w = e.getValue();
+                System.out.println(EPLFactory.toEPL(w, w.getStream()));
                 System.out.println(w.getStream().toEPLSchema());
             }
         }
 
         if (q.getWindows() != null) {
-            for (Window w : q.getWindows()) {
+            for (WindowedStreamNode w : q.getWindows()) {
                 System.out.println(w.toString());
             }
         }

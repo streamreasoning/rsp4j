@@ -5,7 +5,7 @@ package it.polimi.jasper.parser;
  */
 public class Utils {
 
-    public static void dothis(){
+    public static void dothis() {
 
         System.out.print(0);
     }

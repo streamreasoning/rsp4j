@@ -1,11 +1,11 @@
 package it.polimi.jasper.parser.run;
 
-import it.polimi.jasper.parser.SPARQLQuery;
 import it.polimi.jasper.parser.SPARQLParser;
+import it.polimi.jasper.parser.SPARQLQuery;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.graph.Node;
+import org.apache.jena.query.Query;
 import org.apache.jena.query.SortCondition;
-import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.sparql.core.BasicPattern;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.core.VarExprList;
@@ -42,10 +42,11 @@ public class SPARQLMain {
 
         print(q);
         System.out.println("Check valid");
-        SyntaxVarScope.check(q);
+        SyntaxVarScope.check(q.getQ());
     }
 
-    private static void print(SPARQLQuery q) throws UnsupportedEncodingException {
+    private static void print(SPARQLQuery sparqlQuery) throws UnsupportedEncodingException {
+        Query q = sparqlQuery.getQ();
         System.out.println("--MQL--");
         System.out.println(q.getGraphURIs());
         System.out.println(q.getQueryType());

@@ -2,7 +2,7 @@ package it.polimi.jasper.parser;
 
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.jasper.parser.streams.Register;
-import it.polimi.jasper.parser.streams.Window;
+import it.polimi.jasper.parser.streams.WindowedStreamNode;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.jena.graph.Node;
@@ -47,17 +47,17 @@ public class RSPQLParser extends SPARQLParser {
 
     public Rule DatastreamClause() {
         return Sequence(FROM(), FirstOf(DefaultStreamClause(), NamedStreamClause()),
-                pushQuery(((RSPQuery) popQuery(1)).addWindow((Window) pop())));
+                pushQuery(((RSPQuery) popQuery(1)).addWindow((WindowedStreamNode) pop())));
     }
 
     public Rule DefaultStreamClause() {
-        return Sequence(WINDOW(), push(new Window()), WindowClause(), ON(), STREAM(), StreamSourceSelector(),
-                push(((Window) pop(1)).addStreamUri(((Node_URI) pop()))));
+        return Sequence(WINDOW(), push(new WindowedStreamNode()), WindowClause(), ON(), STREAM(), StreamSourceSelector(),
+                push(((WindowedStreamNode) pop(1)).addStreamUri(((Node_URI) pop()))));
     }
 
     public Rule NamedStreamClause() {
-        return Sequence(NAMED(), WINDOW(), WindowSourceSelector(), push(new Window((Node_URI) pop())), WindowClause(), ON(),
-                STREAM(), StreamSourceSelector(), push(((Window) pop(1)).addStreamUri(((Node_URI) pop()))));
+        return Sequence(NAMED(), WINDOW(), WindowSourceSelector(), push(new WindowedStreamNode((Node_URI) pop())), WindowClause(), ON(),
+                STREAM(), StreamSourceSelector(), push(((WindowedStreamNode) pop(1)).addStreamUri(((Node_URI) pop()))));
     }
 
     public Rule ParametricSourceSelector(String s) {
@@ -90,14 +90,14 @@ public class RSPQLParser extends SPARQLParser {
     }
 
     public Rule LogicalWindow() {
-        return Sequence(TimeConstrain(), push((((Window) pop())).addConstrain(match())), COMMA(),
-                FirstOf(Sequence(SLIDE(), TimeConstrain(), push((((Window) pop())).addSlide(trimMatch()))), TUMBLING()),
+        return Sequence(TimeConstrain(), push((((WindowedStreamNode) pop())).addConstrain(match())), COMMA(),
+                FirstOf(Sequence(SLIDE(), TimeConstrain(), push((((WindowedStreamNode) pop())).addSlide(trimMatch()))), TUMBLING()),
                 WS());
     }
 
     public Rule PhysicalWindow() {
-        return Sequence(PhysicalConstrain(), push((((Window) pop())).addConstrain(match())), COMMA(), FirstOf(
-                Sequence(SLIDE(), PhysicalConstrain(), push((((Window) pop())).addSlide(trimMatch()))), TUMBLING()));
+        return Sequence(PhysicalConstrain(), push((((WindowedStreamNode) pop())).addConstrain(match())), COMMA(), FirstOf(
+                Sequence(SLIDE(), PhysicalConstrain(), push((((WindowedStreamNode) pop())).addSlide(trimMatch()))), TUMBLING()));
     }
 
     public Rule TimeConstrain() {
