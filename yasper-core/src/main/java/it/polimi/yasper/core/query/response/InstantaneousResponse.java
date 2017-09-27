@@ -2,7 +2,7 @@ package it.polimi.yasper.core.query.response;
 
 import it.polimi.data.Collectable;
 import it.polimi.streaming.Response;
-import it.polimi.yasper.core.query.ContinuousQuery;
+import it.polimi.rspql.querying.ContinuousQuery;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
