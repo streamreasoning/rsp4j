@@ -1,9 +1,9 @@
 package it.polimi.jasper.engine.reasoning.pellet;
 
 
+import it.polimi.jasper.engine.instantaneous.JenaGraph;
+import it.polimi.jasper.engine.reasoning.InstantaneousInfGraph;
 import it.polimi.jasper.engine.reasoning.JenaTVGReasoner;
-import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
-import it.polimi.jasper.engine.instantaneous.InstantaneousGraph;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
 import openllet.jena.PelletInfGraph;
 import openllet.jena.PelletReasoner;
@@ -16,7 +16,7 @@ import org.apache.jena.reasoner.ReasonerException;
 /**
  * Created by riccardo on 06/07/2017.
  */
-public class TVGReasonerPellet extends PelletReasoner implements JenaTVGReasoner {
+public class TVGReasonerPellet extends PelletReasoner implements JenaTVGReasoner, Reasoner {
 
     @Override
     public Reasoner bindSchema(Model model) throws ReasonerException {
@@ -29,11 +29,13 @@ public class TVGReasonerPellet extends PelletReasoner implements JenaTVGReasoner
         return new PelletInfTVGraph(graph, this, new DefaultGraphLoader(), null, -1);
     }
 
-    public TimeVaryingInfGraph bind(InstantaneousGraph graph) {
-        return bind(graph);
+
+    public TVGReasoner bindSchema(JenaGraph data) {
+        return bindSchema(data);
     }
 
-    public TVGReasoner bindSchema(InstantaneousGraph data) {
-        return bindSchema(data);
+    @Override
+    public InstantaneousInfGraph bind(JenaGraph data) {
+        return bind(data);
     }
 }

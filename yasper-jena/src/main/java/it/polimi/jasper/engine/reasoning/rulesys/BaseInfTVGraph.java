@@ -1,7 +1,7 @@
 package it.polimi.jasper.engine.reasoning.rulesys;
 
-import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
-import it.polimi.yasper.core.timevarying.TimeVaryingGraph;
+import it.polimi.jasper.engine.instantaneous.JenaGraph;
+import it.polimi.jasper.engine.reasoning.InstantaneousInfGraph;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.GraphUtil;
 import org.apache.jena.graph.Triple;
@@ -15,9 +15,9 @@ import org.apache.jena.util.iterator.ExtendedIterator;
 /**
  * Created by riccardo on 06/07/2017.
  */
-public class BaseInfTVGraph extends BaseInfGraph implements TimeVaryingInfGraph {
+public class BaseInfTVGraph extends BaseInfGraph implements InstantaneousInfGraph {
     private long last_timestamp;
-    private TimeVaryingGraph window;
+    private JenaGraph window;
 
     /**
      * Constructor
@@ -25,9 +25,9 @@ public class BaseInfTVGraph extends BaseInfGraph implements TimeVaryingInfGraph 
      * @param data     the raw data file to be augmented with entailments
      * @param reasoner the engine, with associated tbox data, whose find interface
      */
-    public BaseInfTVGraph(Graph data, Reasoner reasoner, long timestamp, TimeVaryingGraph w) {
+    public BaseInfTVGraph(Graph data, Reasoner reasoner, long timestamp, JenaGraph w) {
         super(data, reasoner);
-        this.last_timestamp = last_timestamp;
+        this.last_timestamp = timestamp;
         this.window = w;
     }
 
@@ -42,16 +42,6 @@ public class BaseInfTVGraph extends BaseInfGraph implements TimeVaryingInfGraph 
     }
 
     @Override
-    public TimeVaryingGraph getWindowOperator() {
-        return window;
-    }
-
-    @Override
-    public void setWindowOperator(TimeVaryingGraph w) {
-        this.window = w;
-    }
-
-    @Override
     public ExtendedIterator<Triple> findWithContinuation(TriplePattern pattern, Finder continuation) {
         return null;
     }
@@ -61,23 +51,43 @@ public class BaseInfTVGraph extends BaseInfGraph implements TimeVaryingInfGraph 
         return null;
     }
 
-
     @Override
-    public void addContent(Object o) {
-        if (o instanceof Triple) {
-            add((Triple) o);
-        } else if (o instanceof Graph) {
-            GraphUtil.addInto(this, (Graph) o);
-        }
+    public boolean contains(Object o) {
+        return false;
     }
 
     @Override
-    public void removeContent(Object o) {
-        if (o instanceof Statement) {
-            Statement s = (Statement) o;
-            remove(s.getSubject().asNode(), s.getPredicate().asNode(), s.getObject().asNode());
-        } else if (o instanceof Graph) {
-            GraphUtil.deleteFrom(this, (Graph) o);
-        }
+    public boolean isSetSemantics() {
+        return false;
     }
+
+
+//    @Override
+//    public void add(Object o) {
+//        if (o instanceof Triple) {
+//            add((Triple) o);
+//        } else if (o instanceof Graph) {
+//            GraphUtil.addInto(this, (Graph) o);
+//        }
+//    }
+//
+//    @Override
+//    public void remove(Object o) {
+//        if (o instanceof Statement) {
+//            Statement s = (Statement) o;
+//            remove(s.getSubject().asNode(), s.getPredicate().asNode(), s.getObject().asNode());
+//        } else if (o instanceof Graph) {
+//            GraphUtil.deleteFrom(this, (Graph) o);
+//        }
+//    }
+//
+//    @Override
+//    public boolean contains(Object o) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean isSetSemantics() {
+//        return false;
+//    }
 }
