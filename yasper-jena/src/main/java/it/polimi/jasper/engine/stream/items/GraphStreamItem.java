@@ -1,10 +1,8 @@
-package it.polimi.jasper.engine.stream;
+package it.polimi.jasper.engine.stream.items;
 
-import it.polimi.jasper.engine.instantaneous.InstantaneousGraph;
+import it.polimi.jasper.engine.instantaneous.JenaGraph;
 import it.polimi.rdf.RDFLine;
-import it.polimi.yasper.core.query.InstantaneousItem;
-import it.polimi.yasper.core.stream.StreamItem;
-import lombok.NoArgsConstructor;
+import it.polimi.yasper.core.query.Updatable;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.GraphUtil;
 import org.apache.jena.graph.Triple;
@@ -13,9 +11,8 @@ import org.apache.jena.util.iterator.ExtendedIterator;
 import java.util.HashSet;
 import java.util.Set;
 
-@NoArgsConstructor
-
-public class GraphStreamItem extends StreamItem<Graph> {
+//TODO wrap rid of  JenaGraph
+public class GraphStreamItem extends RDFStreamItem<JenaGraph> {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,9 +21,9 @@ public class GraphStreamItem extends StreamItem<Graph> {
     }
 
     @Override
-    public InstantaneousGraph addTo(InstantaneousItem abox) {
-        if (abox instanceof InstantaneousGraph) {
-            InstantaneousGraph abox1 = (InstantaneousGraph) abox;
+    public JenaGraph addTo(Updatable abox) {
+        if (abox instanceof JenaGraph) {
+            JenaGraph abox1 = (JenaGraph) abox;
             GraphUtil.addInto(abox1, this.getTypedContent());
             return abox1;
         } else {
@@ -48,9 +45,9 @@ public class GraphStreamItem extends StreamItem<Graph> {
     }
 
     @Override
-    public InstantaneousGraph removeFrom(InstantaneousItem abox) {
-        if (abox instanceof InstantaneousGraph) {
-            InstantaneousGraph abox1 = (InstantaneousGraph) abox;
+    public JenaGraph removeFrom(Updatable abox) {
+        if (abox instanceof JenaGraph) {
+            JenaGraph abox1 = (JenaGraph) abox;
             GraphUtil.deleteFrom(abox1, getTypedContent());
             return abox1;
         } else {

@@ -1,30 +1,30 @@
 package it.polimi.jasper.engine.stream;
 
-import it.polimi.jasper.engine.stream.items.RDFStreamSchema;
+import com.espertech.esper.client.EPStatement;
 import it.polimi.rspql.Stream;
+import it.polimi.yasper.core.stream.RegisteredStream;
 import it.polimi.yasper.core.stream.StreamSchema;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Created by riccardo on 10/07/2017.
  */
 @Getter
-public class RDFStream implements Stream {
+@RequiredArgsConstructor
+public class RegisteredRDFStream implements Stream, RegisteredStream {
 
     @NonNull
-    private String stream_uri;
+    private RDFStream stream;
     @NonNull
-    private RDFStreamSchema type;
-
-    public RDFStream(String stream_uri, RDFStreamSchema type) {
-        this.stream_uri = stream_uri;
-        this.type = type;
-    }
+    private EPStatement epl_schema;
+    @NonNull
+    private StreamSchema schema;
 
     @Override
     public StreamSchema getSchema() {
-        return type;
+        return schema;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class RDFStream implements Stream {
 
     @Override
     public String getURI() {
-        return stream_uri;
+        return stream.getURI();
     }
 
 
