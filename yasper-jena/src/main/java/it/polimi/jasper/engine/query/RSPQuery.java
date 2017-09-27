@@ -2,11 +2,16 @@ package it.polimi.jasper.engine.query;
 
 import it.polimi.jasper.parser.SPARQLQuery;
 import it.polimi.jasper.parser.streams.Register;
-import it.polimi.jasper.parser.streams.Window;
+import it.polimi.jasper.parser.streams.WindowedStreamNode;
+import it.polimi.rspql.SDSBuilder;
+import it.polimi.rspql.Stream;
+import it.polimi.rspql.cql.s2_.WindowOperator;
+import it.polimi.rspql.querying.ContinuousQuery;
 import it.polimi.yasper.core.enums.StreamOperator;
-import it.polimi.yasper.core.query.ContinuousQuery;
+import it.polimi.yasper.core.utils.QueryConfiguration;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
@@ -17,43 +22,48 @@ import org.apache.jena.sparql.core.Prologue;
 import org.apache.jena.sparql.syntax.ElementNamedGraph;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Riccardo on 05/08/16.
  */
 @Data
 @Log4j
-
 public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
 
-    private Map<Node, Window> namedwindows;
-    private Set<Window> windows;
+    private Map<Node, WindowedStreamNode> namedwindows = new HashMap<Node, WindowedStreamNode>();
+    private Set<WindowedStreamNode> windows = new HashSet<WindowedStreamNode>();
     private List<ElementNamedGraph> windowGraphElements;
     private Register header;
     private StreamOperator r2s;
     @Getter
     private boolean recursive;
 
+    @Setter
+    @Getter
+    private QueryConfiguration configuration;
+
     public RSPQuery(Prologue prologue) {
-        super(prologue);
+        query.usePrologueFrom(prologue);
     }
 
     public RSPQuery() {
-        setBaseURI(IRIResolver.createNoResolve());
+        query.setBaseURI(IRIResolver.createNoResolve());
     }
 
     public RSPQuery(IRIResolver r) {
-        setBaseURI(r);
+        query.setBaseURI(r);
     }
 
+
     public RSPQuery setSelectQuery() {
-        setQuerySelectType();
+        query.setQuerySelectType();
         return this;
     }
 
     public RSPQuery setConstructQuery(StreamOperator r2s) {
         this.r2s = r2s;
-        setQueryConstructType();
+        query.setQueryConstructType();
         return this;
     }
 
@@ -67,14 +77,12 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
     }
 
     public Query getQ() {
-        return this;
+        return query;
     }
 
-    public RSPQuery addNamedWindow(Window nw) {
-        if (namedwindows == null)
-            namedwindows = new HashMap<Node, Window>();
+    public RSPQuery addNamedWindow(WindowedStreamNode nw) {
         if (namedwindows.containsKey(nw.getIri()))
-            throw new QueryException("Window [" + nw.getIri() +
+            throw new QueryException("WindowedStreamNode [" + nw.getIri() +
                     " ] already opened on a stream: " + namedwindows.get(nw.getIri()));
 
 
@@ -83,7 +91,7 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
         return this;
     }
 
-    public RSPQuery addWindow(Window w) {
+    public RSPQuery addWindow(WindowedStreamNode w) {
 
         if (!isRecursive() && w.getStreamURI().equals(getID())) {
             setRecursive(true);
@@ -94,10 +102,8 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
         }
 
 
-        if (windows == null)
-            windows = new HashSet<Window>();
         if (windows.contains(w))
-            throw new QueryException("Window already opened on default stream: " + w.getStream().getIri());
+            throw new QueryException("WindowedStreamNode already opened on default stream: " + w.getStream().getIri());
 
         addGraphURI(w.getStream().getIri());
         windows.add(w);
@@ -118,22 +124,20 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
         return this;
     }
 
-    @Override
     public List<String> getNamedGraphURIs() {
         return new ArrayList<String>();
     }
 
-    @Override
     public List<String> getGraphURIs() {
         return new ArrayList<String>();
     }
 
     public List<String> getRSPNamedGraphURIs() {
-        return super.getNamedGraphURIs();
+        return query.getNamedGraphURIs();
     }
 
     public List<String> getRSPGraphURIs() {
-        return super.getGraphURIs();
+        return query.getGraphURIs();
     }
 
     /**
@@ -158,7 +162,7 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
     public boolean usesWindowURI(String uri) {
         Node blankNode = NodeFactory.createBlankNode(uri);
         boolean res = true;
-        for (Window w : windows) {
+        for (WindowedStreamNode w : windows) {
             res &= !w.getIri().equals(blankNode);
         }
         return !res;
@@ -178,5 +182,40 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
     @Override
     public StreamOperator getR2S() {
         return r2s;
+    }
+
+    @Override
+    public Set<? extends WindowOperator> getWindowsSet() {
+        return windows != null ? this.windows : new HashSet<>();
+    }
+
+    @Override
+    public Set<? extends WindowOperator> getNamedWindowsSet() {
+        return namedwindows != null ? namedwindows.entrySet().stream().map(e -> e.getValue()).collect(Collectors.toSet()) : new HashSet<>();
+    }
+
+    @Override
+    public Map<WindowOperator, Stream> getWindowMap() {
+        Map<WindowOperator, Stream> map = new HashMap<>();
+        getWindows().stream().forEach(w -> map.put(w, w.getStream()));
+        namedwindows.entrySet().stream().forEach(e -> map.put(e.getValue(), e.getValue().getStream()));
+        return map;
+    }
+
+    @Override
+    public Set<Stream> getStreamSet() {
+        Set<Stream> collect = namedwindows.entrySet().stream().map(e -> e.getValue().getStream()).collect(Collectors.toSet());
+        windows.stream().forEach(w -> collect.add(w.getStream()));
+        return collect;
+    }
+
+
+    @Override
+    public void accept(SDSBuilder v) {
+        v.visit(this);
+    }
+
+    public IRIResolver getResolver() {
+        return query.getResolver();
     }
 }
