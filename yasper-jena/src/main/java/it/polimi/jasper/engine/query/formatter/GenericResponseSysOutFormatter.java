@@ -8,7 +8,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.jena.query.ResultSetFormatter;
 
-import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.Observable;
 

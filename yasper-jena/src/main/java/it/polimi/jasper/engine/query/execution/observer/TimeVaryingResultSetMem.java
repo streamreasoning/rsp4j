@@ -1,4 +1,4 @@
-package it.polimi.jasper.engine.query.execution;
+package it.polimi.jasper.engine.query.execution.observer;
 
 import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.resultset.ResultSetMem;

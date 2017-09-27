@@ -1,7 +1,7 @@
 package it.polimi.jasper.engine.query.response;
 
 import it.polimi.jasper.engine.query.RSPQuery;
-import it.polimi.jasper.engine.query.execution.TimeVaryingResultSetMem;
+import it.polimi.jasper.engine.query.execution.observer.TimeVaryingResultSetMem;
 import it.polimi.services.FileService;
 import it.polimi.yasper.core.query.response.InstantaneousResponse;
 import lombok.Getter;
@@ -59,7 +59,7 @@ public final class SelectResponse extends InstantaneousResponse {
     public InstantaneousResponse difference(InstantaneousResponse new_response) {
         TimeVaryingResultSetMem tvResultSet;
         if (new_response == null) {
-            tvResultSet = new TimeVaryingResultSetMem(new ArrayList<Binding>(), ((RSPQuery) getQuery()).getResultVars());
+            tvResultSet = new TimeVaryingResultSetMem(new ArrayList<Binding>(), ((RSPQuery) getQuery()).getQ().getResultVars());
         } else {
 
             SelectResponse remove1 = (SelectResponse) new_response;
@@ -80,7 +80,7 @@ public final class SelectResponse extends InstantaneousResponse {
     public InstantaneousResponse intersection(InstantaneousResponse new_response) {
         TimeVaryingResultSetMem tvResultSet;
         if (new_response == null) {
-            tvResultSet = new TimeVaryingResultSetMem(new ArrayList<Binding>(), ((RSPQuery) getQuery()).getResultVars());
+            tvResultSet = new TimeVaryingResultSetMem(new ArrayList<Binding>(), ((RSPQuery) getQuery()).getQ().getResultVars());
         } else {
 
             SelectResponse remove1 = (SelectResponse) new_response;
@@ -95,7 +95,7 @@ public final class SelectResponse extends InstantaneousResponse {
 
             this.solutionSet.removeAll(copy);
 
-            tvResultSet = new TimeVaryingResultSetMem(this.solutionSet, ((RSPQuery) getQuery()).getResultVars());
+            tvResultSet = new TimeVaryingResultSetMem(this.solutionSet, ((RSPQuery) getQuery()).getQ().getResultVars());
         }
 
         return new SelectResponse(getId(), (RSPQuery) getQuery(), tvResultSet, getCep_timestamp());
