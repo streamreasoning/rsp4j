@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 //TODO wrap rid of  JenaGraph
-public class GraphStreamItem extends RDFStreamItem<JenaGraph> {
+public class GraphStreamItem extends RDFStreamItem<Graph> {
 
     private static final long serialVersionUID = 1L;
 

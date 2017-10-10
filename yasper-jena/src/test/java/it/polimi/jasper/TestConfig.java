@@ -2,8 +2,9 @@ package it.polimi.jasper;
 
 import it.polimi.jasper.engine.JenaRSPQLEngineImpl;
 import it.polimi.jasper.engine.query.formatter.ResponseFormatterFactory;
-import it.polimi.yasper.core.query.ContinuousQuery;
-import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
+import it.polimi.jasper.engine.stream.RegisteredRDFStream;
+import it.polimi.rspql.querying.ContinuousQuery;
+import it.polimi.rspql.querying.ContinuousQueryExecution;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -19,13 +20,15 @@ import java.net.URL;
  */
 public class TestConfig {
 
+    static JenaRSPQLEngineImpl sr;
+
     public static void main(String[] args) throws InterruptedException, IOException, ConfigurationException {
 
         URL resource = TestConfig.class.getResource("/jasper.properties");
         QueryConfiguration config = new QueryConfiguration(resource.getPath());
         EngineConfiguration ec = new EngineConfiguration(resource.getPath());
 
-        JenaRSPQLEngineImpl sr = new JenaRSPQLEngineImpl(0, ec);
+        sr = JenaRSPQLEngineImplFactory.create(0, ec);
 
         IRIResolver resolver = sr.getResolver();
 
@@ -35,8 +38,8 @@ public class TestConfig {
         painter.setRSPEngine(sr);
         writer.setRSPEngine(sr);
 
-        sr.register(painter);
-        sr.register(writer);
+        RegisteredRDFStream painter_reg = sr.register(painter);
+        RegisteredRDFStream writer_reg = sr.register(writer);
 
         String query = getQuery();
         ContinuousQuery q = sr.parseQuery(query);
@@ -51,17 +54,15 @@ public class TestConfig {
         (new Thread(painter)).start();
         (new Thread(writer)).start();
 
-        Thread.sleep(10000);
 
-        sr.unregister(cq);
-        sr.unregister(painter);
-        sr.unregister(writer);
-
-        System.out.println("Unregistered");
     }
 
     public static String getQuery() throws IOException {
         File file = new File("/Users/riccardo/_Projects/RSP/yasper/src/test/resources/q52.rspql");
         return FileUtils.readFileToString(file);
+    }
+
+    public static JenaRSPQLEngineImpl getEngine() {
+        return sr;
     }
 }

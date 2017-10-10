@@ -1,5 +1,6 @@
 package it.polimi.rspql;
 
+import it.polimi.yasper.core.stream.StreamItem;
 import it.polimi.yasper.core.stream.StreamSchema;
 
 /**
@@ -16,4 +17,7 @@ public interface Stream {
     String getTboxUri();
 
     String getURI();
+
+
+
 }

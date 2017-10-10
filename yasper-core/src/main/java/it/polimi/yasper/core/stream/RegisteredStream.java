@@ -4,4 +4,5 @@ import it.polimi.rspql.Stream;
 
 public interface RegisteredStream extends Stream {
 
+    void put(StreamItem i);
 }

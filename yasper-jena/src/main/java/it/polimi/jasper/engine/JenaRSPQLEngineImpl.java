@@ -5,7 +5,6 @@ import it.polimi.jasper.engine.query.JenaSDSQueryBuilder;
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.jasper.engine.stream.RDFStream;
 import it.polimi.jasper.engine.stream.RegisteredRDFStream;
-import it.polimi.jasper.engine.stream.items.RDFStreamSchema;
 import it.polimi.jasper.parser.RSPQLParser;
 import it.polimi.rspql.SDSBuilder;
 import it.polimi.rspql.querying.ContinuousQuery;
@@ -51,7 +50,7 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl<RDFStream, RegisteredRD
           (SDS - RSP Engine) locate this Stream, or can use metadata found in the vois file. */
         log.info("Registering Stream [" + s.getURI() + "]");
         EPStatement epl = createStream(toEPLSchema(s), s.getURI());
-        RegisteredRDFStream value = new RegisteredRDFStream(s, epl, new RDFStreamSchema.GraphStreamSchema());
+        RegisteredRDFStream value = new RegisteredRDFStream(s, epl, this);
         registeredStreams.put(s.getURI(), value);
         return value;
     }

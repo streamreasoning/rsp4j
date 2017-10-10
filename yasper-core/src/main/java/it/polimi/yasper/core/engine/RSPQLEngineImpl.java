@@ -71,12 +71,14 @@ public abstract class RSPQLEngineImpl<S1 extends Stream, S extends RegisteredStr
 
         rsp_config = configuration != null ? configuration : EngineConfiguration.getDefault();
 
+        StreamSchema.Factory.registerSchema(rsp_config.getStreamSchema());
 
         log.debug("Running Configuration ]");
         log.debug("Event Time [" + rsp_config.isUsingEventTime() + "]");
         log.debug("Partial Window [" + rsp_config.partialWindowsEnabled() + "]");
         log.debug("Query Recursion [" + rsp_config.isRecursionEnables() + "]");
         log.debug("Query Class [" + rsp_config.getQueryClass() + "]");
+        log.debug("StreamItem Class [" + rsp_config.getStreamSchema() + "]");
 
     }
 

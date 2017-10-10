@@ -58,7 +58,6 @@ public class JenaSDS extends DatasetImpl implements SDS {
 
     }
 
-
     @Override
     public void beforeEval() {
         setDefaultModel(getDefaultModel().union(knowledge_base));

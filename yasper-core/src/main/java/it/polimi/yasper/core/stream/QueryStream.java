@@ -15,7 +15,6 @@ import lombok.Setter;
 //TODO InstantaneousResponse
 public class QueryStream implements RegisteredStream {
 
-    private Class schema;
     protected RSPEngine e;
     @NonNull
     protected String query_id;
@@ -24,10 +23,9 @@ public class QueryStream implements RegisteredStream {
     protected EPStatement streamStatemnt;
     protected ContinuousQuery q;
 
-    public QueryStream(RSPEngine e, String stream_uri, Class schema) {
+    public QueryStream(RSPEngine e, String stream_uri) {
         this.e = e;
         this.query_id = stream_uri;
-        this.schema = schema;
     }
 
     public void setRSPEngine(RSPEngine e) {
@@ -47,6 +45,12 @@ public class QueryStream implements RegisteredStream {
     @Override
     public String getURI() {
         return query_id;
+    }
+
+
+    @Override
+    public void put(StreamItem i) {
+
     }
 
 

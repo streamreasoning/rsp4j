@@ -3,6 +3,6 @@ SELECT  ?a ?c
 WHERE
     { ?a :b ?c . 
       OPTIONAL
-        { ?c :d ?e } . 
-      FILTER (! bound(?e)) 
+        { ?c :d ?sds } .
+      FILTER (! bound(?sds))
     }

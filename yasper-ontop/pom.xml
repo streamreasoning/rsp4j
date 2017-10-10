@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>yasper</artifactId>
+        <groupId>it.polimi.sr.yasper</groupId>
+        <version>1.0.1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>yasper-ontop</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jool</artifactId>
+            <version>0.9.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.calcite</groupId>
+            <artifactId>calcite-core</artifactId>
+            <version>1.14.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>it.unibz.inf.ontop</groupId>
+            <artifactId>ontop-obda-core</artifactId>
+            <version>3.0.0-beta-2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>it.unibz.inf.ontop</groupId>
+            <artifactId>ontop-rdf4j</artifactId>
+            <version>3.0.0-beta-2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>it.polimi.sr.yasper</groupId>
+            <artifactId>yasper-core</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>it.unibz.inf.ontop</groupId>
+            <artifactId>ontop-reformulation-sql</artifactId>
+            <version>3.0.0-beta-2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>it.unibz.inf.ontop</groupId>
+            <artifactId>ontop-mapping-sql-owlapi</artifactId>
+            <version>3.0.0-beta-2-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.optique-project</groupId>
+            <artifactId>r2rml-api-core</artifactId>
+            <version>0.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.optique-project</groupId>
+            <artifactId>r2rml-api-rdf4j-binding</artifactId>
+            <version>0.6.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.calcite/calcite-avatica -->
+
+    </dependencies>
+</project>

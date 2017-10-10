@@ -1,7 +1,6 @@
 package it.polimi.yasper.core.stream;
 
 import it.polimi.rdf.RDFLine;
-import it.polimi.rspql.instantaneous.Instantaneous;
 import it.polimi.yasper.core.query.Updatable;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,17 +16,24 @@ public abstract class StreamItem<T> extends HashMap<String, Object> {
     protected final String appTimestamp = "app_timestamp";
     protected final String sysTimestamp = "sys_timestamp";
     protected final String content = "content";
-    protected final String type = "type";
 
     @Setter
     @Getter
     private String stream_uri;
 
-    public StreamItem(long appTimestamp1, Object content1, String stream_uri) {
+    @Getter
+    protected Type type;
+    @Getter
+    protected StreamSchema schema;
+
+
+    public StreamItem(long appTimestamp1, T content1, String stream_uri) {
         this.put(appTimestamp, appTimestamp1);
         this.put(content, content1);
         this.put(sysTimestamp, System.currentTimeMillis());
-        this.put(type, content1.getClass());
+        Class<T> aClass = (Class<T>) content1.getClass();
+        this.type = aClass;
+        this.schema = StreamSchema.Factory.wrap(aClass);
         this.stream_uri = stream_uri;
     }
 
@@ -40,16 +46,17 @@ public abstract class StreamItem<T> extends HashMap<String, Object> {
     }
 
     public Type getType() {
-        return this.containsKey(type) ? (Type) this.get(type) : Object.class;
+        return type;
     }
 
     public T getTypedContent() {
         return this.containsKey(content) ? (T) this.get(content) : null;
     }
 
+
     public abstract Updatable addTo(Updatable abox);
 
-    public abstract Instantaneous removeFrom(Updatable abox);
+    public abstract Updatable removeFrom(Updatable abox);
 
     public abstract Set<RDFLine> serialize();
 
