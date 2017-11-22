@@ -13,7 +13,7 @@ import lombok.Setter;
  */
 
 //TODO InstantaneousResponse
-public class QueryStream implements RegisteredStream {
+public class QueryStream extends StreamImpl {
 
     protected RSPEngine e;
     @NonNull
@@ -23,10 +23,12 @@ public class QueryStream implements RegisteredStream {
     protected EPStatement streamStatemnt;
     protected ContinuousQuery q;
 
-    public QueryStream(RSPEngine e, String stream_uri) {
-        this.e = e;
-        this.query_id = stream_uri;
+    public QueryStream(RSPEngine e, String stream_uri, EPStatement streamStatemnt) {
+        super(stream_uri, streamStatemnt);
+        this.e=e;
+        this.query_id=stream_uri;
     }
+
 
     public void setRSPEngine(RSPEngine e) {
         this.e = e;
@@ -36,11 +38,6 @@ public class QueryStream implements RegisteredStream {
         return e;
     }
 
-    @Override
-    public String getTboxUri() {
-        //TODO
-        return "";
-    }
 
     @Override
     public String getURI() {
@@ -48,10 +45,6 @@ public class QueryStream implements RegisteredStream {
     }
 
 
-    @Override
-    public void put(StreamItem i) {
-
-    }
 
 
 }

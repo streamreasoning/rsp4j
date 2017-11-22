@@ -68,4 +68,8 @@ public class EngineConfiguration extends PropertiesConfiguration {
         }
         return StreamSchema.UNKNOWN;
     }
+
+    public String getBaseIRI(){
+        return this.getString(BASE_IRI);
+    }
 }

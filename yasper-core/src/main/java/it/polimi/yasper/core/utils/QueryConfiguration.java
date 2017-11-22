@@ -1,6 +1,6 @@
 package it.polimi.yasper.core.utils;
 
-import it.polimi.yasper.core.enums.Entailment;
+import it.polimi.yasper.core.enums.EntailmentType;
 import it.polimi.yasper.core.enums.Maintenance;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.configuration.ConfigurationException;
@@ -42,8 +42,8 @@ public class QueryConfiguration extends PropertiesConfiguration {
 
     }
 
-    public Entailment getReasoningEntailment() {
-        return Entailment.valueOf(this.getString(REASONING_ENTAILMENT));
+    public EntailmentType getReasoningEntailment() {
+        return EntailmentType.valueOf(this.getString(REASONING_ENTAILMENT));
 
     }
 

@@ -14,10 +14,11 @@ public interface Stream {
         return StreamSchema.UNKNOWN;
     }
 
-    String getTboxUri();
-
     String getURI();
 
+    void setRSPEngine(RSPEngine e);
 
+    RSPEngine getRSPEngine();
 
+    String toEPLSchema();
 }

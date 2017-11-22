@@ -132,10 +132,6 @@ public abstract class RSPQLEngineImpl<S1 extends Stream, S extends RegisteredStr
         return true;
     }
 
-    protected EPStatement getStream(String uri) {
-        return cepAdm.getStatement(EncodingUtils.encode(uri));
-    }
-
     protected EPStatement createStream(String stream, String uri) {
         String s = EncodingUtils.encode(uri);
         log.debug("EPL Schema Statement [ " + stream.replace(s, uri) + "] uri [" + uri + "]");
@@ -150,5 +146,14 @@ public abstract class RSPQLEngineImpl<S1 extends Stream, S extends RegisteredStr
         assignedSDS.put(q.getID(), sds);
 
     }
+
+    public Stream getStream(String uri){
+        //TODO should this be encoded?
+        return registeredStreams.get(uri);
+    }
+
+public ContinuousQuery getQuery(String id){
+        return registeredQueries.get(id);
+}
 
 }

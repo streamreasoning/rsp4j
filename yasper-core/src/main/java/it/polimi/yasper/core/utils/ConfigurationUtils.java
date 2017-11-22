@@ -24,7 +24,7 @@ public class ConfigurationUtils {
     public static final String REASONING_RULE_PATH = ENGINE + "reasoning.rulepath";
     public static final String TIME = ENGINE + "time";
     public static final String PARTIAL_WINDOW = ENGINE + "partialwindow";
-
+    public static final String BASE_IRI = ENGINE + "base_iri";
 
 //    rspengine.tbox_location=/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/arist.tbox.owl
 //    rspengine.graph_mantainance=naive
