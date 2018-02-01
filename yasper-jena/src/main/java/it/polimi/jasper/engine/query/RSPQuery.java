@@ -52,7 +52,7 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
     }
 
     public RSPQuery(IRIResolver r) {
-        query.setBaseURI(r);
+        super(r);
     }
 
 

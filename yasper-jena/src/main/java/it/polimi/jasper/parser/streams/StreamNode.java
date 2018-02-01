@@ -43,11 +43,6 @@ public class StreamNode implements Stream {
     }
 
     @Override
-    public String getTboxUri() {
-        return null;
-    }
-
-    @Override
     public String getURI() {
         return iri.getURI();
     }

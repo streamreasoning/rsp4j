@@ -3,12 +3,9 @@ package it.polimi.jasper.parser;
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.jasper.parser.streams.Register;
 import it.polimi.jasper.parser.streams.WindowedStreamNode;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Node_URI;
-import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.sparql.syntax.ElementNamedGraph;
 import org.parboiled.Rule;
 
@@ -18,11 +15,6 @@ import static it.polimi.yasper.core.enums.StreamOperator.*;
  * Created by Riccardo on 09/08/16.
  */
 public class RSPQLParser extends SPARQLParser {
-
-    @Getter
-    @Setter
-    private IRIResolver resolver;
-
 
     @Override
     public Rule Query() {

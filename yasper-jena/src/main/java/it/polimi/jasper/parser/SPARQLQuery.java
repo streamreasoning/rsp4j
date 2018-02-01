@@ -11,7 +11,7 @@ import org.apache.jena.sparql.core.Prologue;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.expr.aggregate.Aggregator;
-import org.apache.jena.sparql.syntax.ElementGroup;
+import org.apache.jena.sparql.syntax.Element;
 import org.apache.jena.sparql.syntax.Template;
 import org.apache.jena.sparql.syntax.TripleCollectorMark;
 
@@ -33,6 +33,11 @@ public class SPARQLQuery {
 
     public SPARQLQuery() {
         this.query = new Query();
+    }
+
+    public SPARQLQuery(IRIResolver r) {
+        this.query = new Query();
+        query.setResolver(r);
     }
 
     public SPARQLQuery setSelectQuery() {
@@ -79,7 +84,7 @@ public class SPARQLQuery {
         return this;
     }
 
-    public SPARQLQuery addElement(ElementGroup sub) {
+    public SPARQLQuery addElement(Element sub) {
         query.setQueryPattern(sub);
         return this;
     }
@@ -154,7 +159,7 @@ public class SPARQLQuery {
     }
 
     public SPARQLQuery addQCResultVar(Node pop, Expr pop1) {
-        addQCResultVar(pop, pop1);
+        query.addResultVar(pop, pop1);
         query.setQueryResultStar(false);
         return this;
     }
@@ -183,11 +188,6 @@ public class SPARQLQuery {
 
     public String resolveSilent(String iriStr) {
         return query.getResolver().resolveSilent(iriStr).toString();
-    }
-
-    public SPARQLQuery setQResolver(IRIResolver resolver) {
-        query.setResolver(resolver);
-        return this;
     }
 
     @Override

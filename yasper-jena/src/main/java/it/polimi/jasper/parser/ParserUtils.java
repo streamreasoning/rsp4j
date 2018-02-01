@@ -2,13 +2,18 @@ package it.polimi.jasper.parser;
 
 import it.polimi.jasper.parser.sparql.Function;
 import it.polimi.jasper.parser.sparql.ValuesClauseBuilder;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.TypeMapper;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
+import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.expr.ExprList;
+import org.apache.jena.sparql.expr.aggregate.Aggregator;
+import org.apache.jena.sparql.expr.aggregate.AggregatorFactory;
 import org.apache.jena.sparql.expr.aggregate.Args;
 import org.apache.jena.sparql.graph.NodeConst;
 import org.apache.jena.sparql.syntax.*;
@@ -54,6 +59,10 @@ public class ParserUtils extends BaseParser<Object> {
     // In DELETE, false.
     private boolean bNodesAreAllowed = true;
 
+    @Getter
+    @Setter
+    private IRIResolver resolver;
+
     public boolean bNodeOff() {
         activeLabelMap = bNodeLabels;
         return activeLabelMap.equals(bNodeLabels);
@@ -89,7 +98,7 @@ public class ParserUtils extends BaseParser<Object> {
     }
 
     public boolean addElementToQuery() {
-        getQuery(1).addElement((ElementGroup) popElement());
+        getQuery(1).addElement(popElement());
         return true;
     }
 
@@ -128,7 +137,7 @@ public class ParserUtils extends BaseParser<Object> {
     }
 
     public boolean addUnionElement() {
-        ((ElementUnion) peek(1)).addElement((ElementGroup) popElement());
+        ((ElementUnion) peek(1)).addElement(popElement());
         return true;
     }
 
@@ -231,5 +240,10 @@ public class ParserUtils extends BaseParser<Object> {
         return push(new ElementSubQuery(popQuery(0).getQ()));
     }
 
+    public Aggregator createGroupConcat(String separator, Expr expr, Boolean distinct, ExprList orderedBy) {
+        return AggregatorFactory.createGroupConcat(distinct, expr, separator, orderedBy);
+    }
+
+    ;
 
 }

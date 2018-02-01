@@ -18,7 +18,8 @@ import it.polimi.rspql.cql.s2_.WindowOperator;
 import it.polimi.rspql.querying.ContinuousQueryExecution;
 import it.polimi.rspql.querying.SDS;
 import it.polimi.rspql.timevarying.TimeVarying;
-import it.polimi.yasper.core.enums.Entailment;
+import it.polimi.yasper.core.engine.Entailment;
+import it.polimi.yasper.core.enums.EntailmentType;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.exceptions.UnregisteredStreamExeception;
 import it.polimi.yasper.core.stream.RegisteredStream;
@@ -30,7 +31,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Node;
-import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -52,6 +52,7 @@ import static it.polimi.yasper.core.query.operators.s2r.EPLFactory.toIREPL;
 @RequiredArgsConstructor
 public class JenaSDSQueryBuilder implements SDSBuilder<RSPQuery> {
 
+    private final HashMap<String, Entailment> entailments;
     @NonNull
     protected EngineConfiguration rsp_config;
     @NonNull
@@ -76,13 +77,14 @@ public class JenaSDSQueryBuilder implements SDSBuilder<RSPQuery> {
     private DefaultTVG defaultTVG;
     private List<NamedTVG> namedWOFS;
 
-    public JenaSDSQueryBuilder(EPAdministrator cepAdm, EPServiceProvider cep, Map<String, RegisteredRDFStream> registeredStreams, EngineConfiguration rsp_config, QueryConfiguration c) {
+    public JenaSDSQueryBuilder(EPAdministrator cepAdm, EPServiceProvider cep, Map<String, RegisteredRDFStream> registeredStreams, HashMap<String, Entailment> entailments, EngineConfiguration rsp_config, QueryConfiguration c) {
         this.cepAdm = cepAdm;
         this.cep = cep;
         this.registeredStreams = registeredStreams;
         this.rsp_config = rsp_config;
         this.queryConfiguration = c;
         namedWOFS = new ArrayList<>();
+        this.entailments=entailments;
 
     }
 
@@ -94,7 +96,7 @@ public class JenaSDSQueryBuilder implements SDSBuilder<RSPQuery> {
         String tboxLocation = queryConfiguration.getTboxLocation();
         Model tbox = ModelFactory.createDefaultModel().read(tboxLocation);
         this.maintenance = queryConfiguration.getSdsMaintainance();
-        Entailment entailment = queryConfiguration.getReasoningEntailment();
+        EntailmentType entailment = queryConfiguration.getReasoningEntailment();
         boolean recursionEnabled = rsp_config.isRecursionEnables();
 
         log.info("Registering Query [" + bq.getName() + "]");
@@ -108,7 +110,7 @@ public class JenaSDSQueryBuilder implements SDSBuilder<RSPQuery> {
 
 
 
-        reasoner = ContinuousQueryExecutionFactory.getGenericRuleReasoner(entailment, tbox);
+        reasoner = ContinuousQueryExecutionFactory.getGenericRuleReasoner(entailments.get(entailment.name()), tbox);
 
         GraphBase base = new GraphBase();
         Model m = loadStaticGraph(bq, new ModelCom(base));
@@ -159,7 +161,7 @@ public class JenaSDSQueryBuilder implements SDSBuilder<RSPQuery> {
 
     private void addNamedStaticGraph(RSPQuery bq, JenaSDS sds, Reasoner reasoner) {
         //Named Static Graphs
-        if (bq.getNamedGraphURIs() != null)
+        if (bq.getRSPNamedGraphURIs() != null)
             for (String g : bq.getNamedGraphURIs()) {
                 log.info(g);
                 if (!isWindow(bq.getNamedwindows().keySet(), g)) {
@@ -172,7 +174,7 @@ public class JenaSDSQueryBuilder implements SDSBuilder<RSPQuery> {
 
     private Model loadStaticGraph(RSPQuery bq, Model def) {
         //Default Static Graph
-        if (bq.getGraphURIs() != null)
+        if (bq.getRSPGraphURIs() != null)
             for (String g : bq.getGraphURIs()) {
                 log.info(g);
                 if (!isWindow(bq.getWindows(), g)) {

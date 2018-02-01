@@ -23,7 +23,7 @@ import org.parboiled.Rule;
 public class SPARQLParser extends Lexer {
 
     public Rule Query() {
-        return Sequence(push(new SPARQLQuery()), WS(), Prologue(),
+        return Sequence(push(new SPARQLQuery(getResolver())), WS(), Prologue(),
                 FirstOf(SelectQuery(), ConstructQuery(), AskQuery(), DescribeQuery()), ValuesClause(), EOI);
     }
 
@@ -115,7 +115,7 @@ public class SPARQLParser extends Lexer {
     }
 
     public Rule WhereClause() {
-        return Sequence(Optional(WHERE()), GroupGraphPattern(), addElementToQuery());
+        return Sequence(Optional(WHERE()), FirstOf(SubSelect(),GroupGraphPattern()), addElementToQuery());
     }
 
     public Rule SolutionModifiers() {
@@ -183,7 +183,7 @@ public class SPARQLParser extends Lexer {
     }
 
     public Rule GroupGraphPattern() {
-        return Sequence(WS(), OPEN_CURLY_BRACE(), FirstOf(SubSelect(), GroupGraphPatternSub()), CLOSE_CURLY_BRACE());
+        return Sequence(WS(), OPEN_CURLY_BRACE(),  GroupGraphPatternSub(), CLOSE_CURLY_BRACE());
     }
 
     public Rule SubSelect() {
@@ -192,8 +192,8 @@ public class SPARQLParser extends Lexer {
     }
 
     public Rule GroupGraphPatternSub() {
-        return Sequence(push(new ElementGroup()), Optional(TriplesBlock(), addSubElement()), ZeroOrMore(
-                GraphPatternNotTriples(), addSubElement(), Optional(DOT()), Optional(TriplesBlock(), addSubElement())));
+        return FirstOf(SubSelect(),Sequence(push(new ElementGroup()), Optional(TriplesBlock(), addSubElement()), ZeroOrMore(
+                GraphPatternNotTriples(), addSubElement(), Optional(DOT()), Optional(TriplesBlock(), addSubElement()))));
     }
 
     public Rule GroupCondition() {
@@ -279,9 +279,10 @@ public class SPARQLParser extends Lexer {
 
     public Rule GroupContant() {
         return Sequence(GROUP_CONCAT(), LPAR(),
-                FirstOf(Sequence(DISTINCT(), push(new Boolean(true))), push(new Boolean(false))), Expression(),
-                ZeroOrMore(SEMICOLON(), SEPARATOR(), EQUAL(), String(), push(AggregatorFactory
-                        .createGroupConcat((Boolean) pop(1), (Expr) pop(), trimMatch(), new ExprList()))),
+                FirstOf(Sequence(DISTINCT(), push(new Boolean(true))), push(new Boolean(false))),
+                Expression(),
+                Optional(SEMICOLON(), SEPARATOR(), EQUAL()),
+                push(createGroupConcat(trimMatch(), (Expr) pop(),(Boolean) pop(), new ExprList())),
                 RPAR());
     }
 
