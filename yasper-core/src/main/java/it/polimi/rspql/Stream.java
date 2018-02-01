@@ -1,6 +1,5 @@
 package it.polimi.rspql;
 
-import it.polimi.yasper.core.stream.StreamItem;
 import it.polimi.yasper.core.stream.StreamSchema;
 
 /**
@@ -16,9 +15,4 @@ public interface Stream {
 
     String getURI();
 
-    void setRSPEngine(RSPEngine e);
-
-    RSPEngine getRSPEngine();
-
-    String toEPLSchema();
 }

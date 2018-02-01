@@ -40,7 +40,6 @@ public interface StreamSchema {
         public static StreamSchema wrap(Class c) {
             for (StreamSchema s : registered_schemas) {
                 if (c.isAssignableFrom(s.getType()) || s.getType().isAssignableFrom(c)) {
-                    System.out.println("Assignable");
                     return s;
                 }
             }
