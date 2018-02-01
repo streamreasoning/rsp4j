@@ -147,13 +147,13 @@ public abstract class RSPQLEngineImpl<S1 extends Stream, S extends RegisteredStr
 
     }
 
-    public Stream getStream(String uri){
+    public Stream getStream(String uri) {
         //TODO should this be encoded?
         return registeredStreams.get(uri);
     }
 
-public ContinuousQuery getQuery(String id){
+    public ContinuousQuery getQuery(String id) {
         return registeredQueries.get(id);
-}
+    }
 
 }

@@ -51,7 +51,6 @@ public class EngineConfiguration extends PropertiesConfiguration {
         }
     }
 
-
     public String getBaseURI() {
         return this.getString("rsp_engine.base_uri");
     }
