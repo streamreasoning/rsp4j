@@ -44,7 +44,7 @@ public class GraphStream extends RDFStream implements Runnable {
             Random r = new Random();
 
             String uri = "http://www.streamreasoning/it.polimi.jasper.test/artist#";
-            Resource person = ResourceFactory.createResource(getStream_uri() + "/artist" + i);
+            Resource person = ResourceFactory.createResource(stream_uri + "/artist" + i);
             Resource type = ResourceFactory.createResource(uri + name);
             Property hasAge = ResourceFactory.createProperty(uri + "hasAge");
             Property hasTimestamp = ResourceFactory.createProperty(uri + "generatedAt");
@@ -55,10 +55,10 @@ public class GraphStream extends RDFStream implements Runnable {
             // m.apply(m.createStatement(person, hasAge, age));
             m.add(m.createStatement(person, hasTimestamp, ts));
 
-            GraphStreamItem t = new GraphStreamItem(i * 1000, m.getGraph(), getStream_uri());
-            GraphStreamItem t2 = new GraphStreamItem(i * 1000, m.getGraph(), getStream_uri());
-            GraphStreamItem t3 = new GraphStreamItem(i * 1000, m.getGraph(), getStream_uri());
-            System.out.println("[" + System.currentTimeMillis() + "] Sending [" + t + "] on " + getStream_uri()+ " at " + i * 1000);
+            GraphStreamItem t = new GraphStreamItem(i * 1000, m.getGraph(), stream_uri);
+            GraphStreamItem t2 = new GraphStreamItem(i * 1000, m.getGraph(), stream_uri);
+            GraphStreamItem t3 = new GraphStreamItem(i * 1000, m.getGraph(), stream_uri);
+            System.out.println("[" + System.currentTimeMillis() + "] Sending [" + t + "] on " + stream_uri+ " at " + i * 1000);
 
             if (e != null)
                 this.e.process(t);

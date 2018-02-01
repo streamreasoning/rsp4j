@@ -1,9 +1,9 @@
 import it.polimi.jasper.parser.SPARQLParser;
 import it.polimi.jasper.parser.SPARQLQuery;
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QueryParseException;
+import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.sparql.core.QueryCompare;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,11 +18,8 @@ import org.parboiled.support.ParsingResult;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
-import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -31,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Parameterized.class)
 public class Sparql11QueryTest {
 
-    private static final String folder = "test/resources.parser/parser.tests/";
+    private static final String folder = "/yasper-jena/src/test/resources/parser/";
     static String input;
     static org.apache.jena.query.Query toCompare;
     private static boolean res;
@@ -44,28 +41,34 @@ public class Sparql11QueryTest {
 
     @Parameters
     public static Collection<Object[]> data() throws IOException {
-        List<Object[]> obj = new ArrayList<Object[]>();
-        for (String d : IOUtils.readLines(Sparql11QueryTest.class.getClassLoader()
-                .getResourceAsStream(folder), Charsets.UTF_8)) {
-            if (!d.contains("class")) {
-                for (String f : IOUtils.readLines(Sparql11QueryTest.class.getClassLoader()
-                        .getResourceAsStream(folder + d + "/"), Charsets.UTF_8)) {
-                    if (!f.contains(".arq") && !f.contains(".sh") && (!f.contains("false") || !f.contains("bad"))) {
-                        obj.add(new Object[]{(folder + d + "/" + f), true});
-                    }
-                }
-            }
-        }
+        List<Object[]> obj = new ArrayList<>();
+        File resourcesDirectory = new File("src/test/resources/parser/");
+
+        Arrays.stream(resourcesDirectory.list()).map((resourcesDirectory.getAbsolutePath() + "/")::concat).map(File::new).sorted()
+                .flatMap(folder -> Arrays.stream(folder.list())
+                        .map(d -> folder.getAbsolutePath() + "/" + d)).sorted()
+                .filter(f -> !f.contains(".arq"))
+                .filter(f -> !f.contains("false"))
+                .filter(f -> !f.contains("bad"))
+                .filter(f -> !f.contains(".sh"))
+                .forEach(f -> obj.add(new Object[]{f, true}));
+
+
         return obj;
     }
 
     public static void process() throws URISyntaxException, IOException {
+        System.out.println("<=====FILE=====>");
         System.out.println(f);
-        input = readFileToString(new File(Sparql11QueryTest.class.getClassLoader().getResource(f).toURI()));
+        input = FileUtils.readFileToString(new File(f));
+        System.out.println("<=====INPUT=====>");
         System.out.println(input);
+        System.out.println("<=====JENA=====>");
         toCompare = QueryFactory.create(input);
+        System.out.println(toCompare.toString());
 
         SPARQLParser parser = Parboiled.createParser(SPARQLParser.class);
+        parser.setResolver(IRIResolver.create());
         ReportingParseRunner reportingParseRunner = new ReportingParseRunner(parser.Query());
         ParsingResult<SPARQLQuery> result = reportingParseRunner.run(input);
         if (result.hasErrors()) {
@@ -74,6 +77,8 @@ public class Sparql11QueryTest {
             }
         }
         org.apache.jena.query.Query q = result.parseTreeRoot.getChildren().get(0).getValue().getQ();
+        System.out.println("<=====ME=====>");
+        System.out.println(q.toString());
         QueryCompare.PrintMessages = true;
         assertEquals(res, QueryCompare.equals(toCompare, q));
     }

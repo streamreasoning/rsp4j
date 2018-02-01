@@ -69,6 +69,7 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl<RDFStream, RegisteredRD
         String uri = this.resolver.resolveToString(s.getURI());
         log.info("Registering Stream [" + uri + "]");
         EPStatement epl = createStream(toEPLSchema(s), uri);
+
         RegisteredRDFStream value = new RegisteredRDFStream(uri, s, epl, this);
         registeredStreams.put(uri, value);
         return value;

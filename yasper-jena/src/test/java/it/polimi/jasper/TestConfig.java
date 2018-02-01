@@ -30,10 +30,8 @@ public class TestConfig {
 
         sr = JenaRSPQLEngineImplFactory.create(0, ec);
 
-        IRIResolver resolver = sr.getResolver();
-
-        GraphStream painter = new GraphStream("Painter", resolver.resolveToString("streams/stream1"), 1);
-        GraphStream writer = new GraphStream("Writer", resolver.resolveToString("streams/stream2"), 5);
+        GraphStream painter = new GraphStream("Painter", "http://streamreasoning.org/jasper/streams/stream1", 1);
+        GraphStream writer = new GraphStream("Writer", "http://streamreasoning.org/jasper/streams/stream2", 5);
 
         painter.setRSPEngine(sr);
         writer.setRSPEngine(sr);
