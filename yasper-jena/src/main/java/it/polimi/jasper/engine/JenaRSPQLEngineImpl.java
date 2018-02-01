@@ -1,44 +1,62 @@
 package it.polimi.jasper.engine;
 
 import com.espertech.esper.client.EPStatement;
+import com.espertech.esper.client.soda.CreateSchemaClause;
+import com.espertech.esper.client.soda.SchemaColumnDesc;
 import it.polimi.jasper.engine.query.JenaSDSQueryBuilder;
 import it.polimi.jasper.engine.query.RSPQuery;
+import it.polimi.jasper.engine.reasoning.EntailmentImpl;
 import it.polimi.jasper.engine.stream.RDFStream;
 import it.polimi.jasper.engine.stream.RegisteredRDFStream;
 import it.polimi.jasper.parser.RSPQLParser;
 import it.polimi.rspql.SDSBuilder;
+import it.polimi.rspql.Stream;
 import it.polimi.rspql.querying.ContinuousQuery;
 import it.polimi.rspql.querying.ContinuousQueryExecution;
+import it.polimi.yasper.core.engine.Entailment;
 import it.polimi.yasper.core.engine.RSPQLEngineImpl;
+import it.polimi.yasper.core.enums.EntailmentType;
 import it.polimi.yasper.core.exceptions.UnregisteredQueryExeception;
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.utils.EncodingUtils;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
+import org.apache.jena.reasoner.ReasonerRegistry;
+import org.apache.jena.reasoner.rulesys.Rule;
 import org.apache.jena.riot.system.IRIResolver;
 import org.parboiled.Parboiled;
 import org.parboiled.errors.ParseError;
 import org.parboiled.parserunners.ReportingParseRunner;
 import org.parboiled.support.ParsingResult;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static it.polimi.yasper.core.query.operators.s2r.EPLFactory.toEPLSchema;
+import java.io.StringWriter;
+import java.util.*;
 
 @Log4j
 public class JenaRSPQLEngineImpl extends RSPQLEngineImpl<RDFStream, RegisteredRDFStream> {
 
+    private HashMap<String, Entailment> entailments;
     @Getter
     private IRIResolver resolver;
     private RSPQLParser parser;
 
     public JenaRSPQLEngineImpl(long t0, EngineConfiguration ec) {
         super(t0, ec);
-        resolver = IRIResolver.create(ec.getBaseURI());
-        parser = Parboiled.createParser(RSPQLParser.class);
-        parser.setResolver(resolver);
+        this.resolver = IRIResolver.create(ec.getBaseURI());
+        this.parser = Parboiled.createParser(RSPQLParser.class);
+        this.parser.setResolver(resolver);
+
+        ReasonerRegistry.getRDFSSimpleReasoner();
+
+        this.entailments = new HashMap<>();
+
+        //Adding default entailments
+        String ent = EntailmentType.RDFS.name();
+        this.entailments.put(ent, new EntailmentImpl(ent, Rule.rulesFromURL(BaselinesUtils.RHODF_RULE_SET_RUNTIME), EntailmentType.RDFS));
+        ent = EntailmentType.RHODF.name();
+        this.entailments.put(ent, new EntailmentImpl(ent, Rule.rulesFromURL(BaselinesUtils.RHODF_RULE_SET_RUNTIME), EntailmentType.RHODF));
 
     }
 
@@ -48,10 +66,11 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl<RDFStream, RegisteredRD
            The stream registration, which happens before the query registration,
          has two option then lazy approach that waits for the first query using the stream to decide where
           (SDS - RSP Engine) locate this Stream, or can use metadata found in the vois file. */
-        log.info("Registering Stream [" + s.getURI() + "]");
-        EPStatement epl = createStream(toEPLSchema(s), s.getURI());
-        RegisteredRDFStream value = new RegisteredRDFStream(s, epl, this);
-        registeredStreams.put(s.getURI(), value);
+        String uri = this.resolver.resolveToString(s.getURI());
+        log.info("Registering Stream [" + uri + "]");
+        EPStatement epl = createStream(toEPLSchema(s), uri);
+        RegisteredRDFStream value = new RegisteredRDFStream(uri, s, epl, this);
+        registeredStreams.put(uri, value);
         return value;
     }
 
@@ -62,7 +81,7 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl<RDFStream, RegisteredRD
 
     @Override
     public ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c) {
-        SDSBuilder builder = new JenaSDSQueryBuilder(cepAdm, cep, registeredStreams, rsp_config, c);
+        SDSBuilder builder = new JenaSDSQueryBuilder(cepAdm, cep, registeredStreams, entailments, rsp_config, c);
         q.accept(builder);
         ContinuousQueryExecution continuousQueryExecution = builder.getContinuousQueryExecution();
         persist(q, continuousQueryExecution, builder.getSDS());
@@ -82,7 +101,7 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl<RDFStream, RegisteredRD
                     ceq.deleteObserver(f);
                 }
             }
-            assignedSDS.remove(query);
+            assignedSDS.remove(query.getID());
         } else
             throw new UnregisteredQueryExeception(qId);
     }
@@ -167,5 +186,16 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl<RDFStream, RegisteredRD
         RSPQuery query = result.resultValue;
         log.info("Final Query [" + query + "]");
         return query;
+    }
+
+    private String toEPLSchema(Stream s) {
+        CreateSchemaClause schema = new CreateSchemaClause();
+        schema.setSchemaName(EncodingUtils.encode(resolver.resolveToStringSilent(s.getURI())));
+        schema.setInherits(new HashSet<>(Arrays.asList("TStream")));
+        List<SchemaColumnDesc> columns = new ArrayList<>();
+        schema.setColumns(columns);
+        StringWriter writer = new StringWriter();
+        schema.toEPL(writer);
+        return writer.toString();
     }
 }

@@ -1,7 +1,7 @@
 package it.polimi.jasper.engine.stream;
 
 import it.polimi.jasper.engine.stream.items.RDFStreamSchema;
-import it.polimi.rspql.Stream;
+import it.polimi.yasper.core.stream.StreamImpl;
 import it.polimi.yasper.core.stream.StreamSchema;
 import lombok.Getter;
 import lombok.NonNull;
@@ -10,26 +10,19 @@ import lombok.NonNull;
  * Created by riccardo on 10/07/2017.
  */
 @Getter
-public class RDFStream implements Stream {
+public class RDFStream extends StreamImpl {
 
     @NonNull
-    private String stream_uri;
-    @NonNull
-    private RDFStreamSchema type;
+    private RDFStreamSchema schema;
 
-    public RDFStream(String stream_uri, RDFStreamSchema type) {
-        this.stream_uri = stream_uri;
-        this.type = type;
+    public RDFStream(String stream_uri, RDFStreamSchema schema) {
+        super(stream_uri);
+        this.schema=schema;
     }
 
     @Override
     public StreamSchema getSchema() {
-        return type;
-    }
-
-    @Override
-    public String getTboxUri() {
-        return null;
+        return schema;
     }
 
     @Override
