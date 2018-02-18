@@ -1,12 +1,13 @@
-package it.polimi.yasper.core.query.operators.s2r.windows;
+package it.polimi.esper;
 
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
+import com.espertech.esper.client.StatementAwareUpdateListener;
 import com.espertech.esper.event.map.MapEventBean;
 import it.polimi.rspql.Item;
 import it.polimi.rspql.timevarying.TimeVarying;
-import it.polimi.yasper.core.engine.RSPListener;
+import it.polimi.spe.content.viewer.View;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.query.Updatable;
 import it.polimi.yasper.core.stream.StreamItem;
@@ -24,11 +25,11 @@ import java.util.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public abstract class TimeVaryingItemImpl<I extends Item> extends Observable implements TimeVarying<I>, Updatable, RSPListener {
+public abstract class EsperStatementView<I extends Item> extends Observable implements View, TimeVarying<I>, Updatable, StatementAwareUpdateListener {
 
     protected Maintenance maintenance;
 
-    public TimeVaryingItemImpl(Maintenance maintenance) {
+    public EsperStatementView(Maintenance maintenance) {
         this.maintenance = maintenance;
     }
 
@@ -86,10 +87,7 @@ public abstract class TimeVaryingItemImpl<I extends Item> extends Observable imp
         long currentTime = eps.getEPRuntime().getCurrentTime();
         log.debug("[" + Thread.currentThread() + "][" + System.currentTimeMillis() + "] FROM STATEMENT: " + stmt.getText() + " AT "
                 + currentTime);
-
-
         eval(newData, oldData, currentTime);
-
         setChanged();
         notifyObservers(currentTime);  //TODO idea report object
     }

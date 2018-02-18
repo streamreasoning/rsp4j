@@ -27,7 +27,6 @@ public class RelStreamImpl implements RelStream {
         return null;
     }
 
-    @Override
     public String getTboxUri() {
         return null;
     }

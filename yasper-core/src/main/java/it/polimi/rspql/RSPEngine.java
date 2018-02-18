@@ -4,7 +4,6 @@ package it.polimi.rspql;
 import it.polimi.rspql.querying.ContinuousQuery;
 import it.polimi.rspql.querying.ContinuousQueryExecution;
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
-import it.polimi.yasper.core.stream.RegisteredStream;
 import it.polimi.yasper.core.stream.StreamItem;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 
@@ -12,11 +11,11 @@ import it.polimi.yasper.core.utils.QueryConfiguration;
 /**
  * @author Riccardo
  */
-public interface RSPEngine<S extends Stream, R extends RegisteredStream> {
+public interface RSPEngine<S extends Stream> {
 
-    R register(S s);
+    S register(S s);
 
-    void unregister(R s);
+    void unregister(S s);
 
     ContinuousQuery parseQuery(String input);
 
@@ -35,11 +34,6 @@ public interface RSPEngine<S extends Stream, R extends RegisteredStream> {
     void unregister(ContinuousQueryExecution cqe, QueryResponseFormatter o);
 
     boolean process(StreamItem var1);
-
-    void startProcessing();
-
-    void stopProcessing();
-
 
     // TODO is reasoning enabled
     // TODO is external time control enabled

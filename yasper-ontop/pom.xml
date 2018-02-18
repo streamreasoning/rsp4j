@@ -13,6 +13,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.espertech</groupId>
+            <artifactId>esper</artifactId>
+            <version>6.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jool</artifactId>
             <version>0.9.12</version>

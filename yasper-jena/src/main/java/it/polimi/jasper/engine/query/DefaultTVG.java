@@ -1,38 +1,35 @@
 package it.polimi.jasper.engine.query;
 
 import com.espertech.esper.client.EventBean;
+import it.polimi.esper.EsperStatementView;
 import it.polimi.jasper.engine.instantaneous.GraphBase;
 import it.polimi.jasper.engine.instantaneous.JenaGraph;
-import it.polimi.rspql.Window;
-import it.polimi.rspql.cql.s2_.WindowOperator;
-import it.polimi.yasper.core.query.operators.s2r.windows.TimeVaryingItemImpl;
+import it.polimi.spe.content.Content;
+import it.polimi.spe.windowing.assigner.WindowAssigner;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Log4j
 @Getter
-public class DefaultTVG extends TimeVaryingItemImpl<JenaGraph> {
+public class DefaultTVG extends EsperStatementView<JenaGraph> {
 
-    private Set<WindowOperator> windowOperatorSet;
+    private Set<WindowAssigner> windowAssigners;
 
     private JenaGraph graph = new GraphBase();
 
     public DefaultTVG(JenaGraph graph) {
-        this.graph=graph;
-        this.windowOperatorSet = new HashSet<>();
+        this.graph = graph;
+        this.windowAssigners = new HashSet<>();
     }
 
     @Override
     public void update(long t) {
-        List<Window> events = new ArrayList<>();
-        windowOperatorSet.forEach(woa -> {
-            Window windowContent = woa.getWindowContent(t);
-            events.add(windowContent);
+        List<Content> events = new ArrayList<>();
+        windowAssigners.forEach(woa -> {
+            Content content = woa.getContent(t);
+            events.add(content);
         });
 
         //FIXME
@@ -58,8 +55,12 @@ public class DefaultTVG extends TimeVaryingItemImpl<JenaGraph> {
 
 
     @Override
-    public void setWindowOperator(WindowOperator w) {
-        windowOperatorSet.add(w);
+    public void addWindowAssigner(WindowAssigner w) {
+        windowAssigners.add(w);
     }
 
+    @Override
+    public void addObservable(Observable windowAssigner) {
+
+    }
 }

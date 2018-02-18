@@ -1,12 +1,12 @@
 package it.polimi.yasper.core.query.execution;
 
-import com.espertech.esper.client.EPStatement;
 import it.polimi.rspql.querying.ContinuousQueryExecution;
 import it.polimi.rspql.querying.SDS;
 import it.polimi.rspql.querying.ContinuousQuery;
 import it.polimi.rspql.cql._2s._ToStreamOperator;
-import it.polimi.yasper.core.query.response.InstantaneousResponse;
 import it.polimi.rspql.timevarying.TimeVarying;
+import it.polimi.spe.windowing.assigner.WindowAssigner;
+import it.polimi.yasper.core.query.response.InstantaneousResponse;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public abstract class ContinuousQueryExecutionSubscriber extends Observable impl
     protected TVGReasoner reasoner;
     protected _ToStreamOperator s2r;
 
-    public synchronized void update(EPStatement stmt, Long ts) {
+    public synchronized void update(WindowAssigner stmt, Long ts) {
         sds.beforeEval();
         InstantaneousResponse eval = eval(ts);
         sds.afterEval();

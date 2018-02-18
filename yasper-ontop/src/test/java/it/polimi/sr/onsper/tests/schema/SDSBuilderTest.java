@@ -2,8 +2,7 @@ package it.polimi.sr.onsper.tests.schema;
 
 import it.polimi.rspql.SDSBuilder;
 import it.polimi.rspql.Stream;
-import it.polimi.rspql.cql.s2_.WindowOperator;
-import it.polimi.rspql.querying.ContinuousQuery;
+import it.polimi.rspql.cql.s2_.WindowOperatorNode;
 import it.polimi.sr.onsper.query.OBDAQuery;
 import it.polimi.sr.onsper.query.OBSDAQueryBuilder;
 import it.polimi.sr.onsper.query.schema.OntopJavaTypeFactory;
@@ -68,17 +67,17 @@ public class SDSBuilderTest {
         }
 
         @Override
-        public Set<? extends WindowOperator> getWindowsSet() {
+        public Set<? extends WindowOperatorNode> getWindowsSet() {
             return null;
         }
 
         @Override
-        public Set<? extends WindowOperator> getNamedWindowsSet() {
+        public Set<? extends WindowOperatorNode> getNamedWindowsSet() {
             return null;
         }
 
         @Override
-        public Map<WindowOperator, Stream> getWindowMap() {
+        public Map<WindowOperatorNode, Stream> getWindowMap() {
             return null;
         }
 

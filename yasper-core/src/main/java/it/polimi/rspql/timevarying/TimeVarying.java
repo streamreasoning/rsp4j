@@ -1,9 +1,12 @@
 package it.polimi.rspql.timevarying;
 
 import it.polimi.rspql.Item;
-import it.polimi.rspql.cql.s2_.WindowOperator;
 import it.polimi.rspql.instantaneous.Instantaneous;
+import it.polimi.spe.content.Content;
+import it.polimi.spe.windowing.WindowOperator;
+import it.polimi.spe.windowing.assigner.WindowAssigner;
 
+import java.util.List;
 import java.util.Observer;
 
 /**
@@ -17,7 +20,9 @@ public interface TimeVarying<I extends Item> {
 
     <I extends Instantaneous> I eval(long t);
 
-    void setWindowOperator(WindowOperator w);
-
     void addObserver(Observer o);
+
+    Content getContent(long now);
+
+    List<Content> getContents(long now);
 }

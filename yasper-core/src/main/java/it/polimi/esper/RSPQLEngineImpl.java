@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.engine;
+package it.polimi.esper;
 
 import com.espertech.esper.client.*;
 import com.espertech.esper.client.time.CurrentTimeEvent;
@@ -7,8 +7,8 @@ import it.polimi.rspql.Stream;
 import it.polimi.rspql.querying.ContinuousQuery;
 import it.polimi.rspql.querying.ContinuousQueryExecution;
 import it.polimi.rspql.querying.SDS;
+import it.polimi.spe.stream.rdf.RDFStream;
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
-import it.polimi.yasper.core.stream.RegisteredStream;
 import it.polimi.yasper.core.stream.StreamItem;
 import it.polimi.yasper.core.stream.StreamSchema;
 import it.polimi.yasper.core.utils.EncodingUtils;
@@ -23,7 +23,7 @@ import java.util.Map;
 
 @Getter
 @Log4j
-public abstract class RSPQLEngineImpl<S1 extends Stream, S extends RegisteredStream> implements RSPEngine<S1, S> {
+public abstract class RSPQLEngineImpl<S extends RDFStream> implements RSPEngine<RDFStream> {
 
     protected Map<String, S> registeredStreams;
     protected Map<String, SDS> assignedSDS;
@@ -80,34 +80,18 @@ public abstract class RSPQLEngineImpl<S1 extends Stream, S extends RegisteredStr
         log.debug("Query Class [" + rsp_config.getQueryClass() + "]");
         log.debug("StreamItem Class [" + rsp_config.getStreamSchema() + "]");
 
+        cepRT.sendEvent(new CurrentTimeEvent(t0));
+
     }
 
+
     @Override
-    public void unregister(RegisteredStream s) {
+    public void unregister(RDFStream s) {
         log.info("Unregistering Stream [" + s + "]");
         EPStatement statement = cepAdm.getStatement(EncodingUtils.encode(s.getURI()));
         statement.removeAllListeners();
         statement.destroy();
         registeredStreams.remove(EncodingUtils.encode(s.getURI()));
-    }
-
-    public RSPQLEngineImpl(long t0) {
-        this(t0, EngineConfiguration.getDefault());
-    }
-
-    public void startProcessing() {
-        cepRT.sendEvent(new CurrentTimeEvent(t0));
-    }
-
-    public void stopProcessing() {
-        log.info("Engine is closing");
-        // stop the CEP engine
-        for (String stmtName : cepAdm.getStatementNames()) {
-            EPStatement stmt = cepAdm.getStatement(stmtName);
-            if (!stmt.isStopped()) {
-                stmt.stop();
-            }
-        }
     }
 
     public boolean process(StreamItem g) {
@@ -145,15 +129,6 @@ public abstract class RSPQLEngineImpl<S1 extends Stream, S extends RegisteredStr
         queryExecutions.put(q.getID(), accept);
         assignedSDS.put(q.getID(), sds);
 
-    }
-
-    public Stream getStream(String uri) {
-        //TODO should this be encoded?
-        return registeredStreams.get(uri);
-    }
-
-    public ContinuousQuery getQuery(String id) {
-        return registeredQueries.get(id);
     }
 
 }

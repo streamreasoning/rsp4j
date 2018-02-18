@@ -1,20 +1,17 @@
-package it.polimi.rspql.cql.s2_;
+package it.polimi.jasper.parser.streams;
 
-import it.polimi.rspql.Stream;
-import it.polimi.rspql.timevarying.TimeVarying;
 import it.polimi.rspql.Window;
+import it.polimi.spe.windowing.WindowOperator;
 import it.polimi.yasper.core.enums.WindowType;
 
 /**
  * Created by riccardo on 05/09/2017.
  */
-public interface WindowOperator<V extends TimeVarying, S extends Stream> extends StreamTo_Operator {
+public interface WindowOperatorNode extends WindowOperator{
 
     WindowType getType();
 
-    String getName();
 
-    boolean isNamed();
 
     int getT0();
 
@@ -27,7 +24,5 @@ public interface WindowOperator<V extends TimeVarying, S extends Stream> extends
     String getUnitStep();
 
     Window getWindowContent(long t0);
-
-    V apply(S s);
 
 }

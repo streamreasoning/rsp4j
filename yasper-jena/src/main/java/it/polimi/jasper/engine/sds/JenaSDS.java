@@ -62,7 +62,7 @@ public class JenaSDS extends DatasetImpl implements SDS {
     public void beforeEval() {
         setDefaultModel(getDefaultModel().union(knowledge_base));
         if (partialWindowsEnabled) {
-            namedWOFS.stream().forEach(namedWOF -> namedWOF.update(cep.getEPRuntime().getCurrentTime()));
+            namedWOFS.forEach(namedWOF -> namedWOF.update(cep.getEPRuntime().getCurrentTime()));
         }
     }
 

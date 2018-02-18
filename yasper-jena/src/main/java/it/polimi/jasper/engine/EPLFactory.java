@@ -1,9 +1,9 @@
-package it.polimi.yasper.core.query.operators.s2r;
+package it.polimi.jasper.engine;
 
 import com.espertech.esper.client.soda.*;
-import it.polimi.yasper.core.enums.WindowType;
+import it.polimi.jasper.parser.streams.WindowOperatorNode;
 import it.polimi.rspql.Stream;
-import it.polimi.rspql.cql.s2_.WindowOperator;
+import it.polimi.yasper.core.enums.WindowType;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import lombok.extern.log4j.Log4j;
 
@@ -19,11 +19,11 @@ import java.util.List;
 @Log4j
 public class EPLFactory {
 
-    public static EPStatementObjectModel toEPL(WindowOperator wof, Stream s) {
+    public static EPStatementObjectModel toEPL(WindowOperatorNode wof, Stream s) {
         return toEPL(wof, s.getURI());
     }
 
-    public static EPStatementObjectModel toEPL(WindowOperator wof, String s) {
+    public static EPStatementObjectModel toEPL(WindowOperatorNode wof, String s) {
         EPStatementObjectModel stmt = new EPStatementObjectModel();
 
         stmt.setAnnotations(getAnnotations(wof, s));
@@ -47,7 +47,33 @@ public class EPLFactory {
         return stmt;
     }
 
-    public static EPStatementObjectModel toIREPL(WindowOperator wof, String s) {
+
+    public static EPStatementObjectModel toEPL(int step, String unitStep, WindowType type, String s, View window, List<AnnotationPart> annotations) {
+        EPStatementObjectModel stmt = new EPStatementObjectModel();
+
+        stmt.setAnnotations(annotations);
+        SelectClause selectClause = SelectClause.create().addWildcard();
+        stmt.setSelectClause(selectClause);
+        FromClause fromClause = FromClause.create();
+        FilterStream stream = FilterStream.create(EncodingUtils.encode(s));
+        stream.addView(window);
+        fromClause.add(stream);
+        stmt.setFromClause(fromClause);
+
+        OutputLimitClause outputLimitClause;
+
+        if (WindowType.Physical.equals(type)) {
+            outputLimitClause = OutputLimitClause.create(OutputLimitSelector.SNAPSHOT, step);
+        } else {
+            TimePeriodExpression timePeriod = getTimePeriod(step, unitStep);
+            outputLimitClause = OutputLimitClause.create(OutputLimitSelector.SNAPSHOT, timePeriod);
+        }
+
+        stmt.setOutputLimitClause(outputLimitClause);
+        return stmt;
+    }
+
+    public static EPStatementObjectModel toIREPL(WindowOperatorNode wof, String s) {
         EPStatementObjectModel stmt = new EPStatementObjectModel();
 
         stmt.setAnnotations(getAnnotations(wof, s));
@@ -74,15 +100,15 @@ public class EPLFactory {
     }
 
 
-    public static EPStatementObjectModel toIREPL(WindowOperator wof, Stream s) {
+    public static EPStatementObjectModel toIREPL(WindowOperatorNode wof, Stream s) {
         return toIREPL(wof, s.getURI());
     }
 
-    private static List<AnnotationPart> getAnnotations(WindowOperator wof, Stream s) {
+    private static List<AnnotationPart> getAnnotations(WindowOperatorNode wof, Stream s) {
         return getAnnotations(wof, s.getURI());
     }
 
-    private static List<AnnotationPart> getAnnotations(WindowOperator wof, String s) {
+    private static List<AnnotationPart> getAnnotations(WindowOperatorNode wof, String s) {
         AnnotationPart name = new AnnotationPart();
         name.setName("Name");
         name.addValue(EncodingUtils.encode(wof.getName()));
@@ -105,7 +131,30 @@ public class EPLFactory {
         return Arrays.asList(name, stream_uri, range, slide);
     }
 
-    public static View getWindow(WindowOperator wof) {
+    public static List<AnnotationPart> getAnnotations(String name1, int range1, int step1, String s) {
+        AnnotationPart name = new AnnotationPart();
+        name.setName("Name");
+        name.addValue(EncodingUtils.encode(name1));
+
+        AnnotationPart range = new AnnotationPart();
+        range.setName("Tag");
+        range.addValue("name", "range");
+        range.addValue("value", range1 + "");
+
+        AnnotationPart slide = new AnnotationPart();
+        slide.setName("Tag");
+        slide.addValue("name", "step");
+        slide.addValue("value", step1 + "");
+
+        AnnotationPart stream_uri = new AnnotationPart();
+        stream_uri.setName("Tag");
+        stream_uri.addValue("name", "stream");
+        stream_uri.addValue("value", (EncodingUtils.encode(s)));
+
+        return Arrays.asList(name, stream_uri, range, slide);
+    }
+
+    public static View getWindow(WindowOperatorNode wof) {
         View view;
         ArrayList<Expression> parameters = new ArrayList<Expression>();
         if (WindowType.Physical.equals(wof.getType())) {
@@ -115,6 +164,19 @@ public class EPLFactory {
 
         } else {
             parameters.add(getTimePeriod(wof.getRange(), wof.getUnitRange()));
+            view = View.create("win", "time", parameters);
+        }
+        return view;
+    }
+
+    public static View getWindow(int range, String unitRange, WindowType type) {
+        View view;
+        ArrayList<Expression> parameters = new ArrayList<Expression>();
+        if (WindowType.Physical.equals(type)) {
+            parameters.add(Expressions.constant(range));
+            view = View.create("win", "length", parameters);
+        } else {
+            parameters.add(getTimePeriod(range, unitRange));
             view = View.create("win", "time", parameters);
         }
         return view;

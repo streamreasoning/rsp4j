@@ -7,10 +7,9 @@ import com.espertech.esper.core.service.StatementLifecycleSvc;
 import com.espertech.esper.core.service.StatementMetadata;
 import com.espertech.esper.dispatch.DispatchService;
 import com.espertech.esper.timer.TimeSourceService;
-import it.polimi.rspql.Stream;
-import it.polimi.rspql.timevarying.TimeVarying;
 import it.polimi.rspql.Window;
-import it.polimi.rspql.cql.s2_.WindowOperator;
+import it.polimi.rspql.cql.s2_.WindowOperatorNode;
+import it.polimi.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.enums.WindowType;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +17,7 @@ import lombok.Setter;
 /**
  * Created by riccardo on 04/09/2017.
  */
-public class WindowOperatorEPSImpl extends EPStatementImpl implements WindowOperator {
+public class WindowOperatorEPSImpl extends EPStatementImpl implements WindowOperatorNode, it.polimi.spe.windowing.WindowOperator {
 
     @Setter
     @Getter
@@ -72,11 +71,6 @@ public class WindowOperatorEPSImpl extends EPStatementImpl implements WindowOper
     }
 
     @Override
-    public TimeVarying apply(Stream s) {
-        return null;
-    }
-
-    @Override
     public Window getWindowContent(long t0) {
         return null;
     }
@@ -88,6 +82,11 @@ public class WindowOperatorEPSImpl extends EPStatementImpl implements WindowOper
 
     @Override
     public WindowType getType() {
+        return null;
+    }
+
+    @Override
+    public WindowAssigner apply(Stream s) {
         return null;
     }
 }

@@ -23,14 +23,10 @@ import com.espertech.esper.schedule.ScheduleAdjustmentCallback;
 import com.espertech.esper.schedule.ScheduleHandleCallback;
 import com.espertech.esper.util.StopCallback;
 import com.espertech.esper.view.*;
-import it.polimi.rspql.Item;
-import it.polimi.rspql.cql.s2_.WindowOperator;
-import it.polimi.rspql.instantaneous.Instantaneous;
 import it.polimi.rspql.timevarying.TimeVarying;
 
 import java.util.ArrayDeque;
 import java.util.Iterator;
-import java.util.Observer;
 
 /**
  * This view is a moving timeWindow extending the specified amount of milliseconds into the past.
@@ -43,7 +39,7 @@ import java.util.Observer;
  * as the system-time-based timeWindow moves on. However child views receive updates containing new data
  * as soon as the new data arrives.
  */
-public class TimeVaryingItemView extends ViewSupport implements CloneableView, DataWindowView, ScheduleAdjustmentCallback, StoppableView, StopCallback, TimeVarying {
+public abstract class TimeVaryingItemView extends ViewSupport implements CloneableView, DataWindowView, ScheduleAdjustmentCallback, StoppableView, StopCallback, TimeVarying {
     private final WindowOperatorFactory timeWindowViewFactory;
     private final ExprTimePeriodEvalDeltaConst timeDeltaComputation;
     public final TimeWindow timeWindow;
@@ -253,30 +249,5 @@ public class TimeVaryingItemView extends ViewSupport implements CloneableView, D
     }
 
 
-    @Override
-    public Instantaneous eval(long t) {
-        return null;
-    }
-
-
-    @Override
-    public void setContent(Item item) {
-
-    }
-
-    @Override
-    public Item getContent() {
-        return null;
-    }
-
-    @Override
-    public void setWindowOperator(WindowOperator w) {
-
-    }
-
-    @Override
-    public void addObserver(Observer o) {
-
-    }
 }
 

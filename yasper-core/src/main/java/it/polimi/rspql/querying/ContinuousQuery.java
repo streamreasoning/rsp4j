@@ -2,7 +2,7 @@ package it.polimi.rspql.querying;
 
 import it.polimi.rspql.Stream;
 import it.polimi.rspql.Visitable;
-import it.polimi.rspql.cql.s2_.WindowOperator;
+import it.polimi.spe.windowing.WindowOperator;
 import it.polimi.yasper.core.enums.StreamOperator;
 
 import java.util.Map;
@@ -20,7 +20,7 @@ public interface ContinuousQuery extends Visitable {
 
     Set<? extends WindowOperator> getNamedWindowsSet();
 
-    Map<WindowOperator, Stream> getWindowMap();
+    Map<? extends WindowOperator, Stream> getWindowMap();
 
     Set<Stream> getStreamSet();
 

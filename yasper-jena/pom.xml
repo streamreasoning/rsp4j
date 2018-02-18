@@ -27,6 +27,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.espertech</groupId>
+            <artifactId>esper</artifactId>
+            <version>6.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>it.polimi.sr.yasper</groupId>
             <artifactId>yasper-core</artifactId>
             <version>1.0.1</version>

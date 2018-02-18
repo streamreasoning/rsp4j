@@ -85,7 +85,7 @@ public class EPServicesContextFactoryRSP implements EPServicesContextFactory {
         // JNDI context for binding resources
         EngineEnvContext jndiContext = new EngineEnvContext();
 
-        // Engine import service
+        // RSPEngineImpl import service
         EngineImportService engineImportService = makeEngineImportService(configSnapshot, AggregationFactoryFactoryDefault.INSTANCE, epServiceProvider.getURI());
 
         // Event Type Id Generation
@@ -217,7 +217,7 @@ public class EPServicesContextFactoryRSP implements EPServicesContextFactory {
                 new FilterBooleanExpressionFactoryImpl(), new DataCacheFactory(), new MultiMatchHandlerFactoryImpl(), NamedWindowConsumerMgmtServiceImpl.INSTANCE,
                 AggregationFactoryFactoryDefault.INSTANCE);
 
-        // Engine services subset available to statements
+        // RSPEngineImpl services subset available to statements
         statementContextFactory.setStmtEngineServices(services);
 
         // Circular dependency
@@ -300,7 +300,7 @@ public class EPServicesContextFactoryRSP implements EPServicesContextFactory {
      *
      * @param variableService     service to apply to
      * @param variables           configured variables
-     * @param engineImportService engine imports
+     * @param engineImportService RSPEngineImpl imports
      */
     protected static void initVariables(VariableService variableService, Map<String, ConfigurationVariable> variables, EngineImportService engineImportService) {
         for (Map.Entry<String, ConfigurationVariable> entry : variables.entrySet()) {
@@ -321,7 +321,7 @@ public class EPServicesContextFactoryRSP implements EPServicesContextFactory {
      *
      * @param eventAdapterService is events adapter
      * @param configSnapshot      is the config snapshot
-     * @param engineImportService engine import service
+     * @param engineImportService RSPEngineImpl import service
      */
     protected static void init(EventAdapterService eventAdapterService, ConfigurationInformation configSnapshot, EngineImportService engineImportService) {
         // Extract legacy event type definitions for each event type name, if supplied.
@@ -354,7 +354,7 @@ public class EPServicesContextFactoryRSP implements EPServicesContextFactory {
                 String typeName = entry.getKey();
                 eventAdapterService.addBeanType(typeName, entry.getValue(), false, true, true, true);
             } catch (EventAdapterException ex) {
-                throw new ConfigurationException("Error configuring engine: " + ex.getMessage(), ex);
+                throw new ConfigurationException("Error configuring RSPEngineImpl: " + ex.getMessage(), ex);
             }
         }
 
@@ -364,7 +364,7 @@ public class EPServicesContextFactoryRSP implements EPServicesContextFactory {
             try {
                 eventAdapterService.addAvroType(entry.getKey(), entry.getValue(), true, true, true, false, false);
             } catch (EventAdapterException ex) {
-                throw new ConfigurationException("Error configuring engine: " + ex.getMessage(), ex);
+                throw new ConfigurationException("Error configuring RSPEngineImpl: " + ex.getMessage(), ex);
             }
         }
 
@@ -384,7 +384,7 @@ public class EPServicesContextFactoryRSP implements EPServicesContextFactory {
             try {
                 eventAdapterService.addXMLDOMType(entry.getKey(), entry.getValue(), schemaModel, true);
             } catch (EventAdapterException ex) {
-                throw new ConfigurationException("Error configuring engine: " + ex.getMessage(), ex);
+                throw new ConfigurationException("Error configuring RSPEngineImpl: " + ex.getMessage(), ex);
             }
         }
 
@@ -394,7 +394,7 @@ public class EPServicesContextFactoryRSP implements EPServicesContextFactory {
             Map<String, Set<String>> typesReferences = toTypesReferences(configSnapshot.getMapTypeConfigurations());
             dependentMapOrder = GraphUtil.getTopDownOrder(typesReferences);
         } catch (GraphCircularDependencyException e) {
-            throw new ConfigurationException("Error configuring engine, dependency graph between map type names is circular: " + e.getMessage(), e);
+            throw new ConfigurationException("Error configuring RSPEngineImpl, dependency graph between map type names is circular: " + e.getMessage(), e);
         }
 
         Map<String, Properties> mapNames = configSnapshot.getEventTypesMapEvents();
@@ -418,7 +418,7 @@ public class EPServicesContextFactoryRSP implements EPServicesContextFactory {
                 }
             }
         } catch (EventAdapterException ex) {
-            throw new ConfigurationException("Error configuring engine: " + ex.getMessage(), ex);
+            throw new ConfigurationException("Error configuring RSPEngineImpl: " + ex.getMessage(), ex);
         }
 
         // Add object-array in dependency order such that supertypes are added before subtypes
@@ -427,7 +427,7 @@ public class EPServicesContextFactoryRSP implements EPServicesContextFactory {
             Map<String, Set<String>> typesReferences = toTypesReferences(configSnapshot.getObjectArrayTypeConfigurations());
             dependentObjectArrayOrder = GraphUtil.getTopDownOrder(typesReferences);
         } catch (GraphCircularDependencyException e) {
-            throw new ConfigurationException("Error configuring engine, dependency graph between object array type names is circular: " + e.getMessage(), e);
+            throw new ConfigurationException("Error configuring RSPEngineImpl, dependency graph between object array type names is circular: " + e.getMessage(), e);
         }
         Map<String, Map<String, Object>> nestableObjectArrayNames = configSnapshot.getEventTypesNestableObjectArrayEvents();
         dependentObjectArrayOrder.addAll(nestableObjectArrayNames.keySet());
@@ -440,7 +440,7 @@ public class EPServicesContextFactoryRSP implements EPServicesContextFactory {
                 eventAdapterService.addNestableObjectArrayType(objectArrayName, propertyTypesCompiled, objectArrayConfig, true, true, true, false, false, false, null);
             }
         } catch (EventAdapterException ex) {
-            throw new ConfigurationException("Error configuring engine: " + ex.getMessage(), ex);
+            throw new ConfigurationException("Error configuring RSPEngineImpl: " + ex.getMessage(), ex);
         }
 
         // Add plug-in event representations
@@ -503,7 +503,7 @@ public class EPServicesContextFactoryRSP implements EPServicesContextFactory {
      *
      * @param configSnapshot            config info
      * @param aggregationFactoryFactory factory of aggregation service provider
-     * @param engineURI engine URI
+     * @param engineURI RSPEngineImpl URI
      * @return service
      */
     protected static EngineImportService makeEngineImportService(ConfigurationInformation configSnapshot, AggregationFactoryFactory aggregationFactoryFactory, String engineURI) {
@@ -520,7 +520,7 @@ public class EPServicesContextFactoryRSP implements EPServicesContextFactory {
         boolean codegenGetters = configSnapshot.getEngineDefaults().getExecution().getCodeGeneration().isEnablePropertyGetter();
         if (codegenGetters) {
             if (EPServicesContextFactoryDefault.PackageName.check("uri_" + engineURI) == EPServicesContextFactoryDefault.PackageName.INVALID) {
-                throw new ConfigurationException("Invalid engine URI '" + engineURI + "', code generation requires an engine URI that is a valid Java-language identifier and may not contain Java language keywords");
+                throw new ConfigurationException("Invalid RSPEngineImpl URI '" + engineURI + "', code generation requires an RSPEngineImpl URI that is a valid Java-language identifier and may not contain Java language keywords");
             }
         }
 
@@ -557,7 +557,7 @@ public class EPServicesContextFactoryRSP implements EPServicesContextFactory {
                 engineImportService.addSingleRow(config.getName(), config.getFunctionClassName(), config.getFunctionMethodName(), config.getValueCache(), config.getFilterOptimizable(), config.isRethrowExceptions(), config.getEventTypeName());
             }
         } catch (EngineImportException ex) {
-            throw new ConfigurationException("Error configuring engine: " + ex.getMessage(), ex);
+            throw new ConfigurationException("Error configuring RSPEngineImpl: " + ex.getMessage(), ex);
         }
 
         return engineImportService;
@@ -569,7 +569,7 @@ public class EPServicesContextFactoryRSP implements EPServicesContextFactory {
      * @param configSnapshot        is the config snapshot
      * @param schedulingService     is the timer stuff
      * @param schedulingMgmtService for statement schedule management
-     * @param engineImportService   engine import service
+     * @param engineImportService   RSPEngineImpl import service
      * @return database config svc
      */
     protected static DatabaseConfigService makeDatabaseRefService(ConfigurationInformation configSnapshot,
@@ -583,7 +583,7 @@ public class EPServicesContextFactoryRSP implements EPServicesContextFactory {
             ScheduleBucket allStatementsBucket = schedulingMgmtService.allocateBucket();
             databaseConfigService = new DatabaseConfigServiceImpl(configSnapshot.getDatabaseReferences(), schedulingService, allStatementsBucket, engineImportService);
         } catch (IllegalArgumentException ex) {
-            throw new ConfigurationException("Error configuring engine: " + ex.getMessage(), ex);
+            throw new ConfigurationException("Error configuring RSPEngineImpl: " + ex.getMessage(), ex);
         }
 
         return databaseConfigService;

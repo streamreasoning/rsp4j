@@ -2,31 +2,24 @@ package it.polimi.jasper.engine.stream;
 
 import com.espertech.esper.client.EPStatement;
 import it.polimi.rspql.RSPEngine;
-import it.polimi.yasper.core.stream.RegisteredStream;
-import it.polimi.yasper.core.stream.StreamSchema;
+import it.polimi.rspql.Stream;
+import it.polimi.spe.stream.rdf.RDFStream;
 import lombok.Getter;
 
 /**
  * Created by riccardo on 10/07/2017.
  */
 @Getter
-public class RegisteredRDFStream extends RegisteredStream {
+public class RegisteredRDFStream extends RDFStream implements Stream {
 
-    private String resolved_uri;
+    protected RDFStream stream;
+    protected EPStatement e;
+    protected RSPEngine engine;
 
-    public RegisteredRDFStream(String resolved_uri, RDFStream s, EPStatement e, RSPEngine engine) {
-        super(s, e, s.getURI(), engine);
-        this.resolved_uri=resolved_uri;
-    }
-
-    @Override
-    public StreamSchema getSchema() {
-        return super.getStream().getSchema();
-    }
-
-    @Override
-    public String getURI() {
-        return resolved_uri;
+    public RegisteredRDFStream(String uri, RDFStream s, EPStatement epl, RSPEngine engine) {
+        super(uri);
+        this.stream = s;
+        this.engine = engine;
     }
 
 

@@ -13,7 +13,7 @@ import com.espertech.esper.epl.expression.time.ExprTimePeriodEvalDeltaConstFacto
 import com.espertech.esper.view.*;
 import com.espertech.esper.view.window.RandomAccessByIndexGetter;
 import com.espertech.esper.view.window.TimeWindowView;
-import it.polimi.rspql.cql.s2_.WindowOperator;
+import it.polimi.rspql.cql.s2_.WindowOperatorNode;
 import it.polimi.yasper.esper.rsp.internals.esper.internals.WindowOperatorEPSImpl;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public class WindowOperatorFactory implements DataWindowViewFactory, DataWindowV
         StatementContext statementContext1 = agentInstanceViewFactoryContext.getStatementContext();
         EPStatementSPI statement = statementContext1.getStatement();
         TimeWindow timeWindow = new TimeWindow(agentInstanceViewFactoryContext.isRemoveStream());
-        if (statement instanceof WindowOperator) {
+        if (statement instanceof WindowOperatorNode) {
             WindowOperatorEPSImpl wo = (WindowOperatorEPSImpl) statement;
             wo.setWindow(timeWindow);
         }

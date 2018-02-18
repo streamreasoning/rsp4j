@@ -2,10 +2,8 @@ package it.polimi.sr.onsper.query;
 
 import it.polimi.rspql.SDSBuilder;
 import it.polimi.rspql.Stream;
-import it.polimi.rspql.cql.s2_.WindowOperator;
-import it.polimi.rspql.querying.ContinuousQuery;
+import it.polimi.rspql.cql.s2_.WindowOperatorNode;
 import it.polimi.yasper.core.enums.StreamOperator;
-import it.polimi.yasper.core.utils.QueryConfiguration;
 import it.unibz.inf.ontop.answering.reformulation.input.InputQuery;
 import org.semanticweb.owlapi.model.IRI;
 
@@ -40,17 +38,17 @@ public class OBSDAQueryImpl implements OBDAQuery {
     }
 
     @Override
-    public Set<? extends WindowOperator> getWindowsSet() {
+    public Set<? extends WindowOperatorNode> getWindowsSet() {
         return null;
     }
 
     @Override
-    public Set<? extends WindowOperator> getNamedWindowsSet() {
+    public Set<? extends WindowOperatorNode> getNamedWindowsSet() {
         return null;
     }
 
     @Override
-    public Map<WindowOperator, Stream> getWindowMap() {
+    public Map<WindowOperatorNode, Stream> getWindowMap() {
         return null;
     }
 

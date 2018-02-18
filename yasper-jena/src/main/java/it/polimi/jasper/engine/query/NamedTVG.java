@@ -1,36 +1,39 @@
 package it.polimi.jasper.engine.query;
 
+import it.polimi.esper.EsperStatementView;
 import it.polimi.jasper.engine.instantaneous.GraphBase;
 import it.polimi.jasper.engine.instantaneous.JenaGraph;
-import it.polimi.rspql.Window;
-import it.polimi.rspql.cql.s2_.WindowOperator;
 import it.polimi.rspql.instantaneous.Instantaneous;
+import it.polimi.spe.content.Content;
+import it.polimi.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.enums.Maintenance;
-import it.polimi.yasper.core.query.operators.s2r.windows.TimeVaryingItemImpl;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
+import java.util.Observable;
+
 @Log4j
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class NamedTVG extends TimeVaryingItemImpl<JenaGraph> {
+public class NamedTVG extends EsperStatementView<JenaGraph> {
 
-    private WindowOperator woa;
+    private WindowAssigner woa;
     private JenaGraph graph;
+    private String uri;
 
-    public NamedTVG(Maintenance maintenance, WindowOperator wo) {
+    public NamedTVG(String uri, Maintenance maintenance, WindowAssigner wo) {
         super(maintenance);
         this.woa = wo;
         this.graph = new GraphBase();
+        this.uri = uri;
     }
 
     @Override
     public void update(long t) {
-        Window windowContent = woa.getWindowContent(t);
-        //FIXME eval(null, null, t);
+        Content content = woa.getContent(t);
     }
 
     @Override
@@ -50,8 +53,12 @@ public class NamedTVG extends TimeVaryingItemImpl<JenaGraph> {
         return graph;
     }
 
+    public String getUri() {
+        return uri;
+    }
+
     @Override
-    public void setWindowOperator(WindowOperator w) {
-        woa = w;
+    public void addObservable(Observable windowAssigner) {
+
     }
 }

@@ -3,18 +3,19 @@ package it.polimi.jasper.engine;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.soda.CreateSchemaClause;
 import com.espertech.esper.client.soda.SchemaColumnDesc;
+import it.polimi.esper.RSPQLEngineImpl;
+import it.polimi.esper.wrapping.EsperStreamRegistrationService;
 import it.polimi.jasper.engine.query.JenaSDSQueryBuilder;
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.jasper.engine.reasoning.EntailmentImpl;
-import it.polimi.jasper.engine.stream.RDFStream;
 import it.polimi.jasper.engine.stream.RegisteredRDFStream;
 import it.polimi.jasper.parser.RSPQLParser;
 import it.polimi.rspql.SDSBuilder;
 import it.polimi.rspql.Stream;
 import it.polimi.rspql.querying.ContinuousQuery;
 import it.polimi.rspql.querying.ContinuousQueryExecution;
+import it.polimi.spe.stream.rdf.RDFStream;
 import it.polimi.yasper.core.engine.Entailment;
-import it.polimi.yasper.core.engine.RSPQLEngineImpl;
 import it.polimi.yasper.core.enums.EntailmentType;
 import it.polimi.yasper.core.exceptions.UnregisteredQueryExeception;
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
@@ -35,12 +36,14 @@ import java.io.StringWriter;
 import java.util.*;
 
 @Log4j
-public class JenaRSPQLEngineImpl extends RSPQLEngineImpl<RDFStream, RegisteredRDFStream> {
+public class JenaRSPQLEngineImpl extends RSPQLEngineImpl<RDFStream> {
 
     private HashMap<String, Entailment> entailments;
     @Getter
     private IRIResolver resolver;
     private RSPQLParser parser;
+
+    EsperStreamRegistrationService schemaAssigner;
 
     public JenaRSPQLEngineImpl(long t0, EngineConfiguration ec) {
         super(t0, ec);
@@ -57,18 +60,18 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl<RDFStream, RegisteredRD
         this.entailments.put(ent, new EntailmentImpl(ent, Rule.rulesFromURL(BaselinesUtils.RHODF_RULE_SET_RUNTIME), EntailmentType.RDFS));
         ent = EntailmentType.RHODF.name();
         this.entailments.put(ent, new EntailmentImpl(ent, Rule.rulesFromURL(BaselinesUtils.RHODF_RULE_SET_RUNTIME), EntailmentType.RHODF));
-
+        this.schemaAssigner = new EsperStreamRegistrationService(cepAdm);
     }
 
     @Override
-    public RegisteredRDFStream register(RDFStream s) {
+    public RDFStream register(RDFStream s) {
         /* NOTE in a federated context I may have several SDS maintained by the same RSPEngine as a manager.
            The stream registration, which happens before the query registration,
          has two option then lazy approach that waits for the first query using the stream to decide where
-          (SDS - RSP Engine) locate this Stream, or can use metadata found in the vois file. */
+          (SDS - RSP RSPEngineImpl) locate this Stream, or can use metadata found in the vois file. */
         String uri = this.resolver.resolveToString(s.getURI());
-        log.info("Registering Stream [" + uri + "]");
-        EPStatement epl = createStream(toEPLSchema(s), uri);
+
+        EPStatement epl = cepAdm.createEPL(toEPLSchema(s), uri);
 
         RegisteredRDFStream value = new RegisteredRDFStream(uri, s, epl, this);
         registeredStreams.put(uri, value);

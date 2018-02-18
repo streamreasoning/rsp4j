@@ -5,7 +5,7 @@ import it.polimi.jasper.parser.streams.Register;
 import it.polimi.jasper.parser.streams.WindowedStreamNode;
 import it.polimi.rspql.SDSBuilder;
 import it.polimi.rspql.Stream;
-import it.polimi.rspql.cql.s2_.WindowOperator;
+import it.polimi.jasper.parser.streams.WindowOperatorNode;
 import it.polimi.rspql.querying.ContinuousQuery;
 import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.utils.QueryConfiguration;
@@ -185,18 +185,18 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
     }
 
     @Override
-    public Set<? extends WindowOperator> getWindowsSet() {
+    public Set<? extends WindowOperatorNode> getWindowsSet() {
         return windows != null ? this.windows : new HashSet<>();
     }
 
     @Override
-    public Set<? extends WindowOperator> getNamedWindowsSet() {
+    public Set<? extends WindowOperatorNode> getNamedWindowsSet() {
         return namedwindows != null ? namedwindows.entrySet().stream().map(e -> e.getValue()).collect(Collectors.toSet()) : new HashSet<>();
     }
 
     @Override
-    public Map<WindowOperator, Stream> getWindowMap() {
-        Map<WindowOperator, Stream> map = new HashMap<>();
+    public Map<WindowOperatorNode, Stream> getWindowMap() {
+        Map<WindowOperatorNode, Stream> map = new HashMap<>();
         getWindows().stream().forEach(w -> map.put(w, w.getStream()));
         namedwindows.entrySet().stream().forEach(e -> map.put(e.getValue(), e.getValue().getStream()));
         return map;

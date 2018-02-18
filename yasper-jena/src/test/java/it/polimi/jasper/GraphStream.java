@@ -1,12 +1,9 @@
 package it.polimi.jasper;
 
-import it.polimi.jasper.engine.stream.RDFStream;
 import it.polimi.jasper.engine.stream.items.GraphStreamItem;
 import it.polimi.jasper.engine.stream.items.GraphStreamSchema;
-import it.polimi.jasper.engine.stream.items.RDFStreamSchema;
 import it.polimi.rspql.RSPEngine;
 import lombok.extern.log4j.Log4j;
-import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.*;
 
 import java.util.Random;

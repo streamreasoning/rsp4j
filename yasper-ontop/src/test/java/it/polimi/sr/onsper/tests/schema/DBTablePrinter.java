@@ -53,7 +53,7 @@ import java.util.StringJoiner;
  *     People: sky scraper</p>
  *
  * <p>Question:
- * <a target="_blank" href="http://tinyurl.com/pbwgess">System.out.println()
+ * <a target="_blank" href="http://tinyurl.com/pbwgess">SystemConfiguration.out.println()
  * from database into a table</a><br>
  *     People: Simon Cottrill, Tony Toews, Costis Aivali, Riggy, corsiKa</p>
  *

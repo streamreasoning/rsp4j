@@ -1,6 +1,6 @@
 package it.polimi.yasper.core.utils;
 
-import it.polimi.yasper.core.engine.RSPQLEngineImpl;
+import it.polimi.esper.RSPQLEngineImpl;
 
 /**
  * Created by riccardo on 01/09/2017.

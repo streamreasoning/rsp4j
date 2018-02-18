@@ -1,6 +1,7 @@
 package it.polimi.yasper.core.stream;
 
 import it.polimi.rdf.RDFLine;
+import it.polimi.spe.stream.StreamElement;
 import it.polimi.yasper.core.query.Updatable;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +10,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Set;
 
-public abstract class StreamItem<T> extends HashMap<String, Object> {
+public abstract class StreamItem<T> extends HashMap<String, Object> implements StreamElement {
 
     private static final long serialVersionUID = 1L;
 
@@ -61,4 +62,14 @@ public abstract class StreamItem<T> extends HashMap<String, Object> {
     public abstract Set<RDFLine> serialize();
 
     public abstract String getStreamURI();
+
+    @Override
+    public long getTimestamp() {
+        return (long) this.get(appTimestamp);
+    }
+
+    @Override
+    public Object getContent() {
+        return this.get(content);
+    }
 }

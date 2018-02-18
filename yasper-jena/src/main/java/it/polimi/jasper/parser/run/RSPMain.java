@@ -3,7 +3,7 @@ package it.polimi.jasper.parser.run;
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.jasper.parser.RSPQLParser;
 import it.polimi.jasper.parser.streams.WindowedStreamNode;
-import it.polimi.yasper.core.query.operators.s2r.EPLFactory;
+import it.polimi.jasper.engine.EPLFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.graph.Node;
 import org.apache.jena.query.SortCondition;

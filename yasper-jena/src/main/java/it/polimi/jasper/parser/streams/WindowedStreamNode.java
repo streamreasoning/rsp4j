@@ -1,13 +1,18 @@
 package it.polimi.jasper.parser.streams;
 
+import com.espertech.esper.client.soda.AnnotationPart;
+import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.View;
-import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
+import it.polimi.jasper.engine.EPLFactory;
+import it.polimi.esper.wrapping.EsperWindowAssigner;
+import it.polimi.rspql.Stream;
 import it.polimi.rspql.Window;
-import it.polimi.rspql.cql.s2_.WindowOperator;
+import it.polimi.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.enums.WindowType;
 import lombok.*;
 import org.apache.jena.graph.Node_URI;
 
+import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,7 +24,7 @@ import java.util.regex.Pattern;
 @NoArgsConstructor
 @ToString(exclude = {"regex", "p"})
 @RequiredArgsConstructor
-public class WindowedStreamNode implements WindowOperator<TimeVaryingInfGraph, StreamNode> {
+public class WindowedStreamNode implements WindowOperatorNode, it.polimi.spe.windowing.WindowOperator {
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -125,11 +130,6 @@ public class WindowedStreamNode implements WindowOperator<TimeVaryingInfGraph, S
     }
 
     @Override
-    public TimeVaryingInfGraph apply(StreamNode streamNode) {
-        return null;
-    }
-
-    @Override
     public String getName() {
         return iri.getURI();
     }
@@ -159,4 +159,11 @@ public class WindowedStreamNode implements WindowOperator<TimeVaryingInfGraph, S
         return unit_beta;
     }
 
+    @Override
+    public WindowAssigner apply(Stream s) {
+        View window = EPLFactory.getWindow(getRange(), getUnitRange(), getType());
+        List<AnnotationPart> annotations = EPLFactory.getAnnotations(getName(), getRange(), getStep(), getStreamURI());
+        EPStatementObjectModel epStatementObjectModel = EPLFactory.toEPL(getStep(), getUnitStep(), getType(), getStreamURI(), window, annotations);
+        return new EsperWindowAssigner(epStatementObjectModel);
+    }
 }

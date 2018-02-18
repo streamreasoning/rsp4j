@@ -23,7 +23,7 @@ public class BaseInfTVGraph extends BaseInfGraph implements InstantaneousInfGrap
      * Constructor
      *
      * @param data     the raw data file to be augmented with entailments
-     * @param reasoner the engine, with associated tbox data, whose find interface
+     * @param reasoner the RSPEngineImpl, with associated tbox data, whose find interface
      */
     public BaseInfTVGraph(Graph data, Reasoner reasoner, long timestamp, JenaGraph w) {
         super(data, reasoner);

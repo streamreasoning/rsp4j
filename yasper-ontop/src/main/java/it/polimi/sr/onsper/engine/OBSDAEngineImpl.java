@@ -8,7 +8,7 @@ import it.polimi.sr.onsper.query.OBSDAQueryBuilder;
 import it.polimi.sr.onsper.query.schema.OntopJavaTypeFactory;
 import it.polimi.sr.onsper.streams.RegisteredRelStream;
 import it.polimi.sr.onsper.streams.RelStream;
-import it.polimi.yasper.core.engine.RSPQLEngineImpl;
+import it.polimi.esper.RSPQLEngineImpl;
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.stream.StreamSchema;
 import it.polimi.yasper.core.utils.EngineConfiguration;
@@ -17,12 +17,11 @@ import lombok.extern.log4j.Log4j;
 import org.apache.calcite.jdbc.*;
 import org.apache.commons.rdf.api.Graph;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import static it.polimi.yasper.core.query.operators.s2r.EPLFactory.toEPLSchema;
+import static it.polimi.jasper.EPLFactory.toEPLSchema;
 
 /**
  * Created by riccardo on 05/09/2017.

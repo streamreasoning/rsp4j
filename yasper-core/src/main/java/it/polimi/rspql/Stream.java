@@ -1,5 +1,6 @@
 package it.polimi.rspql;
 
+import it.polimi.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.stream.StreamSchema;
 
 /**
@@ -15,4 +16,5 @@ public interface Stream {
 
     String getURI();
 
+    void addObserver(WindowAssigner windowAssigner);
 }

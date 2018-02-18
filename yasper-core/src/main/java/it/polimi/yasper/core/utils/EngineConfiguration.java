@@ -1,6 +1,12 @@
 package it.polimi.yasper.core.utils;
 
 import it.polimi.rspql.querying.ContinuousQuery;
+import it.polimi.spe.report.Report;
+import it.polimi.spe.report.ReportImpl;
+import it.polimi.spe.report.strategies.NonEmptyContent;
+import it.polimi.spe.report.strategies.OnContentChange;
+import it.polimi.spe.report.strategies.OnWindowClose;
+import it.polimi.spe.report.strategies.Periodic;
 import it.polimi.yasper.core.enums.Time;
 import it.polimi.yasper.core.stream.StreamSchema;
 import org.apache.commons.configuration.ConfigurationException;
@@ -68,7 +74,41 @@ public class EngineConfiguration extends PropertiesConfiguration {
         return StreamSchema.UNKNOWN;
     }
 
-    public String getBaseIRI(){
+    public String getBaseIRI() {
         return this.getString(BASE_IRI);
+    }
+
+
+    public boolean onWindowClose() {
+        return this.getBoolean(REPORT_STRATEGY_WC, false);
+    }
+
+    public boolean onContentChange() {
+        return this.getBoolean(REPORT_STRATEGY_CC, false);
+    }
+
+    public boolean nonEmptyContent() {
+        return this.getBoolean(REPORT_STRATEGY_NC, false);
+    }
+
+    public boolean periodic() {
+        return this.getBoolean(REPORT_STRATEGY_PP, false);
+    }
+
+    public Report getReport() {
+        Report report = new ReportImpl();
+
+        if (onContentChange())
+            report.add(new OnContentChange());
+        if (nonEmptyContent())
+            report.add(new NonEmptyContent());
+        if (onContentChange())
+            report.add(new OnWindowClose());
+        if (periodic())
+            report.add(new Periodic());
+
+        //TODO remove period from policy
+
+        return report;
     }
 }

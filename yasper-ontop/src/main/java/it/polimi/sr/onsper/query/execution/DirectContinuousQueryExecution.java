@@ -6,7 +6,6 @@ import it.polimi.rspql.querying.ContinuousQueryExecution;
 import it.polimi.rspql.querying.SDS;
 import it.polimi.rspql.timevarying.TimeVarying;
 import it.polimi.sr.onsper.query.OBDAQuery;
-import it.polimi.sr.onsper.query.OBSDAQueryImpl;
 import it.polimi.yasper.core.query.response.InstantaneousResponse;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
 import it.unibz.inf.ontop.answering.reformulation.impl.SQLExecutableQuery;
