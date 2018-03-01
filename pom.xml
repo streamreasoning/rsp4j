@@ -21,8 +21,6 @@
     <modules>
         <module>yasper-core</module>
         <module>yasper-jena</module>
-        <module>yasper-ontop</module>
-        <module>internals</module>
     </modules>
 
     <dependencyManagement>
