@@ -79,11 +79,6 @@
     </build>
     <dependencies>
         <dependency>
-            <groupId>com.github.streamreasoning.heaven</groupId>
-            <artifactId>heaven-commons</artifactId>
-            <version>0.9.3</version>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.16.10</version>
