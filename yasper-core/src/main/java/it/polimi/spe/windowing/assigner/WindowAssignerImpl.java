@@ -2,13 +2,11 @@ package it.polimi.spe.windowing.assigner;
 
 import it.polimi.rspql.Stream;
 import it.polimi.spe.content.Content;
-import it.polimi.spe.content.ContentList;
+import it.polimi.spe.content.ContentTriple;
 import it.polimi.spe.content.viewer.View;
 import it.polimi.spe.exceptions.OutOfOrderElementException;
 import it.polimi.spe.report.Report;
 import it.polimi.spe.report.ReportGrain;
-import it.polimi.spe.report.ReportImpl;
-import it.polimi.spe.report.strategies.ReportingStrategy;
 import it.polimi.spe.scope.Tick;
 import it.polimi.spe.stream.StreamElement;
 import it.polimi.spe.time.Time;
@@ -16,15 +14,14 @@ import it.polimi.spe.time.TimeFactory;
 import it.polimi.spe.time.TimeInstant;
 import it.polimi.spe.windowing.Window;
 import it.polimi.spe.windowing.WindowImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Log4j
 public class WindowAssignerImpl extends Observable implements WindowAssigner, Observer {
 
-    final Logger log = LoggerFactory.getLogger(WindowAssigner.class);
     private final Stream stream;
     private final long a, b;
     private final Time time;
@@ -36,25 +33,19 @@ public class WindowAssignerImpl extends Observable implements WindowAssigner, Ob
     private ReportGrain aw;
     private Report report;
     private long tc0;
+    private long toi;
 
     public WindowAssignerImpl(Stream s, long a, long b, long t0, long tc0) {
         this.stream = s;
-        this.stream.addObserver(this);
         this.a = a;
         this.b = b;
         this.t0 = t0;
         this.tc0 = tc0;
+        this.toi = 0;
         this.active_windows = new HashMap<>();
         this.to_evict = new HashSet<>();
         this.time = TimeFactory.getInstance();
-    }
-
-    public void addReportingStrategy(ReportingStrategy strategy) {
-        if (report == null) {
-            report = new ReportImpl();
-        }
-        strategy.setActiveWindows(active_windows);
-        report.add(strategy);
+        this.stream.addWindowAssiger(this);
     }
 
     @Override
@@ -151,26 +142,29 @@ public class WindowAssignerImpl extends Observable implements WindowAssigner, Ob
 
         //TODO eviction
 
-//        to_evict.forEach(w -> {
-//            log.debug("Evicting [" + w.getO() + "," + w.getC() + ")");
-//            active_windows.remove(w);
-//        });
-//        to_evict.clear();
+        to_evict.forEach(w -> {
+            log.debug("Evicting [" + w.getO() + "," + w.getC() + ")");
+            active_windows.remove(w);
+            if (toi < w.getC())
+                toi = w.getC() + b;
+        });
+        to_evict.clear();
     }
 
     private void scope(long t_e) {
-        long c_sup = (long) Math.ceil((Math.abs(t_e - tc0) / b) * b);
+        long c_sup = (long) Math.ceil(((double) Math.abs(t_e - tc0) / (double) b)) * b;
         long o_i = c_sup - a;
-        log.debug("Calculating Scope: First Window Opens at [" + o_i + "]. Last Window Closes at [" + c_sup + "]");
+        log.debug("Calculating the Windows to Open. First one opens at [" + o_i + "] and closes at [" + c_sup + "]");
 
         do {
             log.debug("Computing Window [" + o_i + "," + (o_i + a) + ") if absent");
 
             active_windows
-                    .computeIfAbsent(new WindowImpl(o_i, o_i + a), x -> new ContentList());
+                    .computeIfAbsent(new WindowImpl(o_i, o_i + a), x -> new ContentTriple());
             o_i += b;
 
         } while (o_i <= t_e);
+
     }
 
 
@@ -208,6 +202,8 @@ public class WindowAssignerImpl extends Observable implements WindowAssigner, Ob
     }
 
     private void report(Content c) {
+        //TODO the reporting makes the content visible
+        // but the execution of the query is not
         setChanged();
         notifyObservers(c);
     }

@@ -1,20 +1,19 @@
 package it.polimi.spe.content;
 
+import com.espertech.esper.client.EventBean;
 import it.polimi.spe.stream.StreamElement;
-import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.api.RDF;
-import org.apache.commons.rdf.api.Triple;
-import org.apache.commons.rdf.simple.SimpleRDF;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContentGraph implements Content {
+public class ContentBean implements Content {
 
-    private List<Graph> elements;
+    private List<EventBean> elements;
+    @Setter
     private long last_timestamp_changed;
 
-    public ContentGraph() {
+    public ContentBean() {
         this.elements = new ArrayList<>();
     }
 
@@ -25,8 +24,13 @@ public class ContentGraph implements Content {
 
     @Override
     public void add(StreamElement e) {
-        elements.add((Graph) e.getContent());
+        add((EventBean) e.getContent());
+        System.out.println();
         this.last_timestamp_changed = e.getTimestamp();
+    }
+
+    public void add(EventBean e) {
+        elements.add(e);
     }
 
     @Override
@@ -40,12 +44,7 @@ public class ContentGraph implements Content {
         return elements.toString();
     }
 
-
-    public Graph coalese() {
-        RDF rdf = new SimpleRDF();
-        Graph g = rdf.createGraph();
-        elements.stream().flatMap(Graph::stream).forEach(g::add);
-
-        return g;
+    public EventBean[] asArray() {
+        return elements.toArray(new EventBean[size()]);
     }
 }

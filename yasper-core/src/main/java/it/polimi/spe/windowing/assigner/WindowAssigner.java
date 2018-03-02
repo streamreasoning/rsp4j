@@ -12,8 +12,6 @@ import java.util.List;
 
 public interface WindowAssigner {
 
-    void addReportingStrategy(ReportingStrategy strategy);
-
     Report getReport();
 
     Tick getTick();

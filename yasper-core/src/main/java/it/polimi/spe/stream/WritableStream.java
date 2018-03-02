@@ -18,8 +18,8 @@ public class WritableStream extends Observable implements Stream {
     }
 
     @Override
-    public void addObserver(WindowAssigner windowAssigner) {
-        this.addObserver(windowAssigner);
+    public void addWindowAssiger(WindowAssigner windowAssigner) {
+        this.addWindowAssiger(windowAssigner);
     }
 
     public static class Elem implements StreamElement {

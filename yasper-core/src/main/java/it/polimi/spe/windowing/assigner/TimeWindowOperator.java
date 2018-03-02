@@ -22,13 +22,12 @@ public class TimeWindowOperator implements WindowOperator {
 
     @Override
     public boolean isNamed() {
-        return false;
+        return iri != null;
     }
 
     @Override
     public WindowAssigner apply(Stream s) {
         WindowAssignerImpl windowAssigner = new WindowAssignerImpl(s, a, b, 0, 0);
-        s.addObserver(windowAssigner);
         return windowAssigner;
     }
 }

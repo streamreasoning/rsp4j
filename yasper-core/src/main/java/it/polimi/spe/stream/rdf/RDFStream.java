@@ -19,7 +19,7 @@ public class RDFStream implements Stream {
     }
 
     @Override
-    public void addObserver(WindowAssigner windowAssigner) {
+    public void addWindowAssiger(WindowAssigner windowAssigner) {
 
     }
 

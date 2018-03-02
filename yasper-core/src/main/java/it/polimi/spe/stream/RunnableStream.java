@@ -2,15 +2,25 @@ package it.polimi.spe.stream;
 
 import it.polimi.rspql.Stream;
 import it.polimi.spe.windowing.assigner.WindowAssigner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j;
+import org.apache.commons.rdf.api.RDF;
+import org.apache.commons.rdf.api.Triple;
+import org.apache.commons.rdf.simple.SimpleRDF;
 
 import java.util.Observable;
+import java.util.Observer;
 
 
+@Log4j
 public class RunnableStream extends Observable implements Runnable, Stream {
 
-    final Logger log = LoggerFactory.getLogger(RunnableStream.class);
+    public RunnableStream(String iri) {
+        this.iri = iri;
+    }
+
+    private String iri;
+    RDF rdf = new SimpleRDF();
 
     public void run() {
         int i = 0;
@@ -29,22 +39,22 @@ public class RunnableStream extends Observable implements Runnable, Stream {
 
     @Override
     public String getURI() {
-        return null;
+        return iri;
     }
 
     @Override
-    public void addObserver(WindowAssigner windowAssigner) {
-        this.addObserver(windowAssigner);
+    public void addWindowAssiger(WindowAssigner windowAssigner) {
+        this.addObserver((Observer) windowAssigner);
     }
 
     public class Elem implements StreamElement {
 
         private long timestamp;
-        private Object content;
+        private Triple content;
 
-        public Elem(long i, Object c) {
+        public Elem(long i, String s) {
             timestamp = i;
-            content = c;
+            content = rdf.createTriple(rdf.createIRI("http://asubject/" + s), rdf.createIRI("http://aproperty"), rdf.createIRI("http://anObject"));
 
         }
 

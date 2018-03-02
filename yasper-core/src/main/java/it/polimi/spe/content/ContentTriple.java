@@ -9,12 +9,12 @@ import org.apache.commons.rdf.simple.SimpleRDF;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContentGraph implements Content {
+public class ContentTriple implements Content {
 
-    private List<Graph> elements;
+    private List<Triple> elements;
     private long last_timestamp_changed;
 
-    public ContentGraph() {
+    public ContentTriple() {
         this.elements = new ArrayList<>();
     }
 
@@ -25,7 +25,7 @@ public class ContentGraph implements Content {
 
     @Override
     public void add(StreamElement e) {
-        elements.add((Graph) e.getContent());
+        elements.add((Triple) e.getContent());
         this.last_timestamp_changed = e.getTimestamp();
     }
 
@@ -44,7 +44,7 @@ public class ContentGraph implements Content {
     public Graph coalese() {
         RDF rdf = new SimpleRDF();
         Graph g = rdf.createGraph();
-        elements.stream().flatMap(Graph::stream).forEach(g::add);
+        elements.forEach(g::add);
 
         return g;
     }

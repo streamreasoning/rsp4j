@@ -31,7 +31,7 @@ public class WindowImpl implements Window {
 
     @Override
     public String toString() {
-        return "Window [" + c + "," + o + ')';
+        return "Window [" + o + "," + c + ')';
     }
 
     @Override
