@@ -1,17 +1,19 @@
 package it.polimi.jasper.engine.query;
 
-import it.polimi.esper.EsperStatementView;
 import it.polimi.jasper.engine.instantaneous.GraphBase;
 import it.polimi.jasper.engine.instantaneous.JenaGraph;
-import it.polimi.rspql.instantaneous.Instantaneous;
-import it.polimi.spe.content.Content;
-import it.polimi.spe.windowing.assigner.WindowAssigner;
+import it.polimi.jasper.esper.EsperStatementView;
+import it.polimi.yasper.core.rspql.Instantaneous;
+import it.polimi.yasper.core.spe.content.Content;
+import it.polimi.yasper.core.spe.content.ContentBean;
+import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.enums.Maintenance;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
+import java.util.List;
 import java.util.Observable;
 
 @Log4j
@@ -33,17 +35,16 @@ public class NamedTVG extends EsperStatementView<JenaGraph> {
 
     @Override
     public void update(long t) {
-        Content content = woa.getContent(t);
+        ContentBean content = (ContentBean) woa.getContent(t);
+        eval(null, content.asArray(), t);
     }
 
     @Override
     public Instantaneous eval(long t) {
-        update(t);
         graph.setTimestamp(t);
         return graph;
     }
 
-    @Override
     public void setContent(JenaGraph jenaGraph) {
         this.graph = jenaGraph;
     }
@@ -51,6 +52,16 @@ public class NamedTVG extends EsperStatementView<JenaGraph> {
     @Override
     public JenaGraph getContent() {
         return graph;
+    }
+
+    @Override
+    public Content getContent(long now) {
+        return null;
+    }
+
+    @Override
+    public List<Content> getContents(long now) {
+        return null;
     }
 
     public String getUri() {
@@ -61,4 +72,5 @@ public class NamedTVG extends EsperStatementView<JenaGraph> {
     public void addObservable(Observable windowAssigner) {
 
     }
+
 }

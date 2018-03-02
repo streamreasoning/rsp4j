@@ -2,7 +2,6 @@ package it.polimi.jasper.engine.query.response;
 
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.jasper.engine.query.execution.observer.TimeVaryingResultSetMem;
-import it.polimi.services.FileService;
 import it.polimi.yasper.core.query.response.InstantaneousResponse;
 import lombok.Getter;
 import lombok.extern.java.Log;
@@ -28,11 +27,6 @@ public final class SelectResponse extends InstantaneousResponse {
         this.results = resultSetRewindable;
         this.solutionSet = getSolutionSet(resultSetRewindable);
 
-    }
-
-    @Override
-    public boolean save(String where) {
-        return FileService.write(where + ".select", getData());
     }
 
     private String getData() {

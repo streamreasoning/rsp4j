@@ -1,15 +1,17 @@
 package it.polimi.jasper.engine.query;
 
 import com.espertech.esper.client.EventBean;
-import it.polimi.esper.EsperStatementView;
 import it.polimi.jasper.engine.instantaneous.GraphBase;
 import it.polimi.jasper.engine.instantaneous.JenaGraph;
-import it.polimi.spe.content.Content;
-import it.polimi.spe.windowing.assigner.WindowAssigner;
+import it.polimi.jasper.esper.EsperStatementView;
+import it.polimi.yasper.core.spe.content.Content;
+import it.polimi.yasper.core.spe.content.ContentBean;
+import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Log4j
 @Getter
@@ -26,24 +28,20 @@ public class DefaultTVG extends EsperStatementView<JenaGraph> {
 
     @Override
     public void update(long t) {
-        List<Content> events = new ArrayList<>();
-        windowAssigners.forEach(woa -> {
-            Content content = woa.getContent(t);
-            events.add(content);
-        });
+        List<EventBean> beans = windowAssigners.stream()
+                .map(windowAssigner -> (ContentBean) windowAssigner.getContent(t))
+                .flatMap(contentBean -> Arrays.stream(contentBean.asArray()))
+                .collect(Collectors.toList());
 
-        //FIXME
-        eval(null, events.toArray(new EventBean[events.size()]), t);
+        eval(null, beans.toArray(new EventBean[beans.size()]), t);
     }
 
     @Override
     public JenaGraph eval(long t) {
-        update(t);
+        graph.setTimestamp(t);
         return graph;
     }
 
-
-    @Override
     public void setContent(JenaGraph jenaGraph) {
         this.graph = jenaGraph;
     }
@@ -53,11 +51,16 @@ public class DefaultTVG extends EsperStatementView<JenaGraph> {
         return graph;
     }
 
+    @Override
+    public Content getContent(long now) {
+        return null;
+    }
 
     @Override
-    public void addWindowAssigner(WindowAssigner w) {
-        windowAssigners.add(w);
+    public List<Content> getContents(long now) {
+        return null;
     }
+
 
     @Override
     public void addObservable(Observable windowAssigner) {

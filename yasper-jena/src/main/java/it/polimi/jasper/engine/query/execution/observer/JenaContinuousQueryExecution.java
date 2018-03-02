@@ -1,9 +1,8 @@
 package it.polimi.jasper.engine.query.execution.observer;
 
 import it.polimi.jasper.engine.query.RSPQuery;
-import it.polimi.rspql.cql._2s._ToStreamOperator;
-import it.polimi.rspql.querying.ContinuousQuery;
-import it.polimi.rspql.querying.SDS;
+import it.polimi.yasper.core.rspql.RelationToStreamOperator;
+import it.polimi.yasper.core.rspql.SDS;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecutionObserver;
 import it.polimi.yasper.core.query.response.InstantaneousResponse;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
@@ -26,7 +25,7 @@ public abstract class JenaContinuousQueryExecution extends ContinuousQueryExecut
     protected InstantaneousResponse last_response = null;
     protected QueryExecution execution;
 
-    public JenaContinuousQueryExecution(RSPQuery query, SDS sds, TVGReasoner reasoner, _ToStreamOperator s2r) {
+    public JenaContinuousQueryExecution(RSPQuery query, SDS sds, TVGReasoner reasoner, RelationToStreamOperator s2r) {
         super(sds, query, reasoner, s2r);
         this.q = query.getQ();
     }
@@ -36,33 +35,11 @@ public abstract class JenaContinuousQueryExecution extends ContinuousQueryExecut
         Long ts = (Long) arg;
 
         this.sds.beforeEval();
-        InstantaneousResponse r = eval(ts, this.sds, this.query, this.reasoner, this.s2r);
+        InstantaneousResponse r = eval(ts);
         this.sds.afterEval();
 
         setChanged();
         notifyObservers(r);
-    }
-
-    @Override
-    public InstantaneousResponse eval(long ts) {
-        return eval(ts, this.sds);
-
-    }
-
-    @Override
-    public InstantaneousResponse eval(long ts, SDS sds) {
-        return eval(ts, sds, this.query);
-
-    }
-
-    @Override
-    public InstantaneousResponse eval(long ts, SDS sds, ContinuousQuery q) {
-        return eval(ts, sds, q, this.reasoner);
-    }
-
-    @Override
-    public InstantaneousResponse eval(long ts, SDS sds, ContinuousQuery q, TVGReasoner reasoner) {
-        return eval(ts, sds, q, reasoner, this.s2r);
     }
 
 
@@ -70,12 +47,6 @@ public abstract class JenaContinuousQueryExecution extends ContinuousQueryExecut
     public SDS getSDS() {
         return sds;
     }
-
-    @Override
-    public _ToStreamOperator getRelationToStreamOperator() {
-        return s2r;
-    }
-
 
     @Override
     public void setInitialBinding(QuerySolution binding) {

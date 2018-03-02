@@ -6,9 +6,9 @@ import it.polimi.jasper.engine.query.execution.subscribers.ContinuousSelectSubsc
 import it.polimi.jasper.engine.reasoning.GenericRuleJenaTVGReasoner;
 import it.polimi.jasper.engine.reasoning.JenaTVGReasoner;
 import it.polimi.jasper.engine.reasoning.pellet.TVGReasonerPellet;
-import it.polimi.rspql.cql._2s._ToStreamOperator;
-import it.polimi.rspql.querying.SDS;
-import it.polimi.yasper.core.engine.Entailment;
+import it.polimi.yasper.core.rspql.RelationToStreamOperator;
+import it.polimi.yasper.core.rspql.SDS;
+import it.polimi.yasper.core.rspql.Entailment;
 import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecutionObserver;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecutionSubscriber;
@@ -35,7 +35,7 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
     static public ContinuousQueryExecutionObserver createObserver(RSPQuery query, SDS sds, TVGReasoner r) {
         ContinuousQueryExecutionObserver cqe;
         StreamOperator r2S = query.getR2S() != null ? query.getR2S() : StreamOperator.RSTREAM;
-        _ToStreamOperator s2r = getToStreamOperator(r2S);
+        RelationToStreamOperator s2r = getToStreamOperator(r2S);
 
         if (query.getQ().isSelectType()) {
             cqe = new ContinuousSelect(query, sds, r, s2r);
@@ -51,7 +51,7 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
     static public ContinuousQueryExecutionSubscriber createSubscriber(RSPQuery query, SDS sds, TVGReasoner r) {
         ContinuousQueryExecutionSubscriber cqe;
         StreamOperator r2S = query.getR2S() != null ? query.getR2S() : StreamOperator.RSTREAM;
-        _ToStreamOperator s2r = getToStreamOperator(r2S);
+        RelationToStreamOperator s2r = getToStreamOperator(r2S);
 
         if (query.getQ().isSelectType()) {
             cqe = new ContinuousSelectSubscriber(query, sds, r, s2r);
@@ -64,7 +64,7 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
         return cqe;
     }
 
-    private static _ToStreamOperator getToStreamOperator(StreamOperator r2S) {
+    private static RelationToStreamOperator getToStreamOperator(StreamOperator r2S) {
         switch (r2S) {
             case DSTREAM:
                 return new Dstream(1);
