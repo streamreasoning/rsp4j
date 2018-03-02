@@ -1,9 +1,9 @@
 package it.polimi.jasper.engine.stream;
 
 import com.espertech.esper.client.EPStatement;
-import it.polimi.rspql.RSPEngine;
-import it.polimi.rspql.Stream;
-import it.polimi.spe.stream.rdf.RDFStream;
+import it.polimi.yasper.core.rspql.RSPEngine;
+import it.polimi.yasper.core.rspql.Stream;
+import it.polimi.yasper.core.spe.stream.rdf.RDFStream;
 import lombok.Getter;
 
 /**

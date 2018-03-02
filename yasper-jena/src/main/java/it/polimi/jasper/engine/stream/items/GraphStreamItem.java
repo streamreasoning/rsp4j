@@ -1,15 +1,9 @@
 package it.polimi.jasper.engine.stream.items;
 
 import it.polimi.jasper.engine.instantaneous.JenaGraph;
-import it.polimi.rdf.RDFLine;
-import it.polimi.yasper.core.query.Updatable;
+import it.polimi.yasper.core.rspql.Updatable;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.GraphUtil;
-import org.apache.jena.graph.Triple;
-import org.apache.jena.util.iterator.ExtendedIterator;
-
-import java.util.HashSet;
-import java.util.Set;
 
 //TODO wrap rid of  JenaGraph
 public class GraphStreamItem extends RDFStreamItem<Graph> {
@@ -29,19 +23,6 @@ public class GraphStreamItem extends RDFStreamItem<Graph> {
         } else {
             throw new UnsupportedOperationException("[" + abox.getClass() + "] addTo [" + this.getClass() + "] ");
         }
-    }
-
-    @Override
-    public Set<RDFLine> serialize() {
-        HashSet<RDFLine> hashSet = new HashSet<RDFLine>();
-        ExtendedIterator<Triple> all = GraphUtil.findAll(getTypedContent());
-        while (all.hasNext()) {
-            Triple next = all.next();
-            hashSet.add(new RDFLine(next.getSubject().toString(), next.getPredicate().toString(),
-                    next.getObject().toString()));
-        }
-
-        return hashSet;
     }
 
     @Override
