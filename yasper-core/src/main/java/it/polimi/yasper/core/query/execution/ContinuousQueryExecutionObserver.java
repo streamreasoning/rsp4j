@@ -1,5 +1,6 @@
 package it.polimi.yasper.core.query.execution;
 
+import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
 import it.polimi.yasper.core.rspql.SDS;
 import it.polimi.yasper.core.rspql.ContinuousQuery;
@@ -27,6 +28,16 @@ public abstract class ContinuousQueryExecutionObserver extends Observable implem
         this.sds = sds;
     }
 
+
+    @Override
+    public void addFormatter(QueryResponseFormatter o) {
+        addObserver(o);
+    }
+
+    @Override
+    public void deleteFormatter(QueryResponseFormatter o) {
+        deleteObserver(o);
+    }
     @Override
     public String getQueryID() {
         return query.getID();
