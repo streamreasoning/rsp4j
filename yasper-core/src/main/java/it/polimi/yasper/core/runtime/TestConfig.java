@@ -3,7 +3,6 @@ package it.polimi.yasper.core.runtime;
 import it.polimi.yasper.core.rspql.Stream;
 import it.polimi.yasper.core.rspql.ContinuousQuery;
 import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
-import it.polimi.yasper.core.spe.stream.RunnableStream;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -36,6 +35,8 @@ public class TestConfig {
         ContinuousQuery q = new ContinuousQueryImpl();
 
         ContinuousQueryExecution cqe = sr.register(q, config);
+
+        cqe.addFormatter(new InstResponseSysOutFormatter());
 
         //In real application we do not have to start the stream.
         (new Thread(painter)).start();

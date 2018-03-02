@@ -1,18 +1,19 @@
 package it.polimi.yasper.core.runtime;
 
-import it.polimi.yasper.core.rspql.SDSBuilder;
-import it.polimi.yasper.core.rspql.Stream;
+import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
 import it.polimi.yasper.core.rspql.SDS;
+import it.polimi.yasper.core.rspql.SDSBuilder;
+import it.polimi.yasper.core.rspql.Stream;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.scope.Tick;
 import it.polimi.yasper.core.spe.windowing.WindowOperator;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
-import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
-import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.RDF;
@@ -23,15 +24,22 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SDSBuilderImpl implements SDSBuilder<ContinuousQueryImpl> {
 
+    @NonNull
     private Map<String, Stream> registeredStreams;
+    @NonNull
     private EngineConfiguration engine_config;
+    @NonNull
     private QueryConfiguration query_config;
+    @NonNull
     private Report report;
+    @NonNull
     private ReportGrain reportGrain;
+    @NonNull
     private Tick tick;
+    private ContinuousQueryExecutionImpl cqe;
 
     @Override
     public void visit(ContinuousQueryImpl query) {
@@ -55,7 +63,7 @@ public class SDSBuilderImpl implements SDSBuilder<ContinuousQueryImpl> {
             wa.setReportGrain(reportGrain);
 
             if (wo.isNamed()) {
-                NamedStreamView g = new NamedStreamView();
+                NamedStreamView g = new NamedStreamView(wa);
                 nametvgs.put(rdf.createIRI(wo.getName()), g);
                 wa.setView(g);
             } else {
@@ -68,12 +76,12 @@ public class SDSBuilderImpl implements SDSBuilder<ContinuousQueryImpl> {
         Map<IRI, Graph> namedGraphs = query.getNamedGraphs();
         Set<Graph> graphs = query.getGraphs();
 
-        SDS sds = new SDSImpl(graphs, namedGraphs, defaultStreamViews, nametvgs);
+        SDSImpl sds = new SDSImpl(graphs, namedGraphs, defaultStreamViews, nametvgs);
 
         StreamOperator r2S = query.getR2S();
-        ContinuousQueryExecution cqe = new ContinuousQueryExecutionImpl(sds, query, r2S);
+        this.cqe = new ContinuousQueryExecutionImpl(sds, query, r2S);
 
-        nametvgs.forEach((k,v) -> cqe.add(v));
+        nametvgs.forEach((k, v) -> cqe.add(v));
         boolean recursive = query.isRecursive();
 
     }
@@ -91,6 +99,6 @@ public class SDSBuilderImpl implements SDSBuilder<ContinuousQueryImpl> {
 
     @Override
     public ContinuousQueryExecution getContinuousQueryExecution() {
-        return null;
+        return cqe;
     }
 }

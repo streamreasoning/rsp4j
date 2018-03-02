@@ -1,6 +1,7 @@
-package it.polimi.yasper.core.spe.stream;
+package it.polimi.yasper.core.runtime;
 
 import it.polimi.yasper.core.rspql.Stream;
+import it.polimi.yasper.core.spe.stream.StreamElement;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.RDF;
