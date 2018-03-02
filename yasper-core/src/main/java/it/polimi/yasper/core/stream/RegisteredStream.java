@@ -1,8 +1,8 @@
 package it.polimi.yasper.core.stream;
 
-import it.polimi.rspql.RSPEngine;
-import it.polimi.rspql.Stream;
-import it.polimi.spe.windowing.assigner.WindowAssigner;
+import it.polimi.yasper.core.rspql.RSPEngine;
+import it.polimi.yasper.core.rspql.Stream;
+import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

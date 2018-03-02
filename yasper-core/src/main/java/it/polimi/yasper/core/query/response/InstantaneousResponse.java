@@ -1,6 +1,6 @@
 package it.polimi.yasper.core.query.response;
 
-import it.polimi.rspql.ContinuousQuery;
+import it.polimi.yasper.core.rspql.ContinuousQuery;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

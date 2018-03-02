@@ -1,7 +1,7 @@
 package it.polimi.yasper.core.stream;
 
-import it.polimi.spe.stream.StreamElement;
-import it.polimi.rspql.Updatable;
+import it.polimi.yasper.core.spe.stream.StreamElement;
+import it.polimi.yasper.core.rspql.Updatable;
 import lombok.Getter;
 import lombok.Setter;
 

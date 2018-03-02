@@ -1,11 +1,11 @@
 package it.polimi.yasper.core.query.execution;
 
-import it.polimi.rspql.RelationToStreamOperator;
-import it.polimi.rspql.ContinuousQuery;
-import it.polimi.rspql.ContinuousQueryExecution;
-import it.polimi.rspql.SDS;
-import it.polimi.rspql.TimeVarying;
-import it.polimi.spe.windowing.assigner.WindowAssigner;
+import it.polimi.yasper.core.rspql.RelationToStreamOperator;
+import it.polimi.yasper.core.rspql.ContinuousQuery;
+import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
+import it.polimi.yasper.core.rspql.SDS;
+import it.polimi.yasper.core.rspql.TimeVarying;
+import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.query.response.InstantaneousResponse;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
 import lombok.AllArgsConstructor;
