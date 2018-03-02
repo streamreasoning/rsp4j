@@ -1,8 +1,8 @@
 package it.polimi.jasper.engine.instantaneous;
 
-import it.polimi.rspql.Item;
-import it.polimi.rspql.instantaneous.Instantaneous;
-import it.polimi.yasper.core.query.Updatable;
+import it.polimi.yasper.core.rspql.Item;
+import it.polimi.yasper.core.rspql.Instantaneous;
+import it.polimi.yasper.core.rspql.Updatable;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.GraphUtil;
 import org.apache.jena.graph.Triple;

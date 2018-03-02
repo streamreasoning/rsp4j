@@ -1,6 +1,6 @@
 package it.polimi.jasper.engine.instantaneous;
 
-import it.polimi.rspql.instantaneous.Instantaneous;
+import it.polimi.yasper.core.rspql.Instantaneous;
 import lombok.AllArgsConstructor;
 import org.apache.jena.graph.*;
 import org.apache.jena.shared.AddDeniedException;

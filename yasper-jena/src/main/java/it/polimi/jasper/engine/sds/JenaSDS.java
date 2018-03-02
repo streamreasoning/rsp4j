@@ -1,11 +1,12 @@
 package it.polimi.jasper.engine.sds;
 
-import com.espertech.esper.client.EPServiceProvider;
 import it.polimi.jasper.engine.instantaneous.JenaGraph;
 import it.polimi.jasper.engine.query.DefaultTVG;
 import it.polimi.jasper.engine.query.NamedTVG;
 import it.polimi.jasper.engine.reasoning.InstantaneousInfGraph;
-import it.polimi.rspql.querying.SDS;
+import it.polimi.yasper.core.rspql.SDS;
+import it.polimi.yasper.core.spe.time.Time;
+import it.polimi.yasper.core.spe.time.TimeFactory;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
 import lombok.Getter;
@@ -25,11 +26,10 @@ import java.util.List;
 @Log4j
 public class JenaSDS extends DatasetImpl implements SDS {
 
-    private final EPServiceProvider cep;
     private final IRIResolver resolver;
     private final Maintenance maintenanceType;
     private final boolean partialWindowsEnabled;
-
+    private final Time time = TimeFactory.getInstance();
     @Getter
     protected TVGReasoner reasoner;
 
@@ -42,16 +42,21 @@ public class JenaSDS extends DatasetImpl implements SDS {
     private DefaultTVG defTVG;
 
 
-    public JenaSDS(Model tbox_star, Model knowledge_base_star, DefaultTVG defaultTVG, IRIResolver r, Maintenance maintenanceType, EPServiceProvider esp, TVGReasoner<InstantaneousInfGraph, JenaGraph> reasoner, boolean partialWindowsEnabled) {
+    public JenaSDS(Model tbox_star,
+                   Model knowledge_base_star,
+                   DefaultTVG defaultTVG,
+                   IRIResolver r,
+                   Maintenance maintenanceType,
+                   TVGReasoner<InstantaneousInfGraph, JenaGraph> reasoner,
+                   boolean partialWindowsEnabled) {
         super(ModelFactory.createDefaultModel());
         this.maintenanceType = maintenanceType;
-        this.cep = esp;
         this.resolver = r;
         this.namedWOFS = new ArrayList<>();
 
         this.tbox = tbox_star;
         this.knowledge_base = knowledge_base_star;
-        this.defTVG=defaultTVG;
+        this.defTVG = defaultTVG;
 
         this.reasoner = reasoner;
         this.partialWindowsEnabled = partialWindowsEnabled;
@@ -62,7 +67,9 @@ public class JenaSDS extends DatasetImpl implements SDS {
     public void beforeEval() {
         setDefaultModel(getDefaultModel().union(knowledge_base));
         if (partialWindowsEnabled) {
-            namedWOFS.forEach(namedWOF -> namedWOF.update(cep.getEPRuntime().getCurrentTime()));
+            namedWOFS.forEach(namedWOF -> {
+                namedWOF.update(time.getAppTime());
+            });
         }
     }
 
