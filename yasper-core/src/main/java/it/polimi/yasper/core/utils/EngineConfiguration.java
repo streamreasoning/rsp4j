@@ -1,6 +1,6 @@
 package it.polimi.yasper.core.utils;
 
-import it.polimi.rspql.querying.ContinuousQuery;
+import it.polimi.rspql.ContinuousQuery;
 import it.polimi.spe.report.Report;
 import it.polimi.spe.report.ReportImpl;
 import it.polimi.spe.report.strategies.NonEmptyContent;
@@ -21,8 +21,16 @@ import static it.polimi.yasper.core.utils.ConfigurationUtils.*;
  */
 public class EngineConfiguration extends PropertiesConfiguration {
 
+    private static EngineConfiguration config;
+
     public EngineConfiguration(String fileName) throws ConfigurationException {
         super(fileName);
+    }
+
+    public static EngineConfiguration getCurrent() throws ConfigurationException {
+        if (config == null)
+            return config;
+        return getDefault();
     }
 
     public Boolean isUsingEventTime() {
@@ -47,14 +55,16 @@ public class EngineConfiguration extends PropertiesConfiguration {
         return this.getBoolean(PARTIAL_WINDOW, true);
     }
 
-    public static EngineConfiguration getDefault() {
-        URL resource = EngineConfiguration.class.getResource("/default.properties");
-        try {
-            return new EngineConfiguration(resource.getPath());
-        } catch (ConfigurationException e) {
-            e.printStackTrace();
-            return null;
+    public static EngineConfiguration loadConfig(String path) throws ConfigurationException {
+        URL resource = EngineConfiguration.class.getResource(path);
+        if (config == null) {
+            config = new EngineConfiguration(resource.getPath());
         }
+        return config;
+    }
+
+    public static EngineConfiguration getDefault() throws ConfigurationException {
+        return loadConfig("/default.properties");
     }
 
     public String getBaseURI() {

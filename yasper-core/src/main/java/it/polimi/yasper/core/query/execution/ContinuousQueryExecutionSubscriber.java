@@ -1,10 +1,10 @@
 package it.polimi.yasper.core.query.execution;
 
-import it.polimi.rspql.querying.ContinuousQueryExecution;
-import it.polimi.rspql.querying.SDS;
-import it.polimi.rspql.querying.ContinuousQuery;
-import it.polimi.rspql.cql._2s._ToStreamOperator;
-import it.polimi.rspql.timevarying.TimeVarying;
+import it.polimi.rspql.RelationToStreamOperator;
+import it.polimi.rspql.ContinuousQuery;
+import it.polimi.rspql.ContinuousQueryExecution;
+import it.polimi.rspql.SDS;
+import it.polimi.rspql.TimeVarying;
 import it.polimi.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.query.response.InstantaneousResponse;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
@@ -26,7 +26,7 @@ public abstract class ContinuousQueryExecutionSubscriber extends Observable impl
     protected ContinuousQuery query;
     protected SDS sds;
     protected TVGReasoner reasoner;
-    protected _ToStreamOperator s2r;
+    protected RelationToStreamOperator s2r;
 
     public synchronized void update(WindowAssigner stmt, Long ts) {
         sds.beforeEval();
@@ -35,26 +35,6 @@ public abstract class ContinuousQueryExecutionSubscriber extends Observable impl
 
         setChanged();
         notifyObservers(eval);
-    }
-
-    @Override
-    public InstantaneousResponse eval(long ts) {
-        return eval(ts, this.sds);
-    }
-
-    @Override
-    public InstantaneousResponse eval(long ts, SDS sds) {
-        return eval(ts, sds, this.query);
-    }
-
-    @Override
-    public InstantaneousResponse eval(long ts, SDS sds, ContinuousQuery q) {
-        return eval(ts, sds, q, this.reasoner);
-    }
-
-    @Override
-    public InstantaneousResponse eval(long ts, SDS sds, ContinuousQuery q, TVGReasoner reasoner) {
-        return eval(ts, sds, q, reasoner, this.s2r);
     }
 
     @Override
@@ -70,11 +50,6 @@ public abstract class ContinuousQueryExecutionSubscriber extends Observable impl
     @Override
     public SDS getSDS() {
         return sds;
-    }
-
-    @Override
-    public _ToStreamOperator getRelationToStreamOperator() {
-        return s2r;
     }
 
     @Override

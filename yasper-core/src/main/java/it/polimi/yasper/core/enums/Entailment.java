@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.engine;
+package it.polimi.yasper.core.enums;
 
 import it.polimi.yasper.core.enums.EntailmentType;
 

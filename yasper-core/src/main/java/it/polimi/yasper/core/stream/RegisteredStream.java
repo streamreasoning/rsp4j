@@ -1,6 +1,5 @@
 package it.polimi.yasper.core.stream;
 
-import it.polimi.esper.wrapping.SchemaAssigner;
 import it.polimi.rspql.RSPEngine;
 import it.polimi.rspql.Stream;
 import it.polimi.spe.windowing.assigner.WindowAssigner;
@@ -12,7 +11,6 @@ import lombok.Getter;
 public class RegisteredStream implements Stream {
 
     protected Stream stream;
-    protected SchemaAssigner e;
     protected String uri;
     protected RSPEngine engine;
 
@@ -22,8 +20,8 @@ public class RegisteredStream implements Stream {
     }
 
     @Override
-    public void addObserver(WindowAssigner windowAssigner) {
-        stream.addObserver(windowAssigner);
+    public void addWindowAssiger(WindowAssigner windowAssigner) {
+        stream.addWindowAssiger(windowAssigner);
     }
 
     public void setRSPEngine(RSPEngine e) {

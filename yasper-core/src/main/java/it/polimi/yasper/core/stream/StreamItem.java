@@ -1,14 +1,12 @@
 package it.polimi.yasper.core.stream;
 
-import it.polimi.rdf.RDFLine;
 import it.polimi.spe.stream.StreamElement;
-import it.polimi.yasper.core.query.Updatable;
+import it.polimi.rspql.Updatable;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
-import java.util.Set;
 
 public abstract class StreamItem<T> extends HashMap<String, Object> implements StreamElement {
 
@@ -58,8 +56,6 @@ public abstract class StreamItem<T> extends HashMap<String, Object> implements S
     public abstract Updatable addTo(Updatable abox);
 
     public abstract Updatable removeFrom(Updatable abox);
-
-    public abstract Set<RDFLine> serialize();
 
     public abstract String getStreamURI();
 

@@ -1,12 +1,12 @@
 package it.polimi.yasper.core.query.operators.r2s;
 
 import it.polimi.yasper.core.query.response.InstantaneousResponse;
-import it.polimi.rspql.cql._2s._ToStreamOperator;
+import it.polimi.rspql.RelationToStreamOperator;
 
 /**
  * Created by riccardo on 05/09/2017.
  */
-public class Istream implements _ToStreamOperator {
+public class Istream implements RelationToStreamOperator {
     private final int i;
     private InstantaneousResponse last_response;
 
@@ -14,7 +14,7 @@ public class Istream implements _ToStreamOperator {
         this.i = i;
     }
 
-    public static _ToStreamOperator get() {
+    public static RelationToStreamOperator get() {
         return new Istream(1);
     }
 
