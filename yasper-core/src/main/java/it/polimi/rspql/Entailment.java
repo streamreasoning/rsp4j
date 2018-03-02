@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.enums;
+package it.polimi.rspql;
 
 import it.polimi.yasper.core.enums.EntailmentType;
 

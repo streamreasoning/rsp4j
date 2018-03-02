@@ -1,6 +1,6 @@
 package it.polimi.runtime;
 
-import it.polimi.rspql.querying.SDS;
+import it.polimi.rspql.SDS;
 import lombok.AllArgsConstructor;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;

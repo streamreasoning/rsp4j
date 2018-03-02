@@ -2,23 +2,28 @@ package it.polimi.runtime;
 
 import it.polimi.rspql.RSPEngine;
 import it.polimi.rspql.SDSBuilder;
-import it.polimi.rspql.querying.ContinuousQuery;
-import it.polimi.rspql.querying.ContinuousQueryExecution;
-import it.polimi.rspql.querying.SDS;
+import it.polimi.rspql.Stream;
+import it.polimi.rspql.ContinuousQuery;
+import it.polimi.rspql.ContinuousQueryExecution;
+import it.polimi.rspql.SDS;
 import it.polimi.spe.report.Report;
+import it.polimi.spe.report.ReportGrain;
+import it.polimi.spe.report.ReportImpl;
+import it.polimi.spe.report.strategies.OnWindowClose;
 import it.polimi.spe.scope.Tick;
-import it.polimi.spe.stream.rdf.RDFStream;
-import it.polimi.runtime.SDSBuilderImpl;
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.stream.StreamItem;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RSPEngineImpl implements RSPEngine<RDFStream> {
 
+public class RSPEngineImpl implements RSPEngine<Stream> {
+
+    private final long t0;
     private Report report;
     private Tick tick;
     protected EngineConfiguration rsp_config;
@@ -27,16 +32,28 @@ public class RSPEngineImpl implements RSPEngine<RDFStream> {
     protected Map<String, ContinuousQueryExecution> queryExecutions;
     protected Map<String, ContinuousQuery> registeredQueries;
     protected Map<String, List<QueryResponseFormatter>> queryObservers;
-    protected Map<String, RDFStream> registeredStreams;
+    protected Map<String, Stream> registeredStreams;
+
+    public RSPEngineImpl(long t0, EngineConfiguration rsp_config) {
+        this.rsp_config = rsp_config;
+        this.assignedSDS = new HashMap<>();
+        this.registeredQueries = new HashMap<>();
+        this.registeredStreams = new HashMap<>();
+        this.queryObservers = new HashMap<>();
+        this.queryExecutions = new HashMap<>();
+        this.t0 = t0;
+        this.report = new ReportImpl();
+        this.report.add(new OnWindowClose());
+    }
 
     @Override
-    public RDFStream register(RDFStream s) {
+    public Stream register(Stream s) {
         registeredStreams.put(s.getURI(), s);
         return s;
     }
 
     @Override
-    public void unregister(RDFStream s) {
+    public void unregister(Stream s) {
         //TODO stop all the queries that are using s
         // destroy all the window asssigners
         // remove s from registeredStreams
@@ -49,7 +66,7 @@ public class RSPEngineImpl implements RSPEngine<RDFStream> {
 
     @Override
     public ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c) {
-        SDSBuilder builder = new SDSBuilderImpl(registeredStreams, rsp_config, c);
+        SDSBuilder builder = new SDSBuilderImpl(registeredStreams, rsp_config, c, report, ReportGrain.SINGLE, Tick.TIME_DRIVEN);
         q.accept(builder);
         return builder.getContinuousQueryExecution();
     }

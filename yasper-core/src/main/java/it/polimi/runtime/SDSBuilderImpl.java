@@ -2,17 +2,17 @@ package it.polimi.runtime;
 
 import it.polimi.rspql.SDSBuilder;
 import it.polimi.rspql.Stream;
-import it.polimi.rspql.querying.ContinuousQueryExecution;
-import it.polimi.rspql.querying.SDS;
+import it.polimi.rspql.ContinuousQueryExecution;
+import it.polimi.rspql.SDS;
 import it.polimi.spe.report.Report;
 import it.polimi.spe.report.ReportGrain;
 import it.polimi.spe.scope.Tick;
-import it.polimi.spe.stream.rdf.RDFStream;
 import it.polimi.spe.windowing.WindowOperator;
 import it.polimi.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
+import lombok.AllArgsConstructor;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.RDF;
@@ -23,18 +23,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+@AllArgsConstructor
 public class SDSBuilderImpl implements SDSBuilder<ContinuousQueryImpl> {
 
-    private Map<String, RDFStream> registeredStreams;
+    private Map<String, Stream> registeredStreams;
     private EngineConfiguration engine_config;
     private QueryConfiguration query_config;
     private Report report;
     private ReportGrain reportGrain;
     private Tick tick;
-
-    public SDSBuilderImpl(Map<String, RDFStream> registeredStreams, EngineConfiguration rsp_config, QueryConfiguration c) {
-
-    }
 
     @Override
     public void visit(ContinuousQueryImpl query) {
@@ -50,10 +47,13 @@ public class SDSBuilderImpl implements SDSBuilder<ContinuousQueryImpl> {
 
         windows.forEach((wo, s) -> {
 
-            WindowAssigner wa = wo.apply(s);
+            Stream s1 = registeredStreams.get(s.getURI());
+            WindowAssigner wa = wo.apply(s1);
+
             wa.setReport(report);
             wa.setTick(tick);
             wa.setReportGrain(reportGrain);
+
             if (wo.isNamed()) {
                 NamedStreamView g = new NamedStreamView();
                 nametvgs.put(rdf.createIRI(wo.getName()), g);
@@ -73,6 +73,7 @@ public class SDSBuilderImpl implements SDSBuilder<ContinuousQueryImpl> {
         StreamOperator r2S = query.getR2S();
         ContinuousQueryExecution cqe = new ContinuousQueryExecutionImpl(sds, query, r2S);
 
+        nametvgs.forEach((k,v) -> cqe.add(v));
         boolean recursive = query.isRecursive();
 
     }
