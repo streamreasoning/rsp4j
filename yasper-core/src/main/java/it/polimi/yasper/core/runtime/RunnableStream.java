@@ -53,7 +53,7 @@ public class RunnableStream extends Observable implements Runnable, Stream {
 
         public Elem(long i, String s) {
             timestamp = i;
-            content = rdf.createTriple(rdf.createIRI("http://asubject/" + s), rdf.createIRI("http://aproperty"), rdf.createIRI("http://anObject"));
+            content = rdf.createTriple(rdf.createIRI("http://asubject/" + i), rdf.createIRI("http://aproperty"), rdf.createIRI("http://anobject" + i));
 
         }
 

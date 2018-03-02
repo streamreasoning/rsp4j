@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * **/
 public interface ReportingStrategy {
-    boolean match(Window w, long tapp, long tsys);
+    boolean match(Window w, Content c, long tapp, long tsys);
 
     void setActiveWindows(Map<Window, Content> active_windows);
 }

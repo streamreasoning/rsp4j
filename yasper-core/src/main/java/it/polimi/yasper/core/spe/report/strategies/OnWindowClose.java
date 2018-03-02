@@ -14,7 +14,7 @@ import java.util.Map;
 public class OnWindowClose implements ReportingStrategy {
 
     @Override
-    public boolean match(Window w, long tapp, long tsys) {
+    public boolean match(Window w, Content c, long tapp, long tsys) {
         return w.getC() < tapp;
     }
 

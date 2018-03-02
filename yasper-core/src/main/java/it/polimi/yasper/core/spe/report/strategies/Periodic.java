@@ -20,7 +20,7 @@ public class Periodic implements ReportingStrategy {
     private long period;
 
     @Override
-    public boolean match(Window w, long tapp, long tsys) {
+    public boolean match(Window w, Content c, long tapp, long tsys) {
         return tapp % period == 0;
     }
 

@@ -2,7 +2,8 @@ package it.polimi.yasper.core.spe.windowing.assigner;
 
 import it.polimi.yasper.core.rspql.Stream;
 import it.polimi.yasper.core.spe.content.Content;
-import it.polimi.yasper.core.spe.content.ContentTriple;
+import it.polimi.yasper.core.spe.content.ContentGraph;
+import it.polimi.yasper.core.spe.content.EmptyContent;
 import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.spe.exceptions.OutOfOrderElementException;
 import it.polimi.yasper.core.spe.report.Report;
@@ -67,7 +68,7 @@ public class WindowAssignerImpl extends Observable implements WindowAssigner, Ob
         if (max.isPresent())
             return active_windows.get(max.get());
 
-        return null;
+        return new EmptyContent();
     }
 
     @Override
@@ -129,16 +130,19 @@ public class WindowAssignerImpl extends Observable implements WindowAssigner, Ob
         switch (aw) {
             case MULTIPLE:
                 active_windows.keySet().stream()
-                        .filter(w -> report.report(w, t_e, System.currentTimeMillis()))
-                        .forEach(w -> report(tick(t_e, w)));
+                        .filter(w-> report.report(w, null, t_e, System.currentTimeMillis()))
+                        .forEach(w -> tick(t_e, w));
                 break;
             case SINGLE:
             default:
                 active_windows.keySet().stream()
-                        .filter(w -> report.report(w, t_e, System.currentTimeMillis()))
+                        .filter(w-> report.report(w, null, t_e, System.currentTimeMillis()))
                         .max(Comparator.comparingLong(Window::getC))
-                        .ifPresent(window -> report(tick(t_e, window)));
+                        .ifPresent(window -> tick(t_e, window));
         }
+
+        //TODO shouldn't we evaluate setVisible.setVisible when we materialize the content?
+        //TODO Tick regulates whether we compute, setVisible only if we see the results.
 
         //TODO eviction
 
@@ -160,7 +164,7 @@ public class WindowAssignerImpl extends Observable implements WindowAssigner, Ob
             log.debug("Computing Window [" + o_i + "," + (o_i + a) + ") if absent");
 
             active_windows
-                    .computeIfAbsent(new WindowImpl(o_i, o_i + a), x -> new ContentTriple());
+                    .computeIfAbsent(new WindowImpl(o_i, o_i + a), x -> new ContentGraph());
             o_i += b;
 
         } while (o_i <= t_e);
@@ -186,25 +190,38 @@ public class WindowAssignerImpl extends Observable implements WindowAssigner, Ob
 
     private Content tick(long t_e, Window w) {
         TimeFactory.getEvaluationTimeInstants().add(new TimeInstant(t_e));
-        Content content = active_windows.get(w);
-        log.debug("Report [" + w.getO() + "," + w.getC() + ") with Content " + content + "");
+        Content c = null;
         switch (tick) {
             case TIME_DRIVEN:
                 if (t_e > time.getAppTime()) {
-                    time.setAppTime(t_e);
-                    return content;
+                    c = compute(t_e, w);
                 }
+                break;
             case TUPLE_DRIVEN:
+                c = compute(t_e, w);
+                break;
             case BATCH_DRIVEN:
             default:
-                return content;
+                c = compute(t_e, w);
+                break;
         }
+
+        return setVisible(t_e, w, c);
+
     }
 
-    private void report(Content c) {
+    private Content compute(long t_e, Window w) {
+        Content content = active_windows.containsKey(w) ? active_windows.get(w) : new EmptyContent();
+        time.setAppTime(t_e);
+        return content;
+    }
+
+    private Content setVisible(long t_e, Window w, Content c) {
         //TODO the reporting makes the content visible
         // but the execution of the query is not
+        log.debug("Report [" + w.getO() + "," + w.getC() + ") with Content " + c + "");
         setChanged();
-        notifyObservers(c);
+        notifyObservers(t_e);
+        return c;
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.yasper.core.spe.report;
 
 
+import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.windowing.Window;
 import it.polimi.yasper.core.spe.report.strategies.ReportingStrategy;
 
@@ -17,7 +18,7 @@ import it.polimi.yasper.core.spe.report.strategies.ReportingStrategy;
  * **/
 public interface Report {
 
-    boolean report(Window w, long tapp, long tsys);
+    boolean report(Window w, Content c, long tapp, long tsys);
 
     void add(ReportingStrategy r);
 }

@@ -19,7 +19,7 @@ public class OnContentChange implements ReportingStrategy {
     private Map<Window, Content> active_windows = new HashMap<>();
 
     @Override
-    public boolean match(Window w, long tapp, long tsys) {
+    public boolean match(Window w, Content c, long tapp, long tsys) {
         last_change.computeIfAbsent(w, k -> active_windows.get(w).getTimeStampLastUpdate());
         if (last_change.containsKey(w))
             return last_change.get(w) != active_windows.get(w).getTimeStampLastUpdate();
