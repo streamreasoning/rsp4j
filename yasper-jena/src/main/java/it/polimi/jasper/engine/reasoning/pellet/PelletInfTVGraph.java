@@ -1,8 +1,8 @@
 package it.polimi.jasper.engine.reasoning.pellet;
 
 import it.polimi.jasper.engine.instantaneous.JenaGraph;
-import it.polimi.rspql.instantaneous.Instantaneous;
-import it.polimi.yasper.core.query.Updatable;
+import it.polimi.yasper.core.rspql.Instantaneous;
+import it.polimi.yasper.core.rspql.Updatable;
 import openllet.jena.PelletInfGraph;
 import openllet.jena.PelletReasoner;
 import openllet.jena.graph.loader.GraphLoader;

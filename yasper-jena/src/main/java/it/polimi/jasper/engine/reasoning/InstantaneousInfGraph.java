@@ -8,5 +8,4 @@ import org.apache.jena.reasoner.InfGraph;
  */
 public interface InstantaneousInfGraph extends InfGraph, JenaGraph {
 
-
 }

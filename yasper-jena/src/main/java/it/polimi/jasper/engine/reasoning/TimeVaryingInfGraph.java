@@ -1,6 +1,6 @@
 package it.polimi.jasper.engine.reasoning;
 
-import it.polimi.rspql.timevarying.TimeVarying;
+import it.polimi.yasper.core.rspql.TimeVarying;
 import org.apache.jena.reasoner.InfGraph;
 
 /**
