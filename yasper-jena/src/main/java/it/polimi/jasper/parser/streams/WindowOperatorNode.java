@@ -1,7 +1,6 @@
 package it.polimi.jasper.parser.streams;
 
-import it.polimi.rspql.Window;
-import it.polimi.spe.windowing.WindowOperator;
+import it.polimi.yasper.core.spe.windowing.WindowOperator;
 import it.polimi.yasper.core.enums.WindowType;
 
 /**
@@ -10,8 +9,6 @@ import it.polimi.yasper.core.enums.WindowType;
 public interface WindowOperatorNode extends WindowOperator{
 
     WindowType getType();
-
-
 
     int getT0();
 
@@ -22,7 +19,5 @@ public interface WindowOperatorNode extends WindowOperator{
     String getUnitRange();
 
     String getUnitStep();
-
-    Window getWindowContent(long t0);
 
 }

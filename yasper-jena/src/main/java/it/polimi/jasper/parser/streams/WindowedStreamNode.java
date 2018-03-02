@@ -3,13 +3,14 @@ package it.polimi.jasper.parser.streams;
 import com.espertech.esper.client.soda.AnnotationPart;
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.View;
-import it.polimi.jasper.engine.EPLFactory;
-import it.polimi.esper.wrapping.EsperWindowAssigner;
-import it.polimi.rspql.Stream;
-import it.polimi.rspql.Window;
-import it.polimi.spe.windowing.assigner.WindowAssigner;
+import it.polimi.jasper.esper.EsperWindowAssigner;
+import it.polimi.jasper.esper.EPLFactory;
+import it.polimi.yasper.core.rspql.Stream;
+import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.enums.WindowType;
+import it.polimi.yasper.core.utils.EncodingUtils;
 import lombok.*;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.jena.graph.Node_URI;
 
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.regex.Pattern;
 @NoArgsConstructor
 @ToString(exclude = {"regex", "p"})
 @RequiredArgsConstructor
-public class WindowedStreamNode implements WindowOperatorNode, it.polimi.spe.windowing.WindowOperator {
+public class WindowedStreamNode implements WindowOperatorNode, it.polimi.yasper.core.spe.windowing.WindowOperator {
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -125,11 +126,6 @@ public class WindowedStreamNode implements WindowOperatorNode, it.polimi.spe.win
     }
 
     @Override
-    public Window getWindowContent(long t0) {
-        return null;
-    }
-
-    @Override
     public String getName() {
         return iri.getURI();
     }
@@ -164,6 +160,10 @@ public class WindowedStreamNode implements WindowOperatorNode, it.polimi.spe.win
         View window = EPLFactory.getWindow(getRange(), getUnitRange(), getType());
         List<AnnotationPart> annotations = EPLFactory.getAnnotations(getName(), getRange(), getStep(), getStreamURI());
         EPStatementObjectModel epStatementObjectModel = EPLFactory.toEPL(getStep(), getUnitStep(), getType(), getStreamURI(), window, annotations);
-        return new EsperWindowAssigner(epStatementObjectModel);
+        try {
+            return new EsperWindowAssigner(EncodingUtils.encode(getStreamURI()), epStatementObjectModel);
+        } catch (ConfigurationException e) {
+            throw new RuntimeException("Error During Stream Registration");
+        }
     }
 }

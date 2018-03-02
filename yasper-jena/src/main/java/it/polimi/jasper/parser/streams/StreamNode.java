@@ -2,7 +2,8 @@ package it.polimi.jasper.parser.streams;
 
 import com.espertech.esper.client.soda.CreateSchemaClause;
 import com.espertech.esper.client.soda.SchemaColumnDesc;
-import it.polimi.rspql.Stream;
+import it.polimi.yasper.core.rspql.Stream;
+import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,6 +46,11 @@ public class StreamNode implements Stream {
     @Override
     public String getURI() {
         return iri.getURI();
+    }
+
+    @Override
+    public void addWindowAssiger(WindowAssigner windowAssigner) {
+
     }
 
     public String toEPLSchema() {
