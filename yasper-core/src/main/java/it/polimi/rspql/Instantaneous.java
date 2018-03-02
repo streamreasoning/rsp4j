@@ -1,4 +1,4 @@
-package it.polimi.rspql.instantaneous;
+package it.polimi.rspql;
 
 /**
  * Created by riccardo on 05/07/2017.

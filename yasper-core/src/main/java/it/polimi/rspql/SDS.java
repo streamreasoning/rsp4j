@@ -1,4 +1,4 @@
-package it.polimi.rspql.querying;
+package it.polimi.rspql;
 
 /**
  * Created by riccardo on 01/07/2017.

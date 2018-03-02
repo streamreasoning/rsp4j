@@ -16,5 +16,5 @@ public interface Stream {
 
     String getURI();
 
-    void addObserver(WindowAssigner windowAssigner);
+    void addWindowAssiger(WindowAssigner windowAssigner);
 }

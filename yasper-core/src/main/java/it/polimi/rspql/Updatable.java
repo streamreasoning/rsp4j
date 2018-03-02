@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.query;
+package it.polimi.rspql;
 
 /**
  * Created by riccardo on 05/09/2017.

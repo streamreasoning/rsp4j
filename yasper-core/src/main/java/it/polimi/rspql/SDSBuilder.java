@@ -1,9 +1,5 @@
 package it.polimi.rspql;
 
-import it.polimi.rspql.querying.ContinuousQuery;
-import it.polimi.rspql.querying.ContinuousQueryExecution;
-import it.polimi.rspql.querying.SDS;
-
 /**
  * Created by riccardo on 05/09/2017.
  */
