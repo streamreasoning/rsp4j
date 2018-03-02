@@ -1,8 +1,7 @@
 package it.polimi.yasper.core.rspql;
 
+import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.query.response.InstantaneousResponse;
-
-import java.util.Observer;
 
 /**
  * Created by Riccardo on 12/08/16.
@@ -18,9 +17,9 @@ public interface ContinuousQueryExecution {
 
     SDS getSDS();
 
-    void addObserver(Observer o);
+    void addFormatter(QueryResponseFormatter o);
 
-    void deleteObserver(Observer o);
+    void deleteFormatter(QueryResponseFormatter o);
 
     void add(TimeVarying item);
 }

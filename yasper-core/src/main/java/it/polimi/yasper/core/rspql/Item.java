@@ -4,5 +4,4 @@ public interface Item {
 
     <T> Updatable<T> asUpdatable();
 
-    Instantaneous asInstantaneous();
 }
