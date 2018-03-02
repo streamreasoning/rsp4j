@@ -2,19 +2,15 @@ package it.polimi.jasper.engine.query;
 
 import it.polimi.jasper.engine.instantaneous.GraphBase;
 import it.polimi.jasper.engine.instantaneous.JenaGraph;
+import it.polimi.jasper.esper.ContentBean;
 import it.polimi.jasper.esper.EsperStatementView;
 import it.polimi.yasper.core.rspql.Instantaneous;
-import it.polimi.yasper.core.spe.content.Content;
-import it.polimi.yasper.core.spe.content.ContentBean;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.enums.Maintenance;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j;
-
-import java.util.List;
-import java.util.Observable;
 
 @Log4j
 @Getter
@@ -50,27 +46,14 @@ public class NamedTVG extends EsperStatementView<JenaGraph> {
     }
 
     @Override
-    public JenaGraph getContent() {
+    public JenaGraph getContent(long now) {
         return graph;
-    }
-
-    @Override
-    public Content getContent(long now) {
-        return null;
-    }
-
-    @Override
-    public List<Content> getContents(long now) {
-        return null;
     }
 
     public String getUri() {
         return uri;
     }
 
-    @Override
-    public void addObservable(Observable windowAssigner) {
 
-    }
 
 }

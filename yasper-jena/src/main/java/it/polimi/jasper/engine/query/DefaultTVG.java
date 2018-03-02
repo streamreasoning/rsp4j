@@ -3,9 +3,8 @@ package it.polimi.jasper.engine.query;
 import com.espertech.esper.client.EventBean;
 import it.polimi.jasper.engine.instantaneous.GraphBase;
 import it.polimi.jasper.engine.instantaneous.JenaGraph;
+import it.polimi.jasper.esper.ContentBean;
 import it.polimi.jasper.esper.EsperStatementView;
-import it.polimi.yasper.core.spe.content.Content;
-import it.polimi.yasper.core.spe.content.ContentBean;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
 public class DefaultTVG extends EsperStatementView<JenaGraph> {
 
     private Set<WindowAssigner> windowAssigners;
-
     private JenaGraph graph = new GraphBase();
 
     public DefaultTVG(JenaGraph graph) {
@@ -42,28 +40,9 @@ public class DefaultTVG extends EsperStatementView<JenaGraph> {
         return graph;
     }
 
-    public void setContent(JenaGraph jenaGraph) {
-        this.graph = jenaGraph;
-    }
-
     @Override
-    public JenaGraph getContent() {
+    public JenaGraph getContent(long now) {
         return graph;
     }
 
-    @Override
-    public Content getContent(long now) {
-        return null;
-    }
-
-    @Override
-    public List<Content> getContents(long now) {
-        return null;
-    }
-
-
-    @Override
-    public void addObservable(Observable windowAssigner) {
-
-    }
 }

@@ -66,8 +66,8 @@ public class BaseInfTVGraph extends BaseInfGraph implements InstantaneousInfGrap
 //    public void add(Object o) {
 //        if (o instanceof Triple) {
 //            add((Triple) o);
-//        } else if (o instanceof Graph) {
-//            GraphUtil.addInto(this, (Graph) o);
+//        } else if (o instanceof GraphItem) {
+//            GraphUtil.addInto(this, (GraphItem) o);
 //        }
 //    }
 //
@@ -76,8 +76,8 @@ public class BaseInfTVGraph extends BaseInfGraph implements InstantaneousInfGrap
 //        if (o instanceof Statement) {
 //            Statement s = (Statement) o;
 //            remove(s.getSubject().asNode(), s.getPredicate().asNode(), s.getObject().asNode());
-//        } else if (o instanceof Graph) {
-//            GraphUtil.deleteFrom(this, (Graph) o);
+//        } else if (o instanceof GraphItem) {
+//            GraphUtil.deleteFrom(this, (GraphItem) o);
 //        }
 //    }
 //

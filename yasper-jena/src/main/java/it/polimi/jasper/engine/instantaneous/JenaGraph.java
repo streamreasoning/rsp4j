@@ -34,11 +34,6 @@ public interface JenaGraph extends Updatable<Object>, Instantaneous, Graph, Item
     }
 
     @Override
-    default JenaGraph asInstantaneous() {
-        return this;
-    }
-
-    @Override
     default JenaGraph asUpdatable() {
         return this;
     }

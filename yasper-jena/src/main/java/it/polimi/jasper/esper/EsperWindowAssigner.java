@@ -3,7 +3,6 @@ package it.polimi.jasper.esper;
 import com.espertech.esper.client.*;
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import it.polimi.yasper.core.spe.content.Content;
-import it.polimi.yasper.core.spe.content.ContentBean;
 import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;

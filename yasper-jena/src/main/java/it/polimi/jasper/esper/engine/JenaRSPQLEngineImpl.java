@@ -102,7 +102,7 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl {
             List<QueryResponseFormatter> l = queryObservers.remove(qId);
             if (l != null) {
                 for (QueryResponseFormatter f : l) {
-                    ceq.deleteObserver(f);
+                    ceq.deleteFormatter(f);
                 }
             }
             assignedSDS.remove(query.getID());
@@ -118,7 +118,7 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl {
             throw new UnregisteredQueryExeception(qID);
         else {
             ContinuousQueryExecution ceq = queryExecutions.get(qID);
-            ceq.addObserver(o);
+            ceq.addFormatter(o);
             if (queryObservers.containsKey(qID)) {
                 List<QueryResponseFormatter> l = queryObservers.get(qID);
                 if (l != null) {
@@ -137,7 +137,7 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl {
         String qId = q.getID();
         log.info("Unregistering Observer [" + o.getClass() + "] from Query [" + qId + "]");
         if (queryExecutions.containsKey(qId)) {
-            queryExecutions.get(qId).deleteObserver(o);
+            queryExecutions.get(qId).addFormatter(o);
             if (queryObservers.containsKey(qId)) {
                 queryObservers.get(qId).remove(o);
             }
@@ -152,7 +152,7 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl {
         if (!registeredQueries.containsKey(qID))
             throw new UnregisteredQueryExeception(qID);
         else {
-            ceq.addObserver(o);
+            ceq.addFormatter(o);
             if (queryObservers.containsKey(qID)) {
                 List<QueryResponseFormatter> l = queryObservers.get(qID);
                 if (l != null) {
@@ -168,7 +168,7 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl {
 
     @Override
     public void unregister(ContinuousQueryExecution cqe, QueryResponseFormatter o) {
-        cqe.deleteObserver(o);
+        cqe.deleteFormatter(o);
         if (queryObservers.containsKey(cqe.getQueryID())) {
             queryObservers.get(cqe.getQueryID()).remove(o);
             throw new UnregisteredQueryExeception(cqe.getQueryID());

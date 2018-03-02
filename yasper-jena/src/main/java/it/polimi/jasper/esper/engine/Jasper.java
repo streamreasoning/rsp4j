@@ -1,19 +1,15 @@
 package it.polimi.jasper.esper.engine;
 
-import it.polimi.jasper.engine.reasoning.ReasoningUtils;
-import it.polimi.jasper.esper.EsperStreamRegistrationService;
-import it.polimi.jasper.engine.sds.JasperSDSBuilder;
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.jasper.engine.reasoning.EntailmentImpl;
+import it.polimi.jasper.engine.reasoning.ReasoningUtils;
+import it.polimi.jasper.engine.sds.JasperSDSBuilder;
+import it.polimi.jasper.esper.EsperStreamRegistrationService;
 import it.polimi.jasper.parser.RSPQLParser;
-import it.polimi.yasper.core.rspql.SDSBuilder;
-import it.polimi.yasper.core.rspql.Stream;
-import it.polimi.yasper.core.rspql.ContinuousQuery;
-import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
-import it.polimi.yasper.core.rspql.Entailment;
 import it.polimi.yasper.core.enums.EntailmentType;
 import it.polimi.yasper.core.exceptions.UnregisteredQueryExeception;
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.rspql.*;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import lombok.Getter;
@@ -84,7 +80,7 @@ public class Jasper extends EsperRSPEngine {
             List<QueryResponseFormatter> l = queryObservers.remove(qId);
             if (l != null) {
                 for (QueryResponseFormatter f : l) {
-                    ceq.deleteObserver(f);
+                    ceq.deleteFormatter(f);
                 }
             }
             assignedSDS.remove(query.getID());
@@ -100,7 +96,7 @@ public class Jasper extends EsperRSPEngine {
             throw new UnregisteredQueryExeception(qID);
         else {
             ContinuousQueryExecution ceq = queryExecutions.get(qID);
-            ceq.addObserver(o);
+            ceq.addFormatter(o);
             if (queryObservers.containsKey(qID)) {
                 List<QueryResponseFormatter> l = queryObservers.get(qID);
                 if (l != null) {
@@ -119,7 +115,7 @@ public class Jasper extends EsperRSPEngine {
         String qId = q.getID();
         log.info("Unregistering Observer [" + o.getClass() + "] from Query [" + qId + "]");
         if (queryExecutions.containsKey(qId)) {
-            queryExecutions.get(qId).deleteObserver(o);
+            queryExecutions.get(qId).deleteFormatter(o);
             if (queryObservers.containsKey(qId)) {
                 queryObservers.get(qId).remove(o);
             }
@@ -134,7 +130,7 @@ public class Jasper extends EsperRSPEngine {
         if (!registeredQueries.containsKey(qID))
             throw new UnregisteredQueryExeception(qID);
         else {
-            ceq.addObserver(o);
+            ceq.addFormatter(o);
             if (queryObservers.containsKey(qID)) {
                 List<QueryResponseFormatter> l = queryObservers.get(qID);
                 if (l != null) {
@@ -150,7 +146,7 @@ public class Jasper extends EsperRSPEngine {
 
     @Override
     public void unregister(ContinuousQueryExecution cqe, QueryResponseFormatter o) {
-        cqe.deleteObserver(o);
+        cqe.deleteFormatter(o);
         if (queryObservers.containsKey(cqe.getQueryID())) {
             queryObservers.get(cqe.getQueryID()).remove(o);
             throw new UnregisteredQueryExeception(cqe.getQueryID());

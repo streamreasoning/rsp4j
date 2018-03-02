@@ -5,18 +5,19 @@ import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.StatementAwareUpdateListener;
 import com.espertech.esper.event.map.MapEventBean;
+import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.rspql.Item;
 import it.polimi.yasper.core.rspql.TimeVarying;
-import it.polimi.yasper.core.spe.content.viewer.View;
-import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.rspql.Updatable;
+import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.stream.StreamItem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
-import java.util.*;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by riccardo on 05/07/2017.
@@ -25,7 +26,7 @@ import java.util.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public abstract class EsperStatementView<I extends Item> extends Observable implements View, TimeVarying<I>, Updatable, StatementAwareUpdateListener {
+public abstract class EsperStatementView<I extends Item> extends Observable implements View, TimeVarying<I>, StatementAwareUpdateListener {
 
     protected Maintenance maintenance;
 
@@ -33,82 +34,20 @@ public abstract class EsperStatementView<I extends Item> extends Observable impl
         this.maintenance = maintenance;
     }
 
-    public abstract void update(long t);
-
-    public synchronized void update(EPStatement stmt, Object[][] insertStream, Object[][] removeStream) {
-
-        final Long[] current_timestamp = {(Long) insertStream[0][0]};
-
-        log.debug("[" + Thread.currentThread() + "][" + System.currentTimeMillis() + "] FROM STATEMENT: " + stmt.getText());
-
-        Map<Long, List<StreamItem>[]> grouped_by_time = new HashMap<>();
-
-        Arrays.stream(insertStream).forEach(pairs -> {
-                    Long t = (Long) pairs[0];
-                    if (grouped_by_time.containsKey(t))
-                        grouped_by_time.get(t)[0].add((StreamItem) pairs[1]);
-                    else {
-                        List<StreamItem> events = new ArrayList<>();
-                        events.add((StreamItem) pairs[1]);
-                        List[] value = new List[2];
-                        value[0] = events;
-                        grouped_by_time.put((Long) t, value);
-                    }
-                    current_timestamp[0] = t > current_timestamp[0] ? t : current_timestamp[0];
-                }
-
-
-        );
-
-        if (removeStream != null) {
-            Arrays.stream(removeStream).forEach(pairs -> {
-                        if (grouped_by_time.containsKey(pairs[0]))
-                            grouped_by_time.get(pairs[0])[1].add((StreamItem) pairs[1]);
-                        else {
-                            List<StreamItem> events = new ArrayList<>();
-                            events.add((StreamItem) pairs[1]);
-                            List[] value = new List[2];
-                            value[1] = events;
-                            grouped_by_time.put((Long) pairs[0], value);
-                        }
-                    }
-            );
-        }
-
-        grouped_by_time.forEach((t, ls) -> eval(ls[0], ls[1], t));
-
-        setChanged();
-        notifyObservers(current_timestamp[0]);  //TODO idea report object
-    }
-
-
     @Override
     public synchronized void update(EventBean[] newData, EventBean[] oldData, EPStatement stmt, EPServiceProvider eps) {
-        long currentTime = eps.getEPRuntime().getCurrentTime();
+        Long currentTime = eps.getEPRuntime().getCurrentTime();
         log.debug("[" + Thread.currentThread() + "][" + System.currentTimeMillis() + "] FROM STATEMENT: " + stmt.getText() + " AT "
                 + currentTime);
         eval(newData, oldData, currentTime);
         setChanged();
-        notifyObservers(currentTime);  //TODO idea report object
-    }
-
-    public void eval(List<StreamItem> newData, List<StreamItem> oldData, long currentTime) {
-        Updatable instantaneousItem = getContent().asUpdatable();
-        if (Maintenance.NAIVE.equals(maintenance))
-            instantaneousItem.clear();
-        else oldData.forEach(st -> st.removeFrom(instantaneousItem));
-        newData.forEach(streamItem -> streamItem.addTo(instantaneousItem));
-        eval(currentTime);
+        notifyObservers(currentTime);
     }
 
     public void eval(EventBean[] newData, EventBean[] oldData, long currentTime) {
-        DStreamUpdate(getContent().asUpdatable(), oldData, maintenance);
-        IStreamUpdate(getContent().asUpdatable(), newData);
+        DStreamUpdate(getContent(currentTime).asUpdatable(), oldData, maintenance);
+        IStreamUpdate(getContent(currentTime).asUpdatable(), newData);
         eval(currentTime);
-    }
-
-    public long getTimestamp() {
-        return getContent().asInstantaneous().getTimestamp();
     }
 
     private void handleSingleIStream(Updatable ii, StreamItem st) {
@@ -116,7 +55,7 @@ public abstract class EsperStatementView<I extends Item> extends Observable impl
         st.addTo(ii);
     }
 
-    protected void IStreamUpdate(Updatable ii, EventBean[] newData) {
+    private void IStreamUpdate(Updatable ii, EventBean[] newData) {
         if (newData != null && newData.length != 0) {
             log.debug("[" + newData.length + "] New Events of type ["
                     + newData[0].getUnderlying().getClass().getSimpleName() + "]");
@@ -141,7 +80,7 @@ public abstract class EsperStatementView<I extends Item> extends Observable impl
         st.removeFrom(ii);
     }
 
-    protected void DStreamUpdate(Updatable ii, EventBean[] oldData, Maintenance m) {
+    private void DStreamUpdate(Updatable ii, EventBean[] oldData, Maintenance m) {
         if (Maintenance.NAIVE.equals(m)) {
             ii.clear();
         } else {
@@ -172,29 +111,66 @@ public abstract class EsperStatementView<I extends Item> extends Observable impl
     }
 
     @Override
-    public void add(Object o) {
-        getContent().asUpdatable().add(o);
+    public void addObservable(Object stmt) {
+        ((EPStatement) stmt).addListener(this);
     }
 
-    @Override
-    public void remove(Object o) {
-        getContent().asUpdatable().remove(o);
-    }
+    public abstract void update(long t);
 
-    @Override
-    public boolean contains(Object o) {
-        return getContent().asUpdatable().contains(o);
-    }
-
-    @Override
-    public boolean isSetSemantics() {
-        return getContent().asUpdatable().isSetSemantics();
-    }
-
-    @Override
-    public void clear() {
-        getContent().asUpdatable().clear();
-    }
 }
 
 
+//    public synchronized void update(EPStatement stmt, Object[][] insertStream, Object[][] removeStream) {
+//
+//        final Long[] current_timestamp = {(Long) insertStream[0][0]};
+//
+//        log.debug("[" + Thread.currentThread() + "][" + System.currentTimeMillis() + "] FROM STATEMENT: " + stmt.getText());
+//
+//        Map<Long, List<StreamItem>[]> grouped_by_time = new HashMap<>();
+//
+//        Arrays.stream(insertStream).forEach(pairs -> {
+//                    Long t = (Long) pairs[0];
+//                    if (grouped_by_time.containsKey(t))
+//                        grouped_by_time.get(t)[0].add((StreamItem) pairs[1]);
+//                    else {
+//                        List<StreamItem> events = new ArrayList<>();
+//                        events.add((StreamItem) pairs[1]);
+//                        List[] value = new List[2];
+//                        value[0] = events;
+//                        grouped_by_time.put((Long) t, value);
+//                    }
+//                    current_timestamp[0] = t > current_timestamp[0] ? t : current_timestamp[0];
+//                }
+//
+//
+//        );
+//
+//        if (removeStream != null) {
+//            Arrays.stream(removeStream).forEach(pairs -> {
+//                        if (grouped_by_time.containsKey(pairs[0]))
+//                            grouped_by_time.get(pairs[0])[1].add((StreamItem) pairs[1]);
+//                        else {
+//                            List<StreamItem> events = new ArrayList<>();
+//                            events.add((StreamItem) pairs[1]);
+//                            List[] value = new List[2];
+//                            value[1] = events;
+//                            grouped_by_time.put((Long) pairs[0], value);
+//                        }
+//                    }
+//            );
+//        }
+//
+//        grouped_by_time.forEach((t, ls) -> eval(ls[0], ls[1], t));
+//
+//        setChanged();
+//        notifyObservers(current_timestamp[0]);
+//    }
+
+// public void eval(List<StreamItem> newData, List<StreamItem> oldData, long currentTime) {
+//        Updatable instantaneousItem = getContent().asUpdatable();
+//        if (Maintenance.NAIVE.equals(maintenance))
+//            instantaneousItem.clear();
+//        else oldData.forEach(st -> st.removeFrom(instantaneousItem));
+//        newData.forEach(streamItem -> streamItem.addTo(instantaneousItem));
+//        eval(currentTime);
+//    }

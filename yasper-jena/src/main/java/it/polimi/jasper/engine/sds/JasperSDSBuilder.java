@@ -116,7 +116,7 @@ public class JasperSDSBuilder implements SDSBuilder<RSPQuery> {
         //SET ALL NAMED MODELS
         this.namedWOFS.forEach(namedTVG -> {
             String uri = resolver.resolveToString(namedTVG.getUri());
-            JenaGraph g = namedTVG.getContent();
+            JenaGraph g = namedTVG.getContent(0L);
             InstantaneousInfGraph bind = reasoner.bind(g);
             jenaSDS.addNamedModel(uri, new InfModelImpl(bind));
             namedTVG.setContent(bind);
@@ -159,7 +159,7 @@ public class JasperSDSBuilder implements SDSBuilder<RSPQuery> {
     }
 
     private Model loadStaticGraph(RSPQuery bq, Model def) {
-        //Default Static Graph
+        //Default Static GraphItem
         if (bq.getRSPGraphURIs() != null)
             for (String g : bq.getGraphURIs()) {
                 log.info(g);

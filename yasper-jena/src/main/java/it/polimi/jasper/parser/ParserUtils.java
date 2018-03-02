@@ -54,7 +54,7 @@ public class ParserUtils extends BaseParser<Object> {
     // 1/ It is different between CONSTRUCT intersection the query pattern
     // 2/ Each BasicGraphPattern is a scope for blank node labels so each
     // BGP causes the map to be cleared at the start of the BGP
-    // Graph patterns, true; in templates, false.
+    // GraphItem patterns, true; in templates, false.
     private boolean bNodesAreVariables = true;
     // In DELETE, false.
     private boolean bNodesAreAllowed = true;
