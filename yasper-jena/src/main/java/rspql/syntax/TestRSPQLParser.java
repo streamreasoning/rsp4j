@@ -1,5 +1,7 @@
 package rspql.syntax;
 
+import org.apache.jena.query.Syntax;
+
 import java.io.IOException;
 
 public class TestRSPQLParser {
@@ -28,6 +30,7 @@ public class TestRSPQLParser {
                 "}";
 
         RSPQLJenaQuery query = QueryFactory.parse(trickyQuery);
+        query.setSyntax(Syntax.syntaxARQ);
 
         // Print the query (only the SPARQL 1.1 parts)
         System.out.println(query);
