@@ -56,7 +56,8 @@ public class ContentGraph implements Content {
     }
 
 
-    public Graph coaleseGraphs() {
+    @Override
+    public Graph coalese() {
         if (elements.size() == 1)
             return elements.get(0);
         else {
@@ -66,7 +67,7 @@ public class ContentGraph implements Content {
         }
     }
 
-    public ContentGraph coalese() {
-        return new ContentGraph(coaleseGraphs());
+    public ContentGraph coaleseContent() {
+        return new ContentGraph(coalese());
     }
 }

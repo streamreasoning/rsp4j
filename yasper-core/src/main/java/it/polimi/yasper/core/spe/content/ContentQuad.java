@@ -1,20 +1,23 @@
 package it.polimi.yasper.core.spe.content;
 
 import it.polimi.yasper.core.spe.stream.StreamElement;
-import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.api.RDF;
-import org.apache.commons.rdf.api.Triple;
+import org.apache.commons.rdf.api.*;
 import org.apache.commons.rdf.simple.SimpleRDF;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContentTriple implements Content {
+public class ContentQuad implements Content {
 
-    private List<Triple> elements;
+    //They should all have the same graph
+    private List<Quad> elements;
     private long last_timestamp_changed;
+    private IRI graph_iri;
+    private RDF rdf;
 
-    public ContentTriple() {
+    public ContentQuad(IRI g, RDF rdf) {
+        this.rdf = rdf;
+        this.graph_iri = g;
         this.elements = new ArrayList<>();
     }
 
@@ -25,7 +28,8 @@ public class ContentTriple implements Content {
 
     @Override
     public void add(StreamElement e) {
-        elements.add((Triple) e.getContent());
+        Triple content = (Triple) e.getContent();
+        elements.add(rdf.createQuad(graph_iri, content.getSubject(), content.getPredicate(), content.getObject()));
         this.last_timestamp_changed = e.getTimestamp();
     }
 
@@ -40,11 +44,11 @@ public class ContentTriple implements Content {
         return elements.toString();
     }
 
-    @Override
+
     public Graph coalese() {
         RDF rdf = new SimpleRDF();
         Graph g = rdf.createGraph();
-        elements.forEach(g::add);
+        elements.forEach(q -> g.add(q.asTriple()));
         return g;
     }
 }

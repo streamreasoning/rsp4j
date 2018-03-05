@@ -1,7 +1,7 @@
 package it.polimi.yasper.core.spe.content;
 
-import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.stream.StreamElement;
+import org.apache.commons.rdf.api.Graph;
 
 public class EmptyContent implements Content {
 
@@ -20,5 +20,10 @@ public class EmptyContent implements Content {
     @Override
     public Long getTimeStampLastUpdate() {
         return ts;
+    }
+
+    @Override
+    public Graph coalese() {
+        return null;
     }
 }
