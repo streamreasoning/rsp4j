@@ -12,6 +12,7 @@ import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.scope.Tick;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
+import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import lombok.NonNull;
@@ -43,8 +44,12 @@ public class SDSBuilderImpl implements SDSBuilder<ContinuousQueryImpl> {
     @Override
     public void visit(ContinuousQueryImpl query) {
         SDSImpl sds = new SDSImpl(rdf);
-        this.cqe = new ContinuousQueryExecutionImpl(rdf, rdf.createIRI(query.getID()), sds, sds, query, query.getR2S());
+        this.cqe = new ContinuousQueryExecutionImpl(rdf, rdf.createIRI(query.getID()), sds, sds, query);
         query.getWindowMap().forEach((wo, s) -> {
+
+            WindowOperator w1 = wo;
+            Stream s31 = s;
+
             IRI iri = rdf.createIRI(wo.getName());
             Stream s1 = registeredStreams.get(s.getURI());
             WindowAssigner wa = wo.apply(s1);
@@ -54,11 +59,11 @@ public class SDSBuilderImpl implements SDSBuilder<ContinuousQueryImpl> {
             if (wo.isNamed()) {
                 NamedStreamView v = new NamedStreamView(wa);
                 sds.add(iri, wa.setView(v));
-                cqe.add(v);
+                v.addObserver(cqe);
             } else {
                 DefaultStreamView v = new DefaultStreamView();
                 sds.add(wa.setView(v));
-                cqe.add(v);
+                v.addObserver(cqe);
             }
         });
     }

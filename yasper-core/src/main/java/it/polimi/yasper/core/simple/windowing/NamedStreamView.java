@@ -32,8 +32,8 @@ public class NamedStreamView extends Observable implements View, Observer {
     }
 
     @Override
-    public void addObservable(Object windowAssigner) {
-        ((WindowAssignerImpl) windowAssigner).addObserver(this);
+    public void observerOf(Object observer) {
+        ((Observable) observer).addObserver(this);
     }
 
     @Override

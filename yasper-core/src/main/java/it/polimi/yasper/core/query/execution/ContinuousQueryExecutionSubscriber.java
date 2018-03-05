@@ -3,7 +3,10 @@ package it.polimi.yasper.core.query.execution;
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.query.response.InstantaneousResponse;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
-import it.polimi.yasper.core.rspql.*;
+import it.polimi.yasper.core.rspql.ContinuousQuery;
+import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
+import it.polimi.yasper.core.rspql.RelationToStreamOperator;
+import it.polimi.yasper.core.rspql.SDS;
 import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import lombok.AllArgsConstructor;
@@ -60,10 +63,10 @@ public abstract class ContinuousQueryExecutionSubscriber extends Observable impl
     }
 
     @Override
-    public void add(View item) {
+    public void addObservable(View item) {
         //TODO item will be an extended statement and this is the actual execution
         //need to remove Observer
-        item.addObservable(this);
+        item.observerOf(this);
     }
 
 }

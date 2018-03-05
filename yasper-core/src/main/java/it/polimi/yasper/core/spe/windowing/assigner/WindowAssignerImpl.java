@@ -94,7 +94,7 @@ public class WindowAssignerImpl extends Observable implements WindowAssigner, Ob
 
     @Override
     public TimeVaryingGraph setView(View view) {
-        view.addObserver(this);
+        view.observerOf(this);
         return new TimeVaryingGraph(iri, this);
     }
 

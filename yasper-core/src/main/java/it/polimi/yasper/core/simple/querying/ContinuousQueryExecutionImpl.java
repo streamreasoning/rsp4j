@@ -1,13 +1,11 @@
 package it.polimi.yasper.core.simple.querying;
 
-import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.query.response.InstantaneousResponse;
 import it.polimi.yasper.core.rspql.ContinuousQuery;
 import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
 import it.polimi.yasper.core.rspql.SDS;
 import it.polimi.yasper.core.spe.content.viewer.View;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.*;
@@ -25,18 +23,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ContinuousQueryExecutionImpl extends Observable implements Observer, ContinuousQueryExecution {
 
-    @NonNull
-    private RDF rdf;
-    @NonNull
-    private IRI id;
-    @NonNull
-    private Dataset ds;
-    @NonNull
-    private SDS sds;
-    @NonNull
-    private ContinuousQuery query;
-    @NonNull
-    private StreamOperator r2S;
+    private final RDF rdf;
+    private final IRI id;
+    private final Dataset ds;
+    private final SDS sds;
+    private final ContinuousQuery query;
     private int i = 0;
 
     @Override
@@ -46,7 +37,7 @@ public class ContinuousQueryExecutionImpl extends Observable implements Observer
 
         List<Triple> triples = ds.stream()
                 .filter(quad -> quad.getGraphName().isPresent())
-                .filter(quad -> quad.getGraphName().get().equals(rdf.createIRI("w0")))
+                .filter(quad -> quad.getGraphName().get().equals(rdf.createIRI("w1")))
                 .map(Quad::asTriple).collect(Collectors.toList());
 
         SelectInstResponse r = new SelectInstResponse(id.getIRIString() + "/ans/" + i, ts, triples, query);
@@ -81,8 +72,8 @@ public class ContinuousQueryExecutionImpl extends Observable implements Observer
     }
 
     @Override
-    public void add(View item) {
-        item.addObservable(this);
+    public void addObservable(View item) {
+        item.observerOf(this);
     }
 
     @Override

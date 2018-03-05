@@ -49,7 +49,7 @@ public abstract class ContinuousQueryExecutionObserver extends Observable implem
     }
 
     @Override
-    public void add(View item) {
-        item.addObservable(this);
+    public void addObservable(View item) {
+        item.observerOf(this);
     }
 }

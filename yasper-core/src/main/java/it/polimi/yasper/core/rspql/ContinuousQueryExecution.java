@@ -22,6 +22,7 @@ public interface ContinuousQueryExecution {
 
     void deleteFormatter(QueryResponseFormatter o);
 
-    void add(View item);
+    void addObservable(View item);
+
 }
 
