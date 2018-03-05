@@ -2,24 +2,27 @@ package it.polimi.yasper.core.simple.streaming;
 
 import it.polimi.yasper.core.rspql.Stream;
 import it.polimi.yasper.core.spe.stream.StreamElement;
+import it.polimi.yasper.core.spe.stream.rdf.RDFStream;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.RDF;
 import org.apache.commons.rdf.api.Triple;
 import org.apache.commons.rdf.simple.SimpleRDF;
 
-import java.util.Observable;
-import java.util.Observer;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Log4j
-public class RunnableStream extends Observable implements Runnable, Stream {
+public class RunnableStream extends RDFStream implements Runnable, Stream {
+
+    private List<WindowAssigner> observers;
 
     public RunnableStream(String iri) {
-        this.iri = iri;
+        super(iri);
+        observers = new ArrayList<>();
     }
 
-    private String iri;
     RDF rdf = new SimpleRDF();
 
     public void run() {
@@ -28,7 +31,6 @@ public class RunnableStream extends Observable implements Runnable, Stream {
             try {
                 Thread.sleep(1000);
                 log.info("Iteration [" + i + "]");
-                setChanged();
                 notifyObservers(new Elem(i, "Element"));
                 i += 1000;
             } catch (InterruptedException e) {
@@ -37,14 +39,13 @@ public class RunnableStream extends Observable implements Runnable, Stream {
         }
     }
 
-    @Override
-    public String getURI() {
-        return iri;
+    private void notifyObservers(Elem element) {
+        observers.forEach(wa -> wa.notify(element));
     }
 
     @Override
     public void addWindowAssiger(WindowAssigner windowAssigner) {
-        this.addObserver((Observer) windowAssigner);
+        this.observers.add(windowAssigner);
     }
 
     public class Elem implements StreamElement {

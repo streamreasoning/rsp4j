@@ -8,7 +8,8 @@ import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
 import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
 import it.polimi.yasper.core.spe.scope.Tick;
-import it.polimi.yasper.core.stream.StreamItem;
+import it.polimi.yasper.core.spe.stream.StreamElement;
+import it.polimi.yasper.core.spe.stream.rdf.RDFStream;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import org.apache.commons.rdf.api.RDF;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class RSPEngineImpl implements RSPEngine<Stream> {
+public class RSPEngineImpl implements RSPEngine<StreamElement> {
 
     private final long t0;
     private Report report;
@@ -47,13 +48,13 @@ public class RSPEngineImpl implements RSPEngine<Stream> {
     }
 
     @Override
-    public Stream register(Stream s) {
+    public RDFStream register(RDFStream s) {
         registeredStreams.put(s.getURI(), s);
         return s;
     }
 
     @Override
-    public void unregister(Stream s) {
+    public void unregister(RDFStream s) {
         //TODO stop all the queries that are using s
         // destroy all the window asssigners
         // remove s from registeredStreams
@@ -102,7 +103,7 @@ public class RSPEngineImpl implements RSPEngine<Stream> {
     }
 
     @Override
-    public boolean process(StreamItem var1) {
+    public boolean process(StreamElement var1) {
         return false;
     }
 }
