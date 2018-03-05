@@ -14,10 +14,9 @@ import it.polimi.yasper.core.spe.stream.StreamElement;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.time.TimeFactory;
 import it.polimi.yasper.core.spe.time.TimeInstant;
-import it.polimi.yasper.core.spe.windowing.Window;
-import it.polimi.yasper.core.spe.windowing.WindowImpl;
+import it.polimi.yasper.core.spe.windowing.definition.Window;
+import it.polimi.yasper.core.spe.windowing.definition.WindowImpl;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.rdf.api.Dataset;
 import org.apache.commons.rdf.api.IRI;
 
 import java.util.*;
@@ -39,7 +38,6 @@ public class WindowAssignerImpl extends Observable implements WindowAssigner, Ob
     private Report report;
     private long tc0;
     private long toi;
-    private Dataset sds;
 
     public WindowAssignerImpl(IRI iri, Stream s, long a, long b, long t0, long tc0) {
         this.iri = iri;
@@ -96,13 +94,18 @@ public class WindowAssignerImpl extends Observable implements WindowAssigner, Ob
 
     @Override
     public TimeVaryingGraph setView(View view) {
-        view.addObservable(this);
+        view.addObserver(this);
         return new TimeVaryingGraph(iri, this);
     }
 
     @Override
     public void setReportGrain(ReportGrain aw) {
         this.aw = aw;
+    }
+
+    @Override
+    public void notify(StreamElement arg) {
+        windowing(arg);
     }
 
 

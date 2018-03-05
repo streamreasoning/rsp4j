@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.spe.windowing;
+package it.polimi.yasper.core.spe.windowing.definition;
 
 
 public class WindowImpl implements Window {

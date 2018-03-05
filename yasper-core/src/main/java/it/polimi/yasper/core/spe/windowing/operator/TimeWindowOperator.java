@@ -1,7 +1,9 @@
-package it.polimi.yasper.core.spe.windowing.assigner;
+package it.polimi.yasper.core.spe.windowing.operator;
 
 import it.polimi.yasper.core.rspql.Stream;
-import it.polimi.yasper.core.spe.windowing.WindowOperator;
+import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
+import it.polimi.yasper.core.spe.windowing.assigner.WindowAssignerImpl;
+import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.RDF;
 
