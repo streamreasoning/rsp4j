@@ -1,20 +1,18 @@
-package it.polimi.yasper.core.runtime;
+package it.polimi.yasper.core.simple;
 
-import it.polimi.yasper.core.rspql.RSPEngine;
-import it.polimi.yasper.core.rspql.SDSBuilder;
-import it.polimi.yasper.core.rspql.Stream;
-import it.polimi.yasper.core.rspql.ContinuousQuery;
-import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
-import it.polimi.yasper.core.rspql.SDS;
+import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.rspql.*;
+import it.polimi.yasper.core.simple.sds.SDSBuilderImpl;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
 import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
 import it.polimi.yasper.core.spe.scope.Tick;
-import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.stream.StreamItem;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
+import org.apache.commons.rdf.api.RDF;
+import org.apache.commons.rdf.simple.SimpleRDF;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +23,7 @@ public class RSPEngineImpl implements RSPEngine<Stream> {
 
     private final long t0;
     private Report report;
+    private RDF rdf;
     private Tick tick;
     protected EngineConfiguration rsp_config;
 
@@ -44,6 +43,7 @@ public class RSPEngineImpl implements RSPEngine<Stream> {
         this.t0 = t0;
         this.report = new ReportImpl();
         this.report.add(new OnWindowClose());
+        this.rdf = new SimpleRDF();
     }
 
     @Override
@@ -66,7 +66,7 @@ public class RSPEngineImpl implements RSPEngine<Stream> {
 
     @Override
     public ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c) {
-        SDSBuilder builder = new SDSBuilderImpl(registeredStreams, rsp_config, c, report, ReportGrain.SINGLE, Tick.TIME_DRIVEN);
+        SDSBuilder builder = new SDSBuilderImpl(rdf, registeredStreams, rsp_config, c, report, ReportGrain.SINGLE, Tick.TIME_DRIVEN);
         q.accept(builder);
         return builder.getContinuousQueryExecution();
     }

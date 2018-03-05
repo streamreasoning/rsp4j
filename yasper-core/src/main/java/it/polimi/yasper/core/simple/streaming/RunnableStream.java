@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.runtime;
+package it.polimi.yasper.core.simple.streaming;
 
 import it.polimi.yasper.core.rspql.Stream;
 import it.polimi.yasper.core.spe.stream.StreamElement;

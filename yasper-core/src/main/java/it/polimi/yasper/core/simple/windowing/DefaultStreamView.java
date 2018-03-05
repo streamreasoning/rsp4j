@@ -1,17 +1,14 @@
-package it.polimi.yasper.core.runtime;
+package it.polimi.yasper.core.simple.windowing;
 
-import it.polimi.yasper.core.rspql.Instantaneous;
 import it.polimi.yasper.core.rspql.Item;
-import it.polimi.yasper.core.rspql.TimeVarying;
-import it.polimi.yasper.core.spe.content.Content;
+import it.polimi.yasper.core.rspql.TimeVaryingOld;
 import it.polimi.yasper.core.spe.content.viewer.View;
-import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssignerImpl;
 
 import java.util.Observable;
 import java.util.Observer;
 
-public class DefaultStreamView extends Observable implements View, Observer, TimeVarying<Item> {
+public class DefaultStreamView extends Observable implements View, Observer, TimeVaryingOld<Item> {
 
 
     @Override
@@ -24,8 +21,7 @@ public class DefaultStreamView extends Observable implements View, Observer, Tim
     }
 
     @Override
-    public Instantaneous eval(long t) {
-        return null;
+    public void setTimestamp(long t) {
     }
 
     @Override

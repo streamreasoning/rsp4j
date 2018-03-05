@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.runtime;
+package it.polimi.yasper.core.simple.querying;
 
 import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
@@ -6,11 +6,11 @@ import it.polimi.yasper.core.query.response.InstantaneousResponse;
 import it.polimi.yasper.core.rspql.ContinuousQuery;
 import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
 import it.polimi.yasper.core.rspql.SDS;
-import it.polimi.yasper.core.rspql.TimeVarying;
-import lombok.AllArgsConstructor;
+import it.polimi.yasper.core.rspql.TimeVaryingOld;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.api.Triple;
+import org.apache.commons.rdf.api.*;
 
 import java.util.List;
 import java.util.Observable;
@@ -22,24 +22,36 @@ import java.util.stream.Collectors;
  */
 
 @Log4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ContinuousQueryExecutionImpl extends Observable implements Observer, ContinuousQueryExecution {
 
-    private SDSImpl sds;
+    @NonNull
+    private RDF rdf;
+    @NonNull
+    private IRI id;
+    @NonNull
+    private Dataset ds;
+    @NonNull
+    private SDS sds;
+    @NonNull
     private ContinuousQuery query;
+    @NonNull
     private StreamOperator r2S;
+    private int i = 0;
 
     @Override
     public InstantaneousResponse eval(long ts) {
 
-        //TODO loop through the SDS quads
+        sds.eval(ts);
 
-        List<Graph> graphs = sds.getallGraph();
+        List<Triple> triples = ds.stream()
+                .filter(quad -> quad.getGraphName().isPresent())
+                .filter(quad -> quad.getGraphName().get().equals(rdf.createIRI("w0")))
+                .map(Quad::asTriple).collect(Collectors.toList());
 
-        List<Triple> triples = graphs.stream().flatMap(Graph::stream).collect(Collectors.toList());
+        SelectInstResponse r = new SelectInstResponse(id.getIRIString() + "/ans/" + i, ts, triples, query);
 
-        SelectInstResponse r = new SelectInstResponse("1", ts, triples, query);
-
+        i++;
         return r;
     }
 
@@ -69,7 +81,7 @@ public class ContinuousQueryExecutionImpl extends Observable implements Observer
     }
 
     @Override
-    public void add(TimeVarying item) {
+    public void add(TimeVaryingOld item) {
         item.addObserver(this);
     }
 

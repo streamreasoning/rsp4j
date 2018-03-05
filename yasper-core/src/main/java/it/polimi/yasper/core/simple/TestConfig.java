@@ -1,8 +1,11 @@
-package it.polimi.yasper.core.runtime;
+package it.polimi.yasper.core.simple;
 
 import it.polimi.yasper.core.rspql.Stream;
 import it.polimi.yasper.core.rspql.ContinuousQuery;
 import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
+import it.polimi.yasper.core.simple.querying.ContinuousQueryImpl;
+import it.polimi.yasper.core.simple.querying.formatter.InstResponseSysOutFormatter;
+import it.polimi.yasper.core.simple.streaming.RunnableStream;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import org.apache.commons.configuration.ConfigurationException;

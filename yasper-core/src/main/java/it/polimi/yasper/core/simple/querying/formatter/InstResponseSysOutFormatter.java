@@ -1,9 +1,7 @@
-package it.polimi.yasper.core.runtime;
+package it.polimi.yasper.core.simple.querying.formatter;
 
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import it.polimi.yasper.core.simple.querying.SelectInstResponse;
 
 import java.util.Observable;
 

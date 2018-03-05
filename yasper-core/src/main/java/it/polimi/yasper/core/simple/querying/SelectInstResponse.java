@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.runtime;
+package it.polimi.yasper.core.simple.querying;
 
 import it.polimi.yasper.core.query.response.InstantaneousResponse;
 import it.polimi.yasper.core.rspql.ContinuousQuery;
@@ -7,7 +7,6 @@ import org.apache.commons.rdf.api.Triple;
 import java.util.List;
 
 public class SelectInstResponse extends InstantaneousResponse{
-
 
     private final List<Triple> triples;
 
