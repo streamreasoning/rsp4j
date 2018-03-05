@@ -1,7 +1,7 @@
 package it.polimi.yasper.core.simple.querying;
 
-import it.polimi.yasper.core.query.response.InstantaneousResponse;
-import it.polimi.yasper.core.rspql.ContinuousQuery;
+import it.polimi.yasper.core.quering.response.InstantaneousResponse;
+import it.polimi.yasper.core.quering.ContinuousQuery;
 import org.apache.commons.rdf.api.Triple;
 
 import java.util.List;

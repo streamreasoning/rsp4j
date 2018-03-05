@@ -1,8 +1,8 @@
 package it.polimi.yasper.core.simple.streaming;
 
-import it.polimi.yasper.core.rspql.Stream;
-import it.polimi.yasper.core.spe.stream.StreamElement;
-import it.polimi.yasper.core.spe.stream.rdf.RDFStream;
+import it.polimi.yasper.core.stream.Stream;
+import it.polimi.yasper.core.stream.StreamElement;
+import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.RDF;

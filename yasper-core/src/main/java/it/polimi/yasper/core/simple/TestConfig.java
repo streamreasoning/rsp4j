@@ -1,8 +1,8 @@
 package it.polimi.yasper.core.simple;
 
-import it.polimi.yasper.core.rspql.Stream;
-import it.polimi.yasper.core.rspql.ContinuousQuery;
-import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
+import it.polimi.yasper.core.stream.Stream;
+import it.polimi.yasper.core.quering.ContinuousQuery;
+import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.simple.querying.ContinuousQueryImpl;
 import it.polimi.yasper.core.simple.querying.formatter.InstResponseSysOutFormatter;
 import it.polimi.yasper.core.simple.streaming.RunnableStream;

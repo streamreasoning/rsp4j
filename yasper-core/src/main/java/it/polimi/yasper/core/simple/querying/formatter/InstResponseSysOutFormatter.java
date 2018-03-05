@@ -1,6 +1,6 @@
 package it.polimi.yasper.core.simple.querying.formatter;
 
-import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.simple.querying.SelectInstResponse;
 
 import java.util.Observable;

@@ -1,15 +1,20 @@
 package it.polimi.yasper.core.simple;
 
-import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
-import it.polimi.yasper.core.rspql.*;
+import it.polimi.yasper.core.engine.RSPEngine;
+import it.polimi.yasper.core.quering.ContinuousQuery;
+import it.polimi.yasper.core.quering.SDS;
+import it.polimi.yasper.core.quering.SDSBuilder;
+import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.simple.sds.SDSBuilderImpl;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
 import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
 import it.polimi.yasper.core.spe.scope.Tick;
-import it.polimi.yasper.core.spe.stream.StreamElement;
-import it.polimi.yasper.core.spe.stream.rdf.RDFStream;
+import it.polimi.yasper.core.stream.Stream;
+import it.polimi.yasper.core.stream.StreamElement;
+import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import org.apache.commons.rdf.api.RDF;

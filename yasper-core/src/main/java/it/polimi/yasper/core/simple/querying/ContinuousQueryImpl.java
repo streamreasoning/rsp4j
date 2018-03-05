@@ -1,10 +1,10 @@
 package it.polimi.yasper.core.simple.querying;
 
 import it.polimi.yasper.core.enums.StreamOperator;
-import it.polimi.yasper.core.rspql.ContinuousQuery;
-import it.polimi.yasper.core.rspql.SDSBuilder;
-import it.polimi.yasper.core.rspql.Stream;
-import it.polimi.yasper.core.spe.stream.rdf.RDFStream;
+import it.polimi.yasper.core.quering.ContinuousQuery;
+import it.polimi.yasper.core.quering.SDSBuilder;
+import it.polimi.yasper.core.stream.Stream;
+import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import it.polimi.yasper.core.spe.windowing.operator.TimeWindowOperator;
 import org.apache.commons.rdf.api.Graph;

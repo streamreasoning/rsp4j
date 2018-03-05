@@ -1,6 +1,6 @@
 package it.polimi.yasper.core.reasoning;
 
-import it.polimi.yasper.core.rspql.Instantaneous;
+import it.polimi.yasper.core.stream.Instantaneous;
 
 /**
  * Created by riccardo on 06/07/2017.

@@ -1,9 +1,9 @@
 package it.polimi.yasper.core.simple.sds;
 
-import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
-import it.polimi.yasper.core.rspql.SDS;
-import it.polimi.yasper.core.rspql.SDSBuilder;
-import it.polimi.yasper.core.rspql.Stream;
+import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.quering.SDS;
+import it.polimi.yasper.core.quering.SDSBuilder;
+import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.simple.querying.ContinuousQueryExecutionImpl;
 import it.polimi.yasper.core.simple.querying.ContinuousQueryImpl;
 import it.polimi.yasper.core.simple.windowing.DefaultStreamView;

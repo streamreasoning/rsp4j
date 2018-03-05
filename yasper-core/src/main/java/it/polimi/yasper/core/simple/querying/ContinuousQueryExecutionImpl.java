@@ -1,10 +1,10 @@
 package it.polimi.yasper.core.simple.querying;
 
-import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
-import it.polimi.yasper.core.query.response.InstantaneousResponse;
-import it.polimi.yasper.core.rspql.ContinuousQuery;
-import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
-import it.polimi.yasper.core.rspql.SDS;
+import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.quering.response.InstantaneousResponse;
+import it.polimi.yasper.core.quering.ContinuousQuery;
+import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.quering.SDS;
 import it.polimi.yasper.core.spe.content.viewer.View;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;

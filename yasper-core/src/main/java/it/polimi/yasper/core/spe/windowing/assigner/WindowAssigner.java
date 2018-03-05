@@ -7,7 +7,7 @@ import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.scope.Tick;
-import it.polimi.yasper.core.spe.stream.StreamElement;
+import it.polimi.yasper.core.stream.StreamElement;
 
 import java.util.List;
 

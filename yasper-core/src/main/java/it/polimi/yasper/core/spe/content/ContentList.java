@@ -1,6 +1,6 @@
 package it.polimi.yasper.core.spe.content;
 
-import it.polimi.yasper.core.spe.stream.StreamElement;
+import it.polimi.yasper.core.stream.StreamElement;
 import lombok.Setter;
 import org.apache.commons.rdf.api.Graph;
 

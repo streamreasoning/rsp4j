@@ -1,7 +1,7 @@
 package it.polimi.yasper.core.simple.streaming;
 
-import it.polimi.yasper.core.rspql.Stream;
-import it.polimi.yasper.core.spe.stream.StreamElement;
+import it.polimi.yasper.core.stream.Stream;
+import it.polimi.yasper.core.stream.StreamElement;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 
 import java.util.Observable;
