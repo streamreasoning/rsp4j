@@ -9,17 +9,13 @@ import it.polimi.jasper.engine.query.execution.observer.ContinuousQueryExecution
 import it.polimi.jasper.engine.reasoning.InstantaneousInfGraph;
 import it.polimi.jasper.engine.reasoning.JenaTVGReasoner;
 import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
+import it.polimi.jasper.esper.EsperStatementView;
 import it.polimi.jasper.parser.streams.WindowedStreamNode;
-import it.polimi.yasper.core.rspql.SDSBuilder;
-import it.polimi.yasper.core.rspql.Stream;
-import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
-import it.polimi.yasper.core.rspql.SDS;
-import it.polimi.yasper.core.rspql.TimeVarying;
+import it.polimi.yasper.core.rspql.*;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.scope.Tick;
 import it.polimi.yasper.core.spe.windowing.WindowOperator;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
-import it.polimi.yasper.core.rspql.Entailment;
 import it.polimi.yasper.core.enums.EntailmentType;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.utils.EngineConfiguration;
@@ -104,7 +100,7 @@ public class JasperSDSBuilder implements SDSBuilder<RSPQuery> {
 
         addNamedStaticGraph(bq, jenaSDS, this.reasoner);
 
-        List<TimeVarying> collect = bq.getWindowMap().entrySet().stream()
+        List<EsperStatementView> collect = bq.getWindowMap().entrySet().stream()
                 .map(e -> {
                     WindowOperator key = e.getKey();
                     String uri = e.getValue().getURI();
@@ -185,7 +181,7 @@ public class JasperSDSBuilder implements SDSBuilder<RSPQuery> {
         return false;
     }
 
-    private TimeVarying apply(WindowOperator wo, boolean named, Stream s) {
+    private EsperStatementView apply(WindowOperator wo, boolean named, Stream s) {
 
         WindowAssigner wa = wo.apply(s);
 

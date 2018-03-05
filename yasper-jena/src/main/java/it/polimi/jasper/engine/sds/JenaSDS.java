@@ -5,6 +5,7 @@ import it.polimi.jasper.engine.query.DefaultTVG;
 import it.polimi.jasper.engine.query.NamedTVG;
 import it.polimi.jasper.engine.reasoning.InstantaneousInfGraph;
 import it.polimi.yasper.core.rspql.SDS;
+import it.polimi.yasper.core.simple.windowing.TimeVarying;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.time.TimeFactory;
 import it.polimi.yasper.core.enums.Maintenance;
@@ -12,6 +13,8 @@ import it.polimi.yasper.core.reasoning.TVGReasoner;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
+import org.apache.commons.rdf.api.Graph;
+import org.apache.commons.rdf.api.IRI;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.system.IRIResolver;
@@ -76,6 +79,22 @@ public class JenaSDS extends DatasetImpl implements SDS {
     @Override
     public void afterEval() {
         setDefaultModel(getDefaultModel().difference(knowledge_base));
+    }
+
+    @Override
+    public <T extends TimeVarying<Graph>> void add(IRI iri, T tvg) {
+
+    }
+
+    @Override
+    public <T extends TimeVarying<Graph>> void add(T tvg) {
+
+    }
+
+
+    @Override
+    public void eval(long ts) {
+
     }
 
 }

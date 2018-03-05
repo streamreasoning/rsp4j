@@ -2,6 +2,7 @@ package it.polimi.jasper.esper;
 
 import com.espertech.esper.client.*;
 import com.espertech.esper.client.soda.EPStatementObjectModel;
+import it.polimi.yasper.core.simple.windowing.TimeVaryingGraph;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.spe.report.Report;
@@ -80,16 +81,18 @@ public class EsperWindowAssigner implements WindowAssigner, Observer {
     }
 
     @Override
-    public void setView(View content) {
+    public TimeVaryingGraph setView(View content) {
         if (content instanceof StatementAwareUpdateListener) {
             statement.addListener((StatementAwareUpdateListener) content);
         }
+        return null;
     }
 
     @Override
     public void setReportGrain(ReportGrain aw) {
         this.reportGrain = aw;
     }
+
 
     public boolean process(StreamItem g) {
 

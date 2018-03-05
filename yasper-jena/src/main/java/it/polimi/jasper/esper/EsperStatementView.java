@@ -5,9 +5,8 @@ import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.StatementAwareUpdateListener;
 import com.espertech.esper.event.map.MapEventBean;
+import it.polimi.jasper.engine.instantaneous.JenaGraph;
 import it.polimi.yasper.core.enums.Maintenance;
-import it.polimi.yasper.core.rspql.Item;
-import it.polimi.yasper.core.rspql.TimeVarying;
 import it.polimi.yasper.core.rspql.Updatable;
 import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.stream.StreamItem;
@@ -26,9 +25,10 @@ import java.util.Observer;
 @Getter
 @Setter
 @NoArgsConstructor
-public abstract class EsperStatementView<I extends Item> extends Observable implements View, TimeVarying<I>, StatementAwareUpdateListener {
+public abstract class EsperStatementView extends Observable implements View, StatementAwareUpdateListener {
 
     protected Maintenance maintenance;
+    private JenaGraph graph;
 
     public EsperStatementView(Maintenance maintenance) {
         this.maintenance = maintenance;
@@ -47,7 +47,7 @@ public abstract class EsperStatementView<I extends Item> extends Observable impl
     public void eval(EventBean[] newData, EventBean[] oldData, long currentTime) {
         DStreamUpdate(getContent(currentTime).asUpdatable(), oldData, maintenance);
         IStreamUpdate(getContent(currentTime).asUpdatable(), newData);
-        eval(currentTime);
+        setTimestamp(currentTime);
     }
 
     private void handleSingleIStream(Updatable ii, StreamItem st) {
@@ -115,6 +115,18 @@ public abstract class EsperStatementView<I extends Item> extends Observable impl
         ((EPStatement) stmt).addListener(this);
     }
 
+    public void setTimestamp(long t) {
+        graph.setTimestamp(t);
+    }
+
+    public JenaGraph getContent(long now) {
+        return graph;
+    }
+
+    public void setContent(JenaGraph jenaGraph) {
+        this.graph = jenaGraph;
+    }
+
     public abstract void update(long t);
 
 }
@@ -160,17 +172,17 @@ public abstract class EsperStatementView<I extends Item> extends Observable impl
 //            );
 //        }
 //
-//        grouped_by_time.forEach((t, ls) -> eval(ls[0], ls[1], t));
+//        grouped_by_time.forEach((t, ls) -> setTimestamp(ls[0], ls[1], t));
 //
 //        setChanged();
 //        notifyObservers(current_timestamp[0]);
 //    }
 
-// public void eval(List<StreamItem> newData, List<StreamItem> oldData, long currentTime) {
+// public void setTimestamp(List<StreamItem> newData, List<StreamItem> oldData, long currentTime) {
 //        Updatable instantaneousItem = getContent().asUpdatable();
 //        if (Maintenance.NAIVE.equals(maintenance))
 //            instantaneousItem.clear();
 //        else oldData.forEach(st -> st.removeFrom(instantaneousItem));
 //        newData.forEach(streamItem -> streamItem.addTo(instantaneousItem));
-//        eval(currentTime);
+//        setTimestamp(currentTime);
 //    }

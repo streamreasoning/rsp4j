@@ -6,21 +6,21 @@ import it.polimi.jasper.engine.instantaneous.JenaGraph;
 import it.polimi.jasper.esper.ContentBean;
 import it.polimi.jasper.esper.EsperStatementView;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Log4j
-@Getter
-public class DefaultTVG extends EsperStatementView<JenaGraph> {
+public class DefaultTVG extends EsperStatementView {
 
     private Set<WindowAssigner> windowAssigners;
-    private JenaGraph graph = new GraphBase();
 
-    public DefaultTVG(JenaGraph graph) {
-        this.graph = graph;
+    public DefaultTVG(JenaGraph g) {
+        this.setContent(g);
         this.windowAssigners = new HashSet<>();
     }
 
@@ -34,15 +34,5 @@ public class DefaultTVG extends EsperStatementView<JenaGraph> {
         eval(null, beans.toArray(new EventBean[beans.size()]), t);
     }
 
-    @Override
-    public JenaGraph eval(long t) {
-        graph.setTimestamp(t);
-        return graph;
-    }
-
-    @Override
-    public JenaGraph getContent(long now) {
-        return graph;
-    }
 
 }
