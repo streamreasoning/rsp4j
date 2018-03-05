@@ -5,8 +5,8 @@ import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
 import it.polimi.yasper.core.rspql.SDS;
 import it.polimi.yasper.core.rspql.ContinuousQuery;
 import it.polimi.yasper.core.rspql.RelationToStreamOperator;
-import it.polimi.yasper.core.rspql.TimeVarying;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
+import it.polimi.yasper.core.spe.content.viewer.View;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -49,7 +49,7 @@ public abstract class ContinuousQueryExecutionObserver extends Observable implem
     }
 
     @Override
-    public void add(TimeVarying item) {
-        item.addObserver(this);
+    public void add(View item) {
+        item.addObservable(this);
     }
 }
