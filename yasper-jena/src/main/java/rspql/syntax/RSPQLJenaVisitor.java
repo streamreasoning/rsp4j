@@ -10,9 +10,7 @@ import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Query;
-import org.apache.jena.sparql.core.BasicPattern;
-import org.apache.jena.sparql.core.TriplePath;
-import org.apache.jena.sparql.core.Var;
+import org.apache.jena.sparql.core.*;
 import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.engine.binding.BindingFactory;
 import org.apache.jena.sparql.expr.*;
@@ -20,12 +18,14 @@ import org.apache.jena.sparql.expr.aggregate.Aggregator;
 import org.apache.jena.sparql.expr.aggregate.AggregatorFactory;
 import org.apache.jena.sparql.expr.aggregate.Args;
 import org.apache.jena.sparql.graph.NodeConst;
+import org.apache.jena.sparql.modify.request.QuadAcc;
 import org.apache.jena.sparql.path.*;
 import org.apache.jena.sparql.syntax.*;
 import org.apache.jena.sparql.util.ExprUtils;
 import org.apache.jena.vocabulary.RDF;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -162,10 +162,20 @@ public class RSPQLJenaVisitor extends RSPQLBaseVisitor {
     }
 
     public Object visitConstructTemplate(RSPQLParser.ConstructTemplateContext ctx) {
-        BasicPattern bgp = new BasicPattern();
-        ElementTriplesBlock el = (ElementTriplesBlock) ctx.constructTriples().accept(this);
-        el.getPattern().iterator().forEachRemaining(bgp::add);
-        query.setConstructTemplate(new Template(bgp));
+//        BasicPattern bgp = new BasicPattern();
+//        ElementTriplesBlock el = (ElementTriplesBlock) ctx.constructTriples().accept(this);
+//        el.getPattern().iterator().forEachRemaining(bgp::add);
+//        query.setConstructTemplate(new Template(bgp));
+        ArrayList<Quad> quads = new ArrayList<>();
+        ctx.quads().quadsNotTriples().forEach(graph -> {
+            Node n = (Node) graph.varOrIri().accept(this);
+            ElementTriplesBlock etb = (ElementTriplesBlock) graph.triplesTemplate().accept(this);
+            etb.patternElts().forEachRemaining(t -> {
+                Quad q = new Quad(n, t);
+                quads.add(q);
+            });
+        });
+        query.setConstructTemplate(new Template(new QuadAcc(quads)));
         return null;
     }
 
