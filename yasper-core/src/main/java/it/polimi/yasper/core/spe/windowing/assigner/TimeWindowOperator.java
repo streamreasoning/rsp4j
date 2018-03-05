@@ -2,13 +2,17 @@ package it.polimi.yasper.core.spe.windowing.assigner;
 
 import it.polimi.yasper.core.rspql.Stream;
 import it.polimi.yasper.core.spe.windowing.WindowOperator;
+import org.apache.commons.rdf.api.IRI;
+import org.apache.commons.rdf.api.RDF;
 
 public class TimeWindowOperator implements WindowOperator {
 
     private final long a, b, t0;
-    private final String iri;
+    private final IRI iri;
+    private RDF rdf;
 
-    public TimeWindowOperator(String iri, long a, long b, long t0) {
+    public TimeWindowOperator(RDF rdf, IRI iri, long a, long b, long t0) {
+        this.rdf = rdf;
         this.iri = iri;
         this.a = a;
         this.b = b;
@@ -17,7 +21,7 @@ public class TimeWindowOperator implements WindowOperator {
 
     @Override
     public String getName() {
-        return iri;
+        return iri.getIRIString();
     }
 
     @Override
@@ -27,7 +31,7 @@ public class TimeWindowOperator implements WindowOperator {
 
     @Override
     public WindowAssigner apply(Stream s) {
-        WindowAssignerImpl windowAssigner = new WindowAssignerImpl(s, a, b, 0, 0);
+        WindowAssignerImpl windowAssigner = new WindowAssignerImpl(iri, s, a, b, 0, 0);
         return windowAssigner;
     }
 }

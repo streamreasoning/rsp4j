@@ -1,6 +1,7 @@
 package it.polimi.yasper.core.spe.windowing.assigner;
 
 import it.polimi.yasper.core.rspql.Stream;
+import it.polimi.yasper.core.simple.windowing.TimeVaryingGraph;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.ContentGraph;
 import it.polimi.yasper.core.spe.content.EmptyContent;
@@ -16,6 +17,8 @@ import it.polimi.yasper.core.spe.time.TimeInstant;
 import it.polimi.yasper.core.spe.windowing.Window;
 import it.polimi.yasper.core.spe.windowing.WindowImpl;
 import lombok.extern.log4j.Log4j;
+import org.apache.commons.rdf.api.Dataset;
+import org.apache.commons.rdf.api.IRI;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,6 +30,7 @@ public class WindowAssignerImpl extends Observable implements WindowAssigner, Ob
     private final long a, b;
     private final Time time;
     private final long t0;
+    private final IRI iri;
 
     private Map<Window, Content> active_windows;
     private Set<Window> to_evict;
@@ -35,8 +39,10 @@ public class WindowAssignerImpl extends Observable implements WindowAssigner, Ob
     private Report report;
     private long tc0;
     private long toi;
+    private Dataset sds;
 
-    public WindowAssignerImpl(Stream s, long a, long b, long t0, long tc0) {
+    public WindowAssignerImpl(IRI iri, Stream s, long a, long b, long t0, long tc0) {
+        this.iri = iri;
         this.stream = s;
         this.a = a;
         this.b = b;
@@ -48,6 +54,7 @@ public class WindowAssignerImpl extends Observable implements WindowAssigner, Ob
         this.time = TimeFactory.getInstance();
         this.stream.addWindowAssiger(this);
     }
+
 
     @Override
     public Report getReport() {
@@ -88,8 +95,9 @@ public class WindowAssignerImpl extends Observable implements WindowAssigner, Ob
     }
 
     @Override
-    public void setView(View view) {
+    public TimeVaryingGraph setView(View view) {
         view.addObservable(this);
+        return new TimeVaryingGraph(iri, this);
     }
 
     @Override
@@ -130,13 +138,13 @@ public class WindowAssignerImpl extends Observable implements WindowAssigner, Ob
         switch (aw) {
             case MULTIPLE:
                 active_windows.keySet().stream()
-                        .filter(w-> report.report(w, null, t_e, System.currentTimeMillis()))
+                        .filter(w -> report.report(w, null, t_e, System.currentTimeMillis()))
                         .forEach(w -> tick(t_e, w));
                 break;
             case SINGLE:
             default:
                 active_windows.keySet().stream()
-                        .filter(w-> report.report(w, null, t_e, System.currentTimeMillis()))
+                        .filter(w -> report.report(w, null, t_e, System.currentTimeMillis()))
                         .max(Comparator.comparingLong(Window::getC))
                         .ifPresent(window -> tick(t_e, window));
         }
