@@ -5,4 +5,5 @@ public interface StreamElement {
     long getTimestamp();
 
     Object getContent();
+
 }

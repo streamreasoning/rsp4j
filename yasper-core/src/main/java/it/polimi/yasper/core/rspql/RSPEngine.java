@@ -2,7 +2,8 @@ package it.polimi.yasper.core.rspql;
 
 
 import it.polimi.yasper.core.rspql.features.*;
-import it.polimi.yasper.core.stream.StreamItem;
+import it.polimi.yasper.core.spe.stream.StreamElement;
+import it.polimi.yasper.core.spe.stream.rdf.RDFStream;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -10,8 +11,9 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * @author Riccardo
  */
-public interface RSPEngine<S extends Stream> extends QueryParsingFeature, QueryRegistrationFeature, QueryDeletionFeature, QueryObserverRegistrationFeature, QueryObserverDeletionFeature, StreamRegistrationFeature<S>, StreamDeletionFeature<S> {
-    boolean process(StreamItem var1);
+public interface RSPEngine<T> extends QueryParsingFeature, QueryRegistrationFeature, QueryDeletionFeature, QueryObserverRegistrationFeature, QueryObserverDeletionFeature, StreamRegistrationFeature<RDFStream>, StreamDeletionFeature<RDFStream> {
+
+    boolean process(T var1);
 
     @Override
     default String toVocals() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
