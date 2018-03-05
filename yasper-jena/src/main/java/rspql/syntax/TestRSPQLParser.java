@@ -9,7 +9,7 @@ public class TestRSPQLParser {
                 "PREFIX : <ex#> " +
                 "REGISTER ISTREAM :test AS " +
                 "CONSTRUCT { " +
-                "  GRAPH <g> { ?a ?b ?c } " +
+                "  <s> <p2> <o2> . GRAPH <g> { ?s ?p ?o } . ?s <p> <o> " +
                 "} " +
                 "FROM NAMED WINDOW <ex#w1> ON <ex#s> [ RANGE PT1H ] " +
                 "FROM NAMED WINDOW ex:w2 ON ex:s [ ELEMENTS 10 STEP 10 ] " +

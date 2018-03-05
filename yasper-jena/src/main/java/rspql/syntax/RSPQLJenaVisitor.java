@@ -167,14 +167,26 @@ public class RSPQLJenaVisitor extends RSPQLBaseVisitor {
 //        el.getPattern().iterator().forEachRemaining(bgp::add);
 //        query.setConstructTemplate(new Template(bgp));
         ArrayList<Quad> quads = new ArrayList<>();
-        ctx.quads().quadsNotTriples().forEach(graph -> {
-            Node n = (Node) graph.varOrIri().accept(this);
-            ElementTriplesBlock etb = (ElementTriplesBlock) graph.triplesTemplate().accept(this);
-            etb.patternElts().forEachRemaining(t -> {
-                Quad q = new Quad(n, t);
-                quads.add(q);
+        if(ctx.quads().triplesTemplate() != null) {
+            ctx.quads().triplesTemplate().forEach(triplesTemplate -> {
+                ElementTriplesBlock etb = (ElementTriplesBlock) triplesTemplate.accept(this);
+                etb.patternElts().forEachRemaining(t -> {
+                    Quad q = new Quad(null, t);
+                    quads.add(q);
+                    System.out.println(q);
+                });
             });
-        });
+        }
+        if(ctx.quads().quadsNotTriples() != null) {
+            ctx.quads().quadsNotTriples().forEach(graph -> {
+                Node n = (Node) graph.varOrIri().accept(this);
+                ElementTriplesBlock etb = (ElementTriplesBlock) graph.triplesTemplate().accept(this);
+                etb.patternElts().forEachRemaining(t -> {
+                    Quad q = new Quad(n, t);
+                    quads.add(q);
+                });
+            });
+        }
         query.setConstructTemplate(new Template(new QuadAcc(quads)));
         return null;
     }
