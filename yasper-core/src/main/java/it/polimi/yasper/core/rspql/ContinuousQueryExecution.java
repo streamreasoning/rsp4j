@@ -21,6 +21,6 @@ public interface ContinuousQueryExecution {
 
     void deleteFormatter(QueryResponseFormatter o);
 
-    void add(TimeVarying item);
+    void add(TimeVaryingOld item);
 }
 

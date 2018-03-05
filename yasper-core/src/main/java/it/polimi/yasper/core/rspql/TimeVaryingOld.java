@@ -5,9 +5,9 @@ import java.util.Observer;
 /**
  * Created by riccardo on 02/09/2017.
  */
-public interface TimeVarying<I extends Item> {
+public interface TimeVaryingOld<I extends Item> {
 
-    <I extends Instantaneous> I eval(long t);
+    void setTimestamp(long t);
 
     I getContent(long now);
 

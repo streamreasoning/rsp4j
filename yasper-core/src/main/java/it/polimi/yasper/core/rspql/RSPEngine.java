@@ -1,37 +1,33 @@
 package it.polimi.yasper.core.rspql;
 
 
-import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.rspql.features.*;
 import it.polimi.yasper.core.stream.StreamItem;
-import it.polimi.yasper.core.utils.QueryConfiguration;
+
+import java.lang.reflect.InvocationTargetException;
 
 
 /**
  * @author Riccardo
  */
-public interface RSPEngine<S extends Stream> {
-
-    S register(S s);
-
-    void unregister(S s);
-
-    ContinuousQuery parseQuery(String input);
-
-    ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c);
-
-    ContinuousQueryExecution register(String q, QueryConfiguration c);
-
-    void unregister(ContinuousQuery qId);
-
-    void register(ContinuousQuery q, QueryResponseFormatter o);
-
-    void unregister(ContinuousQuery q, QueryResponseFormatter o);
-
-    void register(ContinuousQueryExecution cqe, QueryResponseFormatter o);
-
-    void unregister(ContinuousQueryExecution cqe, QueryResponseFormatter o);
-
+public interface RSPEngine<S extends Stream> extends QueryParsingFeature, QueryRegistrationFeature, QueryDeletionFeature, QueryObserverRegistrationFeature, QueryObserverDeletionFeature, StreamRegistrationFeature<S>, StreamDeletionFeature<S> {
     boolean process(StreamItem var1);
+
+    @Override
+    default String toVocals() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+
+        String ttl = "<> a vocals:RSPEngine; \n";
+        ttl += "\t " + StreamRegistrationFeature.super.toVocals() + ";\n";
+        ttl += "\t " + StreamDeletionFeature.super.toVocals() + ";\n";
+        ttl += "\t " + QueryParsingFeature.super.toVocals() + ";\n";
+        ttl += "\t " + QueryRegistrationFeature.super.toVocals() + ";\n";
+        ttl += "\t " + QueryDeletionFeature.super.toVocals() + ";\n";
+        ttl += "\t " + QueryObserverRegistrationFeature.super.toVocals() + ";\n";
+        ttl += "\t " + QueryObserverDeletionFeature.super.toVocals() + ";\n";
+
+        return ttl;
+    }
+
 
     // TODO is reasoning enabled
     // TODO is external time control enabled
