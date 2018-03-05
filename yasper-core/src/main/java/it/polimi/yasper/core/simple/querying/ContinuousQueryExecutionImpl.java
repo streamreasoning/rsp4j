@@ -6,7 +6,7 @@ import it.polimi.yasper.core.query.response.InstantaneousResponse;
 import it.polimi.yasper.core.rspql.ContinuousQuery;
 import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
 import it.polimi.yasper.core.rspql.SDS;
-import it.polimi.yasper.core.rspql.TimeVaryingOld;
+import it.polimi.yasper.core.spe.content.viewer.View;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -81,8 +81,8 @@ public class ContinuousQueryExecutionImpl extends Observable implements Observer
     }
 
     @Override
-    public void add(TimeVaryingOld item) {
-        item.addObserver(this);
+    public void add(View item) {
+        item.addObservable(this);
     }
 
     @Override

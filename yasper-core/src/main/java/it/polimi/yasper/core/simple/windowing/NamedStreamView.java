@@ -1,8 +1,7 @@
 package it.polimi.yasper.core.simple.windowing;
 
-import it.polimi.yasper.core.rspql.Item;
-import it.polimi.yasper.core.rspql.TimeVaryingOld;
-import it.polimi.yasper.core.spe.content.*;
+import it.polimi.yasper.core.spe.content.Content;
+import it.polimi.yasper.core.spe.content.EmptyContent;
 import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssignerImpl;
@@ -23,7 +22,7 @@ import java.util.Observer;
  * In theory we could just notify to the extencution that we had an update in the ET.
  **/
 @Getter
-public class NamedStreamView extends Observable implements View, Observer, TimeVaryingOld {
+public class NamedStreamView extends Observable implements View, Observer {
 
     private final WindowAssigner window_assigner;
     private Content content = new EmptyContent();
@@ -50,12 +49,4 @@ public class NamedStreamView extends Observable implements View, Observer, TimeV
         super.addObserver(o);
     }
 
-    @Override
-    public Item getContent(long now) {
-        return null;
-    }
-
-    @Override
-    public void setTimestamp(long t) {
-    }
 }
