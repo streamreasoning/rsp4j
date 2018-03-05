@@ -2,12 +2,12 @@ package it.polimi.jasper.engine.query.execution.subscribers;
 
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.jasper.engine.query.response.ConstructResponse;
-import it.polimi.yasper.core.rspql.RelationToStreamOperator;
-import it.polimi.yasper.core.rspql.ContinuousQuery;
-import it.polimi.yasper.core.rspql.SDS;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecutionSubscriber;
 import it.polimi.yasper.core.query.response.InstantaneousResponse;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
+import it.polimi.yasper.core.rspql.ContinuousQuery;
+import it.polimi.yasper.core.rspql.RelationToStreamOperator;
+import it.polimi.yasper.core.rspql.SDS;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;

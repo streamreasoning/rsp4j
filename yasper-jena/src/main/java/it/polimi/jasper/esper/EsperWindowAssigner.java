@@ -2,16 +2,17 @@ package it.polimi.jasper.esper;
 
 import com.espertech.esper.client.*;
 import com.espertech.esper.client.soda.EPStatementObjectModel;
+import it.polimi.jasper.engine.stream.items.StreamItem;
 import it.polimi.yasper.core.simple.windowing.TimeVaryingGraph;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.scope.Tick;
+import it.polimi.yasper.core.spe.stream.StreamElement;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.time.TimeFactory;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
-import it.polimi.yasper.core.stream.StreamItem;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -93,6 +94,11 @@ public class EsperWindowAssigner implements WindowAssigner, Observer {
         this.reportGrain = aw;
     }
 
+    @Override
+    public void notify(StreamElement arg) {
+        if (arg instanceof StreamItem)
+            process((StreamItem) arg);
+    }
 
     public boolean process(StreamItem g) {
 

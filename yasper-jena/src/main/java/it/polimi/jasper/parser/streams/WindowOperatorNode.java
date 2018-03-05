@@ -1,6 +1,6 @@
 package it.polimi.jasper.parser.streams;
 
-import it.polimi.yasper.core.spe.windowing.WindowOperator;
+import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import it.polimi.yasper.core.enums.WindowType;
 
 /**

@@ -63,9 +63,9 @@ public class BaseInfTVGraph extends BaseInfGraph implements InstantaneousInfGrap
 
 
 //    @Override
-//    public void add(Object o) {
+//    public void addObservable(Object o) {
 //        if (o instanceof Triple) {
-//            add((Triple) o);
+//            addObservable((Triple) o);
 //        } else if (o instanceof GraphItem) {
 //            GraphUtil.addInto(this, (GraphItem) o);
 //        }

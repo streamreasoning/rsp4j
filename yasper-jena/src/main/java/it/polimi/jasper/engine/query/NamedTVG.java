@@ -1,7 +1,5 @@
 package it.polimi.jasper.engine.query;
 
-import it.polimi.jasper.engine.instantaneous.GraphBase;
-import it.polimi.jasper.engine.instantaneous.JenaGraph;
 import it.polimi.jasper.esper.ContentBean;
 import it.polimi.jasper.esper.EsperStatementView;
 import it.polimi.yasper.core.enums.Maintenance;

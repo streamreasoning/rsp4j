@@ -612,7 +612,7 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
             Expr expr2;
             if(i.multiplicativeExpression() != null){
                 expr2 = (Expr) i.multiplicativeExpression().accept(this);
-                // add expr
+                // addObservable expr
                 String op = i.getChild(0).getText();
                 if(op.equals("+")){
                     expr1 = new E_Add(expr1, expr2);

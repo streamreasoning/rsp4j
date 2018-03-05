@@ -14,7 +14,7 @@ import it.polimi.jasper.parser.streams.WindowedStreamNode;
 import it.polimi.yasper.core.rspql.*;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.scope.Tick;
-import it.polimi.yasper.core.spe.windowing.WindowOperator;
+import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.enums.EntailmentType;
 import it.polimi.yasper.core.enums.Maintenance;
@@ -121,7 +121,7 @@ public class JasperSDSBuilder implements SDSBuilder<RSPQuery> {
 
         sds = jenaSDS;
         qe = ContinuousQueryExecutionFactory.createObserver(bq, sds, this.reasoner);
-        collect.forEach(tvi -> qe.add(tvi));
+        collect.forEach(tvi -> qe.addObservable(tvi));
 
 
     }

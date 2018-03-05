@@ -1,7 +1,5 @@
 package it.polimi.jasper.engine.stream.items;
 
-import it.polimi.yasper.core.stream.StreamItem;
-import lombok.NoArgsConstructor;
 
 /**
  * Created by riccardo on 05/09/2017.

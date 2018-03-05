@@ -2,15 +2,16 @@ package it.polimi.jasper.esper.engine;
 
 import com.espertech.esper.client.*;
 import com.espertech.esper.client.time.CurrentTimeEvent;
+import it.polimi.jasper.engine.stream.items.StreamItem;
 import it.polimi.jasper.esper.RuntimeManager;
 import it.polimi.yasper.core.rspql.RSPEngine;
 import it.polimi.yasper.core.rspql.Stream;
 import it.polimi.yasper.core.rspql.ContinuousQuery;
 import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
 import it.polimi.yasper.core.rspql.SDS;
+import it.polimi.yasper.core.spe.stream.StreamElement;
 import it.polimi.yasper.core.spe.stream.rdf.RDFStream;
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
-import it.polimi.yasper.core.stream.StreamItem;
 import it.polimi.yasper.core.stream.StreamSchema;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import it.polimi.yasper.core.utils.EngineConfiguration;
@@ -24,7 +25,7 @@ import java.util.Map;
 
 @Getter
 @Log4j
-public abstract class RSPQLEngineImpl implements RSPEngine<RDFStream> {
+public abstract class RSPQLEngineImpl implements RSPEngine<StreamItem> {
 
     private final RuntimeManager manager;
     private final EPServiceProvider cep;

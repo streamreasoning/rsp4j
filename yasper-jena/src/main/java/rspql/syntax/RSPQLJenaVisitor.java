@@ -74,7 +74,7 @@ public class RSPQLJenaVisitor extends SPARQL11JenaVisitor {
         ElementNamedWindow elementNamedWindow = new ElementNamedWindow(n, elg);
         query.addElementNamedWindow(elementNamedWindow);
         return null;
-        //return elementNamedWindow; // add to Jena query pattern
+        //return elementNamedWindow; // addObservable to Jena query pattern
     }
 
     @Override

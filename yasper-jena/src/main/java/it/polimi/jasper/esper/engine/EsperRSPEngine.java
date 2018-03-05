@@ -5,16 +5,16 @@ import com.espertech.esper.client.EPRuntime;
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.time.CurrentTimeEvent;
+import it.polimi.jasper.engine.stream.items.StreamItem;
 import it.polimi.jasper.esper.EsperStreamRegistrationService;
 import it.polimi.jasper.esper.EsperWindowAssigner;
 import it.polimi.jasper.esper.RuntimeManager;
-import it.polimi.yasper.core.rspql.RSPEngine;
+import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.rspql.ContinuousQuery;
 import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
+import it.polimi.yasper.core.rspql.RSPEngine;
 import it.polimi.yasper.core.rspql.SDS;
 import it.polimi.yasper.core.spe.stream.rdf.RDFStream;
-import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
-import it.polimi.yasper.core.stream.StreamItem;
 import it.polimi.yasper.core.stream.StreamSchema;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import lombok.extern.log4j.Log4j;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 @Log4j
-public abstract class EsperRSPEngine implements RSPEngine<RDFStream> {
+public abstract class EsperRSPEngine implements RSPEngine<StreamItem> {
 
     protected Map<String, EsperWindowAssigner> stream_dispatching_service;
     protected Map<String, SDS> assignedSDS;

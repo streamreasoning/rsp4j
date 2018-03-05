@@ -6,10 +6,10 @@ import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.StatementAwareUpdateListener;
 import com.espertech.esper.event.map.MapEventBean;
 import it.polimi.jasper.engine.instantaneous.JenaGraph;
+import it.polimi.jasper.engine.stream.items.StreamItem;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.rspql.Updatable;
 import it.polimi.yasper.core.spe.content.viewer.View;
-import it.polimi.yasper.core.stream.StreamItem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -111,8 +111,8 @@ public abstract class EsperStatementView extends Observable implements View, Sta
     }
 
     @Override
-    public void addObservable(Object stmt) {
-        ((EPStatement) stmt).addListener(this);
+    public void observerOf(Object observer) {
+        ((EPStatement) observer).addListener(this);
     }
 
     public void setTimestamp(long t) {
@@ -143,10 +143,10 @@ public abstract class EsperStatementView extends Observable implements View, Sta
 //        Arrays.stream(insertStream).forEach(pairs -> {
 //                    Long t = (Long) pairs[0];
 //                    if (grouped_by_time.containsKey(t))
-//                        grouped_by_time.get(t)[0].add((StreamItem) pairs[1]);
+//                        grouped_by_time.get(t)[0].addObservable((StreamItem) pairs[1]);
 //                    else {
 //                        List<StreamItem> events = new ArrayList<>();
-//                        events.add((StreamItem) pairs[1]);
+//                        events.addObservable((StreamItem) pairs[1]);
 //                        List[] value = new List[2];
 //                        value[0] = events;
 //                        grouped_by_time.put((Long) t, value);
@@ -160,10 +160,10 @@ public abstract class EsperStatementView extends Observable implements View, Sta
 //        if (removeStream != null) {
 //            Arrays.stream(removeStream).forEach(pairs -> {
 //                        if (grouped_by_time.containsKey(pairs[0]))
-//                            grouped_by_time.get(pairs[0])[1].add((StreamItem) pairs[1]);
+//                            grouped_by_time.get(pairs[0])[1].addObservable((StreamItem) pairs[1]);
 //                        else {
 //                            List<StreamItem> events = new ArrayList<>();
-//                            events.add((StreamItem) pairs[1]);
+//                            events.addObservable((StreamItem) pairs[1]);
 //                            List[] value = new List[2];
 //                            value[1] = events;
 //                            grouped_by_time.put((Long) pairs[0], value);

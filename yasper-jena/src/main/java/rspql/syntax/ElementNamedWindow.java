@@ -7,7 +7,7 @@ import org.apache.jena.sparql.util.NodeIsomorphismMap;
 
 /**
  * This is a placeholder class to show how an ElementNamedWindow might be included in the Jena structure.
- * Note: The current version of the RSPQLJenaQuery simply places ElementNamedWindows in a list. To actually add it
+ * Note: The current version of the RSPQLJenaQuery simply places ElementNamedWindows in a list. To actually addObservable it
  * to the Jena element structure edit the RSPQLJenaVisitor class.
  */
 

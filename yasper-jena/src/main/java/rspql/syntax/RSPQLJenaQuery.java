@@ -4,7 +4,7 @@ import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.rspql.ContinuousQuery;
 import it.polimi.yasper.core.rspql.SDSBuilder;
 import it.polimi.yasper.core.rspql.Stream;
-import it.polimi.yasper.core.spe.windowing.WindowOperator;
+import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import org.apache.jena.graph.Node;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryVisitor;

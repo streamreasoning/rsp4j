@@ -8,6 +8,7 @@ import it.polimi.jasper.esper.EPLFactory;
 import it.polimi.yasper.core.rspql.Stream;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.enums.WindowType;
+import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import lombok.*;
 import org.apache.commons.configuration.ConfigurationException;
@@ -25,7 +26,7 @@ import java.util.regex.Pattern;
 @NoArgsConstructor
 @ToString(exclude = {"regex", "p"})
 @RequiredArgsConstructor
-public class WindowedStreamNode implements WindowOperatorNode, it.polimi.yasper.core.spe.windowing.WindowOperator {
+public class WindowedStreamNode implements WindowOperatorNode, WindowOperator {
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
