@@ -77,7 +77,7 @@ constraint :  brackettedExpression |  builtInCall |  functionCall ;
 functionCall : iri  argList ; 
 argList : NIL | '(' distinct?  expression ( ','  expression )* ')' ;
 expressionList : NIL | '('  expression ( ','  expression )* ')' ; 
-constructTemplate : '{'  constructTriples? '}' ; 
+constructTemplate : '{'  quads '}' ;
 constructTriples :  triplesSameSubject ( '.'  constructTriples? )? ; 
 triplesSameSubject :  varOrTerm  propertyListNotEmpty |  triplesNode  propertyListNotEmpty? ;
 propertyListNotEmpty :  propertyList ( ';' (  propertyList )? )* ;
