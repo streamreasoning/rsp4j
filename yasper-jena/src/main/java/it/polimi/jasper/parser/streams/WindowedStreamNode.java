@@ -5,7 +5,7 @@ import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.View;
 import it.polimi.jasper.esper.EsperWindowAssigner;
 import it.polimi.jasper.esper.EPLFactory;
-import it.polimi.yasper.core.rspql.Stream;
+import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.enums.WindowType;
 import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;

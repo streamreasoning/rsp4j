@@ -2,9 +2,9 @@ package it.polimi.jasper;
 
 import it.polimi.jasper.esper.engine.JenaRSPQLEngineImpl;
 import it.polimi.jasper.engine.query.formatter.ResponseFormatterFactory;
-import it.polimi.yasper.core.rspql.ContinuousQuery;
-import it.polimi.yasper.core.rspql.ContinuousQueryExecution;
-import it.polimi.yasper.core.spe.stream.rdf.RDFStream;
+import it.polimi.yasper.core.quering.ContinuousQuery;
+import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import org.apache.commons.configuration.ConfigurationException;

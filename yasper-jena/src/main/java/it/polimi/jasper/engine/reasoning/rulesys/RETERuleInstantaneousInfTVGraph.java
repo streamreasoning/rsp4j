@@ -52,13 +52,4 @@ public class RETERuleInstantaneousInfTVGraph extends RETERuleInfGraph implements
     }
 
 
-    @Override
-    public boolean contains(Object o) {
-        return false;
-    }
-
-    @Override
-    public boolean isSetSemantics() {
-        return false;
-    }
 }

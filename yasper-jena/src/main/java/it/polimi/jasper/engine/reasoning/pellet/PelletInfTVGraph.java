@@ -1,8 +1,6 @@
 package it.polimi.jasper.engine.reasoning.pellet;
 
 import it.polimi.jasper.engine.instantaneous.JenaGraph;
-import it.polimi.yasper.core.rspql.Instantaneous;
-import it.polimi.yasper.core.rspql.Updatable;
 import openllet.jena.PelletInfGraph;
 import openllet.jena.PelletReasoner;
 import openllet.jena.graph.loader.GraphLoader;
@@ -14,7 +12,7 @@ import org.apache.jena.rdf.model.Statement;
 /**
  * Created by riccardo on 05/07/2017.
  */
-public class PelletInfTVGraph extends PelletInfGraph implements Updatable, Instantaneous {
+public class PelletInfTVGraph extends PelletInfGraph implements JenaGraph {
 
     private long last_timestamp;
     private JenaGraph window;
@@ -35,7 +33,6 @@ public class PelletInfTVGraph extends PelletInfGraph implements Updatable, Insta
         this.last_timestamp = ts;
     }
 
-    @Override
     public void add(Object o) {
         if (o instanceof Triple) {
             add((Triple) o);
@@ -44,7 +41,6 @@ public class PelletInfTVGraph extends PelletInfGraph implements Updatable, Insta
         }
     }
 
-    @Override
     public void remove(Object o) {
         if (o instanceof Statement) {
             Statement s = (Statement) o;
@@ -54,13 +50,4 @@ public class PelletInfTVGraph extends PelletInfGraph implements Updatable, Insta
         }
     }
 
-    @Override
-    public boolean contains(Object o) {
-        return false;
-    }
-
-    @Override
-    public boolean isSetSemantics() {
-        return false;
-    }
 }

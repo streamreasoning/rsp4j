@@ -2,7 +2,7 @@ package it.polimi.jasper.engine.query.response;
 
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.jasper.engine.query.execution.observer.TimeVaryingResultSetMem;
-import it.polimi.yasper.core.query.response.InstantaneousResponse;
+import it.polimi.yasper.core.quering.response.InstantaneousResponse;
 import lombok.Getter;
 import lombok.extern.java.Log;
 import org.apache.jena.query.QuerySolution;

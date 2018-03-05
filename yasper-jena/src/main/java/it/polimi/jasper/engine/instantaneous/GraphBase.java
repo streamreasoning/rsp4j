@@ -12,16 +12,6 @@ public class GraphBase extends GraphMem implements JenaGraph {
     public long timestamp;
 
     @Override
-    public boolean contains(Object o) {
-        return false;
-    }
-
-    @Override
-    public boolean isSetSemantics() {
-        return false;
-    }
-
-    @Override
     public long getTimestamp() {
         return timestamp;
     }

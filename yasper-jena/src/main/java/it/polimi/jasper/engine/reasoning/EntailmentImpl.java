@@ -1,6 +1,6 @@
 package it.polimi.jasper.engine.reasoning;
 
-import it.polimi.yasper.core.rspql.Entailment;
+import it.polimi.yasper.core.reasoning.Entailment;
 import it.polimi.yasper.core.enums.EntailmentType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

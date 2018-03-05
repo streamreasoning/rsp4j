@@ -8,7 +8,6 @@ import com.espertech.esper.event.map.MapEventBean;
 import it.polimi.jasper.engine.instantaneous.JenaGraph;
 import it.polimi.jasper.engine.stream.items.StreamItem;
 import it.polimi.yasper.core.enums.Maintenance;
-import it.polimi.yasper.core.rspql.Updatable;
 import it.polimi.yasper.core.spe.content.viewer.View;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,17 +44,17 @@ public abstract class EsperStatementView extends Observable implements View, Sta
     }
 
     public void eval(EventBean[] newData, EventBean[] oldData, long currentTime) {
-        DStreamUpdate(getContent(currentTime).asUpdatable(), oldData, maintenance);
-        IStreamUpdate(getContent(currentTime).asUpdatable(), newData);
+        DStreamUpdate(getContent(currentTime), oldData, maintenance);
+        IStreamUpdate(getContent(currentTime), newData);
         setTimestamp(currentTime);
     }
 
-    private void handleSingleIStream(Updatable ii, StreamItem st) {
+    private void handleSingleIStream(JenaGraph ii, StreamItem st) {
         log.debug("Handling single IStreamTest [" + st + "]");
         st.addTo(ii);
     }
 
-    private void IStreamUpdate(Updatable ii, EventBean[] newData) {
+    private void IStreamUpdate(JenaGraph ii, EventBean[] newData) {
         if (newData != null && newData.length != 0) {
             log.debug("[" + newData.length + "] New Events of type ["
                     + newData[0].getUnderlying().getClass().getSimpleName() + "]");
@@ -75,12 +74,12 @@ public abstract class EsperStatementView extends Observable implements View, Sta
         }
     }
 
-    private void handleSingleDStream(Updatable ii, StreamItem st) {
+    private void handleSingleDStream(JenaGraph ii, StreamItem st) {
         log.debug("Handling single IStreamTest [" + st + "]");
         st.removeFrom(ii);
     }
 
-    private void DStreamUpdate(Updatable ii, EventBean[] oldData, Maintenance m) {
+    private void DStreamUpdate(JenaGraph ii, EventBean[] oldData, Maintenance m) {
         if (Maintenance.NAIVE.equals(m)) {
             ii.clear();
         } else {

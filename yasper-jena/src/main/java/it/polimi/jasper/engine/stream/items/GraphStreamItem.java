@@ -1,7 +1,6 @@
 package it.polimi.jasper.engine.stream.items;
 
 import it.polimi.jasper.engine.instantaneous.JenaGraph;
-import it.polimi.yasper.core.rspql.Updatable;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.GraphUtil;
 
@@ -15,7 +14,7 @@ public class GraphStreamItem extends RDFStreamItem<Graph> {
     }
 
     @Override
-    public JenaGraph addTo(Updatable abox) {
+    public JenaGraph addTo(JenaGraph abox) {
         if (abox instanceof JenaGraph) {
             JenaGraph abox1 = (JenaGraph) abox;
             GraphUtil.addInto(abox1, this.getTypedContent());
@@ -26,7 +25,7 @@ public class GraphStreamItem extends RDFStreamItem<Graph> {
     }
 
     @Override
-    public JenaGraph removeFrom(Updatable abox) {
+    public JenaGraph removeFrom(JenaGraph abox) {
         if (abox instanceof JenaGraph) {
             JenaGraph abox1 = (JenaGraph) abox;
             GraphUtil.deleteFrom(abox1, getTypedContent());

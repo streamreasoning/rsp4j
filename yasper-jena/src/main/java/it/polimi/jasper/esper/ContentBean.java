@@ -2,7 +2,7 @@ package it.polimi.jasper.esper;
 
 import com.espertech.esper.client.EventBean;
 import it.polimi.yasper.core.spe.content.Content;
-import it.polimi.yasper.core.spe.stream.StreamElement;
+import it.polimi.yasper.core.stream.StreamElement;
 import lombok.Setter;
 import org.apache.commons.rdf.api.Graph;
 

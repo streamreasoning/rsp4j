@@ -1,8 +1,8 @@
 package rspql.syntax;
 
-import it.polimi.yasper.core.rspql.syntax.CaseChangingCharStream;
-import it.polimi.yasper.core.rspql.syntax.RSPQLLexer;
-import it.polimi.yasper.core.rspql.syntax.RSPQLParser;
+import it.polimi.yasper.core.quering.syntax.CaseChangingCharStream;
+import it.polimi.yasper.core.quering.syntax.RSPQLLexer;
+import it.polimi.yasper.core.quering.syntax.RSPQLParser;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;

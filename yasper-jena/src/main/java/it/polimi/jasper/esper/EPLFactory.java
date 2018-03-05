@@ -2,7 +2,7 @@ package it.polimi.jasper.esper;
 
 import com.espertech.esper.client.soda.*;
 import it.polimi.jasper.parser.streams.WindowOperatorNode;
-import it.polimi.yasper.core.rspql.Stream;
+import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.enums.WindowType;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import lombok.extern.log4j.Log4j;

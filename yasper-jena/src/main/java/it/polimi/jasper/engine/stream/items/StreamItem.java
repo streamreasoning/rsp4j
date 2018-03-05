@@ -1,8 +1,8 @@
 package it.polimi.jasper.engine.stream.items;
 
-import it.polimi.yasper.core.rspql.Updatable;
-import it.polimi.yasper.core.spe.stream.StreamElement;
-import it.polimi.yasper.core.stream.StreamSchema;
+import it.polimi.jasper.engine.instantaneous.JenaGraph;
+import it.polimi.yasper.core.stream.StreamElement;
+import it.polimi.yasper.core.stream.schema.StreamSchema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -54,9 +54,9 @@ public abstract class StreamItem<T> extends HashMap<String, Object> implements S
     }
 
 
-    public abstract Updatable addTo(Updatable abox);
+    public abstract JenaGraph addTo(JenaGraph abox);
 
-    public abstract Updatable removeFrom(Updatable abox);
+    public abstract JenaGraph removeFrom(JenaGraph abox);
 
     public abstract String getStreamURI();
 

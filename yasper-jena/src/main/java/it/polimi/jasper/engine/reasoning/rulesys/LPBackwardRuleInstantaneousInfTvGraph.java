@@ -30,13 +30,5 @@ public class LPBackwardRuleInstantaneousInfTvGraph extends LPBackwardRuleInfGrap
         this.last_timestamp = ts;
     }
 
-    @Override
-    public boolean contains(Object o) {
-        return false;
-    }
 
-    @Override
-    public boolean isSetSemantics() {
-        return false;
-    }
 }

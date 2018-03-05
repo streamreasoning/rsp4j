@@ -51,16 +51,6 @@ public class BaseInfTVGraph extends BaseInfGraph implements InstantaneousInfGrap
         return null;
     }
 
-    @Override
-    public boolean contains(Object o) {
-        return false;
-    }
-
-    @Override
-    public boolean isSetSemantics() {
-        return false;
-    }
-
 
 //    @Override
 //    public void addObservable(Object o) {

@@ -1,9 +1,9 @@
 package rspql.syntax;
 
 import it.polimi.yasper.core.enums.StreamOperator;
-import it.polimi.yasper.core.rspql.ContinuousQuery;
-import it.polimi.yasper.core.rspql.SDSBuilder;
-import it.polimi.yasper.core.rspql.Stream;
+import it.polimi.yasper.core.quering.ContinuousQuery;
+import it.polimi.yasper.core.quering.SDSBuilder;
+import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import org.apache.jena.graph.Node;
 import org.apache.jena.query.Query;

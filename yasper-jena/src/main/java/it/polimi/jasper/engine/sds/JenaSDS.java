@@ -4,7 +4,7 @@ import it.polimi.jasper.engine.instantaneous.JenaGraph;
 import it.polimi.jasper.engine.query.DefaultTVG;
 import it.polimi.jasper.engine.query.NamedTVG;
 import it.polimi.jasper.engine.reasoning.InstantaneousInfGraph;
-import it.polimi.yasper.core.rspql.SDS;
+import it.polimi.yasper.core.quering.SDS;
 import it.polimi.yasper.core.simple.windowing.TimeVarying;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.time.TimeFactory;

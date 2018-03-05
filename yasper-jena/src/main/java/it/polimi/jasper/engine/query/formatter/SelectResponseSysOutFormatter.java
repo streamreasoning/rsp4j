@@ -1,7 +1,7 @@
 package it.polimi.jasper.engine.query.formatter;
 
 import it.polimi.jasper.engine.query.response.SelectResponse;
-import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

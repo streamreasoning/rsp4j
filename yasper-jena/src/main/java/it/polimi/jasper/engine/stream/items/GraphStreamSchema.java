@@ -1,7 +1,7 @@
 package it.polimi.jasper.engine.stream.items;
 
 
-import it.polimi.yasper.core.stream.SchemaEntry;
+import it.polimi.yasper.core.stream.schema.SchemaEntry;
 import org.apache.jena.graph.Graph;
 
 import java.util.HashSet;

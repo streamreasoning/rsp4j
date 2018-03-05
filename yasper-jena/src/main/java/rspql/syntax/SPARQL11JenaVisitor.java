@@ -1,8 +1,8 @@
 package rspql.syntax;
 
 
-import it.polimi.yasper.core.rspql.syntax.RSPQLBaseVisitor;
-import it.polimi.yasper.core.rspql.syntax.RSPQLParser;
+import it.polimi.yasper.core.quering.syntax.RSPQLBaseVisitor;
+import it.polimi.yasper.core.quering.syntax.RSPQLParser;
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.TypeMapper;
 import org.apache.jena.datatypes.xsd.XSDDatatype;

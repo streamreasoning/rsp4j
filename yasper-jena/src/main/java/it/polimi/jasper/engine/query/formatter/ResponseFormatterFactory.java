@@ -1,6 +1,6 @@
 package it.polimi.jasper.engine.query.formatter;
 
-import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
 
 /**
  * Created by riccardo on 10/07/2017.
