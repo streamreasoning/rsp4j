@@ -8,27 +8,29 @@ public class TestRSPQLParser {
 
     public static void main(String[] args) throws IOException {
         String trickyQuery = "" +
-                "PREFIX : <ex#> " +
-                "REGISTER ISTREAM :test AS " +
-                "CONSTRUCT { " +
-                "  <s> <p2> <o2> . " +
-                "GRAPH <g> { ?s ?p ?o } . ?s <p> <o> " +
+                "PREFIX : <ex#> \n" +
+                "REGISTER ISTREAM :test AS \n" +
+                "CONSTRUCT { \n" +
+                "  <s> <p2> <o2> . \n" +
+                "  GRAPH <g> { ?s ?p ?o } .\n" +
+                "  ?s <p> <o> \n" +
                 "} " +
-                "FROM NAMED WINDOW <ex#w1> ON <ex#s> [ RANGE PT1H ] " +
-                "FROM NAMED WINDOW ex:w2 ON ex:s [ ELEMENTS 10 STEP 10 ] " +
-                "FROM NAMED WINDOW ex:w3 ON ex:s [ RANGE PT1H STEP PT1H ] " +
-                "FROM NAMED WINDOW ex:w4 ON ex:s [ ELEMENTS 5 ] " +
-                "WHERE {" +
-                "   WINDOW :w1 { " +
-                "      ?s ?p ?c " +
-                "   } " +
-                "   WINDOW ?w { " +
-                "      ?s ?p ?c " +
-                "   } " +
-                "   GRAPH ?g { " +
-                "      ?s ?p ?c " +
-                "   } " +
+                "FROM NAMED WINDOW <ex#w1> ON <ex#s> [ RANGE PT1H ] \n" +
+                "FROM NAMED WINDOW :w2 ON :s [ ELEMENTS 10 STEP 10 ] \n" +
+                "FROM NAMED WINDOW :w3 ON :s [ RANGE PT1H STEP PT1H ] \n" +
+                "FROM NAMED WINDOW :w4 ON :s [ ELEMENTS 5 ] " +
+                "WHERE {\n" +
+                "   WINDOW :w1 { \n" +
+                "      ?s ?p ?c \n" +
+                "   } \n" +
+                "   WINDOW ?w { \n" +
+                "      ?s ?p ?c \n" +
+                "   } \n" +
+                "   GRAPH ?g { \n" +
+                "      ?s ?p ?c \n" +
+                "   } \n" +
                 "}";
+        System.err.println(trickyQuery);
 
         RSPQLJenaQuery query = QueryFactory.parse(trickyQuery);
         query.setSyntax(Syntax.syntaxARQ);
