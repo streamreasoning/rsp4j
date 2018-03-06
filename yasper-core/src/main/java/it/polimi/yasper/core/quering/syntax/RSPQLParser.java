@@ -100,7 +100,7 @@ public class RSPQLParser extends Parser {
 		"graphRef", "quadPattern", "quads", "quadsNotTriples", "triplesTemplate", 
 		"groupGraphPattern", "groupGraphPatternSub", "triplesBlock", "graphPatternNotTriples", 
 		"optionalGraphPattern", "graphGraphPattern", "windowGraphPattern", "serviceGraphPattern", 
-		"bind", "inlineData", "dataBlock", "inlineDataOneVar", "inlineDataFull", 
+		"bindTVG", "inlineData", "dataBlock", "inlineDataOneVar", "inlineDataFull",
 		"dataBlockValues", "dataBlockValue", "undef", "minusGraphPattern", "groupOrUnionGraphPattern", 
 		"filter", "constraint", "functionCall", "argList", "expressionList", "constructTemplate", 
 		"constructTriples", "triplesSameSubject", "propertyListNotEmpty", "propertyList", 

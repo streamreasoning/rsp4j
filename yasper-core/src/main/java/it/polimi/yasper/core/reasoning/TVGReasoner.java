@@ -1,14 +1,12 @@
 package it.polimi.yasper.core.reasoning;
 
-import it.polimi.yasper.core.stream.Instantaneous;
-
 /**
  * Created by riccardo on 06/07/2017.
  */
-public interface TVGReasoner<F extends Instantaneous, I extends Instantaneous> {
+public interface TVGReasoner<F,I> {
 
-    F bind(I data);
+    F bindTVG(I data);
 
-    TVGReasoner<F, I> bindSchema(I g);
+    TVGReasoner<F, I> bindSchemaTVG(I g);
 
 }

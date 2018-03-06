@@ -1,11 +1,10 @@
 package it.polimi.yasper.core.quering.execution;
 
-import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
-import it.polimi.yasper.core.quering.SDS;
 import it.polimi.yasper.core.quering.ContinuousQuery;
+import it.polimi.yasper.core.quering.SDS;
+import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.quering.operators.r2s.RelationToStreamOperator;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
-import it.polimi.yasper.core.spe.content.viewer.View;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -37,6 +36,7 @@ public abstract class ContinuousQueryExecutionObserver extends Observable implem
     public void deleteFormatter(QueryResponseFormatter o) {
         deleteObserver(o);
     }
+
     @Override
     public String getQueryID() {
         return query.getID();
@@ -47,8 +47,4 @@ public abstract class ContinuousQueryExecutionObserver extends Observable implem
         return query;
     }
 
-    @Override
-    public void addObservable(View item) {
-        item.observerOf(this);
-    }
 }

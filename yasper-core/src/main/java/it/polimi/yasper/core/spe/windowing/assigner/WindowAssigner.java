@@ -1,7 +1,7 @@
 package it.polimi.yasper.core.spe.windowing.assigner;
 
 
-import it.polimi.yasper.core.simple.windowing.TimeVaryingGraph;
+import it.polimi.yasper.core.simple.windowing.TimeVarying;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.spe.report.Report;
@@ -11,7 +11,7 @@ import it.polimi.yasper.core.stream.StreamElement;
 
 import java.util.List;
 
-public interface WindowAssigner {
+public interface WindowAssigner<T> {
 
     Report getReport();
 
@@ -25,7 +25,7 @@ public interface WindowAssigner {
 
     void setTick(Tick timeDriven);
 
-    TimeVaryingGraph setView(View content);
+    TimeVarying<T> setView(View content);
 
     void setReportGrain(ReportGrain aw);
 

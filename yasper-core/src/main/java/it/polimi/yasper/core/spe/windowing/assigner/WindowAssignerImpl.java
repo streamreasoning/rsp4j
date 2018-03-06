@@ -1,6 +1,5 @@
 package it.polimi.yasper.core.spe.windowing.assigner;
 
-import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.simple.windowing.TimeVaryingGraph;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.ContentGraph;
@@ -10,20 +9,23 @@ import it.polimi.yasper.core.spe.exceptions.OutOfOrderElementException;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.scope.Tick;
-import it.polimi.yasper.core.stream.StreamElement;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.time.TimeFactory;
 import it.polimi.yasper.core.spe.time.TimeInstant;
 import it.polimi.yasper.core.spe.windowing.definition.Window;
 import it.polimi.yasper.core.spe.windowing.definition.WindowImpl;
+import it.polimi.yasper.core.stream.Stream;
+import it.polimi.yasper.core.stream.StreamElement;
 import lombok.extern.log4j.Log4j;
+import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
+import org.apache.commons.rdf.api.RDF;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j
-public class WindowAssignerImpl extends Observable implements WindowAssigner, Observer {
+public class WindowAssignerImpl extends Observable implements WindowAssigner<Graph>, Observer {
 
     private final Stream stream;
     private final long a, b;
@@ -39,7 +41,10 @@ public class WindowAssignerImpl extends Observable implements WindowAssigner, Ob
     private long tc0;
     private long toi;
 
-    public WindowAssignerImpl(IRI iri, Stream s, long a, long b, long t0, long tc0) {
+    private final RDF rdf;
+
+    public WindowAssignerImpl(RDF rdf, IRI iri, Stream s, long a, long b, long t0, long tc0) {
+        this.rdf = rdf;
         this.iri = iri;
         this.stream = s;
         this.a = a;
@@ -95,7 +100,7 @@ public class WindowAssignerImpl extends Observable implements WindowAssigner, Ob
     @Override
     public TimeVaryingGraph setView(View view) {
         view.observerOf(this);
-        return new TimeVaryingGraph(iri, this);
+        return new TimeVaryingGraph(iri, rdf,this);
     }
 
     @Override
