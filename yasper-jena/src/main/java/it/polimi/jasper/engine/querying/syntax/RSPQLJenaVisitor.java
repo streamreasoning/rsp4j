@@ -65,6 +65,7 @@ public class RSPQLJenaVisitor extends SPARQL11JenaVisitor {
             }
             query.addNamedWindow(windowUri, streamUri, range, step);
         }
+        query.addNamedGraphURI(windowUri.toString()); // add window as named graph to Jena query
         return null;
     }
 
@@ -73,23 +74,13 @@ public class RSPQLJenaVisitor extends SPARQL11JenaVisitor {
         ElementGroup elg = (ElementGroup) ctx.groupGraphPattern().accept(this);
         ElementNamedWindow elementNamedWindow = new ElementNamedWindow(n, elg);
         query.addElementNamedWindow(elementNamedWindow);
-        return null;
-        //return elementNamedWindow; // addObservable to Jena query pattern
+
+        return elementNamedWindow;
     }
 
     @Override
     public Object visitConstructTemplate(RSPQLParser.ConstructTemplateContext ctx) {
         ArrayList<Quad> quads = new ArrayList<>();
-        if(ctx.quads().triplesTemplate() != null) {
-            ctx.quads().triplesTemplate().forEach(triplesTemplate -> {
-                ElementTriplesBlock etb = (ElementTriplesBlock) triplesTemplate.accept(this);
-                etb.patternElts().forEachRemaining(t -> {
-                    Quad q = new Quad(null, t);
-                    quads.add(q);
-                    System.out.println(q);
-                });
-            });
-        }
         if(ctx.quads().quadsNotTriples() != null) {
             ctx.quads().quadsNotTriples().forEach(graph -> {
                 Node n = (Node) graph.varOrIri().accept(this);
@@ -100,7 +91,20 @@ public class RSPQLJenaVisitor extends SPARQL11JenaVisitor {
                 });
             });
         }
-        query.setConstructTemplate(new Template(new QuadAcc(quads)));
+
+        // Triples must be added as quads
+        if(ctx.quads().triplesTemplate() != null) {
+            ctx.quads().triplesTemplate().forEach(triplesTemplate -> {
+                ElementTriplesBlock etb = (ElementTriplesBlock) triplesTemplate.accept(this);
+                etb.getPattern().forEach(triple -> {
+                    quads.add(new Quad(Quad.defaultGraphNodeGenerated, triple));
+                });
+                System.out.println("adding " + etb.getPattern());
+            });
+        }
+
+        Template t = new Template(new QuadAcc(quads));
+        query.setConstructTemplate(t);
         return null;
     }
 }
