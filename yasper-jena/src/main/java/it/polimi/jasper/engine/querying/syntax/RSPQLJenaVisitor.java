@@ -69,13 +69,12 @@ public class RSPQLJenaVisitor extends SPARQL11JenaVisitor {
         return null;
     }
 
-    public ElementNamedWindow visitWindowGraphPattern(RSPQLParser.WindowGraphPatternContext ctx) {
+    public ElementNamedGraph visitWindowGraphPattern(RSPQLParser.WindowGraphPatternContext ctx) {
         Node n = (Node) ctx.varOrIri().accept(this);
         ElementGroup elg = (ElementGroup) ctx.groupGraphPattern().accept(this);
         ElementNamedWindow elementNamedWindow = new ElementNamedWindow(n, elg);
         query.addElementNamedWindow(elementNamedWindow);
-
-        return elementNamedWindow;
+        return new ElementNamedGraph(n, elg);
     }
 
     @Override
