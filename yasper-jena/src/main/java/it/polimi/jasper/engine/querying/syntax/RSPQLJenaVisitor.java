@@ -98,7 +98,6 @@ public class RSPQLJenaVisitor extends SPARQL11JenaVisitor {
                 etb.getPattern().forEach(triple -> {
                     quads.add(new Quad(Quad.defaultGraphNodeGenerated, triple));
                 });
-                System.out.println("adding " + etb.getPattern());
             });
         }
 
