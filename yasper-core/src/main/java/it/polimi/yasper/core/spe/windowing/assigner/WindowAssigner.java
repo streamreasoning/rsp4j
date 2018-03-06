@@ -1,7 +1,7 @@
 package it.polimi.yasper.core.spe.windowing.assigner;
 
 
-import it.polimi.yasper.core.simple.windowing.TimeVarying;
+import it.polimi.yasper.simple.windowing.TimeVarying;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.spe.report.Report;

@@ -1,7 +1,7 @@
-package it.polimi.yasper.core.simple.querying.formatter;
+package it.polimi.yasper.simple.querying.formatter;
 
 import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
-import it.polimi.yasper.core.simple.querying.SelectInstResponse;
+import it.polimi.yasper.simple.querying.SelectInstResponse;
 
 import java.util.Observable;
 

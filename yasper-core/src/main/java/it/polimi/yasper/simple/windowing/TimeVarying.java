@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.simple.windowing;
+package it.polimi.yasper.simple.windowing;
 
 public interface TimeVarying<T> {
 

@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.simple;
+package it.polimi.yasper.simple;
 
 import it.polimi.yasper.core.engine.RSPEngine;
 import it.polimi.yasper.core.quering.ContinuousQuery;
@@ -6,7 +6,7 @@ import it.polimi.yasper.core.quering.SDS;
 import it.polimi.yasper.core.quering.SDSBuilder;
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
-import it.polimi.yasper.core.simple.sds.SDSBuilderImpl;
+import it.polimi.yasper.simple.sds.SDSBuilderImpl;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;

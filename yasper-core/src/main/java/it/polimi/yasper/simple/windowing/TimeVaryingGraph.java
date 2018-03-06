@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.simple.windowing;
+package it.polimi.yasper.simple.windowing;
 
 import it.polimi.yasper.core.exceptions.UnsupportedContentFormatException;
 import it.polimi.yasper.core.spe.content.*;

@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.polimi.yasper.core.simple.sds;
+package it.polimi.yasper.simple.sds;
 
 import it.polimi.yasper.core.quering.SDS;
-import it.polimi.yasper.core.simple.windowing.TimeVarying;
+import it.polimi.yasper.simple.windowing.TimeVarying;
 import lombok.AllArgsConstructor;
 import org.apache.commons.rdf.api.*;
 import org.apache.commons.rdf.simple.DatasetGraphView;

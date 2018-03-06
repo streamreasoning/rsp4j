@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.simple.streaming;
+package it.polimi.yasper.simple.streaming;
 
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.stream.StreamElement;

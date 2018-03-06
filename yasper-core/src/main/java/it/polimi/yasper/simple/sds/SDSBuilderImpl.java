@@ -1,13 +1,13 @@
-package it.polimi.yasper.core.simple.sds;
+package it.polimi.yasper.simple.sds;
 
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.quering.SDS;
 import it.polimi.yasper.core.quering.SDSBuilder;
 import it.polimi.yasper.core.stream.Stream;
-import it.polimi.yasper.core.simple.querying.ContinuousQueryExecutionImpl;
-import it.polimi.yasper.core.simple.querying.ContinuousQueryImpl;
-import it.polimi.yasper.core.simple.windowing.DefaultStreamView;
-import it.polimi.yasper.core.simple.windowing.NamedStreamView;
+import it.polimi.yasper.simple.querying.ContinuousQueryExecutionImpl;
+import it.polimi.yasper.simple.querying.ContinuousQueryImpl;
+import it.polimi.yasper.simple.windowing.DefaultStreamView;
+import it.polimi.yasper.simple.windowing.NamedStreamView;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.scope.Tick;

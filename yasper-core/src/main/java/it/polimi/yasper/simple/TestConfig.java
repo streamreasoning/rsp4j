@@ -1,11 +1,11 @@
-package it.polimi.yasper.core.simple;
+package it.polimi.yasper.simple;
 
 import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.quering.ContinuousQuery;
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.simple.querying.ContinuousQueryImpl;
-import it.polimi.yasper.core.simple.querying.formatter.InstResponseSysOutFormatter;
-import it.polimi.yasper.core.simple.streaming.RunnableStream;
+import it.polimi.yasper.simple.querying.ContinuousQueryImpl;
+import it.polimi.yasper.simple.querying.formatter.InstResponseSysOutFormatter;
+import it.polimi.yasper.simple.streaming.RunnableStream;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import org.apache.commons.configuration.ConfigurationException;

@@ -1,6 +1,6 @@
 package it.polimi.yasper.core.quering;
 
-import it.polimi.yasper.core.simple.windowing.TimeVarying;
+import it.polimi.yasper.simple.windowing.TimeVarying;
 import org.apache.commons.rdf.api.IRI;
 
 /**

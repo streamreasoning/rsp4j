@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.simple.querying;
+package it.polimi.yasper.simple.querying;
 
 import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.quering.ContinuousQuery;
