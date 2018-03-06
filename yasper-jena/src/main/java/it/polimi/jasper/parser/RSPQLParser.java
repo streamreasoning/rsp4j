@@ -1,6 +1,6 @@
 package it.polimi.jasper.parser;
 
-import it.polimi.jasper.engine.query.RSPQuery;
+import it.polimi.jasper.engine.querying.RSPQuery;
 import it.polimi.jasper.parser.streams.Register;
 import it.polimi.jasper.parser.streams.WindowedStreamNode;
 import org.apache.jena.graph.Node;

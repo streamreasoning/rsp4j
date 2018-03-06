@@ -3,8 +3,8 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.*;
 import org.junit.Test;
-import rspql.syntax.QueryFactory;
-import rspql.syntax.RSPQLJenaQuery;
+import it.polimi.jasper.engine.querying.syntax.QueryFactory;
+import it.polimi.jasper.engine.querying.syntax.RSPQLJenaQuery;
 
 import java.io.*;
 

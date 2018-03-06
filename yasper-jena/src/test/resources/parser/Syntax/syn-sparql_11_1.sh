@@ -188,7 +188,7 @@ N=$((N+1)) ; testGood $SPARQL11 $(fname "syntax-bindings-" $N) <<EOF
 SELECT ?Z { ?s ?p ?o . BIND(?o+1 AS ?Z) }
 EOF
 
-N=$((N+1)) ; testGood $SPARQL11 $(fname "syntax-bind-" $N) <<EOF
+N=$((N+1)) ; testGood $SPARQL11 $(fname "syntax-bindTVG-" $N) <<EOF
 SELECT ?Z { ?s ?p ?o . BIND(?o+1 AS ?Z) BIND(?Z/2 AS ?Zby2) }
 EOF
 
