@@ -1,9 +1,8 @@
 package it.polimi.yasper.core.simple.streaming;
 
-import it.polimi.yasper.core.stream.Stream;
+import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.stream.StreamElement;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
-import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.RDF;
 import org.apache.commons.rdf.api.Triple;
@@ -14,38 +13,32 @@ import java.util.List;
 
 
 @Log4j
-public class RunnableStream extends RDFStream implements Runnable, Stream {
-
+public class RunnableStream extends RDFStream {
+    RDF rdf = new SimpleRDF();
     private List<WindowAssigner> observers;
-
+    int i = 0;
+    
     public RunnableStream(String iri) {
         super(iri);
         observers = new ArrayList<>();
     }
 
-    RDF rdf = new SimpleRDF();
-
-    public void run() {
-        int i = 0;
-        while (true) {
-            try {
-                Thread.sleep(1000);
-                log.info("Iteration [" + i + "]");
-                notifyObservers(new Elem(i, "Element"));
-                i += 1000;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void notifyObservers(Elem element) {
-        observers.forEach(wa -> wa.notify(element));
-    }
-
     @Override
     public void addWindowAssiger(WindowAssigner windowAssigner) {
-        this.observers.add(windowAssigner);
+
+        new Thread(() -> {
+            final WindowAssigner wa = windowAssigner;
+            while (true) {
+                try {
+                    Thread.sleep(1000);
+                    log.info("Iteration [" + i + "]");
+                    wa.notify(new Elem(i, "Element"));
+                    i += 1000;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     public class Elem implements StreamElement {

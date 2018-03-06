@@ -1,21 +1,21 @@
 package it.polimi.yasper.core.simple.windowing;
 
 import it.polimi.yasper.core.exceptions.UnsupportedContentFormatException;
-import it.polimi.yasper.core.spe.content.Content;
-import it.polimi.yasper.core.spe.content.ContentGraph;
-import it.polimi.yasper.core.spe.content.ContentQuad;
-import it.polimi.yasper.core.spe.content.ContentTriple;
+import it.polimi.yasper.core.spe.content.*;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
+import org.apache.commons.rdf.api.RDF;
 
 @RequiredArgsConstructor
 public class TimeVaryingGraph implements TimeVarying<Graph> {
 
     @NonNull
     private final IRI name;
+    @NonNull
+    private final RDF rdf;
     @NonNull
     private final WindowAssigner wa;
 
@@ -34,8 +34,15 @@ public class TimeVaryingGraph implements TimeVarying<Graph> {
             return ((ContentTriple) content).coalese();
         } else if (content instanceof ContentQuad) {
             return ((ContentQuad) content).coalese();
+        } else if (content instanceof EmptyContent) {
+            return rdf.createGraph();
         } else {
             throw new UnsupportedContentFormatException();
         }
+    }
+
+    @Override
+    public Graph asT() {
+        return rdf.createGraph();
     }
 }

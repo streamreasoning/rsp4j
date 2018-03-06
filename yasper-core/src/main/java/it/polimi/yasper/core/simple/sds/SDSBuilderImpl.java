@@ -39,17 +39,13 @@ public class SDSBuilderImpl implements SDSBuilder<ContinuousQueryImpl> {
     private ReportGrain reportGrain;
     @NonNull
     private Tick tick;
-    private ContinuousQueryExecutionImpl cqe;
+    private ContinuousQueryExecution cqe;
 
     @Override
     public void visit(ContinuousQueryImpl query) {
         SDSImpl sds = new SDSImpl(rdf);
         this.cqe = new ContinuousQueryExecutionImpl(rdf, rdf.createIRI(query.getID()), sds, sds, query);
-        query.getWindowMap().forEach((wo, s) -> {
-
-            WindowOperator w1 = wo;
-            Stream s31 = s;
-
+        query.getWindowMap().forEach((WindowOperator wo, Stream s) -> {
             IRI iri = rdf.createIRI(wo.getName());
             Stream s1 = registeredStreams.get(s.getURI());
             WindowAssigner wa = wo.apply(s1);

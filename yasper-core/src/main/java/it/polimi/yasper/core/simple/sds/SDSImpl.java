@@ -35,7 +35,7 @@ import java.util.stream.Stream;
  * <p>
  * All Stream operations are performed using parallel and unordered directives.
  */
-final public class SDSImpl implements Dataset, SDS {
+final public class SDSImpl implements Dataset, SDS<Graph> {
 
     private static final int TO_STRING_MAX = 10;
     private final Set<Quad> quads = new HashSet<>();

@@ -1,10 +1,8 @@
 package it.polimi.yasper.core.simple.windowing;
 
 import it.polimi.yasper.core.spe.content.Content;
-import it.polimi.yasper.core.spe.content.EmptyContent;
 import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
-import it.polimi.yasper.core.spe.windowing.assigner.WindowAssignerImpl;
 import lombok.Getter;
 
 import java.util.Observable;
@@ -25,7 +23,7 @@ import java.util.Observer;
 public class NamedStreamView extends Observable implements View, Observer {
 
     private final WindowAssigner window_assigner;
-    private Content content = new EmptyContent();
+    private Content content;
 
     public NamedStreamView(WindowAssigner wa) {
         this.window_assigner = wa;

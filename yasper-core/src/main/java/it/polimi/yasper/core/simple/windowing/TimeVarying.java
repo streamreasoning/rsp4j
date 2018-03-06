@@ -4,4 +4,6 @@ public interface TimeVarying<T> {
 
     T eval(long ts);
 
+    T asT();
+
 }

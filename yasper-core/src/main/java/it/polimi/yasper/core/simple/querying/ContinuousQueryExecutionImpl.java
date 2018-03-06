@@ -36,8 +36,6 @@ public class ContinuousQueryExecutionImpl extends Observable implements Observer
         sds.eval(ts);
 
         List<Triple> triples = ds.stream()
-                .filter(quad -> quad.getGraphName().isPresent())
-                .filter(quad -> quad.getGraphName().get().equals(rdf.createIRI("w1")))
                 .map(Quad::asTriple).collect(Collectors.toList());
 
         SelectInstResponse r = new SelectInstResponse(id.getIRIString() + "/ans/" + i, ts, triples, query);
@@ -69,11 +67,6 @@ public class ContinuousQueryExecutionImpl extends Observable implements Observer
     @Override
     public void deleteFormatter(QueryResponseFormatter o) {
         deleteObserver(o);
-    }
-
-    @Override
-    public void addObservable(View item) {
-        item.observerOf(this);
     }
 
     @Override

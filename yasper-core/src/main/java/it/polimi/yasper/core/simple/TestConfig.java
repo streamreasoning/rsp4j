@@ -42,8 +42,6 @@ public class TestConfig {
         cqe.addFormatter(new InstResponseSysOutFormatter());
 
         //In real application we do not have to start the stream.
-        (new Thread(painter)).start();
-
 
     }
 
