@@ -20,7 +20,7 @@ public class TestConfig {
 
     static RSPEngineImpl sr;
 
-    public static void main(String[] args) throws InterruptedException, IOException, ConfigurationException {
+    public static void main(String[] args) throws ConfigurationException {
 
         URL resource = TestConfig.class.getResource("/default.properties");
         QueryConfiguration config = new QueryConfiguration(resource.getPath());
@@ -33,7 +33,6 @@ public class TestConfig {
         Stream painter_reg = sr.register(painter);
 
         //_____
-
 
         ContinuousQuery q = new ContinuousQueryImpl();
 
