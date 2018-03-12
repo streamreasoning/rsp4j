@@ -6,7 +6,6 @@ import it.polimi.yasper.core.quering.SDS;
 import it.polimi.yasper.core.quering.SDSBuilder;
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
-import it.polimi.yasper.simple.sds.SDSBuilderImpl;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
@@ -17,6 +16,7 @@ import it.polimi.yasper.core.stream.StreamElement;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
+import it.polimi.yasper.simple.sds.SDSBuilderImpl;
 import org.apache.commons.rdf.api.RDF;
 import org.apache.commons.rdf.simple.SimpleRDF;
 
@@ -73,7 +73,7 @@ public class RSPEngineImpl implements RSPEngine<StreamElement> {
     @Override
     public ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c) {
         SDSBuilder builder = new SDSBuilderImpl(rdf, registeredStreams, rsp_config, c, report, ReportGrain.SINGLE, Tick.TIME_DRIVEN);
-        q.accept(builder);
+        builder.visit(q);
         return builder.getContinuousQueryExecution();
     }
 

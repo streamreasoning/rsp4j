@@ -13,6 +13,7 @@ import org.apache.commons.rdf.api.RDF;
 import org.apache.commons.rdf.simple.SimpleRDF;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -55,7 +56,37 @@ public class ContinuousQueryImpl implements ContinuousQuery {
     }
 
     @Override
-    public void accept(SDSBuilder v) {
-        v.visit(this);
+    public boolean isSelectType() {
+        return false;
+    }
+
+    @Override
+    public boolean isConstructType() {
+        return false;
+    }
+
+    @Override
+    public int getQueryType() {
+        return 0;
+    }
+
+    @Override
+    public List<String> getGraphURIs() {
+        return null;
+    }
+
+    @Override
+    public List<String> getNamedwindowsURIs() {
+        return null;
+    }
+
+    @Override
+    public List<String> getNamedGraphURIs() {
+        return null;
+    }
+
+    @Override
+    public String getSPARQL() {
+        return null;
     }
 }

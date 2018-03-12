@@ -1,5 +1,6 @@
 package it.polimi.yasper.simple.sds;
 
+import it.polimi.yasper.core.quering.ContinuousQuery;
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.quering.SDS;
 import it.polimi.yasper.core.quering.SDSBuilder;
@@ -23,7 +24,7 @@ import org.apache.commons.rdf.api.RDF;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class SDSBuilderImpl implements SDSBuilder<ContinuousQueryImpl> {
+public class SDSBuilderImpl implements SDSBuilder {
 
     @NonNull
     private final RDF rdf;
@@ -42,7 +43,7 @@ public class SDSBuilderImpl implements SDSBuilder<ContinuousQueryImpl> {
     private ContinuousQueryExecution cqe;
 
     @Override
-    public void visit(ContinuousQueryImpl query) {
+    public void visit(ContinuousQuery query) {
         SDSImpl sds = new SDSImpl(rdf);
         this.cqe = new ContinuousQueryExecutionImpl(rdf, rdf.createIRI(query.getID()), sds, sds, query);
         query.getWindowMap().forEach((WindowOperator wo, Stream s) -> {
@@ -67,11 +68,6 @@ public class SDSBuilderImpl implements SDSBuilder<ContinuousQueryImpl> {
 
     @Override
     public SDS getSDS() {
-        return null;
-    }
-
-    @Override
-    public ContinuousQueryImpl getContinuousQuery() {
         return null;
     }
 
