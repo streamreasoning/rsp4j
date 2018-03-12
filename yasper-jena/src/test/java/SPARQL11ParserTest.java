@@ -1,16 +1,16 @@
+import it.polimi.jasper.engine.querying.syntax.QueryFactory;
+import it.polimi.jasper.engine.querying.syntax.RSPQLJenaQuery;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.*;
 import org.junit.Test;
-import it.polimi.jasper.engine.querying.syntax.QueryFactory;
-import it.polimi.jasper.engine.querying.syntax.RSPQLJenaQuery;
 
 import java.io.*;
 
 /**
  * This validates the Yasper Jena parser for SPARQL 1.1.
- *
+ * <p>
  * TODO: How to handle backslash in URIs? Should they be allowed at all?
  */
 
@@ -30,10 +30,10 @@ public class SPARQL11ParserTest {
         int parsed = 0;
         int failed = 0;
         int correct = 0;
-        for(RDFNode n : dirs.asJavaList()){
+        for (RDFNode n : dirs.asJavaList()) {
             Model m = ModelFactory.createDefaultModel();
             m.read(n.asResource().toString());
-            String root = n.toString().replaceAll("^file://(.+/).*?$","$1");
+            String root = n.toString().replaceAll("^file://(.+/).*?$", "$1");
 
             // Positive
             String queryString = "" +
@@ -53,19 +53,19 @@ public class SPARQL11ParserTest {
                     "}";
             ResultSet rs = QueryExecutionFactory.create(queryString, m).execSelect();
 
-            while(rs.hasNext()) {
+            while (rs.hasNext()) {
                 String f = root + rs.next().get("file").toString();
                 String q = readFile(f);
                 try {
-                    RSPQLJenaQuery q1 = QueryFactory.parse(q);
+                    RSPQLJenaQuery q1 = QueryFactory.parse(null, q);
                     Query q2 = org.apache.jena.query.QueryFactory.create(q);
                     parsed++;
-                    if(q1.toString().equals(q2.toString()))
+                    if (q1.toString().equals(q2.toString()))
                         correct++;
                     else {
                         System.out.println("Parsed but found mismatch: " + f);
                     }
-                } catch (Exception e){
+                } catch (Exception e) {
                     System.out.println("Error: Failed to parse " + f);
                     failed++;
                 }
@@ -92,10 +92,10 @@ public class SPARQL11ParserTest {
 
         int failed = 0;
         int correct = 0;
-        for(RDFNode n : dirs.asJavaList()){
+        for (RDFNode n : dirs.asJavaList()) {
             Model m = ModelFactory.createDefaultModel();
             m.read(n.asResource().toString());
-            String root = n.toString().replaceAll("^file://(.+/).*?$","$1");
+            String root = n.toString().replaceAll("^file://(.+/).*?$", "$1");
 
             // Positive
             String queryString = "" +
@@ -108,13 +108,13 @@ public class SPARQL11ParserTest {
                     "  BIND( replace(str(?action), '^.*?/([^/]*)$', '$1') AS ?file) " +
                     "}";
             ResultSet rs = QueryExecutionFactory.create(queryString, m).execSelect();
-            while(rs.hasNext()) {
+            while (rs.hasNext()) {
                 String f = root + rs.next().get("file").toString();
                 String q = readFile(f);
                 try {
-                    Query query = (Query) QueryFactory.parse(q);
+                    Query query = (Query) QueryFactory.parse(null, q);
                     failed++;
-                } catch (Exception e){
+                } catch (Exception e) {
                     correct++;
                 }
             }
@@ -134,7 +134,7 @@ public class SPARQL11ParserTest {
                 }
             }
             return sb.toString();
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
             return null;
         }

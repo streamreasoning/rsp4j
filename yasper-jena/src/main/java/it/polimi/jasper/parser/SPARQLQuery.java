@@ -25,7 +25,6 @@ public class SPARQLQuery {
 
     protected Query query;
 
-
     public SPARQLQuery(Prologue p) {
         this.query = new Query();
         this.query.usePrologueFrom(p);
@@ -79,7 +78,7 @@ public class SPARQLQuery {
         return this;
     }
 
-    public SPARQLQuery addGraphURI(Node_URI match) {
+    public SPARQLQuery addGraphURI(Node match) {
         query.addGraphURI(match.getURI());
         return this;
     }

@@ -1,6 +1,7 @@
 package it.polimi.jasper.engine;
 
 import it.polimi.jasper.engine.querying.RSPQuery;
+import it.polimi.jasper.engine.querying.syntax.QueryFactory;
 import it.polimi.jasper.engine.reasoning.EntailmentImpl;
 import it.polimi.jasper.engine.reasoning.ReasoningUtils;
 import it.polimi.jasper.engine.sds.JasperSDSBuilder;
@@ -27,6 +28,7 @@ import org.parboiled.errors.ParseError;
 import org.parboiled.parserunners.ReportingParseRunner;
 import org.parboiled.support.ParsingResult;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,8 +70,8 @@ public class Jasper extends EsperRSPEngine {
     @Override
     public ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c) {
         Map<String, Stream> registeredStreams = stream_registration_service.getRegisteredStreams();
-        SDSBuilder builder = new JasperSDSBuilder(registeredStreams, entailments, rsp_config, c);
-        q.accept(builder);
+        SDSBuilder builder = new JasperSDSBuilder(registeredStreams, entailments, rsp_config, c, resolver);
+        builder.visit(q);
         ContinuousQueryExecution continuousQueryExecution = builder.getContinuousQueryExecution();
         save(q, continuousQueryExecution, builder.getSDS());
         //register(new QueryStream(this, q.getID(), RDFStreamItem.class));
@@ -173,6 +175,10 @@ public class Jasper extends EsperRSPEngine {
         RSPQuery query = result.resultValue;
         log.info("Final Query [" + query + "]");
         return query;
+    }
+
+    public ContinuousQuery parse(String q) throws IOException {
+        return QueryFactory.parse(resolver, q);
     }
 
 }
