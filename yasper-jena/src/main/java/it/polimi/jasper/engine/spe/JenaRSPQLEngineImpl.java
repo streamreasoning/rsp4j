@@ -9,7 +9,6 @@ import it.polimi.jasper.engine.reasoning.ReasoningUtils;
 import it.polimi.jasper.engine.sds.JasperSDSBuilder;
 import it.polimi.jasper.engine.spe.esper.EsperStreamRegistrationService;
 import it.polimi.jasper.engine.streaming.RegisteredRDFStream;
-import it.polimi.jasper.parser.RSPQLParser;
 import it.polimi.yasper.core.enums.EntailmentType;
 import it.polimi.yasper.core.exceptions.UnregisteredQueryExeception;
 import it.polimi.yasper.core.quering.ContinuousQuery;
@@ -27,7 +26,6 @@ import lombok.extern.log4j.Log4j;
 import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.reasoner.rulesys.Rule;
 import org.apache.jena.riot.system.IRIResolver;
-import org.parboiled.Parboiled;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -39,15 +37,12 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl {
     private HashMap<String, Entailment> entailments;
     @Getter
     private IRIResolver resolver;
-    private RSPQLParser parser;
 
     EsperStreamRegistrationService schemaAssigner;
 
     public JenaRSPQLEngineImpl(long t0, EngineConfiguration ec) {
         super(t0, ec);
         this.resolver = IRIResolver.create(ec.getBaseURI());
-        this.parser = Parboiled.createParser(RSPQLParser.class);
-        this.parser.setResolver(resolver);
 
         ReasonerRegistry.getRDFSSimpleReasoner();
 

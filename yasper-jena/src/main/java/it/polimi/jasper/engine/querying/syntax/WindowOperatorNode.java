@@ -1,4 +1,4 @@
-package it.polimi.jasper.parser.streams;
+package it.polimi.jasper.engine.querying.syntax;
 
 import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import it.polimi.yasper.core.enums.WindowType;

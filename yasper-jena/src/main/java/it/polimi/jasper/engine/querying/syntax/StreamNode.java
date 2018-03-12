@@ -1,4 +1,4 @@
-package it.polimi.jasper.parser.streams;
+package it.polimi.jasper.engine.querying.syntax;
 
 import com.espertech.esper.client.soda.CreateSchemaClause;
 import com.espertech.esper.client.soda.SchemaColumnDesc;

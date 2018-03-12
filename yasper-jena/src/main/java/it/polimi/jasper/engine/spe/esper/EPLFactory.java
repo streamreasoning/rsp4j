@@ -2,7 +2,6 @@ package it.polimi.jasper.engine.spe.esper;
 
 import com.espertech.esper.client.soda.*;
 import it.polimi.jasper.engine.windowing.EsperWindowAssigner;
-import it.polimi.jasper.parser.streams.WindowOperatorNode;
 import it.polimi.yasper.core.enums.WindowType;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.stream.Stream;
@@ -22,33 +21,6 @@ import java.util.List;
 @Log4j
 public class EPLFactory {
 
-    public static EPStatementObjectModel toEPL(WindowOperatorNode wof, Stream s) {
-        return toEPL(wof, s.getURI());
-    }
-
-    public static EPStatementObjectModel toEPL(WindowOperatorNode wof, String s) {
-        EPStatementObjectModel stmt = new EPStatementObjectModel();
-
-        stmt.setAnnotations(getAnnotations(wof, s));
-        SelectClause selectClause = SelectClause.create().addWildcard();
-        stmt.setSelectClause(selectClause);
-        FromClause fromClause = FromClause.create();
-        FilterStream stream = FilterStream.create(EncodingUtils.encode(s));
-        stream.addView(getWindow(wof));
-        fromClause.add(stream);
-        stmt.setFromClause(fromClause);
-
-        OutputLimitClause outputLimitClause;
-
-        if (WindowType.Physical.equals(wof.getType())) {
-            outputLimitClause = OutputLimitClause.create(OutputLimitSelector.SNAPSHOT, wof.getStep());
-        } else {
-            outputLimitClause = OutputLimitClause.create(OutputLimitSelector.SNAPSHOT, getTimePeriod(wof.getStep(), wof.getUnitStep()));
-        }
-
-        stmt.setOutputLimitClause(outputLimitClause);
-        return stmt;
-    }
 
 
     public static EPStatementObjectModel toEPL(int step, String unitStep, WindowType type, String s, View window, List<AnnotationPart> annotations) {
@@ -76,63 +48,7 @@ public class EPLFactory {
         return stmt;
     }
 
-    public static EPStatementObjectModel toIREPL(WindowOperatorNode wof, String s) {
-        EPStatementObjectModel stmt = new EPStatementObjectModel();
 
-        stmt.setAnnotations(getAnnotations(wof, s));
-
-        SelectClause selectClause = SelectClause.create().addWildcard();
-        selectClause.setStreamSelector(StreamSelector.RSTREAM_ISTREAM_BOTH);
-        stmt.setSelectClause(selectClause);
-        FromClause fromClause = FromClause.create();
-        FilterStream stream = FilterStream.create(EncodingUtils.encode(s));
-        stream.addView(getWindow(wof));
-        fromClause.add(stream);
-        stmt.setFromClause(fromClause);
-
-        OutputLimitClause outputLimitClause;
-
-        if (WindowType.Physical.equals(wof.getType())) {
-            outputLimitClause = OutputLimitClause.create(OutputLimitSelector.DEFAULT, wof.getStep());
-        } else {
-            outputLimitClause = OutputLimitClause.create(OutputLimitSelector.DEFAULT, getTimePeriod(wof.getStep(), wof.getUnitStep()));
-        }
-
-        stmt.setOutputLimitClause(outputLimitClause);
-        return stmt;
-    }
-
-
-    public static EPStatementObjectModel toIREPL(WindowOperatorNode wof, Stream s) {
-        return toIREPL(wof, s.getURI());
-    }
-
-    private static List<AnnotationPart> getAnnotations(WindowOperatorNode wof, Stream s) {
-        return getAnnotations(wof, s.getURI());
-    }
-
-    private static List<AnnotationPart> getAnnotations(WindowOperatorNode wof, String s) {
-        AnnotationPart name = new AnnotationPart();
-        name.setName("Name");
-        name.addValue(EncodingUtils.encode(wof.getName()));
-
-        AnnotationPart range = new AnnotationPart();
-        range.setName("Tag");
-        range.addValue("name", "range");
-        range.addValue("value", wof.getRange() + "");
-
-        AnnotationPart slide = new AnnotationPart();
-        slide.setName("Tag");
-        slide.addValue("name", "step");
-        slide.addValue("value", wof.getStep() + "");
-
-        AnnotationPart stream_uri = new AnnotationPart();
-        stream_uri.setName("Tag");
-        stream_uri.addValue("name", "stream");
-        stream_uri.addValue("value", (EncodingUtils.encode(s)));
-
-        return Arrays.asList(name, stream_uri, range, slide);
-    }
 
     public static List<AnnotationPart> getAnnotations(String name1, int range1, int step1, String s) {
         AnnotationPart name = new AnnotationPart();
@@ -157,20 +73,6 @@ public class EPLFactory {
         return Arrays.asList(name, stream_uri, range, slide);
     }
 
-    public static View getWindow(WindowOperatorNode wof) {
-        View view;
-        ArrayList<Expression> parameters = new ArrayList<Expression>();
-        if (WindowType.Physical.equals(wof.getType())) {
-
-            parameters.add(Expressions.constant(wof.getStep()));
-            view = View.create("win", "length", parameters);
-
-        } else {
-            parameters.add(getTimePeriod(wof.getRange(), wof.getUnitRange()));
-            view = View.create("win", "time", parameters);
-        }
-        return view;
-    }
 
     public static View getWindow(int range, String unitRange, WindowType type) {
         View view;

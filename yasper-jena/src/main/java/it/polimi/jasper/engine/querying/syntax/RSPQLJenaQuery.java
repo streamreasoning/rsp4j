@@ -1,6 +1,5 @@
 package it.polimi.jasper.engine.querying.syntax;
 
-import it.polimi.jasper.parser.streams.StreamNode;
 import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.quering.ContinuousQuery;
 import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
