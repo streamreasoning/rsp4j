@@ -1,7 +1,13 @@
-select ?obId1 ?obId2 ?obId3 ?obId4 ?v1 ?v2 ?v3 ?v4
- FROM <http://127.0.0.1:9000/WebGlCity/RDF/SensorRepository.rdf> 
- FROM stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusWeatherData0> [range 3s step 1s] 
- FROM stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusTrafficData158505> [range 3000ms step 1s]
+PREFIX ses: <http://www.insight-centre.org/dataset/SampleEventService#>
+PREFIX ssn: <http://purl.oclc.org/NET/ssnx/ssn#>
+PREFIX ct: <http://www.insight-centre.org/citytraffic#>
+PREFIX sao: <http://purl.oclc.org/NET/sao/>
+
+REGISTER RSTREAM <citybench/query2> AS
+SELECT ?obId1 ?obId2 ?obId3 ?obId4 ?v1 ?v2 ?v3 ?v4
+FROM <http://127.0.0.1:9000/WebGlCity/RDF/SensorRepository.rdf> 
+FROM NAMED WINDOW <w1> <http://www.insight-centre.org/dataset/SampleEventService#AarhusWeatherData0> [RANGE PT3S STEP PT1S]
+FROM NAMED WINDOW <w2> <http://www.insight-centre.org/dataset/SampleEventService#AarhusTrafficData158505> [RANGE PT3S STEP PT1S]
  
 where {
 
@@ -11,23 +17,24 @@ where {
 #?p4   a <http://www.insight-centre.org/citytraffic#CongestionLevel>.
 
 
-{
-?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p1.
-?obId1 <http://purl.oclc.org/NET/sao/hasValue> ?v1.
-?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusWeatherData0>.
+        WINDOW <w1> {
+        ?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p1.
+        ?obId1 <http://purl.oclc.org/NET/sao/hasValue> ?v1.
+        ?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusWeatherData0>.
 
 
-?obId2 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p2.
-?obId2 <http://purl.oclc.org/NET/sao/hasValue> ?v2.
-?obId2 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusWeatherData0>.
+        ?obId2 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p2.
+        ?obId2 <http://purl.oclc.org/NET/sao/hasValue> ?v2.
+        ?obId2 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusWeatherData0>.
 
 
-?obId3 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p3.
-?obId3 <http://purl.oclc.org/NET/sao/hasValue> ?v3.
-?obId3 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusWeatherData0>.
+        ?obId3 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p3.
+        ?obId3 <http://purl.oclc.org/NET/sao/hasValue> ?v3.
+        ?obId3 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusWeatherData0>.
+
 }
 
-{
+WINDOW <w2> {
 ?obId4 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p4.
 ?obId4 <http://purl.oclc.org/NET/sao/hasValue> ?v4.
 ?obId4 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusTrafficData158505>.
