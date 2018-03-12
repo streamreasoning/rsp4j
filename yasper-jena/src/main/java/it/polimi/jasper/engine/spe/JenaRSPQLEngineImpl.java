@@ -3,7 +3,6 @@ package it.polimi.jasper.engine.spe;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.soda.CreateSchemaClause;
 import com.espertech.esper.client.soda.SchemaColumnDesc;
-import it.polimi.jasper.engine.querying.RSPQuery;
 import it.polimi.jasper.engine.querying.syntax.QueryFactory;
 import it.polimi.jasper.engine.reasoning.EntailmentImpl;
 import it.polimi.jasper.engine.reasoning.ReasoningUtils;
@@ -29,9 +28,6 @@ import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.reasoner.rulesys.Rule;
 import org.apache.jena.riot.system.IRIResolver;
 import org.parboiled.Parboiled;
-import org.parboiled.errors.ParseError;
-import org.parboiled.parserunners.ReportingParseRunner;
-import org.parboiled.support.ParsingResult;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -179,19 +175,14 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl {
 
 
     @Override
-    public ContinuousQuery parseQuery(String input) {
-        log.info("Parsing Query [" + input + "]");
-
-        ParsingResult<RSPQuery> result = new ReportingParseRunner(parser.Query()).run(input);
-
-        if (result.hasErrors()) {
-            for (ParseError arg : result.parseErrors) {
-                log.info(input.substring(0, arg.getStartIndex()) + "|->" + input.substring(arg.getStartIndex(), arg.getEndIndex()) + "<-|" + input.substring(arg.getEndIndex() + 1, input.length() - 1));
-            }
+    public ContinuousQuery parseQuery(String q) {
+        log.info("Parsing Query [" + q + "]");
+        try {
+            return QueryFactory.parse(resolver, q);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        RSPQuery query = result.resultValue;
-        log.info("Final Query [" + query + "]");
-        return query;
+        return null;
     }
 
     private String toEPLSchema(Stream s) {
@@ -206,6 +197,6 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl {
     }
 
     public ContinuousQuery parse(String q) throws IOException {
-        return QueryFactory.parse(resolver,q);
+        return QueryFactory.parse(resolver, q);
     }
 }
