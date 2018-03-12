@@ -5,11 +5,11 @@ PREFIX sao: <http://purl.oclc.org/NET/sao/>
 
 REGISTER RSTREAM <citybench/query10_5> AS
 SELECT ?obId1 ?obId2 ?obId3 ?obId4 ?obId5 
-FROM NAMED WINDOW <w1> ses:AarhusPollutionData182955 [RANGE 3s STEP 1s] 
-FROM NAMED WINDOW <w2> ses:AarhusPollutionData158505 [RANGE 3s STEP 1s] 
-FROM NAMED WINDOW <w3> ses:AarhusPollutionData206502 [RANGE 3s STEP 1s] 
-FROM NAMED WINDOW <w4> ses:AarhusPollutionData179093 [RANGE 3s STEP 1s] 
-FROM NAMED WINDOW <w5> ses:AarhusPollutionData195843 [RANGE 3s STEP 1s] 
+FROM NAMED WINDOW <w1> ON ses:AarhusPollutionData182955 [RANGE 3s STEP 1s] 
+FROM NAMED WINDOW <w2> ON ses:AarhusPollutionData158505 [RANGE 3s STEP 1s] 
+FROM NAMED WINDOW <w3> ON ses:AarhusPollutionData206502 [RANGE 3s STEP 1s] 
+FROM NAMED WINDOW <w4> ON ses:AarhusPollutionData179093 [RANGE 3s STEP 1s] 
+FROM NAMED WINDOW <w5> ON ses:AarhusPollutionData195843 [RANGE 3s STEP 1s] 
 FROM <http://127.0.0.1:9000/WebGlCity/RDF/SensorRepository.rdf>
 WHERE {
 

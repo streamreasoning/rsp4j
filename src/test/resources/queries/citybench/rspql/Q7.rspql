@@ -3,15 +3,16 @@ PREFIX ssn: <http://purl.oclc.org/NET/ssnx/ssn#>
 PREFIX ct: <http://www.insight-centre.org/citytraffic#>
 PREFIX sao: <http://purl.oclc.org/NET/sao/>
 
-REGISTER RSTREAM <citybench/trafficparking> AS
+REGISTER RSTREAM <citybench/q7> AS
 SELECT ?obId1 ?obId2 ?v1 ?v2 
-FROM NAMED WINDOW <w1> ON ses:AarhusParkingDataKALKVAERKSVEJ [RANGE PT20S STEP PT10S]
-FROM NAMED WINDOW <w2> ON ses:AarhusTrafficData158505 [RANGE PT3S STEP PT1S] #1.5 seconds
-FROM <http://127.0.0.1:9000/WebGlCity/SensorRepository.rdf> 
+FROM <http://127.0.0.1:9000/WebGlCity/RDF/SensorRepository.rdf>  
+FROM NAMED WINDOW <w1> ON ses:AarhusParkingDataKALKVAERKSVEJ [RANGE PT3S STEP PT1S]
+FROM NAMED WINDOW <w2> ONses:AarhusParkingDataSKOLEBAKKEN [RANGE PT3S STEP PT1S]
 WHERE {
-    
-    ?p1   a ct:ParkingVacancy.
-    ?p2   a ct:CongestionLevel.
+
+    ?p1   a ct:ParkingVacancy .
+    ?p2   a ct:ParkingVacancy .
+
 
     WINDOW <w1> {
         ?obId1 a ?ob.
@@ -19,10 +20,13 @@ WHERE {
         ?obId1 sao:hasValue ?v1.
         ?obId1 ssn:observedBy ses:AarhusParkingDataKALKVAERKSVEJ.
     }
+
     WINDOW <w2> {
         ?obId2 a ?ob.
         ?obId2 ssn:observedProperty ?p2.
         ?obId2 sao:hasValue ?v2.
-        ?obId2 ssn:observedBy ses:AarhusTrafficData158505.
+        ?obId2 ssn:observedBy ses:AarhusParkingDataSKOLEBAKKEN.
     }
+
+    FILTER(?v1 < 1 || ?v2 < 1 )
 }
