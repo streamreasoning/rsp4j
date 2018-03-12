@@ -38,7 +38,7 @@ public class TestConfig {
 
         ContinuousQueryExecution cqe = sr.register(q, config);
 
-        cqe.addFormatter(new InstResponseSysOutFormatter());
+        cqe.addFormatter(new InstResponseSysOutFormatter("TTL", true));
 
         //In real application we do not have to start the stream.
 
