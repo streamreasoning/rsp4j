@@ -5,13 +5,11 @@ import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
 /**
  * Created by riccardo on 05/09/2017.
  */
-public interface SDSBuilder<Q extends ContinuousQuery> {
+public interface SDSBuilder {
 
-    void visit(Q query);
+    void visit(ContinuousQuery query);
 
     SDS getSDS();
-
-    Q getContinuousQuery();
 
     ContinuousQueryExecution getContinuousQueryExecution();
 
