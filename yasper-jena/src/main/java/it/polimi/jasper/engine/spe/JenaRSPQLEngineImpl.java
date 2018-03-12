@@ -3,22 +3,23 @@ package it.polimi.jasper.engine.spe;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.soda.CreateSchemaClause;
 import com.espertech.esper.client.soda.SchemaColumnDesc;
-import it.polimi.jasper.engine.reasoning.ReasoningUtils;
-import it.polimi.jasper.engine.spe.esper.EsperStreamRegistrationService;
-import it.polimi.jasper.engine.sds.JasperSDSBuilder;
 import it.polimi.jasper.engine.querying.RSPQuery;
+import it.polimi.jasper.engine.querying.syntax.QueryFactory;
 import it.polimi.jasper.engine.reasoning.EntailmentImpl;
+import it.polimi.jasper.engine.reasoning.ReasoningUtils;
+import it.polimi.jasper.engine.sds.JasperSDSBuilder;
+import it.polimi.jasper.engine.spe.esper.EsperStreamRegistrationService;
 import it.polimi.jasper.engine.streaming.RegisteredRDFStream;
 import it.polimi.jasper.parser.RSPQLParser;
-import it.polimi.yasper.core.quering.SDSBuilder;
-import it.polimi.yasper.core.stream.Stream;
-import it.polimi.yasper.core.quering.ContinuousQuery;
-import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.stream.rdf.RDFStream;
-import it.polimi.yasper.core.reasoning.Entailment;
 import it.polimi.yasper.core.enums.EntailmentType;
 import it.polimi.yasper.core.exceptions.UnregisteredQueryExeception;
+import it.polimi.yasper.core.quering.ContinuousQuery;
+import it.polimi.yasper.core.quering.SDSBuilder;
+import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.reasoning.Entailment;
+import it.polimi.yasper.core.stream.Stream;
+import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
@@ -32,6 +33,7 @@ import org.parboiled.errors.ParseError;
 import org.parboiled.parserunners.ReportingParseRunner;
 import org.parboiled.support.ParsingResult;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
 
@@ -85,8 +87,8 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl {
 
     @Override
     public ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c) {
-        SDSBuilder builder = new JasperSDSBuilder(registeredStreams, entailments, rsp_config, c);
-        q.accept(builder);
+        SDSBuilder builder = new JasperSDSBuilder(registeredStreams, entailments, rsp_config, c, resolver);
+        builder.visit(q);
         ContinuousQueryExecution continuousQueryExecution = builder.getContinuousQueryExecution();
         persist(q, continuousQueryExecution, builder.getSDS());
         //register(new QueryStream(this, q.getID(), RDFStreamItem.class));
@@ -201,5 +203,9 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl {
         StringWriter writer = new StringWriter();
         schema.toEPL(writer);
         return writer.toString();
+    }
+
+    public ContinuousQuery parse(String q) throws IOException {
+        return QueryFactory.parse(resolver,q);
     }
 }

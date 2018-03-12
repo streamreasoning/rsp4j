@@ -2,13 +2,13 @@ package it.polimi.jasper.parser.streams;
 
 import com.espertech.esper.client.soda.CreateSchemaClause;
 import com.espertech.esper.client.soda.SchemaColumnDesc;
-import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
+import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.jena.graph.Node_URI;
+import org.apache.jena.graph.Node;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class StreamNode implements Stream {
     @Getter
     @Setter
 
-    private Node_URI iri;
+    private Node iri;
 
     @Override
 

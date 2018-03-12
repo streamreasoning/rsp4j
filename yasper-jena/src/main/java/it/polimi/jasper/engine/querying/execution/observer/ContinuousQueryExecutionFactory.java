@@ -4,6 +4,7 @@ import it.polimi.jasper.engine.querying.RSPQuery;
 import it.polimi.jasper.engine.querying.execution.subscribers.ContinuouConstructSubscriber;
 import it.polimi.jasper.engine.querying.execution.subscribers.ContinuousSelectSubscriber;
 import it.polimi.jasper.engine.reasoning.GenericRuleJenaTVGReasoner;
+import it.polimi.yasper.core.quering.ContinuousQuery;
 import it.polimi.yasper.core.quering.operators.r2s.RelationToStreamOperator;
 import it.polimi.yasper.core.quering.SDS;
 import it.polimi.yasper.core.reasoning.Entailment;
@@ -30,17 +31,17 @@ import java.util.List;
 public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory {
 
 
-    static public ContinuousQueryExecutionObserver createObserver(RSPQuery query, SDS sds, TVGReasoner r) {
+    static public ContinuousQueryExecutionObserver createObserver(ContinuousQuery query, SDS sds, TVGReasoner r) {
         ContinuousQueryExecutionObserver cqe;
         StreamOperator r2S = query.getR2S() != null ? query.getR2S() : StreamOperator.RSTREAM;
         RelationToStreamOperator s2r = getToStreamOperator(r2S);
 
-        if (query.getQ().isSelectType()) {
+        if (query.isSelectType()) {
             cqe = new ContinuousSelect(query, sds, r, s2r);
-        } else if (query.getQ().isConstructType()) {
+        } else if (query.isConstructType()) {
             cqe = new ContinuouConstruct(query, sds, r, s2r);
         } else {
-            throw new RuntimeException("Unsupported ContinuousQuery Type [" + query.getQ().getQueryType() + "]");
+            throw new RuntimeException("Unsupported ContinuousQuery Type [" + query.getQueryType() + "]");
         }
 
         return cqe;

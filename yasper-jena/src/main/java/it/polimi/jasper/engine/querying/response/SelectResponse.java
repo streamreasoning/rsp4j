@@ -2,6 +2,7 @@ package it.polimi.jasper.engine.querying.response;
 
 import it.polimi.jasper.engine.querying.RSPQuery;
 import it.polimi.jasper.engine.querying.execution.observer.TimeVaryingResultSetMem;
+import it.polimi.yasper.core.quering.ContinuousQuery;
 import it.polimi.yasper.core.quering.response.InstantaneousResponse;
 import lombok.Getter;
 import lombok.extern.java.Log;
@@ -21,7 +22,7 @@ public final class SelectResponse extends InstantaneousResponse {
     private List<Binding> solutionSet;
     private ResultSet results;
 
-    public SelectResponse(String id, RSPQuery query, ResultSet results, long cep_timestamp) {
+    public SelectResponse(String id, ContinuousQuery query, ResultSet results, long cep_timestamp) {
         super(id, System.currentTimeMillis(), cep_timestamp, query);
         ResultSetRewindable resultSetRewindable = ResultSetFactory.copyResults(results);
         this.results = resultSetRewindable;

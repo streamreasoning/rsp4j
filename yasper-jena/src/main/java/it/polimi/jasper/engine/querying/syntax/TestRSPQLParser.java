@@ -32,7 +32,7 @@ public class TestRSPQLParser {
                 "}";
         System.err.println(trickyQuery);
 
-        RSPQLJenaQuery query = QueryFactory.parse(trickyQuery);
+        RSPQLJenaQuery query = QueryFactory.parse(null, trickyQuery);
         query.setSyntax(Syntax.syntaxARQ);
         // Print the query (only the SPARQL 1.1 parts)
         System.out.println(query);

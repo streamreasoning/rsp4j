@@ -1,52 +1,47 @@
 package it.polimi.jasper.engine.sds;
 
-import it.polimi.jasper.engine.windowing.NamedStreamEsperView;
-import it.polimi.jasper.engine.querying.RSPQuery;
-import it.polimi.jasper.engine.windowing.StreamEsperView;
 import it.polimi.jasper.engine.querying.execution.observer.ContinuousQueryExecutionFactory;
 import it.polimi.jasper.engine.reasoning.GenericRuleJenaTVGReasoner;
 import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
-import it.polimi.jasper.parser.streams.WindowedStreamNode;
+import it.polimi.jasper.engine.windowing.NamedStreamEsperView;
+import it.polimi.jasper.engine.windowing.StreamEsperView;
 import it.polimi.yasper.core.enums.EntailmentType;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.exceptions.UnregisteredStreamExeception;
+import it.polimi.yasper.core.quering.ContinuousQuery;
 import it.polimi.yasper.core.quering.SDS;
 import it.polimi.yasper.core.quering.SDSBuilder;
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.reasoning.Entailment;
-import it.polimi.yasper.simple.windowing.TimeVarying;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.scope.Tick;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
+import it.polimi.yasper.simple.windowing.TimeVarying;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.jena.JenaRDF;
 import org.apache.jena.graph.Graph;
-import org.apache.jena.graph.Node;
 import org.apache.jena.graph.compose.MultiUnion;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.impl.InfModelImpl;
-import org.apache.jena.rdf.model.impl.ModelCom;
 import org.apache.jena.reasoner.InfGraph;
 import org.apache.jena.riot.system.IRIResolver;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Riccardo on 05/09/2017.
  */
 @Log4j
 @RequiredArgsConstructor
-public class JasperSDSBuilder implements SDSBuilder<RSPQuery> {
+public class JasperSDSBuilder implements SDSBuilder {
 
     @NonNull
     private Map<String, Stream> registeredStreams;
@@ -56,6 +51,10 @@ public class JasperSDSBuilder implements SDSBuilder<RSPQuery> {
     protected EngineConfiguration rsp_config;
     @NonNull
     protected QueryConfiguration queryConfiguration;
+
+    @Nonnull
+    private IRIResolver resolver;
+
     @Getter
     protected GenericRuleJenaTVGReasoner reasoner;
 
@@ -65,21 +64,16 @@ public class JasperSDSBuilder implements SDSBuilder<RSPQuery> {
     @Getter
     private ContinuousQueryExecution qe;
     private Maintenance maintenance;
-    private IRIResolver resolver;
-    private RSPQuery query;
 
     @Override
-    public void visit(RSPQuery bq) {
+    public void visit(ContinuousQuery query) {
 
         JenaRDF rdf = new JenaRDF();
-        this.query = bq;
-        this.query.setConfiguration(queryConfiguration);
 
-        this.resolver = this.query.getResolver();
         this.maintenance = queryConfiguration.getSdsMaintainance();
         this.is_deltas = Maintenance.INCREMENTAL.equals(maintenance);
 
-        if (bq.isRecursive() && !rsp_config.isRecursionEnables()) {
+        if (query.isRecursive() && !rsp_config.isRecursionEnables()) {
             throw new UnsupportedOperationException("Recursion must be enabled");
         }
 
@@ -87,21 +81,30 @@ public class JasperSDSBuilder implements SDSBuilder<RSPQuery> {
         Model tbox = ModelFactory.createDefaultModel().read(tboxLocation);
         EntailmentType entailment = queryConfiguration.getReasoningEntailment();
 
-        log.info("Registering Query [" + bq.getName() + "]");
-        log.info(bq.getQ().toString());
-
-        reasoner = ContinuousQueryExecutionFactory.getGenericRuleReasoner(entailments.get(entailment.name()), tbox);
+        this.reasoner = ContinuousQueryExecutionFactory.getGenericRuleReasoner(entailments.get(entailment.name()), tbox);
 
         MultiUnion defaultgraph = new MultiUnion();
-        Graph base = rdf.createGraph().asJenaGraph();
-        defaultgraph.addGraph(reasoner.bind(loadStaticGraph(bq, base)));
 
         JenaSDS jenaSDS = new JenaSDS(defaultgraph, resolver);
-        qe = ContinuousQueryExecutionFactory.createObserver(bq, jenaSDS, this.reasoner);
-        addNamedStaticGraph(bq, jenaSDS, this.reasoner);
+        qe = ContinuousQueryExecutionFactory.createObserver(query, jenaSDS, this.reasoner);
 
-        bq.getWindowMap().forEach((wo, s) -> {
-            if (!registeredStreams.containsKey(s.getURI())) {
+        query.getNamedGraphURIs().forEach(g -> {
+            if (!query.getNamedwindowsURIs().contains(g)) {
+                Model m = ModelFactory.createDefaultModel().read(g);
+                TimeVaryingInfGraph bind = (TimeVaryingInfGraph) reasoner.bind(m.getGraph());
+                sds.add(rdf.createIRI(g), bind);
+            }
+        });
+
+        query.getGraphURIs().forEach(g -> {
+            Model m = ModelFactory.createDefaultModel().read(g);
+            TimeVaryingInfGraph bind = (TimeVaryingInfGraph) reasoner.bind(m.getGraph());
+            sds.add(bind);
+        });
+
+
+        query.getWindowMap().forEach((wo, s) -> {
+            if (!registeredStreams.containsKey(resolver.resolveToString("streams/" + s.getURI()))) {
                 throw new UnregisteredStreamExeception(s.getURI());
             } else {
                 WindowAssigner<Graph> wa = wo.apply(s);
@@ -133,54 +136,8 @@ public class JasperSDSBuilder implements SDSBuilder<RSPQuery> {
     }
 
     @Override
-    public RSPQuery getContinuousQuery() {
-        return query;
-    }
-
-    @Override
     public ContinuousQueryExecution getContinuousQueryExecution() {
         return qe;
-    }
-
-    private void addNamedStaticGraph(RSPQuery bq, JenaSDS sds, GenericRuleJenaTVGReasoner reasoner) {
-        //Named Static Graphs
-        if (bq.getRSPNamedGraphURIs() != null)
-            for (String g : bq.getNamedGraphURIs()) {
-                log.info(g);
-                if (!isWindow(bq.getNamedwindows().keySet(), g)) {
-                    Model m = ModelFactory.createDefaultModel().read(g);
-                    TimeVaryingInfGraph bind = (TimeVaryingInfGraph) reasoner.bind(m.getGraph());
-                    sds.addNamedModel(g, new InfModelImpl(bind));
-                }
-            }
-    }
-
-    private Graph loadStaticGraph(RSPQuery bq, Graph gg) {
-        Model def = new ModelCom(gg);
-        //Default Static GraphItem
-        if (bq.getRSPGraphURIs() != null)
-            for (String g : bq.getGraphURIs()) {
-                log.info(g);
-                if (!isWindow(bq.getWindows(), g)) {
-                    def = def.read(g);
-                }
-            }
-        return def.getGraph();
-    }
-
-    protected boolean isWindow(Set<?> windows, String g) {
-        if (windows != null) {
-            Iterator<?> iterator = windows.iterator();
-            while (iterator.hasNext()) {
-                Object next = iterator.next();
-                if (next instanceof WindowedStreamNode && ((WindowedStreamNode) next).getStreamURI().equals(g)) {
-                    return true;
-                } else if (next instanceof Node && ((Node) next).getURI().equals(g)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
 }

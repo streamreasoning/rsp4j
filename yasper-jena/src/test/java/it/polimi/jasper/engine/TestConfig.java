@@ -39,9 +39,14 @@ public class TestConfig {
         RDFStream painter_reg = sr.register(painter);
         RDFStream writer_reg = sr.register(writer);
 
-        String query = getQuery();
-        ContinuousQuery q = sr.parseQuery(query);
-        ContinuousQueryExecution ceq = sr.register(q, config);
+        ContinuousQuery q = sr.parseQuery(getQuery("yql"));
+        ContinuousQuery q2 = sr.parse(getQuery("rspql"));
+
+        System.out.println(q.toString());
+        System.out.println("<<------>>");
+        System.out.println(q2.toString());
+
+        ContinuousQueryExecution ceq = sr.register(q2, config);
         ContinuousQuery cq = ceq.getContinuousQuery();
 
         sr.register(cq, ResponseFormatterFactory.getGenericResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
@@ -53,8 +58,8 @@ public class TestConfig {
 
     }
 
-    public static String getQuery() throws IOException {
-        File file = new File("/Users/riccardo/_Projects/RSP/yasper/src/test/resources/q52.rspql");
+    public static String getQuery(String suffix) throws IOException {
+        File file = new File("/Users/riccardo/_Projects/RSP/yasper/src/test/resources/q52."+suffix);
         return FileUtils.readFileToString(file);
     }
 

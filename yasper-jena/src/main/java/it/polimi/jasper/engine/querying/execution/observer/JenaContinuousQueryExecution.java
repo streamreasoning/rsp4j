@@ -1,9 +1,9 @@
 package it.polimi.jasper.engine.querying.execution.observer;
 
-import it.polimi.jasper.engine.querying.RSPQuery;
-import it.polimi.yasper.core.quering.operators.r2s.RelationToStreamOperator;
+import it.polimi.yasper.core.quering.ContinuousQuery;
 import it.polimi.yasper.core.quering.SDS;
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecutionObserver;
+import it.polimi.yasper.core.quering.operators.r2s.RelationToStreamOperator;
 import it.polimi.yasper.core.quering.response.InstantaneousResponse;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
 import org.apache.jena.graph.Triple;
@@ -25,9 +25,9 @@ public abstract class JenaContinuousQueryExecution extends ContinuousQueryExecut
     protected InstantaneousResponse last_response = null;
     protected QueryExecution execution;
 
-    public JenaContinuousQueryExecution(RSPQuery query, SDS sds, TVGReasoner reasoner, RelationToStreamOperator s2r) {
+    public JenaContinuousQueryExecution(ContinuousQuery query, SDS sds, TVGReasoner reasoner, RelationToStreamOperator s2r) {
         super(sds, query, reasoner, s2r);
-        this.q = query.getQ();
+        this.q = QueryFactory.create(query.getSPARQL());
     }
 
     @Override

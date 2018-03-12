@@ -1,6 +1,7 @@
 package it.polimi.jasper.engine.querying.response;
 
 import it.polimi.jasper.engine.querying.RSPQuery;
+import it.polimi.yasper.core.quering.ContinuousQuery;
 import it.polimi.yasper.core.quering.response.InstantaneousResponse;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
@@ -15,7 +16,7 @@ import org.apache.jena.rdf.model.StmtIterator;
 public final class ConstructResponse extends InstantaneousResponse {
     private Model results;
 
-    public ConstructResponse(String id, RSPQuery query, Model results, long cep_timestamp) {
+    public ConstructResponse(String id, ContinuousQuery query, Model results, long cep_timestamp) {
         super(id, System.currentTimeMillis(), cep_timestamp, query);
         this.results = results;
     }

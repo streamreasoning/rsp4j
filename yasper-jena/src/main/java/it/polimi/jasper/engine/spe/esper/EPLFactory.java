@@ -1,11 +1,14 @@
 package it.polimi.jasper.engine.spe.esper;
 
 import com.espertech.esper.client.soda.*;
+import it.polimi.jasper.engine.windowing.EsperWindowAssigner;
 import it.polimi.jasper.parser.streams.WindowOperatorNode;
-import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.enums.WindowType;
+import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
+import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.utils.EncodingUtils;
 import lombok.extern.log4j.Log4j;
+import org.apache.commons.configuration.ConfigurationException;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -183,15 +186,16 @@ public class EPLFactory {
     }
 
     private static TimePeriodExpression getTimePeriod(Integer omega, String unit_omega) {
-        if ("ms".equals(unit_omega)) {
+        String unit = unit_omega.toLowerCase();
+        if ("ms".equals(unit) || "millis".equals(unit) || "milliseconds".equals(unit)) {
             return Expressions.timePeriod(null, null, null, null, omega);
-        } else if ("s".equals(unit_omega)) {
+        } else if ("s".equals(unit) || "seconds".equals(unit) || "sec".equals(unit)) {
             return Expressions.timePeriod(null, null, null, omega, null);
-        } else if ("m".equals(unit_omega)) {
+        } else if ("m".equals(unit) || "minutes".equals(unit) || "min".equals(unit)) {
             return Expressions.timePeriod(null, null, omega, null, null);
-        } else if ("h".equals(unit_omega)) {
+        } else if ("h".equals(unit) || "hours".equals(unit) || "hour".equals(unit)) {
             return Expressions.timePeriod(null, omega, null, null, null);
-        } else if ("d".equals(unit_omega)) {
+        } else if ("d".equals(unit) || "days".equals(unit)) {
             return Expressions.timePeriod(omega, null, null, null, null);
         }
         return null;
@@ -209,6 +213,17 @@ public class EPLFactory {
         StringWriter writer = new StringWriter();
         schema.toEPL(writer);
         return writer.toString();
+    }
+
+    public static WindowAssigner getWindowAssigner(String name, int step, int range, String unitStep, String unitRange, WindowType type) {
+        List<AnnotationPart> annotations = EPLFactory.getAnnotations(name, range, step, name);
+        View window = EPLFactory.getWindow(range, unitRange, type);
+        EPStatementObjectModel epStatementObjectModel = EPLFactory.toEPL(step, unitStep, type, name, window, annotations);
+        try {
+            return new EsperWindowAssigner(EncodingUtils.encode(name), epStatementObjectModel);
+        } catch (ConfigurationException e) {
+            throw new RuntimeException("Error During Stream Registration");
+        }
     }
 
 

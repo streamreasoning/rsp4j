@@ -2,12 +2,12 @@ package it.polimi.jasper.engine.querying;
 
 import it.polimi.jasper.parser.SPARQLQuery;
 import it.polimi.jasper.parser.streams.Register;
+import it.polimi.jasper.parser.streams.WindowOperatorNode;
 import it.polimi.jasper.parser.streams.WindowedStreamNode;
+import it.polimi.yasper.core.enums.StreamOperator;
+import it.polimi.yasper.core.quering.ContinuousQuery;
 import it.polimi.yasper.core.quering.SDSBuilder;
 import it.polimi.yasper.core.stream.Stream;
-import it.polimi.jasper.parser.streams.WindowOperatorNode;
-import it.polimi.yasper.core.quering.ContinuousQuery;
-import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import lombok.Data;
 import lombok.Getter;
@@ -22,6 +22,7 @@ import org.apache.jena.sparql.core.Prologue;
 import org.apache.jena.sparql.syntax.ElementNamedGraph;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Riccardo on 05/08/16.
@@ -30,8 +31,8 @@ import java.util.*;
 @Log4j
 public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
 
-    private Map<Node, WindowedStreamNode> namedwindows = new HashMap<Node, WindowedStreamNode>();
-    private Set<WindowedStreamNode> windows = new HashSet<WindowedStreamNode>();
+    private Map<Node, WindowedStreamNode> namedwindows = new HashMap<>();
+    private Set<WindowedStreamNode> windows = new HashSet<>();
     private List<ElementNamedGraph> windowGraphElements;
     private Register header;
     private StreamOperator r2s;
@@ -112,7 +113,7 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
 
     public RSPQuery addElement(ElementNamedGraph elm) {
         if (windowGraphElements == null) {
-            windowGraphElements = new ArrayList<ElementNamedGraph>();
+            windowGraphElements = new ArrayList<>();
         }
         windowGraphElements.add(elm);
         return this;
@@ -124,19 +125,22 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
     }
 
     public List<String> getNamedGraphURIs() {
-        return new ArrayList<String>();
-    }
-
-    public List<String> getGraphURIs() {
-        return new ArrayList<String>();
-    }
-
-    public List<String> getRSPNamedGraphURIs() {
         return query.getNamedGraphURIs();
     }
 
-    public List<String> getRSPGraphURIs() {
+    @Override
+    public String getSPARQL() {
+        return query.toString();
+    }
+
+
+    public List<String> getGraphURIs() {
         return query.getGraphURIs();
+    }
+
+    @Override
+    public List<String> getNamedwindowsURIs() {
+        return namedwindows.keySet().stream().map(Node::getURI).collect(Collectors.toList());
     }
 
     /**
@@ -169,11 +173,6 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
 
 
     @Override
-    public String toString() {
-        return super.toString();
-    }
-
-    @Override
     public String getID() {
         return getName();
     }
@@ -191,14 +190,27 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
         return map;
     }
 
-
+    @Override
+    public boolean isSelectType() {
+        return query.isSelectType();
+    }
 
     @Override
-    public void accept(SDSBuilder v) {
-        v.visit(this);
+    public boolean isConstructType() {
+        return query.isConstructType();
+    }
+
+    @Override
+    public int getQueryType() {
+        return query.getQueryType();
     }
 
     public IRIResolver getResolver() {
         return query.getResolver();
+    }
+
+    @Override
+    public String toString() {
+        return query.toString();
     }
 }
