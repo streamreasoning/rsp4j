@@ -6,7 +6,7 @@ PREFIX sao: <http://purl.oclc.org/NET/sao/>
 REGISTER RSTREAM <citybench/q4> AS
 SELECT ?evtId ?title ?node ?obId2 ?lat2 ?lon2 ?lat1 ?lon1
 FROM <http://127.0.0.1:9000/WebGlCity/RDF/AarhusCulturalEvents.rdf>  
-FROM NAMED WINDOW <w1> ON ssn:UserLocationService [RANGE PT3S step PT1S] 
+FROM NAMED WINDOW <w1> ON ssn:UserLocationService [RANGE PT3S STEP PT1S]
 
 WHERE {
 
@@ -23,8 +23,8 @@ WHERE {
         ?obId2 <http://purl.oclc.org/NET/sao/hasValue> ?v2. 
         ?v2 ct:hasLatitude ?lat2. 
         ?v2 ct:hasLongitude ?lon2. 
-        ?obId2 ssn:observedBy> ses:UserLocationService .
+        ?obId2 ssn:observedBy ses:UserLocationService .
     }
 
-    FILTER (((?lat2 - ?lat1)*(?lat2 - ?lat1) + (?lon2 - ?lon1)*(?lon2 - lon1)) < 0.1)
+    FILTER (((?lat2 - ?lat1)*(?lat2 - ?lat1) + (?lon2 - ?lon1)*(?lon2 - ?lon1)) < 0.1)
 } 

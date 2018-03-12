@@ -19,7 +19,8 @@ WHERE {
         ?obId1 ssn:observedBy ses:AarhusTrafficData182955 .
     }
 
-   WINDOW <w2> {  ?obId2 ssn:observedProperty> ?p2 .
+   WINDOW <w2> {
+        ?obId2 ssn:observedProperty ?p2 .
         ?obId2 sao:hasValue ?v2 .
         ?obId2 ssn:observedBy ses:AarhusTrafficData158505 .
     }

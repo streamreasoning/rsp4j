@@ -1,7 +1,7 @@
-PREFIX ses: ses:
-PREFIX ssn: ssn:
+PREFIX ses: <http://www.insight-centre.org/dataset/SampleEventService#>
+PREFIX ssn: <http://purl.oclc.org/NET/ssnx/ssn#>
 PREFIX ct: <http://www.insight-centre.org/citytraffic#>
-PREFIX sao: sao:
+PREFIX sao: <http://purl.oclc.org/NET/sao/>
 
 REGISTER RSTREAM <citybench/Q2> AS
 SELECT ?obId1 ?obId2 ?obId3 ?obId4 ?v1 ?v2 ?v3 ?v4

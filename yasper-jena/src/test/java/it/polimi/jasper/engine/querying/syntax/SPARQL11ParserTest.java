@@ -17,14 +17,14 @@ import java.io.*;
  */
 
 public class SPARQL11ParserTest {
-    private static final String root = "it/polimi/jasper/engine/querying/syntax/sparql11/";
+    private static final String root = "./sparql11/";
 
     @Test
     public void positiveTests() {
         String mf = "http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#";
         String path = getClass().getClassLoader().getResource(root).getPath();
         Model model = ModelFactory.createDefaultModel();
-        model.read(path + "manifest-it.polimi.jasper.engine.querying.syntax.sparql11-query.ttl", path);
+        model.read(path + "manifest-sparql11-query.ttl", path);
         RDFList dirs = model
                 .listObjectsOfProperty(ResourceFactory.createProperty(mf + "include"))
                 .next().as(RDFList.class);
@@ -87,7 +87,7 @@ public class SPARQL11ParserTest {
         String mf = "http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#";
         String rootPath = getClass().getClassLoader().getResource(root).getPath();
         Model model = ModelFactory.createDefaultModel();
-        model.read(rootPath + "manifest-it.polimi.jasper.engine.querying.syntax.sparql11-query.ttl", rootPath);
+        model.read(rootPath + "manifest-sparql11-query.ttl", rootPath);
         RDFList dirs = model
                 .listObjectsOfProperty(ResourceFactory.createProperty(mf + "include"))
                 .next().as(RDFList.class);
