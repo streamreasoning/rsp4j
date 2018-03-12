@@ -1,6 +1,6 @@
 package it.polimi.jasper.parser.run;
 
-import it.polimi.jasper.engine.querying.RSPQuery;
+import it.polimi.jasper.parser.RSPQuery;
 import it.polimi.jasper.parser.RSPQLParser;
 import it.polimi.jasper.parser.streams.WindowedStreamNode;
 import it.polimi.jasper.engine.spe.esper.EPLFactory;
