@@ -1,0 +1,22 @@
+
+select ?obId1 ?obId2 ?lat1 ?lon1 ?lat2 ?lon2
+
+where {
+?p1   a <http://www.insight-centre.org/citytraffic#ParkingVacancy>.
+?p1 <http://purl.oclc.org/NET/ssnx/ssn#isPropertyOf> ?foi1.
+?foi1 <http://www.insight-centre.org/citytraffic#hasStartLatitude> ?lat1.
+?foi1 <http://www.insight-centre.org/citytraffic#hasStartLongitude> ?lon1.
+
+stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusParkingDataKALKVAERKSVEJ> [range 20s slide 1s] 
+{?obId1 a ?ob.
+?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p1.
+?obId1 <http://purl.oclc.org/NET/sao/hasValue> ?v1.
+?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusParkingDataKALKVAERKSVEJ>.
+}
+ stream <http://www.insight-centre.org/dataset/SampleEventService#UserLocationService> [range 3000ms] 
+{?obId2 a ?ob.
+?obId2 <http://purl.oclc.org/NET/sao/hasValue> ?v2.
+?v2 <http://www.insight-centre.org/citytraffic#hasLatitude> ?lat2.
+?v2 <http://www.insight-centre.org/citytraffic#hasLongitude> ?lon2.
+?obId2 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#UserLocationService>.
+}}

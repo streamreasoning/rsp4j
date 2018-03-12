@@ -1,0 +1,24 @@
+
+select ?evtId ?title ?node ?obId2 ?lat2 ?lon2 ?lat1 ?lon1
+
+FROM <http://127.0.0.1:9000/WebGlCity/RDF/AarhusCulturalEvents.rdf>  
+
+FROM stream <http://www.insight-centre.org/dataset/SampleEventService#UserLocationService> [range 3000ms step 1s] 
+
+where {
+?evtId a  <http://purl.oclc.org/NET/sao/Point>. 
+?evtId <http://purl.oclc.org/NET/ssnx/ssn#featureOfInterest> ?foi . 
+?foi <http://www.insight-centre.org/citytraffic#hasFirstNode> ?node . 
+?node <http://www.insight-centre.org/citytraffic#hasLatitude> ?lat1 .  
+?node <http://www.insight-centre.org/citytraffic#hasLongitude> ?lon1 . 
+?evtId <http://purl.oclc.org/NET/sao/value> ?title. 
+
+?obId2 a <http://purl.oclc.org/NET/ssnx/ssn#Observation>. 
+?obId2 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p2. 
+?obId2 <http://purl.oclc.org/NET/sao/hasValue> ?v2. 
+?v2 <http://www.insight-centre.org/citytraffic#hasLatitude> ?lat2. 
+?v2 <http://www.insight-centre.org/citytraffic#hasLongitude> ?lon2. 
+?obId2 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#UserLocationService>.
+
+Filter (((?lat2 - ?lat1)*(?lat2 - ?lat1) + (?lon2 - ?lon1)*(?lon2 - ?lon1)) < 0.1)
+} 

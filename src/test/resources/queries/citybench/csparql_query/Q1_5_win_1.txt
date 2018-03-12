@@ -1,0 +1,32 @@
+select ?obId1 ?obId2 ?obId3 #?obId4 ?obId5 #?v1 ?v2
+ from stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusTrafficData182955> [range 2s step 1s]
+ from stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusTrafficData158505> [range 2s step 1s]
+ from stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusTrafficData192707> [range 2s step 1s]
+ FROM <http://127.0.0.1:9000/WebGlCity/RDF/SensorRepository.rdf> 
+ 
+where {
+
+?p1   a <http://www.insight-centre.org/citytraffic#CongestionLevel>.
+?p2   a <http://www.insight-centre.org/citytraffic#CongestionLevel>.
+?p3   a <http://www.insight-centre.org/citytraffic#CongestionLevel>.
+#?p4   a <http://www.insight-centre.org/citytraffic#CongestionLevel>.
+#?p5   a <http://www.insight-centre.org/citytraffic#CongestionLevel>.
+
+ 
+{
+?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p1.
+?obId1 <http://purl.oclc.org/NET/sao/hasValue> ?v1.
+?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusTrafficData182955>.
+}
+
+{
+?obId2 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p2.
+?obId2 <http://purl.oclc.org/NET/sao/hasValue> ?v2.
+?obId2 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusTrafficData158505>.
+}
+{
+?obId3 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p3.
+?obId3 <http://purl.oclc.org/NET/sao/hasValue> ?v3.
+?obId3 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusTrafficData192707>.
+}
+}
