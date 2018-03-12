@@ -2,9 +2,6 @@ package it.polimi.jasper.engine.querying.formatter;
 
 import it.polimi.jasper.engine.querying.response.SelectResponse;
 import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.apache.jena.query.ResultSetFormatter;
 
 import java.util.Observable;
@@ -13,14 +10,13 @@ import java.util.Observable;
  * Created by riccardo on 03/07/2017.
  */
 
-@RequiredArgsConstructor
 public class SelectResponseSysOutFormatter extends QueryResponseFormatter {
 
     long last_result = -1L;
 
-    @NonNull
-    @Getter
-    boolean distinct;
+    public SelectResponseSysOutFormatter(String format, boolean distinct) {
+        super(format, distinct);
+    }
 
     @Override
     public void update(Observable o, Object arg) {

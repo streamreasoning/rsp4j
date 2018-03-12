@@ -7,15 +7,15 @@ import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
  */
 public class ResponseFormatterFactory {
 
-    public static QueryResponseFormatter getSelectResponseSysOutFormatter(boolean distinct) {
-        return new SelectResponseSysOutFormatter(distinct);
+    public static QueryResponseFormatter getSelectResponseSysOutFormatter(String format, boolean distinct) {
+        return new SelectResponseSysOutFormatter(format, distinct);
     }
 
-    public static QueryResponseFormatter getConstructResponseSysOutFormatter(boolean distinct) {
-        return new ConstructResponseSysOutFormatter(distinct);
+    public static QueryResponseFormatter getConstructResponseSysOutFormatter(String format, boolean distinct) {
+        return new ConstructResponseSysOutFormatter(format, distinct);
     }
 
-    public static QueryResponseFormatter getGenericResponseSysOutFormatter(boolean distinct) {
-        return new GenericResponseSysOutFormatter(distinct, System.out);
+    public static QueryResponseFormatter getGenericResponseSysOutFormatter(String format, boolean distinct) {
+        return new GenericResponseSysOutFormatter(format, distinct, System.out);
     }
 }
