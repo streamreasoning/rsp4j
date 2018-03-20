@@ -117,3 +117,4 @@ WHERE {
 Robin: Can we somehow access the generation time reported in the original events? Since all streamed graphs are placed in the same
 default graph this does not seem feasible. Instead it would have to be included within each individual event.
 
+Robin: What will be the reports at `2018-01-01T01:00:09Z` through `2018-01-01T01:00:11Z`? Istream has been defined as (informally) "everything that was not in present in the previous evaluation", which should mean that the observation at `2018-01-01T01:08:00Z` will appear again in `2018-01-01T01:10:00Z`. Is this the correct interpretation? Otherwise, do we need to revisit the meaning of Istream?
