@@ -101,17 +101,17 @@ WHERE {
 ### Expected result
 | Timestamp            | Results       |
 | -------------------- |:-------------|
-| 2018-01-01T01:00:01Z | no result |
-| 2018-01-01T01:00:02Z | no result |
-| 2018-01-01T01:00:03Z | no result |
-| 2018-01-01T01:00:04Z | no result |
-| 2018-01-01T01:00:05Z | no result |
-| 2018-01-01T01:00:06Z | no result |
-| 2018-01-01T01:00:07Z | no result |
-| 2018-01-01T01:00:08Z | ```_:b1 prov:generatedAtTime "2018-01-01T01:08:00Z"^^xsd:dateTimeStamp . _:b1 { dbp:Berlin loc:hasPointTempC "9.0"^^xsd:decimal } ```|
-| 2018-01-01T01:00:09Z | no result |
-| 2018-01-01T01:00:10Z | ```_:b2 prov:generatedAtTime "2018-01-01T10:10:00Z"^^xsd:dateTimeStamp . _:b2 { dbp:Berlin loc:hasPointTempC "8.5"^^xsd:decimal } ``` |
-| 2018-01-01T01:00:11Z | no result |
+| <sub>2018-01-01T01:00:01Z</sub> | <sub>no result</sub> |
+| <sub>2018-01-01T01:00:02Z</sub> | <sub>no result</sub> |
+| <sub>2018-01-01T01:00:03Z</sub> | <sub>no result</sub> |
+| <sub>2018-01-01T01:00:04Z</sub> | <sub>no result</sub> |
+| <sub>2018-01-01T01:00:05Z</sub> | <sub>no result</sub> |
+| <sub>2018-01-01T01:00:06Z</sub> | <sub>no result</sub> |
+| <sub>2018-01-01T01:00:07Z</sub> | <sub>no result</sub> |
+| <sub>2018-01-01T01:00:08Z</sub> | ```_:b1 prov:generatedAtTime "2018-01-01T01:08:00Z"^^xsd:dateTimeStamp . _:b1 { dbp:Berlin loc:hasPointTempC "9.0"^^xsd:decimal } ```|
+| <sub>2018-01-01T01:00:09Z</sub> | <sub>no result</sub> |
+| <sub>2018-01-01T01:00:10Z</sub> | ```_:b2 prov:generatedAtTime "2018-01-01T10:10:00Z"^^xsd:dateTimeStamp . _:b2 { dbp:Berlin loc:hasPointTempC "8.5"^^xsd:decimal } ``` |
+| <sub>2018-01-01T01:00:11Z</sub> | <sub>no result</sub> |
 
 ### Discussion
 Robin: Can we somehow access the generation time reported in the original events? Since all streamed graphs are placed in the same
