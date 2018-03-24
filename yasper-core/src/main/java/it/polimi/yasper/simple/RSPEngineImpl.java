@@ -72,7 +72,7 @@ public class RSPEngineImpl implements RSPEngine<StreamElement> {
 
     @Override
     public ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c) {
-        SDSBuilder builder = new SDSBuilderImpl(rdf, registeredStreams, rsp_config, c, report, ReportGrain.SINGLE, Tick.TIME_DRIVEN);
+        SDSBuilder builder = new SDSBuilderImpl(rdf, registeredStreams, report, ReportGrain.SINGLE, Tick.TIME_DRIVEN);
         builder.visit(q);
         return builder.getContinuousQueryExecution();
     }

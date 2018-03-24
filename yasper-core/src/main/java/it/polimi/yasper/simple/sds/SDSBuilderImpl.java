@@ -31,10 +31,6 @@ public class SDSBuilderImpl implements SDSBuilder {
     @NonNull
     private Map<String, Stream> registeredStreams;
     @NonNull
-    private EngineConfiguration engine_config;
-    @NonNull
-    private QueryConfiguration query_config;
-    @NonNull
     private Report report;
     @NonNull
     private ReportGrain reportGrain;
