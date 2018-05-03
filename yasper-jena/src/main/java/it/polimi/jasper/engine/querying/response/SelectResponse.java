@@ -1,15 +1,11 @@
 package it.polimi.jasper.engine.querying.response;
 
-import it.polimi.jasper.engine.querying.RSPQuery;
 import it.polimi.jasper.engine.querying.execution.observer.TimeVaryingResultSetMem;
 import it.polimi.yasper.core.quering.ContinuousQuery;
 import it.polimi.yasper.core.quering.response.InstantaneousResponse;
 import lombok.Getter;
 import lombok.extern.java.Log;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.query.ResultSetFactory;
-import org.apache.jena.query.ResultSetRewindable;
+import org.apache.jena.query.*;
 import org.apache.jena.sparql.engine.binding.Binding;
 
 import java.util.ArrayList;
@@ -21,13 +17,15 @@ public final class SelectResponse extends InstantaneousResponse {
 
     private List<Binding> solutionSet;
     private ResultSet results;
+    protected final List<String> result_vars;
 
-    public SelectResponse(String id, ContinuousQuery query, ResultSet results, long cep_timestamp) {
+
+    public SelectResponse(String id, ContinuousQuery query, ResultSet results, List<String> resultVars, long cep_timestamp) {
         super(id, System.currentTimeMillis(), cep_timestamp, query);
         ResultSetRewindable resultSetRewindable = ResultSetFactory.copyResults(results);
         this.results = resultSetRewindable;
         this.solutionSet = getSolutionSet(resultSetRewindable);
-
+        this.result_vars = resultVars;
     }
 
     private String getData() {
@@ -54,7 +52,7 @@ public final class SelectResponse extends InstantaneousResponse {
     public InstantaneousResponse difference(InstantaneousResponse new_response) {
         TimeVaryingResultSetMem tvResultSet;
         if (new_response == null) {
-            tvResultSet = new TimeVaryingResultSetMem(new ArrayList<Binding>(), ((RSPQuery) getQuery()).getQ().getResultVars());
+            tvResultSet = new TimeVaryingResultSetMem(new ArrayList<>(), result_vars);
         } else {
 
             SelectResponse remove1 = (SelectResponse) new_response;
@@ -68,14 +66,14 @@ public final class SelectResponse extends InstantaneousResponse {
 
             tvResultSet = new TimeVaryingResultSetMem(this.solutionSet, this.getResults().getResultVars());
         }
-        return new SelectResponse(getId(), ((RSPQuery) getQuery()), tvResultSet, getCep_timestamp());
+        return new SelectResponse(getId(), getQuery(), tvResultSet, result_vars, getCep_timestamp());
     }
 
     @Override
     public InstantaneousResponse intersection(InstantaneousResponse new_response) {
         TimeVaryingResultSetMem tvResultSet;
         if (new_response == null) {
-            tvResultSet = new TimeVaryingResultSetMem(new ArrayList<Binding>(), ((RSPQuery) getQuery()).getQ().getResultVars());
+            tvResultSet = new TimeVaryingResultSetMem(new ArrayList<>(), result_vars);
         } else {
 
             SelectResponse remove1 = (SelectResponse) new_response;
@@ -90,10 +88,10 @@ public final class SelectResponse extends InstantaneousResponse {
 
             this.solutionSet.removeAll(copy);
 
-            tvResultSet = new TimeVaryingResultSetMem(this.solutionSet, ((RSPQuery) getQuery()).getQ().getResultVars());
+            tvResultSet = new TimeVaryingResultSetMem(this.solutionSet, result_vars);
         }
 
-        return new SelectResponse(getId(), (RSPQuery) getQuery(), tvResultSet, getCep_timestamp());
+        return new SelectResponse(getId(), getQuery(), tvResultSet, result_vars, getCep_timestamp());
 
     }
 

@@ -1,0 +1,54 @@
+select ?obId1 ?obId2 ?obId3 ?obId4 ?obId5 ?obId6 ?obId7 ?obId8 
+FROM   stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData182955> [range 3000ms step 1s] 
+FROM  stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData158505> [range 3000ms step 1s]
+FROM  stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData206502> [range 3000ms step 1s]
+FROM  stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData179093> [range 3000ms step 1s]
+FROM  stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData195843> [range 3000ms step 1s]
+FROM  stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData206237> [range 3000ms step 1s]
+FROM  stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData195204> [range 3000ms step 1s]
+FROM  stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData204300> [range 3000ms step 1s]
+ FROM <http://127.0.0.1:9000/WebGlCity/RDF/SensorRepository.rdf>  
+where {
+
+
+{
+?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p1.
+?obId1 <http://purl.oclc.org/NET/sao/hasValue> ?v1.
+?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData182955>.
+}
+{
+?obId2 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p2.
+?obId2 <http://purl.oclc.org/NET/sao/hasValue> ?v2.
+?obId2 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData158505>.
+}
+{
+?obId3 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p3.
+?obId3 <http://purl.oclc.org/NET/sao/hasValue> ?v3.
+?obId3 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData206502>.
+}
+{
+?obId4 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p4.
+?obId4 <http://purl.oclc.org/NET/sao/hasValue> ?v4.
+?obId4 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData179093>.
+}
+{
+?obId5 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p5.
+?obId5 <http://purl.oclc.org/NET/sao/hasValue> ?v5.
+?obId5 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData195843>.
+}
+{
+?obId6 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p6.
+?obId6 <http://purl.oclc.org/NET/sao/hasValue> ?v6.
+?obId6 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData206237>.
+}
+{
+?obId7 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p7.
+?obId7 <http://purl.oclc.org/NET/sao/hasValue> ?v7.
+?obId7 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData195204>.
+}
+{
+?obId8 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p8.
+?obId8 <http://purl.oclc.org/NET/sao/hasValue> ?v8.
+?obId8 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData204300>.
+}
+}

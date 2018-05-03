@@ -1,19 +1,18 @@
 package it.polimi.jasper.engine.querying.execution.observer;
 
-import it.polimi.jasper.engine.querying.RSPQuery;
 import it.polimi.jasper.engine.querying.execution.subscribers.ContinuouConstructSubscriber;
 import it.polimi.jasper.engine.querying.execution.subscribers.ContinuousSelectSubscriber;
 import it.polimi.jasper.engine.reasoning.GenericRuleJenaTVGReasoner;
-import it.polimi.yasper.core.quering.ContinuousQuery;
-import it.polimi.yasper.core.quering.operators.r2s.RelationToStreamOperator;
-import it.polimi.yasper.core.quering.SDS;
-import it.polimi.yasper.core.reasoning.Entailment;
 import it.polimi.yasper.core.enums.StreamOperator;
+import it.polimi.yasper.core.quering.ContinuousQuery;
+import it.polimi.yasper.core.quering.SDS;
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecutionObserver;
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecutionSubscriber;
 import it.polimi.yasper.core.quering.operators.r2s.Dstream;
 import it.polimi.yasper.core.quering.operators.r2s.Istream;
+import it.polimi.yasper.core.quering.operators.r2s.RelationToStreamOperator;
 import it.polimi.yasper.core.quering.operators.r2s.Rstream;
+import it.polimi.yasper.core.reasoning.Entailment;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
@@ -47,17 +46,17 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
         return cqe;
     }
 
-    static public ContinuousQueryExecutionSubscriber createSubscriber(RSPQuery query, SDS sds, TVGReasoner r) {
+    static public ContinuousQueryExecutionSubscriber createSubscriber(ContinuousQuery query, SDS sds, TVGReasoner r) {
         ContinuousQueryExecutionSubscriber cqe;
         StreamOperator r2S = query.getR2S() != null ? query.getR2S() : StreamOperator.RSTREAM;
         RelationToStreamOperator s2r = getToStreamOperator(r2S);
 
-        if (query.getQ().isSelectType()) {
+        if (query.isSelectType()) {
             cqe = new ContinuousSelectSubscriber(query, sds, r, s2r);
-        } else if (query.getQ().isConstructType()) {
+        } else if (query.isConstructType()) {
             cqe = new ContinuouConstructSubscriber(query, sds, r, s2r);
         } else {
-            throw new RuntimeException("Unsupported ContinuousQuery Type [" + query.getQ().getQueryType() + "]");
+            throw new RuntimeException("Unsupported ContinuousQuery Type [" + query.getQueryType() + "]");
         }
 
         return cqe;

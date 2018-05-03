@@ -20,7 +20,7 @@ public class TestConfig {
 
     static RSPEngineImpl sr;
 
-    public static void main(String[] args) throws InterruptedException, IOException, ConfigurationException {
+    public static void main(String[] args) throws ConfigurationException {
 
         URL resource = TestConfig.class.getResource("/default.properties");
         QueryConfiguration config = new QueryConfiguration(resource.getPath());
@@ -34,12 +34,11 @@ public class TestConfig {
 
         //_____
 
-
         ContinuousQuery q = new ContinuousQueryImpl();
 
         ContinuousQueryExecution cqe = sr.register(q, config);
 
-        cqe.addFormatter(new InstResponseSysOutFormatter());
+        cqe.addFormatter(new InstResponseSysOutFormatter("TTL", true));
 
         //In real application we do not have to start the stream.
 

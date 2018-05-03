@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class JenaContinuousQueryExecution extends ContinuousQueryExecutionObserver implements QueryExecution {
 
-    protected Query q;
+    protected final  Query q;
     protected InstantaneousResponse last_response = null;
     protected QueryExecution execution;
 

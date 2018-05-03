@@ -11,6 +11,10 @@ import java.util.Observable;
 
 public class InstResponseSysOutFormatter extends QueryResponseFormatter {
 
+    public InstResponseSysOutFormatter(String format, boolean distinct) {
+        super(format, distinct);
+    }
+
     @Override
     public void update(Observable o, Object arg) {
         SelectInstResponse sr = (SelectInstResponse) arg;

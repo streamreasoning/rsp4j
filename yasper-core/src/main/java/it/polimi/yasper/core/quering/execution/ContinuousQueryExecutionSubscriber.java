@@ -61,12 +61,6 @@ public abstract class ContinuousQueryExecutionSubscriber extends Observable impl
         return sds;
     }
 
-    public void addObservable(View item) {
-        //TODO item will be an extended statement and this is the actual execution
-        //need to remove Observer
-        item.observerOf(this);
-    }
-
     @Override
     public void update(Observable o, Object arg) {
         //TODO

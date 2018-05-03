@@ -1,7 +1,6 @@
 package it.polimi.jasper.engine.querying.syntax;
 
 import it.polimi.jasper.engine.spe.esper.EPLFactory;
-import it.polimi.jasper.parser.streams.WindowOperatorNode;
 import it.polimi.yasper.core.enums.WindowType;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.stream.Stream;

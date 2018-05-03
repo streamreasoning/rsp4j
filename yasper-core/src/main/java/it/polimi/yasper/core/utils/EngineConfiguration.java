@@ -121,4 +121,8 @@ public class EngineConfiguration extends PropertiesConfiguration {
 
         return report;
     }
+
+    public String getResponseFormat() {
+        return this.getString("rsp_engine.response_format");
+    }
 }

@@ -15,17 +15,16 @@ import java.util.Observable;
  * Created by riccardo on 03/07/2017.
  */
 
-@RequiredArgsConstructor
 public class GenericResponseSysOutFormatter extends QueryResponseFormatter {
 
     long last_result = -1L;
 
-    @NonNull
-    @Getter
-    boolean distinct;
+    private final OutputStream os;
 
-    @NonNull
-    private OutputStream os;
+    public GenericResponseSysOutFormatter(String format, boolean distinct, OutputStream os) {
+        super(format, distinct);
+        this.os = os;
+    }
 
     @Override
     public void update(Observable o, Object arg) {
@@ -40,7 +39,7 @@ public class GenericResponseSysOutFormatter extends QueryResponseFormatter {
             ConstructResponse sr = (ConstructResponse) arg;
 
             if (sr.getCep_timestamp() != last_result && distinct) {
-                sr.getResults().write(os, "TTL");
+                sr.getResults().write(os, format);
                 last_result = sr.getCep_timestamp();
             }
         }

@@ -1,6 +1,5 @@
 package it.polimi.jasper.engine.querying.response;
 
-import it.polimi.jasper.engine.querying.RSPQuery;
 import it.polimi.yasper.core.quering.ContinuousQuery;
 import it.polimi.yasper.core.quering.response.InstantaneousResponse;
 import lombok.Getter;
@@ -9,6 +8,8 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
+
+import java.util.List;
 
 
 @Getter
@@ -36,8 +37,8 @@ public final class ConstructResponse extends InstantaneousResponse {
     }
 
     @Override
-    public InstantaneousResponse difference(InstantaneousResponse r) {
-        return new ConstructResponse(getId(), (RSPQuery) getQuery(), results.difference(((ConstructResponse) r).getResults()), getCep_timestamp());
+    public ConstructResponse difference(InstantaneousResponse r) {
+        return new ConstructResponse(getId(), getQuery(), results.difference(((ConstructResponse) r).getResults()), getCep_timestamp());
     }
 
     @Override
@@ -50,6 +51,6 @@ public final class ConstructResponse extends InstantaneousResponse {
             i = this.results.intersection(r);
             i = r.difference(i);
         }
-        return new ConstructResponse(getId(), (RSPQuery) getQuery(), i, getCep_timestamp());
+        return new ConstructResponse(getId(), getQuery(), i, getCep_timestamp());
     }
 }

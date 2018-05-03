@@ -1,0 +1,22 @@
+
+select ?obId1 ?obId2 ?lat1 ?lon1 ?v1 ?v2
+
+where {
+?p1   a <http://www.insight-centre.org/citytraffic#API>.
+?p1 <http://purl.oclc.org/NET/ssnx/ssn#isPropertyOf> ?foi1.
+?foi1 <http://www.insight-centre.org/citytraffic#hasStartLatitude> ?lat1.
+?foi1 <http://www.insight-centre.org/citytraffic#hasStartLongitude> ?lon1.
+?p2 a <http://www.insight-centre.org/citytraffic#Temperature>.
+
+stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData201399> [range 20s slide 1s] 
+{?obId1 a ?ob.
+?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p1.
+?obId1 <http://purl.oclc.org/NET/sao/hasValue> ?v1.
+?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusPollutionData201399>.
+}
+ stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusWeatherData0> [range 3000ms slide 1s] 
+{?obId2 a ?ob.
+?obId2 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p2.
+?obId2 <http://purl.oclc.org/NET/sao/hasValue> ?v2.
+?obId2 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusWeatherData0>.
+}}
