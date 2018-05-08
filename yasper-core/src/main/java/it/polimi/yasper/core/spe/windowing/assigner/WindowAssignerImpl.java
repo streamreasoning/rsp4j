@@ -24,6 +24,7 @@ import org.apache.commons.rdf.api.RDF;
 import java.util.*;
 import java.util.stream.Collectors;
 
+//TODO rename as C-SPARQL window operator
 @Log4j
 public class WindowAssignerImpl extends Observable implements WindowAssigner<Graph>, Observer {
 
