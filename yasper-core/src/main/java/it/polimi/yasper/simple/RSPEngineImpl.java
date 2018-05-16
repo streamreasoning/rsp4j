@@ -78,11 +78,6 @@ public class RSPEngineImpl implements RSPEngine<StreamElement> {
     }
 
     @Override
-    public ContinuousQueryExecution register(String q, QueryConfiguration c) {
-        return null;
-    }
-
-    @Override
     public void unregister(ContinuousQuery qId) {
 
     }
@@ -93,22 +88,17 @@ public class RSPEngineImpl implements RSPEngine<StreamElement> {
     }
 
     @Override
-    public void unregister(ContinuousQuery q, QueryResponseFormatter o) {
-
-    }
-
-    @Override
     public void register(ContinuousQueryExecution cqe, QueryResponseFormatter o) {
-
-    }
-
-    @Override
-    public void unregister(ContinuousQueryExecution cqe, QueryResponseFormatter o) {
 
     }
 
     @Override
     public boolean process(StreamElement var1) {
         return false;
+    }
+
+    @Override
+    public void removeQueryResponseFormatter(QueryResponseFormatter o) {
+
     }
 }

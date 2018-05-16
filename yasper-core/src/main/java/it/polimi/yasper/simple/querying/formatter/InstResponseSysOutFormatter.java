@@ -17,6 +17,7 @@ public class InstResponseSysOutFormatter extends QueryResponseFormatter {
 
     @Override
     public void update(Observable o, Object arg) {
+        super.update(o, arg);
         SelectInstResponse sr = (SelectInstResponse) arg;
         System.err.println("[" + sr.getTriples() + "] Result");
 
