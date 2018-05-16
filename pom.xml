@@ -21,7 +21,6 @@
     <modules>
         <module>yasper-core</module>
         <module>yasper-jena</module>
-        <module>yaspercsparql</module>
     </modules>
 
 
