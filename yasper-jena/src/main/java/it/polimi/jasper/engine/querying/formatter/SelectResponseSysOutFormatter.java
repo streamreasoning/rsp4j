@@ -20,6 +20,7 @@ public class SelectResponseSysOutFormatter extends QueryResponseFormatter {
 
     @Override
     public void update(Observable o, Object arg) {
+        super.update(o, arg);
         SelectResponse sr = (SelectResponse) arg;
         if (sr.getCep_timestamp() != last_result && distinct) {
             System.out.println("[" + System.currentTimeMillis() + "] Result at [" + last_result + "]");

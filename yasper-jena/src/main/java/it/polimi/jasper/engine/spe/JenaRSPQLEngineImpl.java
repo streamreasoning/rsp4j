@@ -72,11 +72,6 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl {
     }
 
     @Override
-    public ContinuousQueryExecution register(String q, QueryConfiguration c) {
-        return register(parseQuery(q), c);
-    }
-
-    @Override
     public ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c) {
         SDSBuilder builder = new JasperSDSBuilder(registeredStreams, entailments, rsp_config, c, resolver);
         builder.visit(q);
@@ -125,18 +120,6 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl {
         }
     }
 
-    @Override
-    public void unregister(ContinuousQuery q, QueryResponseFormatter o) {
-        String qId = q.getID();
-        log.info("Unregistering Observer [" + o.getClass() + "] from Query [" + qId + "]");
-        if (queryExecutions.containsKey(qId)) {
-            queryExecutions.get(qId).addFormatter(o);
-            if (queryObservers.containsKey(qId)) {
-                queryObservers.get(qId).remove(o);
-            }
-        }
-        throw new UnregisteredQueryExeception(qId);
-    }
 
     @Override
     public void register(ContinuousQueryExecution ceq, QueryResponseFormatter o) {
@@ -160,7 +143,8 @@ public class JenaRSPQLEngineImpl extends RSPQLEngineImpl {
     }
 
     @Override
-    public void unregister(ContinuousQueryExecution cqe, QueryResponseFormatter o) {
+    public void removeQueryResponseFormatter(QueryResponseFormatter o) {
+        ContinuousQueryExecution cqe = o.getCqe();
         cqe.deleteFormatter(o);
         if (queryObservers.containsKey(cqe.getQueryID())) {
             queryObservers.get(cqe.getQueryID()).remove(o);

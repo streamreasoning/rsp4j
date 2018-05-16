@@ -28,6 +28,7 @@ public class GenericResponseSysOutFormatter extends QueryResponseFormatter {
 
     @Override
     public void update(Observable o, Object arg) {
+        super.update(o, arg);
         if (arg instanceof SelectResponse) {
             SelectResponse sr = (SelectResponse) arg;
             if (sr.getCep_timestamp() != last_result && distinct) {

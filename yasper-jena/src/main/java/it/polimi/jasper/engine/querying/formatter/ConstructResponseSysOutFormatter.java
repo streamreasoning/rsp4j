@@ -4,7 +4,6 @@ import it.polimi.jasper.engine.querying.response.ConstructResponse;
 import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 import java.util.Observable;
 
@@ -26,12 +25,12 @@ public class ConstructResponseSysOutFormatter extends QueryResponseFormatter {
 
     @Override
     public void update(Observable o, Object arg) {
+        super.update(o, arg);
         ConstructResponse sr = (ConstructResponse) arg;
         if (sr.getCep_timestamp() != last_result && distinct) {
             last_result = sr.getCep_timestamp();
             System.out.println("[" + last_result + "] Result");
             sr.getResults().write(System.out, format);
         }
-
     }
 }
