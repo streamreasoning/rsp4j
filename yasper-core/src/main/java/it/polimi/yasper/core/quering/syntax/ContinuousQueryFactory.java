@@ -30,7 +30,7 @@ public class ContinuousQueryFactory {
         parser.setErrorHandler(new BailErrorStrategy());
         ParseTree tree = parser.queryUnit();
         ContinuousQuery query = null; //new RSPQLQueryImpl();
-        //RSPQLJenaVisitor visitor = new RSPQLJenaVisitor(query);
+        //RSPQLSimpleVisitor visitor = new RSPQLSimpleVisitor(query);
         //visitor.visit(tree);
         return query;
     }

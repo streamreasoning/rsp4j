@@ -1,10 +1,13 @@
-// Generated from RSPQL.g4 by ANTLR 4.7
+// Generated from /Users/riccardo/_Projects/RSP/yasper/yasper-core/src/main/java/it/polimi/yasper/core/quering/syntax/RSPQL.g4 by ANTLR 4.7
 package it.polimi.yasper.core.quering.syntax;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
 import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class RSPQLParser extends Parser {
@@ -100,7 +103,7 @@ public class RSPQLParser extends Parser {
 		"graphRef", "quadPattern", "quads", "quadsNotTriples", "triplesTemplate", 
 		"groupGraphPattern", "groupGraphPatternSub", "triplesBlock", "graphPatternNotTriples", 
 		"optionalGraphPattern", "graphGraphPattern", "windowGraphPattern", "serviceGraphPattern", 
-		"bindTVG", "inlineData", "dataBlock", "inlineDataOneVar", "inlineDataFull",
+		"bind", "inlineData", "dataBlock", "inlineDataOneVar", "inlineDataFull", 
 		"dataBlockValues", "dataBlockValue", "undef", "minusGraphPattern", "groupOrUnionGraphPattern", 
 		"filter", "constraint", "functionCall", "argList", "expressionList", "constructTemplate", 
 		"constructTriples", "triplesSameSubject", "propertyListNotEmpty", "propertyList", 

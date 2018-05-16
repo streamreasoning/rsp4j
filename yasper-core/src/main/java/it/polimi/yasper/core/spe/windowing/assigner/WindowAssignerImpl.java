@@ -1,6 +1,6 @@
 package it.polimi.yasper.core.spe.windowing.assigner;
 
-import it.polimi.yasper.simple.windowing.TimeVaryingGraph;
+import it.polimi.yasper.core.quering.TimeVaryingGraph;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.ContentGraph;
 import it.polimi.yasper.core.spe.content.EmptyContent;

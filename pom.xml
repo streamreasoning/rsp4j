@@ -20,7 +20,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>yasper-core</module>
-        <module>yasper-jena</module>
+        <module>yasper-simple</module>
     </modules>
 
 

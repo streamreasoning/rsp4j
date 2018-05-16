@@ -1,4 +1,4 @@
-// Generated from RSPQL.g4 by ANTLR 4.7
+// Generated from /Users/riccardo/_Projects/RSP/yasper/yasper-core/src/main/java/it/polimi/yasper/core/quering/syntax/RSPQL.g4 by ANTLR 4.7
 package it.polimi.yasper.core.quering.syntax;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
