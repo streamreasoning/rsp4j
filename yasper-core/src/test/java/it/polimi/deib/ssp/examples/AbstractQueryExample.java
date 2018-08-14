@@ -1,5 +1,7 @@
-package it.polimi.deib.ssp.windowing;
+package it.polimi.deib.ssp.examples;
 
+import it.polimi.deib.ssp.utils.StreamViewImpl;
+import it.polimi.deib.ssp.utils.WritableStream;
 import it.polimi.yasper.core.quering.TimeVarying;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
@@ -12,7 +14,7 @@ import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import it.polimi.yasper.core.utils.RDFUtils;
 import org.apache.commons.rdf.api.Graph;
 
-public class MainWritable {
+public class AbstractQueryExample {
 
 
     public static void main(String[] str) {
@@ -62,7 +64,7 @@ public class MainWritable {
         graph = RDFUtils.getInstance().createGraph();
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S2"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O2")));
 
-        stream.put(new WritableStream.Elem(1999, graph));
+        stream.put(new WritableStream.Elem(1000, graph));
 
         graph = RDFUtils.getInstance().createGraph();
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S3"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O3")));
@@ -89,7 +91,7 @@ public class MainWritable {
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S7"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O7")));
 
         stream.put(new WritableStream.Elem(7000, graph));
-        //stream.put(new it.polimi.deib.ssp.windowing.WritableStream.Elem(3000, graph));
+        //stream.put(new WritableStream.Elem(3000, graph));
 
 
     }

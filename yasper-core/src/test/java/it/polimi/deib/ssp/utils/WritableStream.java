@@ -1,4 +1,4 @@
-package it.polimi.deib.ssp.windowing;
+package it.polimi.deib.ssp.utils;
 
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.stream.Stream;

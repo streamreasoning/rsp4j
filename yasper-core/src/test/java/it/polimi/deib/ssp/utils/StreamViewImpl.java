@@ -1,7 +1,8 @@
-package it.polimi.deib.ssp.windowing;
+package it.polimi.deib.ssp.utils;
 
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.viewer.View;
+import it.polimi.yasper.core.spe.windowing.assigner.ObservableWindowAssigner;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.spe.windowing.assigner.CSPARQLWindowAssigner;
 
@@ -14,7 +15,7 @@ public class StreamViewImpl extends Observable implements View, Observer {
 
     @Override
     public void observerOf(Object observer) {
-        ((CSPARQLWindowAssigner) observer).addObserver(this);
+        ((ObservableWindowAssigner) observer).addObserver(this);
     }
 
     @Override
