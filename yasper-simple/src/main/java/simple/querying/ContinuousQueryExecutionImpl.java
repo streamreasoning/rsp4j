@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ContinuousQueryExecutionImpl extends Observable implements Observer, ContinuousQueryExecution {
 
-    private final RDF rdf;
     private final IRI id;
     private final Dataset ds;
     private final SDS sds;

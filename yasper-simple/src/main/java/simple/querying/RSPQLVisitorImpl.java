@@ -607,7 +607,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
     }
 
     /**
-     * Visit RDF literal.
+     * Visit RDFUtils literal.
      * @param ctx
      * @return
      */

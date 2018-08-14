@@ -19,6 +19,7 @@ package simple.sds;
 
 import it.polimi.yasper.core.quering.SDS;
 import it.polimi.yasper.core.quering.TimeVarying;
+import it.polimi.yasper.core.utils.RDFUtils;
 import lombok.AllArgsConstructor;
 import org.apache.commons.rdf.api.*;
 import org.apache.commons.rdf.simple.DatasetGraphView;
@@ -35,18 +36,16 @@ import java.util.stream.Stream;
  * <p>
  * All Stream operations are performed using parallel and unordered directives.
  */
-final public class SDSImpl implements Dataset, SDS<Graph> {
+final public class SDSImpl implements Dataset, SDS {
 
     private static final int TO_STRING_MAX = 10;
     private final Set<Quad> quads = new HashSet<>();
     private final Set<TimeVarying<Graph>> defs = new HashSet<>();
     private final Map<IRI, TimeVarying<Graph>> tvgs = new HashMap<>();
-    private final RDF factory;
     private final IRI def;
 
-    public SDSImpl(RDF rdf) {
-        this.factory = rdf;
-        this.def = factory.createIRI("def");
+    public SDSImpl() {
+        this.def = RDFUtils.createIRI("def");
     }
 
     @Override
@@ -55,7 +54,7 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
         final BlankNodeOrIRI newSubject = (BlankNodeOrIRI) internallyMap(subject);
         final IRI newPredicate = (IRI) internallyMap(predicate);
         final RDFTerm newObject = internallyMap(object);
-        final Quad result = factory.createQuad(newGraphName, newSubject, newPredicate, newObject);
+        final Quad result = RDFUtils.createQuad(newGraphName, newSubject, newPredicate, newObject);
         quads.add(result);
     }
 
@@ -72,7 +71,7 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
             quads.add(quad);
         } else {
             // Make a new Quad with our mapped instances
-            final Quad result = factory.createQuad(newGraph, newSubject, newPredicate, newObject);
+            final Quad result = RDFUtils.createQuad(newGraph, newSubject, newPredicate, newObject);
             quads.add(result);
         }
     }
@@ -86,16 +85,16 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
             // this graph will generate a local object that is mapped to an
             // equivalent object, based on the code in the package private
             // BlankNodeImpl class
-            return factory.createBlankNode(blankNode.uniqueReference());
+            return RDFUtils.createBlankNode(blankNode.uniqueReference());
         } else if (object instanceof IRI) {
             final IRI iri = (IRI) object;
-            return factory.createIRI(iri.getIRIString());
+            return RDFUtils.createIRI(iri.getIRIString());
         } else if (object instanceof Literal) {
             final Literal literal = (Literal) object;
             if (literal.getLanguageTag().isPresent()) {
-                return factory.createLiteral(literal.getLexicalForm(), literal.getLanguageTag().get());
+                return RDFUtils.createLiteral(literal.getLexicalForm(), literal.getLanguageTag().get());
             }
-            return factory.createLiteral(literal.getLexicalForm(), (IRI) internallyMap(literal.getDatatype()));
+            return RDFUtils.createLiteral(literal.getLexicalForm(), (IRI) internallyMap(literal.getDatatype()));
         } else {
             throw new IllegalArgumentException("Not a BlankNode, IRI or Literal: " + object);
         }
@@ -230,6 +229,9 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
         //TODO here applies the consolidation strategies
         //Default consolidation coaleces all the current
         //content graphs and produces the SDS to who execute the query.
+
+        this.clear();
+
         defs.stream().map(g -> g.eval(ts))
                 .flatMap(Graph::stream)
                 .forEach(t -> this.add(def, t.getSubject(), t.getPredicate(), t.getObject()));
