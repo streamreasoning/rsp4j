@@ -1,17 +1,10 @@
 package it.polimi.yasper.core.spe.windowing.assigner;
 
-import it.polimi.yasper.core.quering.TimeVaryingGraph;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.ContentGraph;
 import it.polimi.yasper.core.spe.content.EmptyContent;
-import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.spe.exceptions.OutOfOrderElementException;
-import it.polimi.yasper.core.spe.report.Report;
-import it.polimi.yasper.core.spe.report.ReportGrain;
-import it.polimi.yasper.core.spe.scope.Tick;
-import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.time.TimeFactory;
-import it.polimi.yasper.core.spe.time.TimeInstant;
 import it.polimi.yasper.core.spe.windowing.definition.Window;
 import it.polimi.yasper.core.spe.windowing.definition.WindowImpl;
 import it.polimi.yasper.core.stream.StreamElement;
@@ -23,24 +16,18 @@ import java.util.stream.Collectors;
 
 //TODO rename as C-SPARQL window operator
 @Log4j
-public class CSPARQLWindowAssigner extends Observable implements WindowAssigner, Observer {
+public class CSPARQLWindowAssigner extends ObservableWindowAssigner implements Observer {
 
     private final long a, b;
-    private final Time time;
     private final long t0;
-    private final IRI iri;
 
     private Map<Window, Content> active_windows;
     private Set<Window> to_evict;
-    private Tick tick;
-    private ReportGrain aw;
-    private Report report;
     private long tc0;
     private long toi;
 
-
     public CSPARQLWindowAssigner(IRI iri, long a, long b, long t0, long tc0) {
-        this.iri = iri;
+        super(TimeFactory.getInstance(), iri);
         this.a = a;
         this.b = b;
         this.t0 = t0;
@@ -48,18 +35,6 @@ public class CSPARQLWindowAssigner extends Observable implements WindowAssigner,
         this.toi = 0;
         this.active_windows = new HashMap<>();
         this.to_evict = new HashSet<>();
-        this.time = TimeFactory.getInstance();
-    }
-
-
-    @Override
-    public Report getReport() {
-        return report;
-    }
-
-    @Override
-    public Tick getTick() {
-        return tick;
     }
 
     @Override
@@ -82,37 +57,11 @@ public class CSPARQLWindowAssigner extends Observable implements WindowAssigner,
     }
 
     @Override
-    public void setReport(Report report) {
-        this.report = report;
-    }
-
-    public void setTick(Tick t) {
-        this.tick = t;
-    }
-
-    @Override
-    public TimeVaryingGraph setView(View view) {
-        view.observerOf(this);
-        return new TimeVaryingGraph(this, iri);
-    }
-
-    @Override
-    public void setReportGrain(ReportGrain aw) {
-        this.aw = aw;
-    }
-
-    @Override
-    public void notify(StreamElement arg) {
-        windowing(arg);
-    }
-
-
-    @Override
     public void update(Observable o, Object arg) {
         windowing((StreamElement) arg);
     }
 
-    private void windowing(StreamElement e) {
+    protected void windowing(StreamElement e) {
         log.debug("Received element (" + e.getContent() + "," + e.getTimestamp() + ")");
         long t_e = e.getTimestamp();
 
@@ -185,52 +134,10 @@ public class CSPARQLWindowAssigner extends Observable implements WindowAssigner,
         to_evict.add(w);
     }
 
-    /**
-     * The Tick dimension in our model defines the condition which drives an SPE
-     * to take action on its input (also referred to as “window state change” or “window re-evaluation” [13]).
-     * Like Report, Tick is also part of a system’s inter- nal execution model.
-     * While some systems react to individual tuples as they arrive, others collectively
-     * react to all or subsets of tuples with the same tapp value.
-     * During our analysis, we have identified three main ways that di↵erent systems “tick”:
-     * (a) tuple-driven, where each tuple arrival causes a system to react;
-     * (b) time-driven, where the progress of tapp causes a system to react;
-     * (c) batch-driven, where either a new batch arrival or the progress of tapp causes a system to react.
-     **/
 
-    private Content tick(long t_e, Window w) {
-        TimeFactory.getEvaluationTimeInstants().add(new TimeInstant(t_e));
-        Content c = null;
-        switch (tick) {
-            case TIME_DRIVEN:
-                if (t_e > time.getAppTime()) {
-                    c = compute(t_e, w);
-                }
-                break;
-            case TUPLE_DRIVEN:
-                c = compute(t_e, w);
-                break;
-            case BATCH_DRIVEN:
-            default:
-                c = compute(t_e, w);
-                break;
-        }
-
-        return setVisible(t_e, w, c);
-
-    }
-
-    private Content compute(long t_e, Window w) {
+    protected Content compute(long t_e, Window w) {
         Content content = active_windows.containsKey(w) ? active_windows.get(w) : new EmptyContent();
         time.setAppTime(t_e);
         return content;
-    }
-
-    private Content setVisible(long t_e, Window w, Content c) {
-        //TODO the reporting makes the content visible
-        // but the execution of the query is not
-        log.debug("Report [" + w.getO() + "," + w.getC() + ") with Content " + c + "");
-        setChanged();
-        notifyObservers(t_e);
-        return c;
     }
 }

@@ -13,15 +13,10 @@ import java.util.Map;
  * for t only if the content at t is not empty.
  **/
 public class NonEmptyContent implements ReportingStrategy {
-    private Map<Window, Content> active_windows = new HashMap<>();
 
     @Override
     public boolean match(Window w, Content c, long tapp, long tsys) {
         return c.size() > 0 || (c instanceof EmptyContent);
     }
 
-    @Override
-    public void setActiveWindows(Map<Window, Content> active_windows) {
-        this.active_windows = active_windows;
-    }
 }

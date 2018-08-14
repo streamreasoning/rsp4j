@@ -1,6 +1,7 @@
 package it.polimi.yasper.core.spe.content;
 
 import it.polimi.yasper.core.stream.StreamElement;
+import it.polimi.yasper.core.utils.RDFUtils;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.RDF;
 import org.apache.commons.rdf.api.Triple;
@@ -9,9 +10,9 @@ import org.apache.commons.rdf.simple.SimpleRDF;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class ContentGraph implements Content {
-    private static final RDF rdf = new SimpleRDF();
     private List<Graph> elements;
     private long last_timestamp_changed;
 
@@ -33,7 +34,7 @@ public class ContentGraph implements Content {
         Object content = e.getContent();
         Graph graph;
         if (content instanceof Triple) {
-            graph = rdf.createGraph();
+            graph = RDFUtils.createGraph();
             graph.add((Triple) content);
 
         } else {
@@ -61,7 +62,7 @@ public class ContentGraph implements Content {
         if (elements.size() == 1)
             return elements.get(0);
         else {
-            Graph g = rdf.createGraph();
+            Graph g = RDFUtils.createGraph();
             elements.stream().flatMap(Graph::stream).forEach(g::add);
             return g;
         }
@@ -69,5 +70,19 @@ public class ContentGraph implements Content {
 
     public ContentGraph coaleseContent() {
         return new ContentGraph(coalese());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ContentGraph that = (ContentGraph) o;
+        return last_timestamp_changed == that.last_timestamp_changed &&
+                Objects.equals(elements, that.elements);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(elements, last_timestamp_changed);
     }
 }
