@@ -21,7 +21,7 @@ public interface ContinuousQuery {
 
     // Subset of methods
 
-    void addNamedWindow(Object windowUri, Object streamUri, Duration range, Duration step);
+    void addNamedWindow(String windowUri, Object streamUri, Duration range, Duration step);
 
     void setIstream();
     void setRstream();

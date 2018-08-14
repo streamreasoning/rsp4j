@@ -1,24 +1,22 @@
 package it.polimi.yasper.core.quering;
 
 import it.polimi.yasper.core.exceptions.UnsupportedContentFormatException;
-import it.polimi.yasper.core.quering.TimeVarying;
 import it.polimi.yasper.core.spe.content.*;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
+import it.polimi.yasper.core.utils.RDFUtils;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
-import org.apache.commons.rdf.api.RDF;
 
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class TimeVaryingGraph implements TimeVarying<Graph> {
 
     @NonNull
-    private final IRI name;
-    @NonNull
-    private final RDF rdf;
-    @NonNull
     private final WindowAssigner wa;
+    private IRI name;
 
     /**
      * The setTimestamp function merges the element
@@ -36,7 +34,7 @@ public class TimeVaryingGraph implements TimeVarying<Graph> {
         } else if (content instanceof ContentQuad) {
             return ((ContentQuad) content).coalese();
         } else if (content instanceof EmptyContent) {
-            return rdf.createGraph();
+            return RDFUtils.createGraph();
         } else {
             throw new UnsupportedContentFormatException();
         }
@@ -44,6 +42,11 @@ public class TimeVaryingGraph implements TimeVarying<Graph> {
 
     @Override
     public Graph asT() {
-        return rdf.createGraph();
+        return RDFUtils.createGraph();
+    }
+
+    @Override
+    public boolean isNamed() {
+        return name != null;
     }
 }

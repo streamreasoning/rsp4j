@@ -6,4 +6,5 @@ public interface TimeVarying<T> {
 
     T asT();
 
+    boolean isNamed();
 }

@@ -1,17 +1,10 @@
 package it.polimi.yasper.core.quering;
 
 import it.polimi.yasper.core.enums.StreamOperator;
-import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
-import it.polimi.yasper.core.stream.Stream;
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.rdf.api.RDF;
 import org.apache.commons.rdf.simple.SimpleRDF;
 
-import java.time.Duration;
-import java.util.List;
-import java.util.Map;
-
-public class AbstractContinuousQuery implements ContinuousQuery {
+public abstract class AbstractContinuousQuery implements ContinuousQuery {
     private RDF rdf = new SimpleRDF();
     private int queryType;
     private String outputStreamIri;
@@ -68,6 +61,19 @@ public class AbstractContinuousQuery implements ContinuousQuery {
     }
 
     @Override
+    public StreamOperator getR2S() {
+        switch (outputStreamType) {
+            case ISTREAM:
+                return StreamOperator.ISTREAM;
+            case DSTREAM:
+                return StreamOperator.DSTREAM;
+            case RSTREAM:
+            default:
+                return StreamOperator.RSTREAM;
+        }
+    }
+
+    @Override
     public void setOutputStream(String iri) {
         outputStreamIri = iri;
     }
@@ -77,49 +83,4 @@ public class AbstractContinuousQuery implements ContinuousQuery {
         return outputStreamIri;
     }
 
-
-    @Override
-    public void addNamedWindow(Object windowUri, Object streamUri, Duration range, Duration step) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public String getID() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public StreamOperator getR2S() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public boolean isRecursive() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public Map<? extends WindowOperator, Stream> getWindowMap() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public List<String> getGraphURIs() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public List<String> getNamedwindowsURIs() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public List<String> getNamedGraphURIs() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public String getSPARQL() {
-        throw new NotImplementedException();
-    }
 }
