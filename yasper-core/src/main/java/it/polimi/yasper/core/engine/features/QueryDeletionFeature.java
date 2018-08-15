@@ -1,6 +1,6 @@
 package it.polimi.yasper.core.engine.features;
 
-import it.polimi.yasper.core.quering.ContinuousQuery;
+import it.polimi.yasper.core.quering.querying.ContinuousQuery;
 
 public interface QueryDeletionFeature {
 

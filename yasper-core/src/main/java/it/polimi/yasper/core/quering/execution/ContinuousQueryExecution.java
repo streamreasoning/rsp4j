@@ -2,9 +2,8 @@ package it.polimi.yasper.core.quering.execution;
 
 import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.quering.response.InstantaneousResponse;
-import it.polimi.yasper.core.quering.ContinuousQuery;
-import it.polimi.yasper.core.quering.SDS;
-import it.polimi.yasper.core.spe.content.viewer.View;
+import it.polimi.yasper.core.quering.querying.ContinuousQuery;
+import it.polimi.yasper.core.quering.rspql.sds.SDS;
 
 import java.util.Observer;
 

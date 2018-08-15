@@ -1,6 +1,6 @@
 package it.polimi.yasper.core.quering.response;
 
-import it.polimi.yasper.core.quering.ContinuousQuery;
+import it.polimi.yasper.core.quering.querying.ContinuousQuery;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

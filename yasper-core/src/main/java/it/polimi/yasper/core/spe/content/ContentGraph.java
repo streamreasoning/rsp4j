@@ -3,25 +3,19 @@ package it.polimi.yasper.core.spe.content;
 import it.polimi.yasper.core.stream.StreamElement;
 import it.polimi.yasper.core.utils.RDFUtils;
 import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.api.RDF;
 import org.apache.commons.rdf.api.Triple;
-import org.apache.commons.rdf.simple.SimpleRDF;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class ContentGraph implements Content {
+public class ContentGraph implements Content<Graph> {
     private List<Graph> elements;
     private long last_timestamp_changed;
 
     public ContentGraph() {
         this.elements = new ArrayList<>();
-    }
-
-    public ContentGraph(Graph g) {
-        this.elements = Collections.singletonList(g);
     }
 
     @Override
@@ -58,7 +52,7 @@ public class ContentGraph implements Content {
 
 
     @Override
-    public Graph coalese() {
+    public Graph coalesce() {
         if (elements.size() == 1)
             return elements.get(0);
         else {
@@ -66,10 +60,6 @@ public class ContentGraph implements Content {
             elements.stream().flatMap(Graph::stream).forEach(g::add);
             return g;
         }
-    }
-
-    public ContentGraph coaleseContent() {
-        return new ContentGraph(coalese());
     }
 
     @Override

@@ -2,7 +2,7 @@ package it.polimi.deib.ssp.examples;
 
 import it.polimi.deib.ssp.utils.StreamViewImpl;
 import it.polimi.deib.ssp.utils.WritableStream;
-import it.polimi.yasper.core.quering.TimeVarying;
+import it.polimi.yasper.core.quering.rspql.tvg.TimeVarying;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
@@ -41,15 +41,17 @@ public class AbstractQueryExample {
 
         //ENGINE INTERNALS - HOW THE REPORTING POLICY, TICK AND REPORT GRAIN INFLUENCE THE RUNTIME
         WindowAssigner windowAssigner = windowOperator.apply(stream);
-        windowAssigner.setReport(report);
-        windowAssigner.setTick(tick);
-        windowAssigner.setReportGrain(report_grain);
+        windowAssigner.report(report);
+        windowAssigner.tick(tick);
+        windowAssigner.report_grain(report_grain);
 
         StreamViewImpl v = new StreamViewImpl();
-        TimeVarying timeVarying = windowAssigner.setView(v);
+
+        TimeVarying timeVarying = windowAssigner.set(v);
+
         v.addObserver((o, arg) -> {
             Long arg1 = (Long) arg;
-            Graph g = (Graph) timeVarying.eval(arg1);
+            Graph g = timeVarying.materialize(arg1);
             System.err.println(arg1);
             System.err.println(g);
         });

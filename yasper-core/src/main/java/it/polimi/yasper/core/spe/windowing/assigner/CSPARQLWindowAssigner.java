@@ -27,7 +27,7 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner implements O
     private long toi;
 
     public CSPARQLWindowAssigner(IRI iri, long a, long b, long t0, long tc0) {
-        super(TimeFactory.getInstance(), iri);
+        super(iri, TimeFactory.getInstance());
         this.a = a;
         this.b = b;
         this.t0 = t0;
@@ -140,4 +140,5 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner implements O
         time.setAppTime(t_e);
         return content;
     }
+
 }

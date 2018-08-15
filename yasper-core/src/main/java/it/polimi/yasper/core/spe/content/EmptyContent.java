@@ -23,7 +23,7 @@ public class EmptyContent implements Content {
     }
 
     @Override
-    public Graph coalese() {
+    public Graph coalesce() {
         return null;
     }
 }

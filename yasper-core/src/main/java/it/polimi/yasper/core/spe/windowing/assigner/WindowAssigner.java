@@ -1,33 +1,37 @@
 package it.polimi.yasper.core.spe.windowing.assigner;
 
 
-import it.polimi.yasper.core.quering.TimeVarying;
+import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.quering.rspql.tvg.TimeVarying;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.scope.Tick;
 import it.polimi.yasper.core.stream.StreamElement;
+import it.polimi.yasper.core.stream.rdf.Named;
 
 import java.util.List;
 
-public interface WindowAssigner {
+public interface WindowAssigner extends Named{
 
-    Report getReport();
+    Report report();
 
-    Tick getTick();
+    Tick tick();
 
-    Content getContent(long now);
+    <T> Content<T> getContent(long now);
 
     List<Content> getContents(long now);
 
-    void setReport(Report report);
+    void report(Report report);
 
-    void setTick(Tick timeDriven);
+    void tick(Tick timeDriven);
 
-    <T> TimeVarying<T> setView(View content);
+    TimeVarying set(View content);
 
-    void setReportGrain(ReportGrain aw);
+    TimeVarying set(ContinuousQueryExecution content);
+
+    void report_grain(ReportGrain aw);
 
     void notify(StreamElement arg);
 

@@ -30,7 +30,7 @@ public class CQELSWindowAssigner extends ObservableWindowAssigner implements Obs
 
 
     public CQELSWindowAssigner(IRI iri, long a, long tc0) {
-        super(TimeFactory.getInstance(), iri);
+        super(iri, TimeFactory.getInstance());
         this.a = a;
         this.tc0 = tc0;
         this.toi = 0;

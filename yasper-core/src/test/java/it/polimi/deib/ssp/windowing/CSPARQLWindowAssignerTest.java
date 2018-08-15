@@ -2,7 +2,7 @@ package it.polimi.deib.ssp.windowing;
 
 import it.polimi.deib.ssp.utils.StreamViewImpl;
 import it.polimi.deib.ssp.utils.WritableStream;
-import it.polimi.yasper.core.quering.TimeVarying;
+import it.polimi.yasper.core.quering.rspql.tvg.TimeVarying;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
@@ -35,18 +35,18 @@ public class CSPARQLWindowAssignerTest {
         WindowAssigner windowAssigner = new CSPARQLWindowAssigner(RDFUtils.createIRI("w1"), 2000, 2000, scope, 0);
 
         //ENGINE INTERNALS - HOW THE REPORTING POLICY, TICK AND REPORT GRAIN INFLUENCE THE RUNTIME
-        windowAssigner.setReport(report);
-        windowAssigner.setTick(tick);
-        windowAssigner.setReportGrain(report_grain);
+        windowAssigner.report(report);
+        windowAssigner.tick(tick);
+        windowAssigner.report_grain(report_grain);
 
         StreamViewImpl v = new StreamViewImpl();
-        TimeVarying timeVarying = windowAssigner.setView(v);
+        TimeVarying timeVarying = windowAssigner.set(v);
 
         Tester tester = new Tester();
 
         v.addObserver((o, arg) -> {
             Long arg1 = (Long) arg;
-            Graph g = (Graph) timeVarying.eval(arg1);
+            Graph g = timeVarying.materialize(arg1);
             tester.test(g);
             System.err.println(arg1);
             System.err.println(g);
@@ -117,7 +117,6 @@ public class CSPARQLWindowAssignerTest {
 
         windowAssigner.notify(new WritableStream.Elem(7000, graph));
         //stream.put(new WritableStream.Elem(3000, graph));
-
 
     }
 

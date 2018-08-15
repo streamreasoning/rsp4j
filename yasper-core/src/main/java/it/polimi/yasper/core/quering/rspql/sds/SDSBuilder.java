@@ -1,5 +1,6 @@
-package it.polimi.yasper.core.quering;
+package it.polimi.yasper.core.quering.rspql.sds;
 
+import it.polimi.yasper.core.quering.querying.ContinuousQuery;
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
 
 /**

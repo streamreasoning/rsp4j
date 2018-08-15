@@ -1,11 +1,10 @@
-package it.polimi.yasper.core.quering;
+package it.polimi.yasper.core.quering.querying;
 
 import it.polimi.yasper.core.enums.StreamOperator;
 import org.apache.commons.rdf.api.RDF;
 import org.apache.commons.rdf.simple.SimpleRDF;
 
 public abstract class AbstractContinuousQuery implements ContinuousQuery {
-    private RDF rdf = new SimpleRDF();
     private int queryType;
     private String outputStreamIri;
     private int outputStreamType;

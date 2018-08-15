@@ -1,6 +1,6 @@
 package it.polimi.yasper.core.quering.syntax;
 
-import it.polimi.yasper.core.quering.ContinuousQuery;
+import it.polimi.yasper.core.quering.querying.ContinuousQuery;
 
 /**
  * For now this is just a placeholder class.

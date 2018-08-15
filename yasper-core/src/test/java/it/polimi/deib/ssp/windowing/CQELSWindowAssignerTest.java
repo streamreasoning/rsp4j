@@ -2,7 +2,7 @@ package it.polimi.deib.ssp.windowing;
 
 import it.polimi.deib.ssp.utils.StreamViewImpl;
 import it.polimi.deib.ssp.utils.WritableStream;
-import it.polimi.yasper.core.quering.TimeVarying;
+import it.polimi.yasper.core.quering.rspql.tvg.TimeVarying;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
@@ -31,17 +31,17 @@ public class CQELSWindowAssignerTest {
 
         WindowAssigner wa = new CQELSWindowAssigner(RDFUtils.createIRI("w1"), 3000, 0);
 
-        wa.setReport(report);
-        wa.setTick(tick);
-        wa.setReportGrain(report_grain);
+        wa.report(report);
+        wa.tick(tick);
+        wa.report_grain(report_grain);
 
         Tester tester = new Tester();
 
         StreamViewImpl v = new StreamViewImpl();
-        TimeVarying timeVarying = wa.setView(v);
+        TimeVarying timeVarying = wa.set(v);
         v.addObserver((o, arg) -> {
             Long arg1 = (Long) arg;
-            Graph g = (Graph) timeVarying.eval(arg1);
+            Graph g = timeVarying.materialize(arg1);
             System.out.println(arg1);
             System.out.println(g);
             tester.test(g);

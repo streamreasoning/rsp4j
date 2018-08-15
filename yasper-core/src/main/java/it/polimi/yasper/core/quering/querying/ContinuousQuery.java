@@ -1,11 +1,10 @@
-package it.polimi.yasper.core.quering;
+package it.polimi.yasper.core.quering.querying;
 
-import java.time.Duration;
-import java.util.List;
-import it.polimi.yasper.core.stream.Stream;
-import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import it.polimi.yasper.core.enums.StreamOperator;
+import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
+import it.polimi.yasper.core.stream.Stream;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,21 +20,30 @@ public interface ContinuousQuery {
 
     // Subset of methods
 
-    void addNamedWindow(String windowUri, Object streamUri, Duration range, Duration step);
+    void addNamedWindow(String streamUri, WindowOperator wo);
 
     void setIstream();
+
     void setRstream();
+
     void setDstream();
+
     boolean isIstream();
+
     boolean isRstream();
+
     boolean isDstream();
 
     void setSelect();
+
     void setConstruct();
+
     boolean isSelectType();
+
     boolean isConstructType();
 
     void setOutputStream(String uri);
+
     String getOutputStream();
 
     String getID();

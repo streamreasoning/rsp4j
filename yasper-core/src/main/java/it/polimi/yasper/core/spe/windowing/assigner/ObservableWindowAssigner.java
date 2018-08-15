@@ -1,6 +1,7 @@
 package it.polimi.yasper.core.spe.windowing.assigner;
 
-import it.polimi.yasper.core.quering.TimeVaryingGraph;
+import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.quering.rspql.tvg.TimeVaryingGraph;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.spe.report.Report;
@@ -25,52 +26,53 @@ public abstract class ObservableWindowAssigner extends Observable implements Win
     protected final Time time;
     protected final IRI iri;
 
-    protected ObservableWindowAssigner(Time time, IRI iri) {
+    protected ObservableWindowAssigner(IRI iri, Time time) {
         this.time = time;
         this.iri = iri;
     }
 
     @Override
-    public void setReport(Report report) {
+    public void report(Report report) {
         this.report = report;
     }
 
-    public void setTick(Tick t) {
+    public void tick(Tick t) {
         this.tick = t;
     }
 
     @Override
-    public void setReportGrain(ReportGrain aw) {
+    public void report_grain(ReportGrain aw) {
         this.aw = aw;
     }
-
-
 
     @Override
     public void notify(StreamElement arg) {
         windowing(arg);
     }
 
-    protected abstract void windowing(StreamElement arg);
-
-
     @Override
-    public Report getReport() {
+    public Report report() {
         return report;
     }
 
     @Override
-    public Tick getTick() {
+    public Tick tick() {
         return tick;
     }
 
     @Override
-    public TimeVaryingGraph setView(View view) {
-        view.observerOf(this);
+    public TimeVaryingGraph set(ContinuousQueryExecution content) {
+        this.addObserver(content);
         //TODO Generalize the type of content using an ENUM
         return new TimeVaryingGraph(this, iri);
     }
 
+    @Override
+    public TimeVaryingGraph set(View view) {
+        view.observerOf(this);
+        //TODO Generalize the type of content using an ENUM
+        return new TimeVaryingGraph(this, iri);
+    }
 
     /**
      * The Tick dimension in our model defines the condition which drives an SPE
@@ -106,8 +108,6 @@ public abstract class ObservableWindowAssigner extends Observable implements Win
 
     }
 
-    protected abstract Content compute(long t_e, Window w);
-
     private Content setVisible(long t_e, Window w, Content c) {
         //TODO the reporting makes the content visible
         // but the execution of the query is not
@@ -117,5 +117,12 @@ public abstract class ObservableWindowAssigner extends Observable implements Win
         return c;
     }
 
+    protected abstract void windowing(StreamElement arg);
 
+    protected abstract Content compute(long t_e, Window w);
+
+    @Override
+    public boolean isNamed() {
+        return iri != null;
+    }
 }
