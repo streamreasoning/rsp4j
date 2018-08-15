@@ -1,14 +1,17 @@
-package simple.test;
+package simple.test.examples;
 
-import it.polimi.yasper.core.quering.ContinuousQuery;
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.quering.querying.ContinuousQuery;
+import it.polimi.yasper.core.spe.windowing.operator.CSPARQLTimeWindowOperator;
+import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import it.polimi.yasper.core.stream.Stream;
+import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import it.polimi.yasper.core.utils.RDFUtils;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.rdf.api.Graph;
-import simple.RSPEngineImpl;
+import simple.querying.formatter.ContinuousQueryImpl;
 import simple.querying.formatter.InstResponseSysOutFormatter;
 
 import java.net.URL;
@@ -17,17 +20,17 @@ import java.time.Duration;
 /**
  * Created by Riccardo on 03/08/16.
  */
-public class TestConfig {
+public class CSPARQLExample {
 
-    static RSPEngineImpl sr;
+    static CSPARQLImpl sr;
 
     public static void main(String[] args) throws ConfigurationException {
 
-        URL resource = TestConfig.class.getResource("/default.properties");
+        URL resource = CSPARQLExample.class.getResource("/default.properties");
         QueryConfiguration config = new QueryConfiguration(resource.getPath());
         EngineConfiguration ec = EngineConfiguration.loadConfig("/default.properties");
 
-        sr = new RSPEngineImpl(0, ec);
+        sr = new CSPARQLImpl(0, ec);
 
         //STREAM DECLARATION
         WritableRDFStream stream = new WritableRDFStream("stream1");
@@ -38,7 +41,10 @@ public class TestConfig {
 
         ContinuousQuery q = new ContinuousQueryImpl("q1");
 
-        q.addNamedWindow("w1", "stream1", Duration.ofSeconds(2), Duration.ofSeconds(2));
+
+        WindowOperator w = new CSPARQLTimeWindowOperator(RDFUtils.createIRI("w1"), Duration.ofSeconds(2).toMillis(), Duration.ofSeconds(2).toMillis(), 0);
+
+        q.addNamedWindow("stream1", w);
 
         ContinuousQueryExecution cqe = sr.register(q, config);
 

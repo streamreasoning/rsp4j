@@ -1,15 +1,12 @@
-package simple.test;
+package simple.querying.formatter;
 
 
-import it.polimi.yasper.core.quering.AbstractContinuousQuery;
-import it.polimi.yasper.core.spe.windowing.operator.CSPARQLTimeWindowOperator;
+import it.polimi.yasper.core.quering.querying.AbstractContinuousQuery;
 import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
-import it.polimi.yasper.core.utils.RDFUtils;
 import lombok.RequiredArgsConstructor;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,10 +21,9 @@ public class ContinuousQueryImpl extends AbstractContinuousQuery {
     private List<String> namedGraphURIs = new ArrayList<>();
 
     @Override
-    public void addNamedWindow(String windowUri, Object streamUri, Duration range, Duration step) {
-        WindowOperator w = new CSPARQLTimeWindowOperator(RDFUtils.createIRI(windowUri), range.toMillis(), step.toMillis(), 0);
-        Stream s = new RDFStream((String) streamUri);
-        windowMap.put(w, s);
+    public void addNamedWindow(String streamUri, WindowOperator wo) {
+        Stream s = new RDFStream(streamUri);
+        windowMap.put(wo, s);
     }
 
     @Override

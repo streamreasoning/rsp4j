@@ -1,4 +1,4 @@
-package simple.test;
+package simple.test.examples;
 
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.stream.Stream;

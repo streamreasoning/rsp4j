@@ -1,8 +1,12 @@
 package simple.querying;
 
-import it.polimi.yasper.core.quering.ContinuousQuery;
+import it.polimi.yasper.core.quering.querying.ContinuousQuery;
 import it.polimi.yasper.core.quering.syntax.RSPQLBaseVisitor;
 import it.polimi.yasper.core.quering.syntax.RSPQLParser;
+import it.polimi.yasper.core.spe.windowing.operator.CQELSTimeWindowOperator;
+import it.polimi.yasper.core.spe.windowing.operator.CSPARQLTimeWindowOperator;
+import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
+import it.polimi.yasper.core.utils.RDFUtils;
 import org.apache.commons.lang.NotImplementedException;
 
 import java.time.Duration;
@@ -16,7 +20,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
     private ContinuousQuery rootQuery;
     private ContinuousQuery query;
 
-    public RSPQLVisitorImpl(ContinuousQuery query){
+    public RSPQLVisitorImpl(ContinuousQuery query) {
         rootQuery = query;
         this.query = query;
     }
@@ -24,11 +28,12 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Set output stream type (ISTREAM, DSTREAM or RSTREAM)
+     *
      * @param ctx
      * @return
      */
     public Object visitOutputStreamType(RSPQLParser.OutputStreamTypeContext ctx) {
-        switch (ctx.getText()){
+        switch (ctx.getText()) {
             case "ISTREAM":
                 query.setIstream();
                 break;
@@ -44,6 +49,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Set output stream URI
+     *
      * @param ctx
      * @return
      */
@@ -55,6 +61,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit window definition clauses. For now we support only  logical windows
+     *
      * @param ctx
      * @return
      */
@@ -64,10 +71,17 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
         RSPQLParser.LogicalWindowContext c = ctx.window().logicalWindow();
         Duration range = Duration.parse(c.logicalRange().duration().getText());
         Duration step = null;
-        if(c.logicalStep() != null){
+        if (c.logicalStep() != null) {
             step = Duration.parse(c.logicalStep().duration().getText());
+
+            WindowOperator w = new CSPARQLTimeWindowOperator(RDFUtils.createIRI(windowUri), range.toMillis(), step.toMillis(), 0);
+            query.addNamedWindow(streamUri, w);
+
+        } else {
+            WindowOperator w = new CQELSTimeWindowOperator(RDFUtils.createIRI(windowUri), range.toMillis(), 0);
+            query.addNamedWindow(streamUri, w);
         }
-        query.addNamedWindow(windowUri, streamUri, range, step);
+
         return null;
     }
 
@@ -82,6 +96,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit construct template. Can consists of multiple quad blocks.
+     *
      * @param ctx
      * @return
      */
@@ -118,6 +133,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Set query base URI.
+     *
      * @param ctx
      * @return
      */
@@ -129,6 +145,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Set query prefix.
+     *
      * @param ctx
      * @return
      */
@@ -141,6 +158,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Set default graph.
+     *
      * @param ctx
      * @return
      */
@@ -152,6 +170,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Add named graph.
+     *
      * @param ctx
      * @return
      */
@@ -163,13 +182,14 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit construct query. Set the type, construct clause, and visit children.
+     *
      * @param ctx
      * @return
      */
     public Object visitConstructQuery(RSPQLParser.ConstructQueryContext ctx) {
         query.setConstruct();
 
-        if(ctx.triplesTemplate() != null){
+        if (ctx.triplesTemplate() != null) {
             Object triplesTemplate = ctx.triplesTemplate().accept(this);
             //ElementTriplesBlock elt = (ElementTriplesBlock) ctx.triplesTemplate().accept(this);
             //ElementGroup elg = new ElementGroup();
@@ -186,13 +206,14 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit triple block.
+     *
      * @param ctx
      * @return
      */
     public Object visitTriplesTemplate(RSPQLParser.TriplesTemplateContext ctx) {
         //ElementTriplesBlock etb = new ElementTriplesBlock();
         RSPQLParser.TriplesTemplateContext t = ctx;
-        while(t != null){
+        while (t != null) {
             //ElementTriplesBlock el = (ElementTriplesBlock) t.triplesSameSubject().accept(this);
             //etb.getPattern().addAll(el.getPattern());
             t = t.triplesTemplate();
@@ -203,6 +224,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit construct triples.
+     *
      * @param ctx
      * @return
      */
@@ -226,6 +248,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit select query.
+     *
      * @param ctx
      * @return
      */
@@ -250,6 +273,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit select query with star pattern.
+     *
      * @param ctx
      * @return
      */
@@ -260,6 +284,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit where clause.
+     *
      * @param ctx
      * @return
      */
@@ -271,6 +296,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit group condition
+     *
      * @param ctx
      * @return
      */
@@ -280,6 +306,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit order condition.
+     *
      * @param ctx
      * @return
      */
@@ -289,6 +316,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit group graph pattern.
+     *
      * @param ctx
      * @return
      */
@@ -303,6 +331,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit group graph pattern sub.
+     *
      * @param ctx
      * @return
      */
@@ -323,6 +352,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit optional pattern.
+     *
      * @param ctx
      * @return
      */
@@ -332,6 +362,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit minus pattern.
+     *
      * @param ctx
      * @return
      */
@@ -341,6 +372,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit not exists.
+     *
      * @param ctx
      * @return
      */
@@ -350,6 +382,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit exists.
+     *
      * @param ctx
      * @return
      */
@@ -363,6 +396,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit triples block.
+     *
      * @param ctx
      * @return
      */
@@ -378,6 +412,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit graph pattern.
+     *
      * @param ctx
      * @return
      */
@@ -391,6 +426,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit triples same subject path.
+     *
      * @param ctx
      * @return
      */
@@ -400,6 +436,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit triples same subject.
+     *
      * @param ctx
      * @return
      */
@@ -409,6 +446,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit type. What does this do?
+     *
      * @param ctx
      * @return
      */
@@ -419,6 +457,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit having condition.
+     *
      * @param ctx
      * @return
      */
@@ -428,6 +467,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit values clause.
+     *
      * @param ctx
      * @return
      */
@@ -437,6 +477,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit inline data one var.
+     *
      * @param ctx
      * @return
      */
@@ -446,6 +487,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit inline data full
+     *
      * @param ctx
      * @return
      */
@@ -455,6 +497,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit undef.
+     *
      * @param ctx
      * @return
      */
@@ -464,6 +507,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit blank node property list path.
+     *
      * @param ctx
      * @return
      */
@@ -473,6 +517,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit collection.
+     *
      * @param ctx
      * @return
      */
@@ -482,6 +527,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit collection path.
+     *
      * @param ctx
      * @return
      */
@@ -491,12 +537,13 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit IRI
+     *
      * @param ctx
      * @return
      */
     public Object visitIri(RSPQLParser.IriContext ctx) {
-        if(ctx.IRIREF() != null){
-            String uri =  trimTags(ctx.IRIREF().getText());
+        if (ctx.IRIREF() != null) {
+            String uri = trimTags(ctx.IRIREF().getText());
             // create node
             return null;
         }
@@ -505,6 +552,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit prefixed name.
+     *
      * @param ctx
      * @return
      */
@@ -519,11 +567,12 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit variable.
+     *
      * @param ctx
      * @return
      */
     public Object visitVar(RSPQLParser.VarContext ctx) {
-        String varName =ctx.getText();
+        String varName = ctx.getText();
         // create var
         return null;
     }
@@ -534,10 +583,11 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit blank node.
+     *
      * @param ctx
      * @return
      */
-    public Object visitBlankNode(RSPQLParser.BlankNodeContext ctx){
+    public Object visitBlankNode(RSPQLParser.BlankNodeContext ctx) {
         //if(ctx.ANON() != null)
         //    return NodeFactory.createBlankNode();
         //return NodeFactory.createBlankNode(ctx.BLANK_NODE_LABEL().getText());
@@ -546,6 +596,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit numeric literal negative.
+     *
      * @param ctx
      * @return
      */
@@ -560,6 +611,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit numeric literal positive.
+     *
      * @param ctx
      * @return
      */
@@ -574,6 +626,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit numeric literal unsigned.
+     *
      * @param ctx
      * @return
      */
@@ -588,6 +641,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit string.
+     *
      * @param ctx
      * @return
      */
@@ -598,6 +652,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit boolean literal.
+     *
      * @param ctx
      * @return
      */
@@ -608,6 +663,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit RDFUtils literal.
+     *
      * @param ctx
      * @return
      */
@@ -627,6 +683,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit filter expression.
+     *
      * @param ctx
      * @return
      */
@@ -640,6 +697,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit conditional or expression.
+     *
      * @param ctx
      * @return
      */
@@ -649,6 +707,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit conditional expression.
+     *
      * @param ctx
      * @return
      */
@@ -658,6 +717,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit relational expression.
+     *
      * @param ctx
      * @return
      */
@@ -667,6 +727,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit additive expression.
+     *
      * @param ctx
      * @return
      */
@@ -676,6 +737,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit multiplicative expression.
+     *
      * @param ctx
      * @return
      */
@@ -684,26 +746,28 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
     }
 
     /**
-     *
      * Visit unary expression.
+     *
      * @param ctx
      * @return
      */
     public Object visitUnaryExpression(RSPQLParser.UnaryExpressionContext ctx) {
-        throw  new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Visit primary expression.
+     *
      * @param ctx
      * @return
      */
     public Object visitPrimaryExpression(RSPQLParser.PrimaryExpressionContext ctx) {
-        throw  new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Visit arg list.
+     *
      * @param ctx
      * @return
      */
@@ -713,6 +777,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit expression list.
+     *
      * @param ctx
      * @return
      */
@@ -722,6 +787,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit regex expression.
+     *
      * @param ctx
      * @return
      */
@@ -731,15 +797,17 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit bind.
+     *
      * @param ctx
      * @return
      */
     public Object visitBind(RSPQLParser.BindContext ctx) {
-        throw  new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Visit subselect.
+     *
      * @param ctx
      * @return
      */
@@ -755,6 +823,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Set limit.
+     *
      * @param ctx
      * @return
      */
@@ -766,6 +835,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Set offset.
+     *
      * @param ctx
      * @return
      */
@@ -778,53 +848,57 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
 
     /**
      * Visit aggregate.
+     *
      * @param ctx
      * @return
      */
     public Object visitAggregate(RSPQLParser.AggregateContext ctx) {
-        throw  new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Visit substring expression.
+     *
      * @param ctx
      * @return
      */
     public Object visitSubstringExpression(RSPQLParser.SubstringExpressionContext ctx) {
-        throw  new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Visit string replace function.
+     *
      * @param ctx
      * @return
      */
     public Object visitStrReplaceExpression(RSPQLParser.StrReplaceExpressionContext ctx) {
-        throw  new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Visit built in call.
+     *
      * @param ctx
      * @return
      */
     public Object visitBuiltInCall(RSPQLParser.BuiltInCallContext ctx) {
-        throw  new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
-    public String trimTags(String s){
+    public String trimTags(String s) {
         return s.replaceAll("^<(.*)>$", "$1");
     }
 
-    public String trimQuotes(String s){
+    public String trimQuotes(String s) {
         return s.replaceAll("^['\"](.*)['\"]$", "$1");
     }
 
-    public String trimFirst(String s){
+    public String trimFirst(String s) {
         return s.replaceAll("^.(.*)$", "$1");
     }
 
-    public String trimLast(String s){
+    public String trimLast(String s) {
         return s.replaceAll("^(.*).$", "$1");
     }
 

@@ -1,14 +1,15 @@
-package simple;
+package simple.test.examples;
 
 import it.polimi.yasper.core.engine.RSPEngine;
-import it.polimi.yasper.core.quering.ContinuousQuery;
-import it.polimi.yasper.core.quering.SDS;
-import it.polimi.yasper.core.quering.SDSBuilder;
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.quering.querying.ContinuousQuery;
+import it.polimi.yasper.core.quering.rspql.sds.SDS;
+import it.polimi.yasper.core.quering.rspql.sds.SDSBuilder;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
+import it.polimi.yasper.core.spe.report.strategies.OnContentChange;
 import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
 import it.polimi.yasper.core.spe.scope.Tick;
 import it.polimi.yasper.core.stream.Stream;
@@ -17,19 +18,16 @@ import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import simple.sds.SDSBuilderImpl;
-import org.apache.commons.rdf.api.RDF;
-import org.apache.commons.rdf.simple.SimpleRDF;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-public class RSPEngineImpl implements RSPEngine<StreamElement> {
+public class CQELSmpl implements RSPEngine<StreamElement> {
 
     private final long t0;
     private Report report;
-    private RDF rdf;
     private Tick tick;
     protected EngineConfiguration rsp_config;
 
@@ -38,8 +36,9 @@ public class RSPEngineImpl implements RSPEngine<StreamElement> {
     protected Map<String, ContinuousQuery> registeredQueries;
     protected Map<String, List<QueryResponseFormatter>> queryObservers;
     protected Map<String, Stream> registeredStreams;
+    private ReportGrain report_grain;
 
-    public RSPEngineImpl(long t0, EngineConfiguration rsp_config) {
+    public CQELSmpl(long t0, EngineConfiguration rsp_config) {
         this.rsp_config = rsp_config;
         this.assignedSDS = new HashMap<>();
         this.registeredQueries = new HashMap<>();
@@ -48,8 +47,9 @@ public class RSPEngineImpl implements RSPEngine<StreamElement> {
         this.queryExecutions = new HashMap<>();
         this.t0 = t0;
         this.report = new ReportImpl();
-        this.report.add(new OnWindowClose());
-        this.rdf = new SimpleRDF();
+        this.report.add(new OnContentChange());
+        this.report_grain = ReportGrain.SINGLE;
+        this.tick = Tick.TUPLE_DRIVEN;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class RSPEngineImpl implements RSPEngine<StreamElement> {
 
     @Override
     public ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c) {
-        SDSBuilder builder = new SDSBuilderImpl(rdf, registeredStreams, report, ReportGrain.SINGLE, Tick.TIME_DRIVEN);
+        SDSBuilder builder = new SDSBuilderImpl(registeredStreams, report, report_grain, tick, t0);
         builder.visit(q);
         return builder.getContinuousQueryExecution();
     }

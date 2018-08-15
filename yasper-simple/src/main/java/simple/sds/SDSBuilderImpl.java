@@ -1,10 +1,10 @@
 package simple.sds;
 
-import it.polimi.yasper.core.quering.ContinuousQuery;
-import it.polimi.yasper.core.quering.SDS;
-import it.polimi.yasper.core.quering.SDSBuilder;
-import it.polimi.yasper.core.quering.TimeVarying;
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.quering.querying.ContinuousQuery;
+import it.polimi.yasper.core.quering.rspql.sds.SDS;
+import it.polimi.yasper.core.quering.rspql.sds.SDSBuilder;
+import it.polimi.yasper.core.quering.rspql.tvg.TimeVarying;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.scope.Tick;
@@ -14,11 +14,8 @@ import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.utils.RDFUtils;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import simple.querying.ContinuousQueryExecutionImpl;
-import simple.windowing.DefaultStreamView;
-import simple.windowing.NamedStreamView;
 
 import java.util.Map;
 
@@ -33,28 +30,29 @@ public class SDSBuilderImpl implements SDSBuilder {
     private ReportGrain reportGrain;
     @NonNull
     private Tick tick;
+    @NonNull
+    private long t0;
+
     private ContinuousQueryExecution cqe;
+    private SDSImpl sds;
 
     @Override
     public void visit(ContinuousQuery query) {
-        SDSImpl sds = new SDSImpl();
+        this.sds = new SDSImpl();
         this.cqe = new ContinuousQueryExecutionImpl(RDFUtils.createIRI(query.getID()), sds, sds, query);
+
         query.getWindowMap().forEach((WindowOperator wo, Stream s) -> {
             IRI iri = RDFUtils.createIRI(wo.getName());
             Stream s1 = registeredStreams.get(s.getURI());
             WindowAssigner wa = wo.apply(s1);
-            wa.setReport(report);
-            wa.setTick(tick);
-            wa.setReportGrain(reportGrain);
+            wa.report(report);
+            wa.tick(tick);
+            wa.report_grain(reportGrain);
             if (wo.isNamed()) {
-                NamedStreamView v = new NamedStreamView(wa);
-                TimeVarying<Graph> tvg = wa.setView(v);
+                TimeVarying tvg = wa.set(cqe);
                 sds.add(iri, tvg);
-                v.addObserver(cqe);
             } else {
-                DefaultStreamView v = new DefaultStreamView();
-                sds.add(wa.setView(v));
-                v.addObserver(cqe);
+                sds.add(wa.set(cqe));
             }
         });
     }
@@ -62,7 +60,7 @@ public class SDSBuilderImpl implements SDSBuilder {
 
     @Override
     public SDS getSDS() {
-        return null;
+        return sds;
     }
 
     @Override

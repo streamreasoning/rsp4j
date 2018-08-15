@@ -1,6 +1,6 @@
 package simple.querying;
 
-import it.polimi.yasper.core.quering.ContinuousQuery;
+import it.polimi.yasper.core.quering.querying.ContinuousQuery;
 import it.polimi.yasper.core.quering.syntax.CaseChangingCharStream;
 import it.polimi.yasper.core.quering.syntax.RSPQLLexer;
 import it.polimi.yasper.core.quering.syntax.RSPQLParser;
@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.DefaultErrorStrategy;
 import org.antlr.v4.runtime.tree.ParseTree;
+import simple.querying.formatter.ContinuousQueryImpl;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -50,7 +51,7 @@ public class QueryFactory {
             RSPQLParser parser = new RSPQLParser(tokens);
             parser.setErrorHandler(new DefaultErrorStrategy());
             ParseTree tree = parser.queryUnit();
-            ContinuousQuery query = new ContinuousQueryImpl();
+            ContinuousQuery query = new ContinuousQueryImpl("w1");
             RSPQLVisitorImpl visitor = new RSPQLVisitorImpl(query);
             visitor.visit(tree);
             return query;

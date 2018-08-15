@@ -17,8 +17,8 @@
  */
 package simple.sds;
 
-import it.polimi.yasper.core.quering.SDS;
-import it.polimi.yasper.core.quering.TimeVarying;
+import it.polimi.yasper.core.quering.rspql.sds.SDS;
+import it.polimi.yasper.core.quering.rspql.tvg.TimeVarying;
 import it.polimi.yasper.core.utils.RDFUtils;
 import lombok.AllArgsConstructor;
 import org.apache.commons.rdf.api.*;
@@ -40,8 +40,8 @@ final public class SDSImpl implements Dataset, SDS {
 
     private static final int TO_STRING_MAX = 10;
     private final Set<Quad> quads = new HashSet<>();
-    private final Set<TimeVarying<Graph>> defs = new HashSet<>();
-    private final Map<IRI, TimeVarying<Graph>> tvgs = new HashMap<>();
+    private final Set<TimeVarying> defs = new HashSet<>();
+    private final Map<IRI, TimeVarying> tvgs = new HashMap<>();
     private final IRI def;
 
     public SDSImpl() {
@@ -205,39 +205,29 @@ final public class SDSImpl implements Dataset, SDS {
     }
 
     @Override
-    public void beforeEval() {
-
-    }
-
-    @Override
-    public void afterEval() {
-
-    }
-
-    @Override
-    public <T extends TimeVarying<Graph>> void add(IRI iri, T tvg) {
+    public void add(IRI iri, TimeVarying tvg) {
         tvgs.put(iri, tvg);
     }
 
     @Override
-    public <T extends TimeVarying<Graph>> void add(T tvg) {
+    public void add(TimeVarying tvg) {
         defs.add(tvg);
     }
 
     @Override
-    public void eval(final long ts) {
+    public void materialize(final long ts) {
         //TODO here applies the consolidation strategies
         //Default consolidation coaleces all the current
         //content graphs and produces the SDS to who execute the query.
 
         this.clear();
 
-        defs.stream().map(g -> g.eval(ts))
+        defs.stream().map(g -> g.<Graph>materialize(ts))
                 .flatMap(Graph::stream)
                 .forEach(t -> this.add(def, t.getSubject(), t.getPredicate(), t.getObject()));
 
         tvgs.entrySet().stream()
-                .map(e -> new NamedGraph(e.getKey(), e.getValue().eval(ts)))
+                .map(e -> new NamedGraph(e.getKey(), e.getValue().materialize(ts)))
                 .forEach(n -> n.g.stream()
                         .forEach(o -> this.add(n.name, o.getSubject(), o.getPredicate(), o.getObject())));
     }

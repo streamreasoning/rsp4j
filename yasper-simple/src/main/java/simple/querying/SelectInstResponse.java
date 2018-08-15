@@ -1,7 +1,7 @@
 package simple.querying;
 
 import it.polimi.yasper.core.quering.response.InstantaneousResponse;
-import it.polimi.yasper.core.quering.ContinuousQuery;
+import it.polimi.yasper.core.quering.querying.ContinuousQuery;
 import org.apache.commons.rdf.api.Triple;
 
 import java.util.List;

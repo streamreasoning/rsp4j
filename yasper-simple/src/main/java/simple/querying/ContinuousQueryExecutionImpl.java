@@ -1,17 +1,20 @@
 package simple.querying;
 
-import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
-import it.polimi.yasper.core.quering.response.InstantaneousResponse;
-import it.polimi.yasper.core.quering.ContinuousQuery;
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.quering.SDS;
-import lombok.RequiredArgsConstructor;
+import it.polimi.yasper.core.quering.execution.ContinuousQueryExecutionObserver;
+import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.quering.operators.r2s.RelationToStreamOperator;
+import it.polimi.yasper.core.quering.querying.ContinuousQuery;
+import it.polimi.yasper.core.quering.response.InstantaneousResponse;
+import it.polimi.yasper.core.quering.rspql.sds.SDS;
+import it.polimi.yasper.core.reasoning.TVGReasoner;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.rdf.api.*;
+import org.apache.commons.rdf.api.Dataset;
+import org.apache.commons.rdf.api.IRI;
+import org.apache.commons.rdf.api.Quad;
+import org.apache.commons.rdf.api.Triple;
 
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.stream.Collectors;
 
 /**
@@ -19,27 +22,19 @@ import java.util.stream.Collectors;
  */
 
 @Log4j
-@RequiredArgsConstructor
-public class ContinuousQueryExecutionImpl extends Observable implements Observer, ContinuousQueryExecution {
+public class ContinuousQueryExecutionImpl extends ContinuousQueryExecutionObserver implements ContinuousQueryExecution {
 
-    private final IRI id;
     private final Dataset ds;
-    private final SDS sds;
-    private final ContinuousQuery query;
     private int i = 0;
 
-    @Override
-    public InstantaneousResponse eval(long ts) {
+    public ContinuousQueryExecutionImpl(IRI id, SDS sds, Dataset ds, ContinuousQuery query) {
+        super(id, sds, query);
+        this.ds = ds;
+    }
 
-        sds.eval(ts);
-
-        List<Triple> triples = ds.stream()
-                .map(Quad::asTriple).collect(Collectors.toList());
-
-        SelectInstResponse r = new SelectInstResponse(id.getIRIString() + "/ans/" + i, ts, triples, query);
-
-        i++;
-        return r;
+    public ContinuousQueryExecutionImpl(IRI id, SDS sds, Dataset ds, ContinuousQuery query, TVGReasoner reasoner, RelationToStreamOperator s2r) {
+        super(id, sds, query, reasoner, s2r);
+        this.ds = ds;
     }
 
     @Override
@@ -68,15 +63,19 @@ public class ContinuousQueryExecutionImpl extends Observable implements Observer
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-        Long ts = (Long) arg;
+    public InstantaneousResponse eval(long ts) {
 
-        sds.beforeEval();
-        InstantaneousResponse r = eval(ts);
-        sds.afterEval();
+        sds.materialize(ts);
 
-        setChanged();
-        notifyObservers(r);
+        List<Triple> triples = ds.stream()
+                .map(Quad::asTriple).collect(Collectors.toList());
+
+        SelectInstResponse r = new SelectInstResponse(id.getIRIString() + "/ans/" + i, ts, triples, query);
+
+        i++;
+        return r;
     }
+
+
 }
 
