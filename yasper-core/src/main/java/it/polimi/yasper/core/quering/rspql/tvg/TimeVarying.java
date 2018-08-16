@@ -1,9 +1,8 @@
 package it.polimi.yasper.core.quering.rspql.tvg;
 
-import it.polimi.yasper.core.stream.rdf.Named;
+public interface TimeVarying {
 
-public interface TimeVarying extends Named {
+    void materialize(long ts);
 
-    <T> T materialize(long ts);
-
+    Object get();
 }

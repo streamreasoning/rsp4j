@@ -1,19 +1,22 @@
 package it.polimi.yasper.core.quering.rspql.tvg;
 
+import it.polimi.yasper.core.Named;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class TimeVaryingGraph implements TimeVarying {
+public class TimeVaryingGraph implements TimeVarying, Named {
 
     @NonNull
     private final WindowAssigner wa;
     private IRI name;
+    private Graph graph;
 
     /**
      * The setTimestamp function merges the element
@@ -21,9 +24,19 @@ public class TimeVaryingGraph implements TimeVarying {
      * and adds it to the current dataset.
      **/
     @Override
-    public <T> T materialize(long ts) {
-        Content<T> content = wa.getContent(ts);
-        return content.coalesce();
+    public void materialize(long ts) {
+        Content<Graph> content = wa.getContent(ts);
+        graph = content.coalesce();
+    }
+
+    @Override
+    public Object get() {
+        return graph;
+    }
+
+    @Override
+    public String getName() {
+        return name.getIRIString();
     }
 
     @Override
