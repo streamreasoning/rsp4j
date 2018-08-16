@@ -1,13 +1,15 @@
 package it.polimi.yasper.core.utils;
 
+import it.polimi.yasper.core.enums.Time;
 import it.polimi.yasper.core.quering.querying.ContinuousQuery;
 import it.polimi.yasper.core.spe.report.Report;
+import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
 import it.polimi.yasper.core.spe.report.strategies.NonEmptyContent;
 import it.polimi.yasper.core.spe.report.strategies.OnContentChange;
 import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
 import it.polimi.yasper.core.spe.report.strategies.Periodic;
-import it.polimi.yasper.core.enums.Time;
+import it.polimi.yasper.core.spe.scope.Tick;
 import it.polimi.yasper.core.stream.schema.StreamSchema;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -27,11 +29,14 @@ public class EngineConfiguration extends PropertiesConfiguration {
         super(fileName);
     }
 
+
     public static EngineConfiguration getCurrent() throws ConfigurationException {
         if (config == null)
             return config;
         return getDefault();
     }
+
+
 
     public Boolean isUsingEventTime() {
         return Time.EventTime.equals(Time.valueOf(this.getString(TIME, Time.EventTime.name())));
@@ -103,6 +108,14 @@ public class EngineConfiguration extends PropertiesConfiguration {
 
     public boolean periodic() {
         return this.getBoolean(REPORT_STRATEGY_PP, false);
+    }
+
+    public Tick getTick() {
+        return Tick.valueOf(getString(TICK));
+    }
+
+    public ReportGrain getReportGrain() {
+        return ReportGrain.valueOf(getString(REPORT_GRAIN));
     }
 
     public Report getReport() {

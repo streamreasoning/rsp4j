@@ -31,6 +31,11 @@ public class ConfigurationUtils {
     public static final String REPORT_STRATEGY_NC = ENGINE + "non_empty_content";
     public static final String REPORT_STRATEGY_PP = ENGINE + "periodic";
 
+    public static final String TICK = ENGINE + "tick";
+    
+    public static final String REPORT_GRAIN = ENGINE + "report_grain";
+
+
 //    rspengine.tbox_location=/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/arist.tbox.owl
 //    rspengine.graph_mantainance=naive
 //    rspengine.reasoning=true
