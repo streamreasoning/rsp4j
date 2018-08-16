@@ -1,6 +1,5 @@
 package it.polimi.yasper.core.stream;
 
-import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.stream.schema.StreamSchema;
 
 /**
@@ -16,5 +15,4 @@ public interface Stream {
 
     String getURI();
 
-    void addWindowAssiger(WindowAssigner windowAssigner);
 }
