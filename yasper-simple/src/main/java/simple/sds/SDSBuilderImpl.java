@@ -5,11 +5,15 @@ import it.polimi.yasper.core.quering.querying.ContinuousQuery;
 import it.polimi.yasper.core.quering.rspql.sds.SDS;
 import it.polimi.yasper.core.quering.rspql.sds.SDSBuilder;
 import it.polimi.yasper.core.quering.rspql.tvg.TimeVarying;
+import it.polimi.yasper.core.quering.rspql.window.WindowNode;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.scope.Tick;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
+import it.polimi.yasper.core.spe.windowing.operator.CQELSTimeWindowOperator;
+import it.polimi.yasper.core.spe.windowing.operator.CSPARQLTimeWindowOperator;
 import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
+import it.polimi.yasper.core.stream.RegisteredStream;
 import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.utils.RDFUtils;
 import lombok.NonNull;
@@ -23,7 +27,7 @@ import java.util.Map;
 public class SDSBuilderImpl implements SDSBuilder {
 
     @NonNull
-    private Map<String, Stream> registeredStreams;
+    private Map<String, RegisteredStream> registeredStreams;
     @NonNull
     private Report report;
     @NonNull
@@ -39,12 +43,19 @@ public class SDSBuilderImpl implements SDSBuilder {
     @Override
     public void visit(ContinuousQuery query) {
         this.sds = new SDSImpl();
-        this.cqe = new ContinuousQueryExecutionImpl(RDFUtils.createIRI(query.getID()), sds, sds, query);
+        this.cqe = new ContinuousQueryExecutionImpl(sds, sds, query);
 
-        query.getWindowMap().forEach((WindowOperator wo, Stream s) -> {
-            IRI iri = RDFUtils.createIRI(wo.getName());
-            Stream s1 = registeredStreams.get(s.getURI());
-            WindowAssigner wa = wo.apply(s1);
+        query.getWindowMap().forEach((WindowNode wo, Stream s) -> {
+
+            WindowOperator w;
+            if (wo.getStep() == -1) {
+                w = new CSPARQLTimeWindowOperator(RDFUtils.createIRI(wo.getName()), wo.getRange(), wo.getStep(), wo.getT0());
+            } else
+                w = new CQELSTimeWindowOperator(RDFUtils.createIRI(wo.getName()), wo.getRange(), wo.getT0());
+
+            IRI iri = RDFUtils.createIRI(w.getName());
+            RegisteredStream s1 = registeredStreams.get(s.getURI());
+            WindowAssigner wa = w.apply(s1);
             wa.report(report);
             wa.tick(tick);
             wa.report_grain(reportGrain);

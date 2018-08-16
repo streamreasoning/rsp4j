@@ -2,6 +2,7 @@ package simple.querying.formatter;
 
 
 import it.polimi.yasper.core.quering.querying.AbstractContinuousQuery;
+import it.polimi.yasper.core.quering.rspql.window.WindowNode;
 import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
@@ -15,13 +16,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ContinuousQueryImpl extends AbstractContinuousQuery {
     private final String id;
-    private Map<WindowOperator, Stream> windowMap = new HashMap<>();
+    private Map<WindowNode, Stream> windowMap = new HashMap<>();
     private List<String> graphURIs = new ArrayList<>();
     private List<String> namedwindowsURIs = new ArrayList<>();
     private List<String> namedGraphURIs = new ArrayList<>();
 
     @Override
-    public void addNamedWindow(String streamUri, WindowOperator wo) {
+    public void addNamedWindow(String streamUri, WindowNode wo) {
         Stream s = new RDFStream(streamUri);
         windowMap.put(wo, s);
     }
@@ -37,7 +38,7 @@ public class ContinuousQueryImpl extends AbstractContinuousQuery {
     }
 
     @Override
-    public Map<WindowOperator, Stream> getWindowMap() {
+    public Map<WindowNode, Stream> getWindowMap() {
         return windowMap;
     }
 

@@ -220,16 +220,24 @@ final public class SDSImpl implements Dataset, SDS {
         //Default consolidation coaleces all the current
         //content graphs and produces the SDS to who execute the query.
 
+        //I need to readd all the triples because the dataset works on quads
+        //Altenrativelt one can wrap it into a graph interface and update it directly within the tvg
+        // this way there's no need to readd after materialization
+
         this.clear();
 
-        defs.stream().map(g -> g.<Graph>materialize(ts))
-                .flatMap(Graph::stream)
+        defs.stream().map(g -> {
+            g.materialize(ts);
+            return (Graph) g.get();
+        }).flatMap(Graph::stream)
                 .forEach(t -> this.add(def, t.getSubject(), t.getPredicate(), t.getObject()));
 
         tvgs.entrySet().stream()
-                .map(e -> new NamedGraph(e.getKey(), e.getValue().materialize(ts)))
-                .forEach(n -> n.g.stream()
-                        .forEach(o -> this.add(n.name, o.getSubject(), o.getPredicate(), o.getObject())));
+                .map(e -> {
+                    e.getValue().materialize(ts);
+                    return new NamedGraph(e.getKey(), (Graph) e.getValue().get());
+                }).forEach(n -> n.g.stream()
+                .forEach(o -> this.add(n.name, o.getSubject(), o.getPredicate(), o.getObject())));
     }
 
     @AllArgsConstructor

@@ -11,9 +11,10 @@ import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
 import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
 import it.polimi.yasper.core.spe.scope.Tick;
-import it.polimi.yasper.core.stream.Stream;
+import it.polimi.yasper.core.stream.RegisteredStream;
 import it.polimi.yasper.core.stream.StreamElement;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
+import it.polimi.yasper.core.stream.rdf.RegisteredRDFStream;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import simple.sds.SDSBuilderImpl;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class CSPARQLImpl implements RSPEngine<StreamElement> {
+public class CSPARQLImpl implements RSPEngine<RDFStream, RegisteredRDFStream, StreamElement> {
 
     private final long t0;
     private Report report;
@@ -34,7 +35,7 @@ public class CSPARQLImpl implements RSPEngine<StreamElement> {
     protected Map<String, ContinuousQueryExecution> queryExecutions;
     protected Map<String, ContinuousQuery> registeredQueries;
     protected Map<String, List<QueryResponseFormatter>> queryObservers;
-    protected Map<String, Stream> registeredStreams;
+    protected Map<String, RegisteredStream> registeredStreams;
     private ReportGrain report_grain;
 
     public CSPARQLImpl(long t0, EngineConfiguration rsp_config) {
@@ -52,13 +53,14 @@ public class CSPARQLImpl implements RSPEngine<StreamElement> {
     }
 
     @Override
-    public RDFStream register(RDFStream s) {
-        registeredStreams.put(s.getURI(), s);
-        return s;
+    public RegisteredRDFStream register(RDFStream s) {
+        RegisteredRDFStream rs = new RegisteredRDFStream(s.getURI());
+        registeredStreams.put(s.getURI(), rs);
+        return rs;
     }
 
     @Override
-    public void unregister(RDFStream s) {
+    public void unregister(RegisteredRDFStream s) {
         //TODO stop all the queries that are using s
         // destroy all the window asssigners
         // remove s from registeredStreams

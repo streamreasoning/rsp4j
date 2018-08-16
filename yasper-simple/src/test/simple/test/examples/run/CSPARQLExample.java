@@ -1,9 +1,8 @@
-package simple.test.examples;
+package simple.test.examples.run;
 
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.quering.querying.ContinuousQuery;
-import it.polimi.yasper.core.spe.windowing.operator.CQELSTimeWindowOperator;
-import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
+import it.polimi.yasper.core.quering.rspql.window.WindowNode;
 import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
@@ -12,6 +11,9 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.rdf.api.Graph;
 import simple.querying.formatter.ContinuousQueryImpl;
 import simple.querying.formatter.InstResponseSysOutFormatter;
+import simple.test.examples.CSPARQLImpl;
+import simple.test.examples.WritableRDFStream;
+import simple.windowing.WindowNodeImpl;
 
 import java.net.URL;
 import java.time.Duration;
@@ -19,17 +21,17 @@ import java.time.Duration;
 /**
  * Created by Riccardo on 03/08/16.
  */
-public class CQELSExample {
+public class CSPARQLExample {
 
-    static CQELSmpl sr;
+    static CSPARQLImpl sr;
 
     public static void main(String[] args) throws ConfigurationException {
 
-        URL resource = CQELSExample.class.getResource("/default.properties");
+        URL resource = CSPARQLExample.class.getResource("/default.properties");
         QueryConfiguration config = new QueryConfiguration(resource.getPath());
         EngineConfiguration ec = EngineConfiguration.loadConfig("/default.properties");
 
-        sr = new CQELSmpl(0, ec);
+        sr = new CSPARQLImpl(0, ec);
 
         //STREAM DECLARATION
         WritableRDFStream stream = new WritableRDFStream("stream1");
@@ -40,13 +42,14 @@ public class CQELSExample {
 
         ContinuousQuery q = new ContinuousQueryImpl("q1");
 
-        WindowOperator w = new CQELSTimeWindowOperator(RDFUtils.createIRI("w1"), Duration.ofSeconds(2).toMillis(), 0);
+        WindowNode wn = new WindowNodeImpl(RDFUtils.createIRI("w1"), Duration.ofSeconds(2), Duration.ofSeconds(2), 0);
 
-        q.addNamedWindow("stream1", w);
+        q.addNamedWindow("stream1", wn);
 
         ContinuousQueryExecution cqe = sr.register(q, config);
 
         cqe.addFormatter(new InstResponseSysOutFormatter("TTL", true));
+
 
         //RUNTIME DATA
 

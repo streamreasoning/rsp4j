@@ -1,11 +1,9 @@
-package simple.test.examples;
+package simple.test.examples.run;
 
 import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.quering.querying.ContinuousQuery;
-import it.polimi.yasper.core.spe.windowing.operator.CSPARQLTimeWindowOperator;
-import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
+import it.polimi.yasper.core.quering.rspql.window.WindowNode;
 import it.polimi.yasper.core.stream.Stream;
-import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import it.polimi.yasper.core.utils.RDFUtils;
@@ -13,6 +11,9 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.rdf.api.Graph;
 import simple.querying.formatter.ContinuousQueryImpl;
 import simple.querying.formatter.InstResponseSysOutFormatter;
+import simple.test.examples.CQELSmpl;
+import simple.test.examples.WritableRDFStream;
+import simple.windowing.WindowNodeImpl;
 
 import java.net.URL;
 import java.time.Duration;
@@ -20,17 +21,17 @@ import java.time.Duration;
 /**
  * Created by Riccardo on 03/08/16.
  */
-public class CSPARQLExample {
+public class CQELSExample {
 
-    static CSPARQLImpl sr;
+    static CQELSmpl sr;
 
     public static void main(String[] args) throws ConfigurationException {
 
-        URL resource = CSPARQLExample.class.getResource("/default.properties");
+        URL resource = CQELSExample.class.getResource("/default.properties");
         QueryConfiguration config = new QueryConfiguration(resource.getPath());
         EngineConfiguration ec = EngineConfiguration.loadConfig("/default.properties");
 
-        sr = new CSPARQLImpl(0, ec);
+        sr = new CQELSmpl(0, ec);
 
         //STREAM DECLARATION
         WritableRDFStream stream = new WritableRDFStream("stream1");
@@ -41,15 +42,13 @@ public class CSPARQLExample {
 
         ContinuousQuery q = new ContinuousQueryImpl("q1");
 
+        WindowNode wn = new WindowNodeImpl(RDFUtils.createIRI("w1"), Duration.ofSeconds(2), 0);
 
-        WindowOperator w = new CSPARQLTimeWindowOperator(RDFUtils.createIRI("w1"), Duration.ofSeconds(2).toMillis(), Duration.ofSeconds(2).toMillis(), 0);
-
-        q.addNamedWindow("stream1", w);
+        q.addNamedWindow("stream1", wn);
 
         ContinuousQueryExecution cqe = sr.register(q, config);
 
         cqe.addFormatter(new InstResponseSysOutFormatter("TTL", true));
-
 
         //RUNTIME DATA
 
@@ -89,7 +88,6 @@ public class CSPARQLExample {
 
         stream.put(new WritableRDFStream.Elem(7000, graph));
         //stream.put(new it.polimi.deib.ssp.windowing.WritableRDFStream.Elem(3000, graph));
-
 
     }
 

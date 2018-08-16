@@ -1,13 +1,12 @@
 package simple.querying;
 
 import it.polimi.yasper.core.quering.querying.ContinuousQuery;
+import it.polimi.yasper.core.quering.rspql.window.WindowNode;
 import it.polimi.yasper.core.quering.syntax.RSPQLBaseVisitor;
 import it.polimi.yasper.core.quering.syntax.RSPQLParser;
-import it.polimi.yasper.core.spe.windowing.operator.CQELSTimeWindowOperator;
-import it.polimi.yasper.core.spe.windowing.operator.CSPARQLTimeWindowOperator;
-import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import it.polimi.yasper.core.utils.RDFUtils;
 import org.apache.commons.lang.NotImplementedException;
+import simple.windowing.WindowNodeImpl;
 
 import java.time.Duration;
 
@@ -71,16 +70,14 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
         RSPQLParser.LogicalWindowContext c = ctx.window().logicalWindow();
         Duration range = Duration.parse(c.logicalRange().duration().getText());
         Duration step = null;
+
         if (c.logicalStep() != null) {
             step = Duration.parse(c.logicalStep().duration().getText());
-
-            WindowOperator w = new CSPARQLTimeWindowOperator(RDFUtils.createIRI(windowUri), range.toMillis(), step.toMillis(), 0);
-            query.addNamedWindow(streamUri, w);
-
-        } else {
-            WindowOperator w = new CQELSTimeWindowOperator(RDFUtils.createIRI(windowUri), range.toMillis(), 0);
-            query.addNamedWindow(streamUri, w);
         }
+
+        WindowNode wn = new WindowNodeImpl(RDFUtils.createIRI(windowUri), range, step, 0);
+
+        query.addNamedWindow(streamUri, wn);
 
         return null;
     }
