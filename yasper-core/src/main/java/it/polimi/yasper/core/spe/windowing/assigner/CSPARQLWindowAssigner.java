@@ -4,7 +4,7 @@ import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.ContentGraph;
 import it.polimi.yasper.core.spe.content.EmptyContent;
 import it.polimi.yasper.core.spe.exceptions.OutOfOrderElementException;
-import it.polimi.yasper.core.spe.time.TimeFactory;
+import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.windowing.definition.Window;
 import it.polimi.yasper.core.spe.windowing.definition.WindowImpl;
 import it.polimi.yasper.core.stream.StreamElement;
@@ -26,8 +26,8 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner implements O
     private long tc0;
     private long toi;
 
-    public CSPARQLWindowAssigner(IRI iri, long a, long b, long t0, long tc0) {
-        super(iri, TimeFactory.getInstance());
+    public CSPARQLWindowAssigner(IRI iri, long a, long b, long t0, long tc0, Time instance) {
+        super(iri, instance);
         this.a = a;
         this.b = b;
         this.t0 = t0;

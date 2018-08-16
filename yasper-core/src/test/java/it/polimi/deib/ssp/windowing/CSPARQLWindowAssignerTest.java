@@ -8,6 +8,7 @@ import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
 import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
 import it.polimi.yasper.core.spe.scope.Tick;
+import it.polimi.yasper.core.spe.time.TimeImpl;
 import it.polimi.yasper.core.spe.windowing.assigner.CSPARQLWindowAssigner;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.utils.RDFUtils;
@@ -32,7 +33,7 @@ public class CSPARQLWindowAssignerTest {
 
 
         //WINDOW DECLARATION
-        WindowAssigner windowAssigner = new CSPARQLWindowAssigner(RDFUtils.createIRI("w1"), 2000, 2000, scope, 0);
+        WindowAssigner windowAssigner = new CSPARQLWindowAssigner(RDFUtils.createIRI("w1"), 2000, 2000, scope, 0, new TimeImpl());
 
         //ENGINE INTERNALS - HOW THE REPORTING POLICY, TICK AND REPORT GRAIN INFLUENCE THE RUNTIME
         windowAssigner.report(report);
@@ -46,10 +47,10 @@ public class CSPARQLWindowAssignerTest {
 
         v.addObserver((o, arg) -> {
             Long arg1 = (Long) arg;
-            Graph g = timeVarying.materialize(arg1);
-            tester.test(g);
+            timeVarying.materialize(arg1);
             System.err.println(arg1);
-            System.err.println(g);
+            System.err.println(timeVarying.get());
+            tester.test((Graph) timeVarying.get());
         });
 
         Graph expected = RDFUtils.getInstance().createGraph();
@@ -116,8 +117,6 @@ public class CSPARQLWindowAssignerTest {
         tester.setExpected(expected);
 
         windowAssigner.notify(new WritableStream.Elem(7000, graph));
-        //stream.put(new WritableStream.Elem(3000, graph));
-
     }
 
     private class Tester {

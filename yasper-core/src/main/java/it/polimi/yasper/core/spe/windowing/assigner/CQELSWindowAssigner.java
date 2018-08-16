@@ -4,7 +4,7 @@ import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.ContentGraph;
 import it.polimi.yasper.core.spe.content.EmptyContent;
 import it.polimi.yasper.core.spe.exceptions.OutOfOrderElementException;
-import it.polimi.yasper.core.spe.time.TimeFactory;
+import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.windowing.definition.Window;
 import it.polimi.yasper.core.spe.windowing.definition.WindowImpl;
 import it.polimi.yasper.core.stream.StreamElement;
@@ -29,8 +29,8 @@ public class CQELSWindowAssigner extends ObservableWindowAssigner implements Obs
     private long toi;
 
 
-    public CQELSWindowAssigner(IRI iri, long a, long tc0) {
-        super(iri, TimeFactory.getInstance());
+    public CQELSWindowAssigner(IRI iri, long a, long tc0, Time instance) {
+        super(iri, instance);
         this.a = a;
         this.tc0 = tc0;
         this.toi = 0;

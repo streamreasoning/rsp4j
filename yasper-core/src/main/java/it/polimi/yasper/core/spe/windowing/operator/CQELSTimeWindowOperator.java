@@ -1,7 +1,9 @@
 package it.polimi.yasper.core.spe.windowing.operator;
 
+import it.polimi.yasper.core.spe.time.TimeFactory;
 import it.polimi.yasper.core.spe.windowing.assigner.CQELSWindowAssigner;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
+import it.polimi.yasper.core.stream.RegisteredStream;
 import it.polimi.yasper.core.stream.Stream;
 import org.apache.commons.rdf.api.IRI;
 
@@ -27,8 +29,8 @@ public class CQELSTimeWindowOperator implements WindowOperator {
     }
 
     @Override
-    public WindowAssigner apply(Stream s) {
-        WindowAssigner windowAssigner = new CQELSWindowAssigner(iri, a, 0);
+    public WindowAssigner apply(RegisteredStream s) {
+        WindowAssigner windowAssigner = new CQELSWindowAssigner(iri, a, 0, TimeFactory.getInstance());
         s.addWindowAssiger(windowAssigner);
         return windowAssigner;
     }

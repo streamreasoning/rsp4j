@@ -1,5 +1,11 @@
 package it.polimi.yasper.core.spe.scope;
 
 public enum Tick {
-    TIME_DRIVEN, BATCH_DRIVEN, TUPLE_DRIVEN
+    TIME_DRIVEN("time"), BATCH_DRIVEN("batch"), TUPLE_DRIVEN("tuple");
+
+    private final String name;
+
+    Tick(String name) {
+        this.name = name;
+    }
 }

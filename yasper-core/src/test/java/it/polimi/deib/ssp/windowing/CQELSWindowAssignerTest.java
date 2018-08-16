@@ -8,6 +8,7 @@ import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
 import it.polimi.yasper.core.spe.report.strategies.OnContentChange;
 import it.polimi.yasper.core.spe.scope.Tick;
+import it.polimi.yasper.core.spe.time.TimeImpl;
 import it.polimi.yasper.core.spe.windowing.assigner.CQELSWindowAssigner;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.utils.RDFUtils;
@@ -29,7 +30,7 @@ public class CQELSWindowAssignerTest {
         Tick tick = Tick.TUPLE_DRIVEN;
         ReportGrain report_grain = ReportGrain.SINGLE;
 
-        WindowAssigner wa = new CQELSWindowAssigner(RDFUtils.createIRI("w1"), 3000, 0);
+        WindowAssigner wa = new CQELSWindowAssigner(RDFUtils.createIRI("w1"), 3000, 0, new TimeImpl());
 
         wa.report(report);
         wa.tick(tick);
@@ -39,13 +40,14 @@ public class CQELSWindowAssignerTest {
 
         StreamViewImpl v = new StreamViewImpl();
         TimeVarying timeVarying = wa.set(v);
+
+
         v.addObserver((o, arg) -> {
             Long arg1 = (Long) arg;
-            Graph g = timeVarying.materialize(arg1);
+            timeVarying.materialize(arg1);
             System.out.println(arg1);
-            System.out.println(g);
-            tester.test(g);
-
+            System.out.println(timeVarying.get());
+            tester.test((Graph) timeVarying.get());
         });
 
 
@@ -142,7 +144,6 @@ public class CQELSWindowAssignerTest {
         tester.setUnexpected_dstream(unexpected);
 
         wa.notify(new WritableStream.Elem(7000, graph));
-        //stream.put(new WritableStream.Elem(3000, graph));
 
     }
 

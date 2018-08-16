@@ -51,9 +51,9 @@ public class AbstractQueryExample {
 
         v.addObserver((o, arg) -> {
             Long arg1 = (Long) arg;
-            Graph g = timeVarying.materialize(arg1);
+            timeVarying.materialize(arg1);
             System.err.println(arg1);
-            System.err.println(g);
+            System.err.println(timeVarying.get());
         });
 
 

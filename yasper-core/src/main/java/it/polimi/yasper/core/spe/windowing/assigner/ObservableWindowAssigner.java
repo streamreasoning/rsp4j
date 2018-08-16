@@ -12,6 +12,7 @@ import it.polimi.yasper.core.spe.time.TimeFactory;
 import it.polimi.yasper.core.spe.time.TimeInstant;
 import it.polimi.yasper.core.spe.windowing.definition.Window;
 import it.polimi.yasper.core.stream.StreamElement;
+import it.polimi.yasper.core.utils.RDFUtils;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.IRI;
 
@@ -64,14 +65,14 @@ public abstract class ObservableWindowAssigner extends Observable implements Win
     public TimeVaryingGraph set(ContinuousQueryExecution content) {
         this.addObserver(content);
         //TODO Generalize the type of content using an ENUM
-        return new TimeVaryingGraph(this, iri);
+        return new TimeVaryingGraph(this, iri, RDFUtils.createGraph());
     }
 
     @Override
     public TimeVaryingGraph set(View view) {
         view.observerOf(this);
         //TODO Generalize the type of content using an ENUM
-        return new TimeVaryingGraph(this, iri);
+        return new TimeVaryingGraph(this, iri, RDFUtils.createGraph());
     }
 
     /**
@@ -120,6 +121,11 @@ public abstract class ObservableWindowAssigner extends Observable implements Win
     protected abstract void windowing(StreamElement arg);
 
     protected abstract Content compute(long t_e, Window w);
+
+    @Override
+    public String getName() {
+        return iri.getIRIString();
+    }
 
     @Override
     public boolean isNamed() {
