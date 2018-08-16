@@ -5,6 +5,8 @@ import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.windowing.definition.Window;
 import it.polimi.yasper.core.spe.report.strategies.ReportingStrategy;
 
+import java.util.List;
+
 /**
  * The Report dimension in our model defines the conditions under
  * which the window contents become visible for further query evaluation
@@ -21,4 +23,6 @@ public interface Report {
     boolean report(Window w, Content c, long tapp, long tsys);
 
     void add(ReportingStrategy r);
+
+    ReportingStrategy[] strategies();
 }

@@ -22,5 +22,10 @@ public class ReportImpl implements Report {
         strategies.add(r);
     }
 
+    @Override
+    public ReportingStrategy[] strategies() {
+        return strategies.toArray(new ReportingStrategy[strategies.size()]);
+    }
+
 
 }
