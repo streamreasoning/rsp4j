@@ -1,6 +1,7 @@
 package it.polimi.yasper.core.quering.querying;
 
 import it.polimi.yasper.core.enums.StreamOperator;
+import it.polimi.yasper.core.quering.rspql.window.WindowNode;
 import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import it.polimi.yasper.core.stream.Stream;
 
@@ -20,7 +21,7 @@ public interface ContinuousQuery {
 
     // Subset of methods
 
-    void addNamedWindow(String streamUri, WindowOperator wo);
+    void addNamedWindow(String streamUri, WindowNode wo);
 
     void setIstream();
 
@@ -52,7 +53,7 @@ public interface ContinuousQuery {
 
     boolean isRecursive();
 
-    Map<? extends WindowOperator, Stream> getWindowMap();
+    Map<? extends WindowNode, Stream> getWindowMap();
 
     List<String> getGraphURIs();
 
