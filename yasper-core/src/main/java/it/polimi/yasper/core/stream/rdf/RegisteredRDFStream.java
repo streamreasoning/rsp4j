@@ -3,6 +3,7 @@ package it.polimi.yasper.core.stream.rdf;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.stream.RegisteredStream;
 import it.polimi.yasper.core.stream.Stream;
+import it.polimi.yasper.core.stream.StreamElement;
 import lombok.NonNull;
 
 import java.util.ArrayList;
@@ -25,5 +26,6 @@ public class RegisteredRDFStream extends RDFStream implements RegisteredStream {
     public void addWindowAssiger(WindowAssigner windowAssigner) {
         assigners.add(windowAssigner);
     }
+
 
 }

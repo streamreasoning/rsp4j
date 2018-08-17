@@ -10,4 +10,7 @@ import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 public interface RegisteredStream extends Stream {
 
     void addWindowAssiger(WindowAssigner windowAssigner);
+
+    void put(StreamElement e);
+
 }
