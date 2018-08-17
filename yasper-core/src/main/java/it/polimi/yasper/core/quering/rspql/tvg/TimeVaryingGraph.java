@@ -4,7 +4,6 @@ import it.polimi.yasper.core.Named;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
@@ -13,7 +12,6 @@ import org.apache.commons.rdf.api.IRI;
 @RequiredArgsConstructor
 public class TimeVaryingGraph implements TimeVarying, Named {
 
-    @NonNull
     private final WindowAssigner wa;
     private IRI name;
     private Graph graph;

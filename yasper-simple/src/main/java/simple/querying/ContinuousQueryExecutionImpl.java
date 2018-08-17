@@ -38,17 +38,17 @@ public class ContinuousQueryExecutionImpl extends ContinuousQueryExecutionObserv
 
     @Override
     public ContinuousQuery getContinuousQuery() {
-        return null;
+        return query;
     }
 
     @Override
     public String getQueryID() {
-        return null;
+        return query.getID();
     }
 
     @Override
     public SDS getSDS() {
-        return null;
+        return sds;
     }
 
     @Override
@@ -78,7 +78,9 @@ public class ContinuousQueryExecutionImpl extends ContinuousQueryExecutionObserv
 
     @Override
     public void update(Observable o, Object arg) {
-        eval((Long) arg);
+        InstantaneousResponse eval = eval((Long) arg);
+        setChanged();
+        notifyObservers(eval);
     }
 }
 

@@ -2,7 +2,6 @@ package it.polimi.deib.ssp.utils;
 
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.stream.RegisteredStream;
-import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.stream.StreamElement;
 
 import java.util.ArrayList;
@@ -24,6 +23,11 @@ public class WritableStream implements RegisteredStream {
     @Override
     public void addWindowAssiger(WindowAssigner windowAssigner) {
         assigners.add(windowAssigner);
+    }
+
+    @Override
+    public void put(StreamElement e) {
+        assigners.forEach(a -> a.notify(e));
     }
 
     public static class Elem implements StreamElement {
