@@ -31,12 +31,12 @@ public class WindowNodeImpl implements WindowNode {
 
     @Override
     public long getRange() {
-        return logicalRange.getSeconds();
+        return logicalRange.getSeconds() * 1000;
     }
 
     @Override
     public long getStep() {
-        return logicalStep != null ? logicalStep.getSeconds() : -1;
+        return logicalStep != null ? logicalStep.getSeconds() * 1000 : -1;
     }
 
     @Override

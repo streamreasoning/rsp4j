@@ -49,9 +49,9 @@ public class SDSBuilderImpl implements SDSBuilder {
 
             WindowOperator w;
             if (wo.getStep() == -1) {
-                w = new CSPARQLTimeWindowOperator(RDFUtils.createIRI(wo.getName()), wo.getRange(), wo.getStep(), wo.getT0());
-            } else
                 w = new CQELSTimeWindowOperator(RDFUtils.createIRI(wo.getName()), wo.getRange(), wo.getT0());
+            } else
+                w = new CSPARQLTimeWindowOperator(RDFUtils.createIRI(wo.getName()), wo.getRange(), wo.getStep(), wo.getT0());
 
             IRI iri = RDFUtils.createIRI(w.getName());
             RegisteredStream s1 = registeredStreams.get(s.getURI());
