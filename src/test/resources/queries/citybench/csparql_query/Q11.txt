@@ -1,0 +1,13 @@
+### negation supported in csparql but cannot evaluate latency or completeness
+Ask  
+from stream <http://www.insight-centre.org/dataset/SampleEventService#AarhusWeatherData0> [range 3s step 1s] 
+where {
+
+ 
+{?obId1 a ?ob.
+?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedProperty> ?p1.
+?obId1 <http://purl.oclc.org/NET/sao/hasValue> ?v1.
+?obId1 <http://purl.oclc.org/NET/ssnx/ssn#observedBy> <http://www.insight-centre.org/dataset/SampleEventService#AarhusWeatherData0>.
+}
+Filter (!bound(?obId1))
+}

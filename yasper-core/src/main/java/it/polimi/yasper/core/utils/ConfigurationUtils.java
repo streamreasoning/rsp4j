@@ -24,6 +24,16 @@ public class ConfigurationUtils {
     public static final String REASONING_RULE_PATH = ENGINE + "reasoning.rulepath";
     public static final String TIME = ENGINE + "time";
     public static final String PARTIAL_WINDOW = ENGINE + "partialwindow";
+    public static final String BASE_IRI = ENGINE + "base_iri";
+
+    public static final String REPORT_STRATEGY_WC = ENGINE + "on_window_close";
+    public static final String REPORT_STRATEGY_CC = ENGINE + "on_content_change";
+    public static final String REPORT_STRATEGY_NC = ENGINE + "non_empty_content";
+    public static final String REPORT_STRATEGY_PP = ENGINE + "periodic";
+
+    public static final String TICK = ENGINE + "tick";
+    
+    public static final String REPORT_GRAIN = ENGINE + "report_grain";
 
 
 //    rspengine.tbox_location=/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/arist.tbox.owl
