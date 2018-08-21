@@ -12,11 +12,18 @@
     <artifactId>yasper-simple</artifactId>
     <version>2.0.4</version>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
-            <groupId>it.polimi.sr.yasper</groupId>
+            <groupId>com.github.riccardotommasini.yasper</groupId>
             <artifactId>yasper-core</artifactId>
-            <version>2.0.4 </version>
+            <version>2.0.4</version>
         </dependency>
     </dependencies>
 </project>

@@ -13,6 +13,4 @@ public interface RSPEngine<S2 extends RDFStream, S1 extends RegisteredRDFStream,
 
     boolean process(T var1);
 
-    // TODO is reasoning enabled
-    // TODO is external time control enabled
 }

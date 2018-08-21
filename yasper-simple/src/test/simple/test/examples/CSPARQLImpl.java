@@ -17,6 +17,7 @@ import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.stream.rdf.RegisteredRDFStream;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
+import org.apache.commons.rdf.api.Graph;
 import simple.sds.SDSBuilderImpl;
 
 import java.util.HashMap;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class CSPARQLImpl implements RSPEngine<RDFStream, RegisteredRDFStream, StreamElement> {
+public class CSPARQLImpl implements RSPEngine<RDFStream, RegisteredRDFStream, Graph> {
 
     private final long t0;
     private Report report;
@@ -95,7 +96,7 @@ public class CSPARQLImpl implements RSPEngine<RDFStream, RegisteredRDFStream, St
     }
 
     @Override
-    public boolean process(StreamElement var1) {
+    public boolean process(Graph var1) {
         return false;
     }
 
