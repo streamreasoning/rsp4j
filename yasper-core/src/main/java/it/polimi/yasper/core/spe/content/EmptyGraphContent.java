@@ -1,9 +1,8 @@
 package it.polimi.yasper.core.spe.content;
 
-import it.polimi.yasper.core.stream.StreamElement;
 import org.apache.commons.rdf.api.Graph;
 
-public class EmptyContent implements Content {
+public class EmptyGraphContent implements Content<Graph> {
 
     long ts = System.currentTimeMillis();
 
@@ -13,7 +12,7 @@ public class EmptyContent implements Content {
     }
 
     @Override
-    public void add(StreamElement e) {
+    public void add(Graph e) {
         throw new UnsupportedOperationException();
     }
 

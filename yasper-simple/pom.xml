@@ -5,12 +5,12 @@
     <parent>
         <artifactId>yasper</artifactId>
         <groupId>it.polimi.sr.yasper</groupId>
-        <version>2.0.0</version>
+        <version>2.0.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>yasper-simple</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.4</version>
 
     <dependencies>
         <dependency>

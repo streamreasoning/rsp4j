@@ -1,26 +1,30 @@
 package it.polimi.yasper.core.spe.windowing.assigner;
 
+import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.quering.rspql.tvg.TimeVaryingGraph;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.ContentGraph;
-import it.polimi.yasper.core.spe.content.EmptyContent;
+import it.polimi.yasper.core.spe.content.EmptyGraphContent;
+import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.spe.exceptions.OutOfOrderElementException;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.windowing.definition.Window;
 import it.polimi.yasper.core.spe.windowing.definition.WindowImpl;
-import it.polimi.yasper.core.stream.StreamElement;
+import it.polimi.yasper.core.utils.RDFUtils;
 import lombok.extern.log4j.Log4j;
+import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j
-public class CSPARQLWindowAssigner extends ObservableWindowAssigner implements Observer {
+public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph> implements Observer {
 
     private final long a, b;
     private final long t0;
 
-    private Map<Window, Content> active_windows;
+    private Map<Window, Content<Graph>> active_windows;
     private Set<Window> to_evict;
     private long tc0;
     private long toi;
@@ -37,7 +41,7 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner implements O
     }
 
     @Override
-    public Content getContent(long t_e) {
+    public Content<Graph>  getContent(long t_e) {
         Optional<Window> max = active_windows.keySet().stream()
                 .filter(w -> w.getO() < t_e && w.getC() <= t_e)
                 .max(Comparator.comparingLong(Window::getC));
@@ -45,7 +49,7 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner implements O
         if (max.isPresent())
             return active_windows.get(max.get());
 
-        return new EmptyContent();
+        return new EmptyGraphContent();
     }
 
     @Override
@@ -57,23 +61,23 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner implements O
 
     @Override
     public void update(Observable o, Object arg) {
-        windowing((StreamElement) arg);
     }
 
-    protected void windowing(StreamElement e) {
-        log.debug("Received element (" + e.getContent() + "," + e.getTimestamp() + ")");
-        long t_e = e.getTimestamp();
+    protected void windowing(Graph e, long timestamp) {
+
+        log.debug("Received element (" + e + "," + timestamp + ")");
+        long t_e = timestamp;
 
         if (time.getAppTime() > t_e) {
             log.error("OUT OF ORDER NOT HANDLED");
-            throw new OutOfOrderElementException("(" + e.getContent() + "," + e.getTimestamp() + ")");
+            throw new OutOfOrderElementException("(" + e + "," + timestamp + ")");
         }
 
         scope(t_e);
 
         active_windows.keySet().forEach(
                 w -> {
-                    log.debug("Processing Window [" + w.getO() + "," + w.getC() + ") for element (" + e.getContent() + "," + e.getTimestamp() + ")");
+                    log.debug("Processing Window [" + w.getO() + "," + w.getC() + ") for element (" + e + "," + timestamp + ")");
                     if (w.getO() <= t_e && t_e < w.getC()) {
                         log.debug("Adding element [" + e + "] to Window [" + w.getO() + "," + w.getC() + ")");
                         active_windows.get(w).add(e);
@@ -98,7 +102,7 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner implements O
                         .ifPresent(window -> tick(t_e, window));
         }
 
-        //TODO shouldn't we evaluate setVisible.setVisible when we materialize the content?
+        //TODO shouldn't we evaluate setVisible.setVisible when we materialize the e?
         //TODO Tick regulates whether we compute, setVisible only if we see the results.
 
         //TODO eviction, should we notify evicted windows to interested observers?
@@ -135,9 +139,24 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner implements O
 
 
     protected Content compute(long t_e, Window w) {
-        Content content = active_windows.containsKey(w) ? active_windows.get(w) : new EmptyContent();
+        Content content = active_windows.containsKey(w) ? active_windows.get(w) : new EmptyGraphContent();
         time.setAppTime(t_e);
         return content;
+    }
+
+
+    @Override
+    public TimeVaryingGraph set(ContinuousQueryExecution content) {
+        this.addObserver(content);
+        //TODO Generalize the type of content using an ENUM
+        return new TimeVaryingGraph(this, iri, RDFUtils.createGraph());
+    }
+
+    @Override
+    public TimeVaryingGraph set(View view) {
+        view.observerOf(this);
+        //TODO Generalize the type of content using an ENUM
+        return new TimeVaryingGraph(this, iri, RDFUtils.createGraph());
     }
 
 }

@@ -3,10 +3,7 @@ package it.polimi.yasper.core.spe.report.strategies;
 
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.windowing.definition.Window;
-import it.polimi.yasper.core.spe.content.EmptyContent;
-
-import java.util.HashMap;
-import java.util.Map;
+import it.polimi.yasper.core.spe.content.EmptyGraphContent;
 
 /**
  * Non-empty content (Rne): reporting is done
@@ -16,7 +13,7 @@ public class NonEmptyContent implements ReportingStrategy {
 
     @Override
     public boolean match(Window w, Content c, long tapp, long tsys) {
-        return c.size() > 0 || (c instanceof EmptyContent);
+        return c.size() > 0 || (c instanceof EmptyGraphContent);
     }
 
 }
