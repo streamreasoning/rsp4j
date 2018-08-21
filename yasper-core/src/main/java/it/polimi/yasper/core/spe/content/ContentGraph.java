@@ -1,12 +1,10 @@
 package it.polimi.yasper.core.spe.content;
 
-import it.polimi.yasper.core.stream.StreamElement;
+import it.polimi.yasper.core.spe.time.TimeFactory;
 import it.polimi.yasper.core.utils.RDFUtils;
 import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.api.Triple;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,19 +22,9 @@ public class ContentGraph implements Content<Graph> {
     }
 
     @Override
-    public void add(StreamElement e) {
-        Object content = e.getContent();
-        Graph graph;
-        if (content instanceof Triple) {
-            graph = RDFUtils.createGraph();
-            graph.add((Triple) content);
-
-        } else {
-            graph = (Graph) content;
-        }
-
-        elements.add(graph);
-        this.last_timestamp_changed = e.getTimestamp();
+    public void add(Graph e) {
+        elements.add(e);
+        this.last_timestamp_changed = TimeFactory.getInstance().getAppTime();
     }
 
     @Override

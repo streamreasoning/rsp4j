@@ -33,7 +33,7 @@ public class CSPARQLWindowAssignerTest {
 
 
         //WINDOW DECLARATION
-        WindowAssigner windowAssigner = new CSPARQLWindowAssigner(RDFUtils.createIRI("w1"), 2000, 2000, scope, 0, new TimeImpl());
+        WindowAssigner<Graph> windowAssigner = new CSPARQLWindowAssigner(RDFUtils.createIRI("w1"), 2000, 2000, scope, 0, new TimeImpl());
 
         //ENGINE INTERNALS - HOW THE REPORTING POLICY, TICK AND REPORT GRAIN INFLUENCE THE RUNTIME
         windowAssigner.report(report);
@@ -62,7 +62,7 @@ public class CSPARQLWindowAssignerTest {
 
         tester.setExpected(graph);
         //RUNTIME DATA
-        windowAssigner.notify(new WritableStream.Elem(1000, graph));
+        windowAssigner.notify(graph, 1000);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple1 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S2"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O2"));
@@ -70,7 +70,7 @@ public class CSPARQLWindowAssignerTest {
 
         expected.add(triple1);
         tester.setExpected(expected);
-        windowAssigner.notify(new WritableStream.Elem(1000, graph));
+        windowAssigner.notify(graph, 1000);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple2 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S3"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O3"));
@@ -79,7 +79,7 @@ public class CSPARQLWindowAssignerTest {
         expected.add(triple2);
         tester.setExpected(expected);
 
-        windowAssigner.notify(new WritableStream.Elem(2001, graph));
+        windowAssigner.notify(graph, 2001);
         graph = RDFUtils.getInstance().createGraph();
 
         Triple triple3 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S4"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O4"));
@@ -88,7 +88,7 @@ public class CSPARQLWindowAssignerTest {
         expected.add(triple3);
         tester.setExpected(expected);
 
-        windowAssigner.notify(new WritableStream.Elem(3000, graph));
+        windowAssigner.notify(graph, 3000);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple4 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S5"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O5"));
@@ -97,7 +97,7 @@ public class CSPARQLWindowAssignerTest {
         expected.add(triple4);
         tester.setExpected(expected);
 
-        windowAssigner.notify(new WritableStream.Elem(5000, graph));
+        windowAssigner.notify(graph, 5000);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple5 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S6"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O6"));
@@ -106,8 +106,8 @@ public class CSPARQLWindowAssignerTest {
         expected.add(triple5);
         tester.setExpected(expected);
 
-        windowAssigner.notify(new WritableStream.Elem(5000, graph));
-        windowAssigner.notify(new WritableStream.Elem(6000, graph));
+        windowAssigner.notify(graph, 5000);
+        windowAssigner.notify(graph, 5000);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple6 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S7"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O7"));
@@ -116,7 +116,7 @@ public class CSPARQLWindowAssignerTest {
         expected.add(triple6);
         tester.setExpected(expected);
 
-        windowAssigner.notify(new WritableStream.Elem(7000, graph));
+        windowAssigner.notify(graph, 7000);
     }
 
     private class Tester {

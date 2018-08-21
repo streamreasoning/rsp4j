@@ -1,15 +1,13 @@
 package it.polimi.yasper.core.spe.content;
 
 
-import it.polimi.yasper.core.stream.StreamElement;
-import org.apache.commons.rdf.api.Graph;
-
 public interface Content<T> {
     int size();
 
-    void add(StreamElement e);
+    void add(T e);
 
     Long getTimeStampLastUpdate();
 
+    //TODO CONSIDERING MAKING THIS INCONCISTENCY AWARE
     T coalesce();
 }
