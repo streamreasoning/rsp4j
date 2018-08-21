@@ -12,7 +12,7 @@ import org.apache.commons.rdf.api.IRI;
 @RequiredArgsConstructor
 public class TimeVaryingGraph implements TimeVarying, Named {
 
-    private final WindowAssigner wa;
+    private final WindowAssigner<Graph> wa;
     private IRI name;
     private Graph graph;
 

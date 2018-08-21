@@ -30,7 +30,7 @@ public class CQELSWindowAssignerTest {
         Tick tick = Tick.TUPLE_DRIVEN;
         ReportGrain report_grain = ReportGrain.SINGLE;
 
-        WindowAssigner wa = new CQELSWindowAssigner(RDFUtils.createIRI("w1"), 3000, 0, new TimeImpl());
+        WindowAssigner<Graph> wa = new CQELSWindowAssigner(RDFUtils.createIRI("w1"), 3000, 0, new TimeImpl());
 
         wa.report(report);
         wa.tick(tick);
@@ -62,7 +62,7 @@ public class CQELSWindowAssignerTest {
         tester.setUnexpected_dstream(unexpected);
 
         //RUNTIME DATA
-        wa.notify(new WritableStream.Elem(1000, graph));
+        wa.notify(graph, 1000);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple1 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S2"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O2"));
@@ -71,7 +71,7 @@ public class CQELSWindowAssignerTest {
         tester.setExpected_rstream(expected);
         tester.setUnexpected_dstream(unexpected);
 
-        wa.notify(new WritableStream.Elem(2000, graph));
+        wa.notify(graph, 2001);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple2 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S3"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O3"));
@@ -81,7 +81,7 @@ public class CQELSWindowAssignerTest {
         tester.setExpected_rstream(expected);
         tester.setUnexpected_dstream(unexpected);
 
-        wa.notify(new WritableStream.Elem(3000, graph));
+        wa.notify(graph, 3000);
         graph = RDFUtils.getInstance().createGraph();
 
         Triple triple3 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S4"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O4"));
@@ -91,7 +91,7 @@ public class CQELSWindowAssignerTest {
         tester.setExpected_rstream(expected);
         tester.setUnexpected_dstream(unexpected);
 
-        wa.notify(new WritableStream.Elem(4000, graph));
+        wa.notify(graph, 4000);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple4 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S5"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O5"));
@@ -105,7 +105,7 @@ public class CQELSWindowAssignerTest {
         unexpected.add(triple);
         tester.setUnexpected_dstream(unexpected);
 
-        wa.notify(new WritableStream.Elem(5000, graph));
+        wa.notify(graph, 5000);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple5 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S6"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O6"));
@@ -119,7 +119,7 @@ public class CQELSWindowAssignerTest {
         tester.setUnexpected_dstream(unexpected);
 
 
-        wa.notify(new WritableStream.Elem(6000, graph));
+        wa.notify(graph, 6000);
         graph = RDFUtils.getInstance().createGraph();
         Triple triple6 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S62"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O62"));
         graph.add(triple6);
@@ -128,8 +128,8 @@ public class CQELSWindowAssignerTest {
         tester.setExpected_rstream(expected);
         tester.setUnexpected_dstream(unexpected);
 
-        wa.notify(new WritableStream.Elem(6000, graph));
-        wa.notify(new WritableStream.Elem(6000, graph));
+        wa.notify(graph, 6000);
+        wa.notify(graph, 6000);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple7 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S7"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O7"));
@@ -143,7 +143,7 @@ public class CQELSWindowAssignerTest {
         unexpected.add(triple2);
         tester.setUnexpected_dstream(unexpected);
 
-        wa.notify(new WritableStream.Elem(7000, graph));
+        wa.notify(graph, 7000);
 
     }
 

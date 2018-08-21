@@ -1,9 +1,6 @@
 package it.polimi.yasper.core.spe.windowing.assigner;
 
-import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.quering.rspql.tvg.TimeVaryingGraph;
 import it.polimi.yasper.core.spe.content.Content;
-import it.polimi.yasper.core.spe.content.viewer.View;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.scope.Tick;
@@ -11,15 +8,13 @@ import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.time.TimeFactory;
 import it.polimi.yasper.core.spe.time.TimeInstant;
 import it.polimi.yasper.core.spe.windowing.definition.Window;
-import it.polimi.yasper.core.stream.StreamElement;
-import it.polimi.yasper.core.utils.RDFUtils;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.IRI;
 
 import java.util.Observable;
 
 @Log4j
-public abstract class ObservableWindowAssigner extends Observable implements WindowAssigner {
+public abstract class ObservableWindowAssigner<E> extends Observable implements WindowAssigner<E> {
 
     protected Tick tick;
     protected ReportGrain aw;
@@ -47,8 +42,8 @@ public abstract class ObservableWindowAssigner extends Observable implements Win
     }
 
     @Override
-    public void notify(StreamElement arg) {
-        windowing(arg);
+    public void notify(E arg, long ts) {
+        windowing(arg, ts);
     }
 
     @Override
@@ -59,20 +54,6 @@ public abstract class ObservableWindowAssigner extends Observable implements Win
     @Override
     public Tick tick() {
         return tick;
-    }
-
-    @Override
-    public TimeVaryingGraph set(ContinuousQueryExecution content) {
-        this.addObserver(content);
-        //TODO Generalize the type of content using an ENUM
-        return new TimeVaryingGraph(this, iri, RDFUtils.createGraph());
-    }
-
-    @Override
-    public TimeVaryingGraph set(View view) {
-        view.observerOf(this);
-        //TODO Generalize the type of content using an ENUM
-        return new TimeVaryingGraph(this, iri, RDFUtils.createGraph());
     }
 
     /**
@@ -118,7 +99,7 @@ public abstract class ObservableWindowAssigner extends Observable implements Win
         return c;
     }
 
-    protected abstract void windowing(StreamElement arg);
+    protected abstract void windowing(E arg, long ts);
 
     protected abstract Content compute(long t_e, Window w);
 
