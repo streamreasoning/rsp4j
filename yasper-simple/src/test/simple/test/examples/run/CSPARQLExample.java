@@ -12,7 +12,6 @@ import org.apache.commons.rdf.api.Graph;
 import simple.querying.formatter.ContinuousQueryImpl;
 import simple.querying.formatter.InstResponseSysOutFormatter;
 import simple.test.examples.CSPARQLImpl;
-import simple.test.examples.Elem;
 import simple.test.examples.RDFStreamDecl;
 import simple.windowing.WindowNodeImpl;
 
@@ -55,39 +54,37 @@ public class CSPARQLExample {
 
         Graph graph = RDFUtils.getInstance().createGraph();
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S1"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O1")));
-
-        stream.put(new Elem(1000, graph));
+        stream.put(graph, 1000);
 
         graph = RDFUtils.getInstance().createGraph();
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S2"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O2")));
-
-        stream.put(new Elem(1999, graph));
+        stream.put(graph, 1999);
 
         graph = RDFUtils.getInstance().createGraph();
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S3"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O3")));
+        stream.put(graph, 2001);
 
-        stream.put(new Elem(2001, graph));
         graph = RDFUtils.getInstance().createGraph();
 
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S4"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O4")));
+        stream.put(graph, 3000);
 
-        stream.put(new Elem(3000, graph));
 
         graph = RDFUtils.getInstance().createGraph();
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S5"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O5")));
+        stream.put(graph, 5000);
 
-        stream.put(new Elem(5000, graph));
 
         graph = RDFUtils.getInstance().createGraph();
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S6"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O6")));
+        stream.put(graph, 5000);
+        stream.put(graph, 6000);
 
-        stream.put(new Elem(5000, graph));
-        stream.put(new Elem(6000, graph));
 
         graph = RDFUtils.getInstance().createGraph();
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S7"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O7")));
+        stream.put(graph, 7000);
 
-        stream.put(new Elem(7000, graph));
         //stream.put(new it.polimi.deib.ssp.windowing.RDFStreamDecl.Elem(3000, graph));
 
 
