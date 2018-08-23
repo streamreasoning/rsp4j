@@ -1,9 +1,9 @@
 package simple.querying;
 
-import it.polimi.yasper.core.quering.querying.ContinuousQuery;
-import it.polimi.yasper.core.quering.rspql.window.WindowNode;
-import it.polimi.yasper.core.quering.syntax.RSPQLBaseVisitor;
-import it.polimi.yasper.core.quering.syntax.RSPQLParser;
+import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
+import it.polimi.yasper.core.rspql.window.WindowNode;
+import it.polimi.yasper.core.rspql.syntax.RSPQLBaseVisitor;
+import it.polimi.yasper.core.rspql.syntax.RSPQLParser;
 import it.polimi.yasper.core.utils.RDFUtils;
 import org.apache.commons.lang.NotImplementedException;
 import simple.windowing.WindowNodeImpl;
@@ -178,7 +178,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
     }
 
     /**
-     * Visit construct query. Set the type, construct clause, and visit children.
+     * Visit construct query. Set the type, construct clause, and build children.
      *
      * @param ctx
      * @return

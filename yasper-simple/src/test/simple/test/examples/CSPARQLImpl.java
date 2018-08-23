@@ -1,31 +1,30 @@
 package simple.test.examples;
 
-import it.polimi.yasper.core.engine.RSPEngine;
-import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
-import it.polimi.yasper.core.quering.querying.ContinuousQuery;
-import it.polimi.yasper.core.quering.rspql.sds.SDS;
-import it.polimi.yasper.core.quering.rspql.sds.SDSBuilder;
+import it.polimi.yasper.core.engine.features.QueryRegistrationFeature;
+import it.polimi.yasper.core.engine.features.StreamRegistrationFeature;
+import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.rspql.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
+import it.polimi.yasper.core.rspql.sds.SDS;
+import it.polimi.yasper.core.rspql.sds.SDSManager;
+import it.polimi.yasper.core.spe.Tick;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
 import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
-import it.polimi.yasper.core.spe.scope.Tick;
 import it.polimi.yasper.core.stream.RegisteredStream;
-import it.polimi.yasper.core.stream.StreamElement;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.stream.rdf.RegisteredRDFStream;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
-import org.apache.commons.rdf.api.Graph;
-import simple.sds.SDSBuilderImpl;
+import simple.sds.SDSManagerImpl;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-public class CSPARQLImpl implements RSPEngine<RDFStream, RegisteredRDFStream, Graph> {
+public class CSPARQLImpl implements QueryRegistrationFeature, StreamRegistrationFeature<RegisteredRDFStream, RDFStream> {
 
     private final long t0;
     private Report report;
@@ -61,47 +60,11 @@ public class CSPARQLImpl implements RSPEngine<RDFStream, RegisteredRDFStream, Gr
     }
 
     @Override
-    public void unregister(RegisteredRDFStream s) {
-        //TODO stop all the queries that are using s
-        // destroy all the window asssigners
-        // remove s from registeredStreams
-    }
-
-    @Override
-    public ContinuousQuery parseQuery(String input) {
-        return null;
-    }
-
-    @Override
     public ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c) {
         report_grain = ReportGrain.SINGLE;
-        SDSBuilder builder = new SDSBuilderImpl(registeredStreams, report, report_grain, tick, t0);
+        SDSManager builder = new SDSManagerImpl(registeredStreams, report, report_grain, tick, t0);
         builder.visit(q);
         return builder.getContinuousQueryExecution();
     }
 
-    @Override
-    public void unregister(ContinuousQuery qId) {
-
-    }
-
-    @Override
-    public void register(ContinuousQuery q, QueryResponseFormatter o) {
-
-    }
-
-    @Override
-    public void register(ContinuousQueryExecution cqe, QueryResponseFormatter o) {
-
-    }
-
-    @Override
-    public boolean process(Graph var1) {
-        return false;
-    }
-
-    @Override
-    public void removeQueryResponseFormatter(QueryResponseFormatter o) {
-
-    }
 }

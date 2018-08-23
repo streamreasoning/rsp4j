@@ -1,4 +1,4 @@
-package ssp.utils;
+package simple.test.examples;
 
 import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.rspql.formatter.QueryResponseFormatter;
@@ -11,7 +11,7 @@ import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import java.util.Observable;
 import java.util.Observer;
 
-public class    StreamViewImpl extends Observable implements ContinuousQueryExecution, Observer {
+public class StreamViewImpl extends Observable implements ContinuousQueryExecution, Observer {
 
     private Content content;
 

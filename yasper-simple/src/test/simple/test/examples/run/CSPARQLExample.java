@@ -1,8 +1,8 @@
 package simple.test.examples.run;
 
-import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.quering.querying.ContinuousQuery;
-import it.polimi.yasper.core.quering.rspql.window.WindowNode;
+import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
+import it.polimi.yasper.core.rspql.window.WindowNode;
 import it.polimi.yasper.core.stream.rdf.RegisteredRDFStream;
 import it.polimi.yasper.core.utils.EngineConfiguration;
 import it.polimi.yasper.core.utils.QueryConfiguration;
@@ -85,7 +85,7 @@ public class CSPARQLExample {
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S7"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O7")));
         stream.put(graph, 7000);
 
-        //stream.put(new it.polimi.deib.ssp.windowing.RDFStreamDecl.Elem(3000, graph));
+        //stream.put(new simple.test.examples.windowing.RDFStreamDecl.Elem(3000, graph));
 
 
     }

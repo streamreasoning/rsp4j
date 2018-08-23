@@ -20,8 +20,13 @@
     </repositories>
 
     <dependencies>
+        <!--<dependency>-->
+            <!--<groupId>com.github.riccardotommasini.yasper</groupId>-->
+            <!--<artifactId>yasper-core</artifactId>-->
+            <!--<version>2.0.4</version>-->
+        <!--</dependency>-->
         <dependency>
-            <groupId>com.github.riccardotommasini.yasper</groupId>
+            <groupId>it.polimi.sr.yasper</groupId>
             <artifactId>yasper-core</artifactId>
             <version>2.0.4</version>
         </dependency>

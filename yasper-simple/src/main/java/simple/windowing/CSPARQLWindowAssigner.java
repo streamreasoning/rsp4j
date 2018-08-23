@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.engine;
+package simple.windowing;
 
 import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.rspql.tvg.TimeVaryingGraph;
@@ -88,24 +88,24 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph> imple
                 });
 
 
-        switch (aw) {
-            case MULTIPLE:
-                active_windows.keySet().stream()
-                        .filter(w -> report.report(w, null, t_e, System.currentTimeMillis()))
-                        .forEach(w -> tick(t_e, w));
-                break;
-            case SINGLE:
-            default:
-                active_windows.keySet().stream()
-                        .filter(w -> report.report(w, null, t_e, System.currentTimeMillis()))
-                        .max(Comparator.comparingLong(Window::getC))
-                        .ifPresent(window -> tick(t_e, window));
-        }
+        active_windows.keySet().stream()
+                .filter(w -> report.report(w, null, t_e, System.currentTimeMillis()))
+                .max(Comparator.comparingLong(Window::getC))
+                .ifPresent(window -> tick(t_e, window));
 
-        //TODO shouldn't we evaluate setVisible.setVisible when we materialize the e?
-        //TODO Tick regulates whether we compute, setVisible only if we see the results.
-
-        //TODO eviction, should we notify evicted windows to interested observers?
+//        switch (aw) {
+//            case MULTIPLE:
+//                active_windows.keySet().stream()
+//                        .filter(w -> report.report(w, null, t_e, System.currentTimeMillis()))
+//                        .forEach(w -> tick(t_e, w));
+//                break;
+//            case SINGLE:
+//            default:
+//                active_windows.keySet().stream()
+//                        .filter(w -> report.report(w, null, t_e, System.currentTimeMillis()))
+//                        .max(Comparator.comparingLong(Window::getC))
+//                        .ifPresent(window -> tick(t_e, window));
+//        }
 
         to_evict.forEach(w -> {
             log.debug("Evicting [" + w.getO() + "," + w.getC() + ")");

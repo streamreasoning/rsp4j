@@ -1,9 +1,10 @@
 package simple.querying.formatter;
 
 
-import it.polimi.yasper.core.quering.querying.AbstractContinuousQuery;
-import it.polimi.yasper.core.quering.rspql.window.WindowNode;
-import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
+import it.polimi.yasper.core.rspql.querying.AbstractContinuousQuery;
+import it.polimi.yasper.core.rspql.window.WindowNode;
+import it.polimi.yasper.core.spe.time.Time;
+import it.polimi.yasper.core.spe.time.TimeFactory;
 import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
 import lombok.RequiredArgsConstructor;
@@ -60,5 +61,10 @@ public class ContinuousQueryImpl extends AbstractContinuousQuery {
     @Override
     public String getSPARQL() {
         return "";
+    }
+
+    @Override
+    public Time getTime() {
+        return TimeFactory.getInstance();
     }
 }

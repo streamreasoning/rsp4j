@@ -1,9 +1,9 @@
 package simple.querying;
 
-import it.polimi.yasper.core.quering.querying.ContinuousQuery;
-import it.polimi.yasper.core.quering.syntax.CaseChangingCharStream;
-import it.polimi.yasper.core.quering.syntax.RSPQLLexer;
-import it.polimi.yasper.core.quering.syntax.RSPQLParser;
+import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
+import it.polimi.yasper.core.rspql.syntax.CaseChangingCharStream;
+import it.polimi.yasper.core.rspql.syntax.RSPQLLexer;
+import it.polimi.yasper.core.rspql.syntax.RSPQLParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.DefaultErrorStrategy;
@@ -32,7 +32,7 @@ public class QueryFactory {
         System.out.println("ISTREAM? " + c.isIstream());
         System.out.println("SELECT? " + c.isSelectType());
         c.getWindowMap().keySet().forEach(x -> {
-            System.out.println(x.getName() + " " + c.getWindowMap().get(x).getURI());
+            System.out.println(x.iri() + " " + c.getWindowMap().get(x).getURI());
         });
         // Query pattern in WHERE clause not yet managed, depends what the internal BGP representation will be.
     }

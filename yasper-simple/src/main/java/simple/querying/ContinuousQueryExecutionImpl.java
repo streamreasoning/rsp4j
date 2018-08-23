@@ -1,12 +1,12 @@
 package simple.querying;
 
-import it.polimi.yasper.core.quering.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.quering.execution.ContinuousQueryExecutionObserver;
-import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
-import it.polimi.yasper.core.quering.operators.r2s.RelationToStreamOperator;
-import it.polimi.yasper.core.quering.querying.ContinuousQuery;
-import it.polimi.yasper.core.quering.response.InstantaneousResponse;
-import it.polimi.yasper.core.quering.rspql.sds.SDS;
+import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecutionObserver;
+import it.polimi.yasper.core.rspql.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.rspql.operators.r2s.RelationToStreamOperator;
+import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
+import it.polimi.yasper.core.rspql.response.InstantaneousResponse;
+import it.polimi.yasper.core.rspql.sds.SDS;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.Dataset;
 import org.apache.commons.rdf.api.Quad;
@@ -28,11 +28,6 @@ public class ContinuousQueryExecutionImpl extends ContinuousQueryExecutionObserv
 
     public ContinuousQueryExecutionImpl(SDS sds, Dataset ds, ContinuousQuery query) {
         super(sds, query);
-        this.ds = ds;
-    }
-
-    public ContinuousQueryExecutionImpl(SDS sds, Dataset ds, ContinuousQuery query, RelationToStreamOperator s2r) {
-        super(query, s2r, sds);
         this.ds = ds;
     }
 

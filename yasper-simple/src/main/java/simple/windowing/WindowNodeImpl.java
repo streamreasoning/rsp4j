@@ -1,7 +1,7 @@
 package simple.windowing;
 
-import it.polimi.yasper.core.enums.WindowType;
-import it.polimi.yasper.core.quering.rspql.window.WindowNode;
+import it.polimi.yasper.core.spe.WindowType;
+import it.polimi.yasper.core.rspql.window.WindowNode;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.rdf.api.IRI;
@@ -50,12 +50,12 @@ public class WindowNodeImpl implements WindowNode {
     }
 
     @Override
-    public String getName() {
+    public String iri() {
         return windowUri.getIRIString();
     }
 
     @Override
-    public boolean isNamed() {
+    public boolean named() {
         return windowUri != null;
     }
 }

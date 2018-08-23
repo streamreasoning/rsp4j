@@ -17,8 +17,8 @@
  */
 package simple.sds;
 
-import it.polimi.yasper.core.quering.rspql.sds.SDS;
-import it.polimi.yasper.core.quering.rspql.tvg.TimeVarying;
+import it.polimi.yasper.core.rspql.sds.SDS;
+import it.polimi.yasper.core.rspql.tvg.TimeVarying;
 import it.polimi.yasper.core.utils.RDFUtils;
 import lombok.AllArgsConstructor;
 import org.apache.commons.rdf.api.*;
@@ -44,7 +44,7 @@ final public class SDSImpl implements Dataset, SDS {
     private final Map<IRI, TimeVarying> tvgs = new HashMap<>();
     private final IRI def;
 
-    public SDSImpl() {
+    public SDSImpl(SDSManagerImpl sdsManager) {
         this.def = RDFUtils.createIRI("def");
     }
 

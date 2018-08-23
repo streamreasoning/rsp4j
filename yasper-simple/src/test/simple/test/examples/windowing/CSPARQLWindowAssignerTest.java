@@ -1,7 +1,7 @@
-package ssp.windowing;
+package simple.test.examples.windowing;
 
 import simple.windowing.CSPARQLWindowAssigner;
-import ssp.utils.StreamViewImpl;
+import simple.test.examples.StreamViewImpl;
 import it.polimi.yasper.core.rspql.tvg.TimeVarying;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;

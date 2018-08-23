@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.engine;
+package simple.windowing;
 
 import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.rspql.tvg.TimeVaryingGraph;

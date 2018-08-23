@@ -1,7 +1,6 @@
-package it.polimi.deib.ssp.examples;
+package simple.test.examples;
 
-import it.polimi.deib.ssp.utils.StreamViewImpl;
-import it.polimi.yasper.core.engine.CSPARQLTimeWindowOperator;
+import simple.windowing.CSPARQLTimeWindowOperator;
 import it.polimi.yasper.core.rspql.tvg.TimeVarying;
 import it.polimi.yasper.core.spe.Tick;
 import it.polimi.yasper.core.spe.report.Report;

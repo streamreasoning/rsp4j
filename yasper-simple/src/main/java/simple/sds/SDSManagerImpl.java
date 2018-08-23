@@ -6,26 +6,29 @@ import it.polimi.yasper.core.rspql.sds.SDS;
 import it.polimi.yasper.core.rspql.sds.SDSManager;
 import it.polimi.yasper.core.rspql.tvg.TimeVarying;
 import it.polimi.yasper.core.rspql.window.WindowNode;
+import it.polimi.yasper.core.spe.Tick;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
-import it.polimi.yasper.core.spe.Tick;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
-import simple.windowing.CQELSTimeWindowOperator;
-import simple.windowing.CSPARQLTimeWindowOperator;
 import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import it.polimi.yasper.core.stream.RegisteredStream;
 import it.polimi.yasper.core.stream.Stream;
+import it.polimi.yasper.core.utils.QueryConfiguration;
 import it.polimi.yasper.core.utils.RDFUtils;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.rdf.api.IRI;
 import simple.querying.ContinuousQueryExecutionImpl;
+import simple.windowing.CQELSTimeWindowOperator;
+import simple.windowing.CSPARQLTimeWindowOperator;
 
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class SDSBuilderImpl implements SDSManager {
+public class SDSManagerImpl implements SDSManager {
 
+    private final ContinuousQuery query;
+    private final QueryConfiguration config;
     @NonNull
     private Map<String, RegisteredStream> registeredStreams;
     @NonNull
@@ -40,9 +43,8 @@ public class SDSBuilderImpl implements SDSManager {
     private ContinuousQueryExecution cqe;
     private SDSImpl sds;
 
-    @Override
-    public void visit(ContinuousQuery query) {
-        this.sds = new SDSImpl();
+    public SDS build() {
+        this.sds = new SDSImpl(this);
         this.cqe = new ContinuousQueryExecutionImpl(sds, sds, query);
 
         query.getWindowMap().forEach((WindowNode wo, Stream s) -> {
@@ -66,11 +68,11 @@ public class SDSBuilderImpl implements SDSManager {
                 sds.add(wa.set(cqe));
             }
         });
+
+        return sds;
     }
 
-
-    @Override
-    public SDS getSDS() {
+    public SDS sds() {
         return sds;
     }
 
