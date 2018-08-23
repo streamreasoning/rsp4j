@@ -1,9 +1,9 @@
 package it.polimi.yasper.core.spe.windowing.assigner;
 
+import it.polimi.yasper.core.spe.Tick;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
-import it.polimi.yasper.core.spe.scope.Tick;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.time.TimeFactory;
 import it.polimi.yasper.core.spe.time.TimeInstant;
@@ -85,14 +85,10 @@ public abstract class ObservableWindowAssigner<E> extends Observable implements 
                 c = compute(t_e, w);
                 break;
         }
-
         return setVisible(t_e, w, c);
-
     }
 
     private Content setVisible(long t_e, Window w, Content c) {
-        //TODO the reporting makes the content visible
-        // but the execution of the query is not
         log.debug("Report [" + w.getO() + "," + w.getC() + ") with Content " + c + "");
         setChanged();
         notifyObservers(t_e);
@@ -104,12 +100,12 @@ public abstract class ObservableWindowAssigner<E> extends Observable implements 
     protected abstract Content compute(long t_e, Window w);
 
     @Override
-    public String getName() {
+    public String iri() {
         return iri.getIRIString();
     }
 
     @Override
-    public boolean isNamed() {
+    public boolean named() {
         return iri != null;
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.yasper.core.stream.schema;
 
 public interface SchemaEntry {
+
     String getID();
 
     String getTypeName();
@@ -10,4 +11,5 @@ public interface SchemaEntry {
     int getType();
 
     boolean canNull();
+
 }

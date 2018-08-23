@@ -1,7 +1,7 @@
 package it.polimi.yasper.core.utils;
 
-import it.polimi.yasper.core.enums.Time;
-import it.polimi.yasper.core.quering.querying.ContinuousQuery;
+import it.polimi.yasper.core.spe.Time;
+import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
@@ -9,7 +9,7 @@ import it.polimi.yasper.core.spe.report.strategies.NonEmptyContent;
 import it.polimi.yasper.core.spe.report.strategies.OnContentChange;
 import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
 import it.polimi.yasper.core.spe.report.strategies.Periodic;
-import it.polimi.yasper.core.spe.scope.Tick;
+import it.polimi.yasper.core.spe.Tick;
 import it.polimi.yasper.core.stream.schema.StreamSchema;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;

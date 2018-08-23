@@ -1,7 +1,7 @@
 package it.polimi.yasper.core.engine.features;
 
-import it.polimi.yasper.core.quering.querying.ContinuousQuery;
-import it.polimi.yasper.core.quering.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
+import it.polimi.yasper.core.rspql.formatter.QueryResponseFormatter;
 
 public interface QueryObserverRegistrationFeature {
 

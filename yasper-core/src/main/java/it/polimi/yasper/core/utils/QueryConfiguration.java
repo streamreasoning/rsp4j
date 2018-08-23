@@ -1,7 +1,6 @@
 package it.polimi.yasper.core.utils;
 
-import it.polimi.yasper.core.enums.EntailmentType;
-import it.polimi.yasper.core.enums.Maintenance;
+import it.polimi.yasper.core.rspql.Maintenance;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -39,11 +38,6 @@ public class QueryConfiguration extends PropertiesConfiguration {
 
     public Boolean getReasoningActive() {
         return this.getBoolean(REASONING_ACTIVE);
-
-    }
-
-    public EntailmentType getReasoningEntailment() {
-        return EntailmentType.valueOf(this.getString(REASONING_ENTAILMENT));
 
     }
 
