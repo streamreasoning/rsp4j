@@ -15,8 +15,8 @@ import it.polimi.yasper.core.spe.report.strategies.OnContentChange;
 import it.polimi.yasper.core.stream.RegisteredStream;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.stream.rdf.RegisteredRDFStream;
-import it.polimi.yasper.core.utils.EngineConfiguration;
-import it.polimi.yasper.core.utils.QueryConfiguration;
+import it.polimi.yasper.core.engine.EngineConfiguration;
+import it.polimi.yasper.core.rspql.querying.QueryConfiguration;
 import simple.sds.SDSManagerImpl;
 
 import java.util.HashMap;
@@ -58,6 +58,11 @@ public class CQELSmpl implements QueryRegistrationFeature, StreamRegistrationFea
         SDSManager builder = new SDSManagerImpl(q, c, registeredStreams, report, report_grain, tick, t0);
         SDS build = builder.build();
         return builder.getContinuousQueryExecution();
+    }
+
+    @Override
+    public ContinuousQueryExecution register(ContinuousQuery q) {
+        return register(q, null);
     }
 
     @Override

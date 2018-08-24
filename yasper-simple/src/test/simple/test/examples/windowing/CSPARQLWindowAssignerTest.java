@@ -10,7 +10,7 @@ import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
 import it.polimi.yasper.core.spe.Tick;
 import it.polimi.yasper.core.spe.time.TimeImpl;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
-import it.polimi.yasper.core.utils.RDFUtils;
+import it.polimi.yasper.core.rspql.RDFUtils;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.Triple;
 import org.junit.Test;

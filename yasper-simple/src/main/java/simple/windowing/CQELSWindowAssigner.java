@@ -10,7 +10,7 @@ import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.windowing.assigner.ObservableWindowAssigner;
 import it.polimi.yasper.core.spe.windowing.definition.Window;
 import it.polimi.yasper.core.spe.windowing.definition.WindowImpl;
-import it.polimi.yasper.core.utils.RDFUtils;
+import it.polimi.yasper.core.rspql.RDFUtils;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;

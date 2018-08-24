@@ -11,7 +11,7 @@ import it.polimi.yasper.core.spe.time.TimeFactory;
 import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
 import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
 import it.polimi.yasper.core.stream.rdf.RegisteredRDFStream;
-import it.polimi.yasper.core.utils.RDFUtils;
+import it.polimi.yasper.core.rspql.RDFUtils;
 import org.apache.commons.rdf.api.Graph;
 
 public class AbstractQueryExample {
