@@ -1,6 +1,6 @@
 package it.polimi.yasper.core.rspql.sds;
 
-import it.polimi.yasper.core.rspql.tvg.TimeVarying;
+import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
 import org.apache.commons.rdf.api.IRI;
 
 /**

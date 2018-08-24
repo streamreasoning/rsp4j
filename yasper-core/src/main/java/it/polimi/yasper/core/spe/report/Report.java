@@ -2,10 +2,8 @@ package it.polimi.yasper.core.spe.report;
 
 
 import it.polimi.yasper.core.spe.content.Content;
-import it.polimi.yasper.core.spe.windowing.definition.Window;
+import it.polimi.yasper.core.spe.operators.s2r.execution.instance.Window;
 import it.polimi.yasper.core.spe.report.strategies.ReportingStrategy;
-
-import java.util.List;
 
 /**
  * The Report dimension in our model defines the conditions under

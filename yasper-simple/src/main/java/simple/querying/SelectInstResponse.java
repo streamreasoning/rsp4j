@@ -1,12 +1,12 @@
 package simple.querying;
 
-import it.polimi.yasper.core.rspql.response.InstantaneousResponse;
-import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2s.result.InstantaneousResult;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
 import org.apache.commons.rdf.api.Triple;
 
 import java.util.List;
 
-public class SelectInstResponse extends InstantaneousResponse{
+public class SelectInstResponse extends InstantaneousResult {
 
     private final List<Triple> triples;
 
@@ -16,12 +16,12 @@ public class SelectInstResponse extends InstantaneousResponse{
     }
 
     @Override
-    public InstantaneousResponse difference(InstantaneousResponse r) {
+    public InstantaneousResult difference(InstantaneousResult r) {
         return null;
     }
 
     @Override
-    public InstantaneousResponse intersection(InstantaneousResponse new_response) {
+    public InstantaneousResult intersection(InstantaneousResult new_response) {
         return null;
     }
 

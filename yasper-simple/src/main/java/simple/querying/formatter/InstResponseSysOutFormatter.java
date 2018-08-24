@@ -1,6 +1,6 @@
 package simple.querying.formatter;
 
-import it.polimi.yasper.core.rspql.formatter.QueryResponseFormatter;
+import it.polimi.yasper.core.spe.operators.r2s.result.QueryResultFormatter;
 import simple.querying.SelectInstResponse;
 
 import java.util.Observable;
@@ -9,7 +9,7 @@ import java.util.Observable;
  * Created by riccardo on 03/07/2017.
  */
 
-public class InstResponseSysOutFormatter extends QueryResponseFormatter {
+public class InstResponseSysOutFormatter extends QueryResultFormatter {
 
     public InstResponseSysOutFormatter(String format, boolean distinct) {
         super(format, distinct);

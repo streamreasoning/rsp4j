@@ -1,8 +1,8 @@
 package simple.windowing;
 
 import it.polimi.yasper.core.spe.time.Time;
-import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
-import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
+import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
+import it.polimi.yasper.core.spe.operators.s2r.WindowOperator;
 import it.polimi.yasper.core.stream.RegisteredStream;
 import org.apache.commons.rdf.api.IRI;
 

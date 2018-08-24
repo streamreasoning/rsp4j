@@ -1,7 +1,7 @@
 package it.polimi.yasper.core.engine;
 
-import it.polimi.yasper.core.spe.Time;
-import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
+import it.polimi.yasper.core.spe.time.Times;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
@@ -9,7 +9,7 @@ import it.polimi.yasper.core.spe.report.strategies.NonEmptyContent;
 import it.polimi.yasper.core.spe.report.strategies.OnContentChange;
 import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
 import it.polimi.yasper.core.spe.report.strategies.Periodic;
-import it.polimi.yasper.core.spe.Tick;
+import it.polimi.yasper.core.spe.tick.Tick;
 import it.polimi.yasper.core.stream.schema.StreamSchema;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -39,12 +39,12 @@ public class EngineConfiguration extends PropertiesConfiguration {
 
 
     public Boolean isUsingEventTime() {
-        return Time.EventTime.equals(Time.valueOf(this.getString(TIME, Time.EventTime.name())));
+        return Times.EventTime.equals(Times.valueOf(this.getString(TIME, Times.EventTime.name())));
 
     }
 
     public Boolean isUsingIngestionTime() {
-        return Time.IngestionTime.equals(Time.valueOf(this.getString(TIME, Time.EventTime.name())));
+        return Times.IngestionTime.equals(Times.valueOf(this.getString(TIME, Times.EventTime.name())));
 
     }
 

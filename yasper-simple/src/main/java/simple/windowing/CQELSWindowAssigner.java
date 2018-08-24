@@ -1,16 +1,17 @@
 package simple.windowing;
 
-import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.rspql.tvg.TimeVaryingGraph;
+import it.polimi.yasper.core.rspql.RDFUtils;
+import it.polimi.yasper.core.rspql.timevarying.TimeVaryingGraph;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.ContentGraph;
 import it.polimi.yasper.core.spe.content.EmptyGraphContent;
 import it.polimi.yasper.core.spe.exceptions.OutOfOrderElementException;
+import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.spe.tick.TickerImpl;
 import it.polimi.yasper.core.spe.time.Time;
-import it.polimi.yasper.core.spe.windowing.assigner.ObservableWindowAssigner;
-import it.polimi.yasper.core.spe.windowing.definition.Window;
-import it.polimi.yasper.core.spe.windowing.definition.WindowImpl;
-import it.polimi.yasper.core.rspql.RDFUtils;
+import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.ObservableWindowAssigner;
+import it.polimi.yasper.core.spe.operators.s2r.execution.instance.Window;
+import it.polimi.yasper.core.spe.operators.s2r.execution.instance.WindowImpl;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 //TODO rename as C-SPARQL window operator
 @Log4j
-public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph> implements Observer {
+public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph> {
 
     private final long a;
 
@@ -34,7 +35,7 @@ public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph> impleme
 
 
     public CQELSWindowAssigner(IRI iri, long a, long tc0, Time instance) {
-        super(iri, instance);
+        super(iri, instance, new TickerImpl());
         this.a = a;
         this.tc0 = tc0;
         this.toi = 0;
@@ -42,6 +43,12 @@ public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph> impleme
         this.to_evict = new HashSet<>();
         this.r_stream = new HashMap<>();
         this.d_stream = new HashMap<>();
+        this.ticker.setWa(this);
+    }
+
+    @Override
+    public Time time() {
+        return time;
     }
 
     @Override
@@ -64,10 +71,6 @@ public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph> impleme
     }
 
 
-    @Override
-    public void update(Observable o, Object arg) {
-    }
-
     protected void windowing(Graph e, long ts) {
         log.debug("Received element (" + e + "," + ts + ")");
         long t_e = ts;
@@ -88,7 +91,7 @@ public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph> impleme
         content.add(e);
 
         if (report.report(active, content, t_e, System.currentTimeMillis())) {
-            tick(t_e, active);
+            ticker.tick(t_e, active);
         }
 
 
@@ -124,10 +127,10 @@ public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph> impleme
         to_evict.add(w);
     }
 
-    protected Content compute(long t_e, Window w) {
-        Content content = windows.containsKey(w) ? windows.get(w) : new EmptyGraphContent();
+    public Content<Graph> compute(long t_e, Window w) {
+        Content<Graph> content = windows.containsKey(w) ? windows.get(w) : new EmptyGraphContent();
         time.setAppTime(t_e);
-        return content;
+        return setVisible(t_e, w, content);
     }
 
 

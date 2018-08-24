@@ -1,16 +1,17 @@
 package simple.windowing;
 
-import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.rspql.tvg.TimeVaryingGraph;
+import it.polimi.yasper.core.rspql.RDFUtils;
+import it.polimi.yasper.core.rspql.timevarying.TimeVaryingGraph;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.content.ContentGraph;
 import it.polimi.yasper.core.spe.content.EmptyGraphContent;
 import it.polimi.yasper.core.spe.exceptions.OutOfOrderElementException;
+import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.spe.tick.TickerImpl;
 import it.polimi.yasper.core.spe.time.Time;
-import it.polimi.yasper.core.spe.windowing.assigner.ObservableWindowAssigner;
-import it.polimi.yasper.core.spe.windowing.definition.Window;
-import it.polimi.yasper.core.spe.windowing.definition.WindowImpl;
-import it.polimi.yasper.core.rspql.RDFUtils;
+import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.ObservableWindowAssigner;
+import it.polimi.yasper.core.spe.operators.s2r.execution.instance.Window;
+import it.polimi.yasper.core.spe.operators.s2r.execution.instance.WindowImpl;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
@@ -19,7 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j
-public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph> implements Observer {
+public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph> {
 
     private final long a, b;
     private final long t0;
@@ -30,7 +31,7 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph> imple
     private long toi;
 
     public CSPARQLWindowAssigner(IRI iri, long a, long b, long t0, long tc0, Time instance) {
-        super(iri, instance);
+        super(iri, instance, new TickerImpl());
         this.a = a;
         this.b = b;
         this.t0 = t0;
@@ -38,6 +39,11 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph> imple
         this.toi = 0;
         this.active_windows = new HashMap<>();
         this.to_evict = new HashSet<>();
+    }
+
+    @Override
+    public Time time() {
+        return time;
     }
 
     @Override
@@ -57,10 +63,6 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph> imple
         return active_windows.keySet().stream()
                 .filter(w -> w.getO() <= t_e && t_e < w.getC())
                 .map(active_windows::get).collect(Collectors.toList());
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
     }
 
     protected void windowing(Graph e, long timestamp) {
@@ -91,7 +93,7 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph> imple
         active_windows.keySet().stream()
                 .filter(w -> report.report(w, null, t_e, System.currentTimeMillis()))
                 .max(Comparator.comparingLong(Window::getC))
-                .ifPresent(window -> tick(t_e, window));
+                .ifPresent(window -> ticker.tick(t_e, window));
 
 //        switch (aw) {
 //            case MULTIPLE:
@@ -138,10 +140,10 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph> imple
     }
 
 
-    protected Content compute(long t_e, Window w) {
-        Content content = active_windows.containsKey(w) ? active_windows.get(w) : new EmptyGraphContent();
+    public Content<Graph> compute(long t_e, Window w) {
+        Content<Graph> content = active_windows.containsKey(w) ? active_windows.get(w) : new EmptyGraphContent();
         time.setAppTime(t_e);
-        return content;
+        return setVisible(t_e, w, content);
     }
 
 

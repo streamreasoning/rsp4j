@@ -1,11 +1,10 @@
 package simple.querying;
 
-import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecutionObserver;
-import it.polimi.yasper.core.rspql.formatter.QueryResponseFormatter;
-import it.polimi.yasper.core.rspql.operators.r2s.RelationToStreamOperator;
-import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
-import it.polimi.yasper.core.rspql.response.InstantaneousResponse;
+import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecutionObserver;
+import it.polimi.yasper.core.spe.operators.r2s.result.QueryResultFormatter;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2s.result.InstantaneousResult;
 import it.polimi.yasper.core.rspql.sds.SDS;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.Dataset;
@@ -47,17 +46,17 @@ public class ContinuousQueryExecutionImpl extends ContinuousQueryExecutionObserv
     }
 
     @Override
-    public void addFormatter(QueryResponseFormatter o) {
+    public void add(QueryResultFormatter o) {
         addObserver(o);
     }
 
     @Override
-    public void deleteFormatter(QueryResponseFormatter o) {
+    public void remove(QueryResultFormatter o) {
         deleteObserver(o);
     }
 
     @Override
-    public InstantaneousResponse eval(long ts) {
+    public InstantaneousResult eval(long ts) {
 
         sds.materialize(ts);
 
@@ -73,7 +72,7 @@ public class ContinuousQueryExecutionImpl extends ContinuousQueryExecutionObserv
 
     @Override
     public void update(Observable o, Object arg) {
-        InstantaneousResponse eval = eval((Long) arg);
+        InstantaneousResult eval = eval((Long) arg);
         setChanged();
         notifyObservers(eval);
     }

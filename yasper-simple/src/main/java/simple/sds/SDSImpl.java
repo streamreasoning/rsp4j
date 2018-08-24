@@ -18,7 +18,7 @@
 package simple.sds;
 
 import it.polimi.yasper.core.rspql.sds.SDS;
-import it.polimi.yasper.core.rspql.tvg.TimeVarying;
+import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
 import it.polimi.yasper.core.rspql.RDFUtils;
 import lombok.AllArgsConstructor;
 import org.apache.commons.rdf.api.*;

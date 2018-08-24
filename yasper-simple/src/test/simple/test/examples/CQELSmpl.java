@@ -2,9 +2,9 @@ package simple.test.examples;
 
 import it.polimi.yasper.core.engine.features.QueryRegistrationFeature;
 import it.polimi.yasper.core.engine.features.StreamRegistrationFeature;
-import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.rspql.formatter.QueryResponseFormatter;
-import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
 import it.polimi.yasper.core.rspql.sds.SDS;
 import it.polimi.yasper.core.rspql.sds.SDSManager;
 import it.polimi.yasper.core.spe.Tick;
@@ -16,7 +16,7 @@ import it.polimi.yasper.core.stream.RegisteredStream;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.stream.rdf.RegisteredRDFStream;
 import it.polimi.yasper.core.engine.EngineConfiguration;
-import it.polimi.yasper.core.rspql.querying.QueryConfiguration;
+import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
 import simple.sds.SDSManagerImpl;
 
 import java.util.HashMap;

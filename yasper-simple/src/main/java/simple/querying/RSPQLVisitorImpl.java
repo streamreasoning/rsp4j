@@ -1,9 +1,9 @@
 package simple.querying;
 
-import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
-import it.polimi.yasper.core.rspql.window.WindowNode;
-import it.polimi.yasper.core.rspql.syntax.RSPQLBaseVisitor;
-import it.polimi.yasper.core.rspql.syntax.RSPQLParser;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowNode;
+import it.polimi.yasper.core.spe.operators.r2r.syntax.RSPQLBaseVisitor;
+import it.polimi.yasper.core.spe.operators.r2r.syntax.RSPQLParser;
 import it.polimi.yasper.core.rspql.RDFUtils;
 import org.apache.commons.lang.NotImplementedException;
 import simple.windowing.WindowNodeImpl;

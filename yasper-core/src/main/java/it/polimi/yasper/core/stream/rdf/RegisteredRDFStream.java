@@ -1,6 +1,6 @@
 package it.polimi.yasper.core.stream.rdf;
 
-import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
+import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
 import it.polimi.yasper.core.stream.RegisteredStream;
 
 import java.util.ArrayList;

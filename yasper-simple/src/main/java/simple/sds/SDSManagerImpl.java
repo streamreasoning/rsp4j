@@ -1,19 +1,19 @@
 package simple.sds;
 
-import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
 import it.polimi.yasper.core.rspql.sds.SDS;
 import it.polimi.yasper.core.rspql.sds.SDSManager;
-import it.polimi.yasper.core.rspql.tvg.TimeVarying;
-import it.polimi.yasper.core.rspql.window.WindowNode;
-import it.polimi.yasper.core.spe.Tick;
+import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
+import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowNode;
+import it.polimi.yasper.core.spe.tick.Tick;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
-import it.polimi.yasper.core.spe.windowing.assigner.WindowAssigner;
-import it.polimi.yasper.core.spe.windowing.operator.WindowOperator;
+import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
+import it.polimi.yasper.core.spe.operators.s2r.WindowOperator;
 import it.polimi.yasper.core.stream.RegisteredStream;
 import it.polimi.yasper.core.stream.Stream;
-import it.polimi.yasper.core.rspql.querying.QueryConfiguration;
+import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
 import it.polimi.yasper.core.rspql.RDFUtils;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

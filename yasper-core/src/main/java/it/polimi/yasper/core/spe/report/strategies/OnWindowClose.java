@@ -1,7 +1,7 @@
 package it.polimi.yasper.core.spe.report.strategies;
 
 import it.polimi.yasper.core.spe.content.Content;
-import it.polimi.yasper.core.spe.windowing.definition.Window;
+import it.polimi.yasper.core.spe.operators.s2r.execution.instance.Window;
 
 /**
  * Window close (Rwc): reporting is done for t

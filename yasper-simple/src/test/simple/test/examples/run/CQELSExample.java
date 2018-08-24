@@ -1,11 +1,11 @@
 package simple.test.examples.run;
 
-import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
 import it.polimi.yasper.core.rspql.window.WindowNode;
 import it.polimi.yasper.core.stream.rdf.RegisteredRDFStream;
 import it.polimi.yasper.core.engine.EngineConfiguration;
-import it.polimi.yasper.core.rspql.querying.QueryConfiguration;
+import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
 import it.polimi.yasper.core.rspql.RDFUtils;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.rdf.api.Graph;

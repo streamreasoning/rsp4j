@@ -1,8 +1,8 @@
 package simple.querying.formatter;
 
 
-import it.polimi.yasper.core.rspql.querying.AbstractContinuousQuery;
-import it.polimi.yasper.core.rspql.window.WindowNode;
+import it.polimi.yasper.core.spe.operators.r2r.AbstractContinuousQuery;
+import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowNode;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.time.TimeFactory;
 import it.polimi.yasper.core.stream.Stream;
