@@ -1,15 +1,15 @@
 package simple.test.examples;
 
+import it.polimi.yasper.core.spe.operators.s2r.WindowOperator;
+import it.polimi.yasper.core.spe.tick.Tick;
 import simple.windowing.CSPARQLTimeWindowOperator;
 import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
-import it.polimi.yasper.core.spe.Tick;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
 import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
 import it.polimi.yasper.core.spe.time.TimeFactory;
 import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
-import it.polimi.yasper.core.spe.operators.s2r.execution.operator.WindowOperator;
 import it.polimi.yasper.core.stream.rdf.RegisteredRDFStream;
 import it.polimi.yasper.core.rspql.RDFUtils;
 import org.apache.commons.rdf.api.Graph;

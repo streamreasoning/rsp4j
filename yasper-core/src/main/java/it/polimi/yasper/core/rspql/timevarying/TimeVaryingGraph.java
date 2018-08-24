@@ -9,7 +9,7 @@ import org.apache.commons.rdf.api.IRI;
 
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class TimeVaryingGraph implements TimeVarying {
+public class TimeVaryingGraph implements TimeVarying<Graph> {
 
     private final WindowAssigner<Graph> wa;
     private IRI name;
@@ -27,7 +27,7 @@ public class TimeVaryingGraph implements TimeVarying {
     }
 
     @Override
-    public Object get() {
+    public Graph get() {
         return graph;
     }
 

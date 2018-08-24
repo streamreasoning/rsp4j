@@ -4,9 +4,10 @@ import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
 import it.polimi.yasper.core.spe.operators.s2r.WindowOperator;
 import it.polimi.yasper.core.stream.RegisteredStream;
+import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 
-public class CQELSTimeWindowOperator implements WindowOperator {
+public class CQELSTimeWindowOperator implements WindowOperator<Graph> {
 
     private final long a, t0;
     private final IRI iri;
@@ -30,7 +31,7 @@ public class CQELSTimeWindowOperator implements WindowOperator {
     }
 
     @Override
-    public WindowAssigner apply(RegisteredStream s) {
+    public WindowAssigner<Graph> apply(RegisteredStream<Graph> s) {
         WindowAssigner windowAssigner = new CQELSWindowAssigner(iri, a, t0, time);
         s.addWindowAssiger(windowAssigner);
         return windowAssigner;

@@ -1,5 +1,6 @@
 package simple.test.examples.windowing;
 
+import it.polimi.yasper.core.spe.tick.Tick;
 import simple.windowing.CSPARQLWindowAssigner;
 import simple.test.examples.StreamViewImpl;
 import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
@@ -7,7 +8,6 @@ import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
 import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
-import it.polimi.yasper.core.spe.Tick;
 import it.polimi.yasper.core.spe.time.TimeImpl;
 import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
 import it.polimi.yasper.core.rspql.RDFUtils;

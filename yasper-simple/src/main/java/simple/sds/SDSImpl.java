@@ -36,12 +36,12 @@ import java.util.stream.Stream;
  * <p>
  * All Stream operations are performed using parallel and unordered directives.
  */
-final public class SDSImpl implements Dataset, SDS {
+final public class SDSImpl implements Dataset, SDS<Graph> {
 
     private static final int TO_STRING_MAX = 10;
     private final Set<Quad> quads = new HashSet<>();
     private final Set<TimeVarying> defs = new HashSet<>();
-    private final Map<IRI, TimeVarying> tvgs = new HashMap<>();
+    private final Map<IRI, TimeVarying<Graph>> tvgs = new HashMap<>();
     private final IRI def;
 
     public SDSImpl(SDSManagerImpl sdsManager) {
@@ -205,12 +205,12 @@ final public class SDSImpl implements Dataset, SDS {
     }
 
     @Override
-    public void add(IRI iri, TimeVarying tvg) {
+    public void add(IRI iri, TimeVarying<Graph> tvg) {
         tvgs.put(iri, tvg);
     }
 
     @Override
-    public void add(TimeVarying tvg) {
+    public void add(TimeVarying<Graph> tvg) {
         defs.add(tvg);
     }
 
@@ -235,7 +235,7 @@ final public class SDSImpl implements Dataset, SDS {
         tvgs.entrySet().stream()
                 .map(e -> {
                     e.getValue().materialize(ts);
-                    return new NamedGraph(e.getKey(), (Graph) e.getValue().get());
+                    return new NamedGraph(e.getKey(), e.getValue().get());
                 }).forEach(n -> n.g.stream()
                 .forEach(o -> this.add(n.name, o.getSubject(), o.getPredicate(), o.getObject())));
     }

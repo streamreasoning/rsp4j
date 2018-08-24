@@ -1,12 +1,13 @@
 package it.polimi.yasper.core.spe.operators.s2r.execution.assigner;
 
-import it.polimi.yasper.core.spe.tick.Tick;
 import it.polimi.yasper.core.spe.content.Content;
+import it.polimi.yasper.core.spe.operators.s2r.execution.instance.Window;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
+import it.polimi.yasper.core.spe.tick.Tick;
+import it.polimi.yasper.core.spe.tick.Ticker;
 import it.polimi.yasper.core.spe.tick.TickerImpl;
 import it.polimi.yasper.core.spe.time.Time;
-import it.polimi.yasper.core.spe.operators.s2r.execution.instance.Window;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.IRI;
 
@@ -18,14 +19,14 @@ public abstract class ObservableWindowAssigner<E> extends Observable implements 
     protected Tick tick;
     protected ReportGrain aw;
     protected Report report;
-    protected final TickerImpl ticker;
+    protected final Ticker ticker;
     protected final Time time;
     protected final IRI iri;
 
-    protected ObservableWindowAssigner(IRI iri, Time time, TickerImpl ticker) {
+    protected ObservableWindowAssigner(IRI iri, Time time, Ticker ticker) {
         this.time = time;
         this.iri = iri;
-        this.ticker=ticker;
+        this.ticker = ticker;
     }
 
     @Override
