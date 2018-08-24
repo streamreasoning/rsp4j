@@ -4,10 +4,10 @@ import it.polimi.yasper.core.rspql.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
 import it.polimi.yasper.core.rspql.querying.QueryConfiguration;
 
-public interface QueryRegistrationFeature<Q extends ContinuousQuery> {
+public interface QueryStringRegistrationFeature<Q extends ContinuousQuery> {
 
-    ContinuousQueryExecution register(Q q);
+    ContinuousQueryExecution register(String q);
 
-    ContinuousQueryExecution register(Q q, QueryConfiguration c);
+    ContinuousQueryExecution register(String q, QueryConfiguration c);
 
 }

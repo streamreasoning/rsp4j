@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.utils;
+package it.polimi.yasper.core.rspql.querying;
 
 import it.polimi.yasper.core.rspql.Maintenance;
 import lombok.extern.log4j.Log4j;
@@ -7,7 +7,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 
 import java.net.URL;
 
-import static it.polimi.yasper.core.utils.ConfigurationUtils.*;
+import static it.polimi.yasper.core.engine.ConfigurationUtils.*;
 
 /**
  * Created by riccardo on 10/07/2017.

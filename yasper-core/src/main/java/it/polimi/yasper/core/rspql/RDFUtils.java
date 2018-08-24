@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.utils;
+package it.polimi.yasper.core.rspql;
 
 import org.apache.commons.rdf.api.*;
 import org.apache.commons.rdf.simple.SimpleRDF;

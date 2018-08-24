@@ -1,4 +1,4 @@
-package it.polimi.yasper.core.utils;
+package it.polimi.yasper.core.engine;
 
 import it.polimi.yasper.core.spe.Time;
 import it.polimi.yasper.core.rspql.querying.ContinuousQuery;
@@ -16,7 +16,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 
 import java.net.URL;
 
-import static it.polimi.yasper.core.utils.ConfigurationUtils.*;
+import static it.polimi.yasper.core.engine.ConfigurationUtils.*;
 
 /**
  * Created by riccardo on 10/07/2017.

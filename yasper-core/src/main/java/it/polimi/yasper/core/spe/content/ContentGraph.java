@@ -1,7 +1,7 @@
 package it.polimi.yasper.core.spe.content;
 
 import it.polimi.yasper.core.spe.time.TimeFactory;
-import it.polimi.yasper.core.utils.RDFUtils;
+import it.polimi.yasper.core.rspql.RDFUtils;
 import org.apache.commons.rdf.api.Graph;
 
 import java.util.ArrayList;
