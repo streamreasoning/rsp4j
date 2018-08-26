@@ -1,9 +1,9 @@
 package simple.test.examples.windowing;
 
+import it.polimi.yasper.core.spe.tick.Tick;
 import simple.windowing.CQELSWindowAssigner;
 import simple.test.examples.StreamViewImpl;
 import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
-import it.polimi.yasper.core.spe.Tick;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;

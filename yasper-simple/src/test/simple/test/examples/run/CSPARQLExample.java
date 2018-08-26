@@ -1,8 +1,8 @@
-package simple.test.examples.run;
+package examples.run;
 
 import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
-import it.polimi.yasper.core.rspql.window.WindowNode;
+import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowNode;
 import it.polimi.yasper.core.stream.rdf.RegisteredRDFStream;
 import it.polimi.yasper.core.engine.EngineConfiguration;
 import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
@@ -48,7 +48,7 @@ public class CSPARQLExample {
 
         ContinuousQueryExecution cqe = sr.register(q, config);
 
-        cqe.addFormatter(new InstResponseSysOutFormatter("TTL", true));
+        cqe.add(new InstResponseSysOutFormatter("TTL", true));
 
         //RUNTIME DATA
 

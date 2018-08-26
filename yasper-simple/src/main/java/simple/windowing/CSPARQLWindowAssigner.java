@@ -39,6 +39,7 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph> {
         this.toi = 0;
         this.active_windows = new HashMap<>();
         this.to_evict = new HashSet<>();
+        this.ticker.setWa(this);
     }
 
     @Override
