@@ -7,6 +7,7 @@ import it.polimi.yasper.core.spe.content.ContentGraph;
 import it.polimi.yasper.core.spe.content.EmptyGraphContent;
 import it.polimi.yasper.core.spe.exceptions.OutOfOrderElementException;
 import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.spe.tick.Ticker;
 import it.polimi.yasper.core.spe.tick.TickerImpl;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.ObservableWindowAssigner;
@@ -30,8 +31,8 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph> {
     private long tc0;
     private long toi;
 
-    public CSPARQLWindowAssigner(IRI iri, long a, long b, long t0, long tc0, Time instance) {
-        super(iri, instance, new TickerImpl());
+    public CSPARQLWindowAssigner(IRI iri, long a, long b, long t0, long tc0, Time instance, Ticker ticker) {
+        super(iri, instance, ticker);
         this.a = a;
         this.b = b;
         this.t0 = t0;
@@ -39,7 +40,6 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph> {
         this.toi = 0;
         this.active_windows = new HashMap<>();
         this.to_evict = new HashSet<>();
-        this.ticker.setWa(this);
     }
 
     @Override
@@ -95,20 +95,6 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph> {
                 .filter(w -> report.report(w, null, t_e, System.currentTimeMillis()))
                 .max(Comparator.comparingLong(Window::getC))
                 .ifPresent(window -> ticker.tick(t_e, window));
-
-//        switch (aw) {
-//            case MULTIPLE:
-//                active_windows.keySet().stream()
-//                        .filter(w -> report.report(w, null, t_e, System.currentTimeMillis()))
-//                        .forEach(w -> tick(t_e, w));
-//                break;
-//            case SINGLE:
-//            default:
-//                active_windows.keySet().stream()
-//                        .filter(w -> report.report(w, null, t_e, System.currentTimeMillis()))
-//                        .max(Comparator.comparingLong(Window::getC))
-//                        .ifPresent(window -> tick(t_e, window));
-//        }
 
         to_evict.forEach(w -> {
             log.debug("Evicting [" + w.getO() + "," + w.getC() + ")");

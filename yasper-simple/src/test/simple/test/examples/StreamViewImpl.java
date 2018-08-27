@@ -1,9 +1,9 @@
 package simple.test.examples;
 
-import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
 import it.polimi.yasper.core.rspql.sds.SDS;
 import it.polimi.yasper.core.spe.content.Content;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.spe.operators.r2s.result.InstantaneousResult;
 import it.polimi.yasper.core.spe.operators.r2s.result.QueryResultFormatter;
 import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
@@ -50,13 +50,11 @@ public class StreamViewImpl extends Observable implements ContinuousQueryExecuti
     }
 
     @Override
-    public void remove(QueryResultFormatter o) {
-
+    public void add(QueryResultFormatter o) {
     }
 
     @Override
-    public void add(QueryResultFormatter o) {
+    public void remove(QueryResultFormatter o) {
 
     }
-
 }

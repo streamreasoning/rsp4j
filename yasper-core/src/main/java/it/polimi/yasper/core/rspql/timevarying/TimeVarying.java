@@ -1,10 +1,10 @@
 package it.polimi.yasper.core.rspql.timevarying;
 
-public interface TimeVarying {
+public interface TimeVarying<E> {
 
     void materialize(long ts);
 
-    Object get();
+    E get();
 
     String iri();
 

@@ -1,4 +1,4 @@
-package examples.run;
+package simple.test.examples.run;
 
 import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;

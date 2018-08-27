@@ -9,6 +9,7 @@ import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.operators.s2r.execution.instance.Window;
+import org.apache.commons.rdf.api.Graph;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public interface WindowAssigner<E> {
 
     void tick(Tick timeDriven);
 
-    TimeVarying set(ContinuousQueryExecution content);
+    TimeVarying<E> set(ContinuousQueryExecution content);
 
     void report_grain(ReportGrain aw);
 
