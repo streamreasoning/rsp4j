@@ -7,6 +7,7 @@ import it.polimi.yasper.core.spe.content.ContentGraph;
 import it.polimi.yasper.core.spe.content.EmptyGraphContent;
 import it.polimi.yasper.core.spe.exceptions.OutOfOrderElementException;
 import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
+import it.polimi.yasper.core.spe.tick.Ticker;
 import it.polimi.yasper.core.spe.tick.TickerImpl;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.ObservableWindowAssigner;
@@ -30,7 +31,7 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph> {
     private long tc0;
     private long toi;
 
-    public CSPARQLWindowAssigner(IRI iri, long a, long b, long t0, long tc0, Time instance, TickerImpl ticker) {
+    public CSPARQLWindowAssigner(IRI iri, long a, long b, long t0, long tc0, Time instance, Ticker ticker) {
         super(iri, instance, ticker);
         this.a = a;
         this.b = b;
