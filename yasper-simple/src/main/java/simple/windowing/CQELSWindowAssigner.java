@@ -7,11 +7,11 @@ import it.polimi.yasper.core.spe.content.ContentGraph;
 import it.polimi.yasper.core.spe.content.EmptyGraphContent;
 import it.polimi.yasper.core.spe.exceptions.OutOfOrderElementException;
 import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.spe.tick.TickerImpl;
-import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.ObservableWindowAssigner;
 import it.polimi.yasper.core.spe.operators.s2r.execution.instance.Window;
 import it.polimi.yasper.core.spe.operators.s2r.execution.instance.WindowImpl;
+import it.polimi.yasper.core.spe.tick.Ticker;
+import it.polimi.yasper.core.spe.time.Time;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
@@ -34,8 +34,8 @@ public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph> {
     private long toi;
 
 
-    public CQELSWindowAssigner(IRI iri, long a, long tc0, Time instance) {
-        super(iri, instance, new TickerImpl());
+    public CQELSWindowAssigner(IRI iri, long a, long tc0, Time instance, Ticker ticker) {
+        super(iri, instance, ticker);
         this.a = a;
         this.tc0 = tc0;
         this.toi = 0;
@@ -43,7 +43,6 @@ public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph> {
         this.to_evict = new HashSet<>();
         this.r_stream = new HashMap<>();
         this.d_stream = new HashMap<>();
-        this.ticker.setWa(this);
     }
 
     @Override

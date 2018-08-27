@@ -1,6 +1,7 @@
 package simple.test.examples.windowing;
 
 import it.polimi.yasper.core.spe.tick.Tick;
+import it.polimi.yasper.core.spe.tick.TickerImpl;
 import simple.windowing.CQELSWindowAssigner;
 import simple.test.examples.StreamViewImpl;
 import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
@@ -15,6 +16,7 @@ import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.Triple;
 import org.junit.Test;
 
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
 public class CQELSWindowAssignerTest {
@@ -29,7 +31,11 @@ public class CQELSWindowAssignerTest {
         Tick tick = Tick.TUPLE_DRIVEN;
         ReportGrain report_grain = ReportGrain.SINGLE;
 
-        WindowAssigner<Graph> wa = new CQELSWindowAssigner(RDFUtils.createIRI("w1"), 3000, 0, new TimeImpl());
+        TickerImpl ticker = new TickerImpl();
+        TimeImpl time = new TimeImpl();
+        WindowAssigner<Graph> wa = new CQELSWindowAssigner(RDFUtils.createIRI("w1"), 3000, 0, time, ticker);
+
+        ticker.setWa(wa);
 
         wa.report(report);
         wa.tick(tick);
@@ -61,7 +67,8 @@ public class CQELSWindowAssignerTest {
         tester.setUnexpected_dstream(unexpected);
 
         //RUNTIME DATA
-        wa.notify(graph, 1000);
+        int current_time = 1000;
+        wa.notify(graph, current_time);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple1 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S2"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O2"));
@@ -70,7 +77,10 @@ public class CQELSWindowAssignerTest {
         tester.setExpected_rstream(expected);
         tester.setUnexpected_dstream(unexpected);
 
-        wa.notify(graph, 2001);
+        assertEquals(current_time, time.getAppTime());
+
+        current_time = 2001;
+        wa.notify(graph, current_time);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple2 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S3"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O3"));
@@ -80,7 +90,11 @@ public class CQELSWindowAssignerTest {
         tester.setExpected_rstream(expected);
         tester.setUnexpected_dstream(unexpected);
 
-        wa.notify(graph, 3000);
+        assertEquals(current_time, time.getAppTime());
+
+        current_time = 3000;
+
+        wa.notify(graph, current_time);
         graph = RDFUtils.getInstance().createGraph();
 
         Triple triple3 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S4"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O4"));
@@ -90,7 +104,11 @@ public class CQELSWindowAssignerTest {
         tester.setExpected_rstream(expected);
         tester.setUnexpected_dstream(unexpected);
 
-        wa.notify(graph, 4000);
+        assertEquals(current_time, time.getAppTime());
+
+        current_time = 4000;
+
+        wa.notify(graph, current_time);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple4 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S5"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O5"));
@@ -104,7 +122,11 @@ public class CQELSWindowAssignerTest {
         unexpected.add(triple);
         tester.setUnexpected_dstream(unexpected);
 
-        wa.notify(graph, 5000);
+        assertEquals(current_time, time.getAppTime());
+
+        current_time = 5000;
+
+        wa.notify(graph, current_time);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple5 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S6"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O6"));
@@ -117,8 +139,11 @@ public class CQELSWindowAssignerTest {
         unexpected.add(triple1);
         tester.setUnexpected_dstream(unexpected);
 
+        assertEquals(current_time, time.getAppTime());
 
-        wa.notify(graph, 6000);
+        current_time = 6000;
+
+        wa.notify(graph, current_time);
         graph = RDFUtils.getInstance().createGraph();
         Triple triple6 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S62"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O62"));
         graph.add(triple6);
@@ -127,7 +152,12 @@ public class CQELSWindowAssignerTest {
         tester.setExpected_rstream(expected);
         tester.setUnexpected_dstream(unexpected);
 
+        assertEquals(current_time, time.getAppTime());
+
         wa.notify(graph, 6000);
+
+        assertEquals(current_time, time.getAppTime());
+
         wa.notify(graph, 6000);
 
         graph = RDFUtils.getInstance().createGraph();
@@ -142,7 +172,11 @@ public class CQELSWindowAssignerTest {
         unexpected.add(triple2);
         tester.setUnexpected_dstream(unexpected);
 
-        wa.notify(graph, 7000);
+        current_time=7000;
+        wa.notify(graph, current_time);
+
+        assertEquals(current_time, time.getAppTime());
+
 
     }
 

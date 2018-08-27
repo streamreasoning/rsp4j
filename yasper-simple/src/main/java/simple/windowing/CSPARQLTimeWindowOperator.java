@@ -1,5 +1,6 @@
 package simple.windowing;
 
+import it.polimi.yasper.core.spe.tick.TickerImpl;
 import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
 import it.polimi.yasper.core.spe.operators.s2r.WindowOperator;
@@ -34,7 +35,7 @@ public class CSPARQLTimeWindowOperator implements WindowOperator<Graph> {
 
     @Override
     public WindowAssigner<Graph> apply(RegisteredStream<Graph> s) {
-        WindowAssigner windowAssigner = new CSPARQLWindowAssigner(iri, a, b, t0, t0, time);
+        WindowAssigner windowAssigner = new CSPARQLWindowAssigner(iri, a, b, t0, t0, time, new TickerImpl());
         s.addWindowAssiger(windowAssigner);
         return windowAssigner;
     }

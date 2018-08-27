@@ -1,6 +1,7 @@
 package simple.test.examples.windowing;
 
 import it.polimi.yasper.core.spe.tick.Tick;
+import it.polimi.yasper.core.spe.tick.TickerImpl;
 import simple.windowing.CSPARQLWindowAssigner;
 import simple.test.examples.StreamViewImpl;
 import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
@@ -32,7 +33,12 @@ public class CSPARQLWindowAssignerTest {
 
 
         //WINDOW DECLARATION
-        WindowAssigner<Graph> windowAssigner = new CSPARQLWindowAssigner(RDFUtils.createIRI("w1"), 2000, 2000, scope, 0, new TimeImpl());
+        TickerImpl ticker = new TickerImpl();
+        TimeImpl time = new TimeImpl();
+
+        WindowAssigner<Graph> windowAssigner = new CSPARQLWindowAssigner(RDFUtils.createIRI("w1"), 2000, 2000, scope, 0, time, ticker);
+
+        ticker.setWa(windowAssigner);
 
         //ENGINE INTERNALS - HOW THE REPORTING POLICY, TICK AND REPORT GRAIN INFLUENCE THE RUNTIME
         windowAssigner.report(report);
