@@ -37,17 +37,14 @@ public class AbstractQueryExample {
         RegisteredRDFStream<Graph> stream = new RegisteredRDFStream<>("s1");
 
         //WINDOW DECLARATION
-        WindowOperator windowOperator = new CSPARQLTimeWindowOperator(RDFUtils.createIRI("w1"), 2000, 2000, scope, TimeFactory.getInstance());
+        WindowOperator<Graph, Graph> windowOperator = new CSPARQLTimeWindowOperator(RDFUtils.createIRI("w1"), 2000, 2000, scope, TimeFactory.getInstance(), tick, report, report_grain);
 
         //ENGINE INTERNALS - HOW THE REPORTING POLICY, TICK AND REPORT GRAIN INFLUENCE THE RUNTIME
-        WindowAssigner windowAssigner = windowOperator.apply(stream);
-        windowAssigner.report(report);
-        windowAssigner.tick(tick);
-        windowAssigner.report_grain(report_grain);
+        WindowAssigner<Graph, Graph> windowAssigner = windowOperator.apply(stream);
 
         StreamViewImpl v = new StreamViewImpl();
 
-        TimeVarying timeVarying = windowAssigner.set(v);
+        TimeVarying<Graph> timeVarying = windowAssigner.set(v);
 
         v.addObserver((o, arg) -> {
             Long arg1 = (Long) arg;

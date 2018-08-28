@@ -8,7 +8,7 @@ import java.util.List;
 
 public class RegisteredRDFStream<E> extends RDFStream implements RegisteredStream<E> {
 
-    protected List<WindowAssigner<E>> assigners = new ArrayList<>();
+    protected List<WindowAssigner<E, ?>> assigners = new ArrayList<>();
 
     public RegisteredRDFStream(String stream_uri) {
         super(stream_uri);
@@ -20,7 +20,7 @@ public class RegisteredRDFStream<E> extends RDFStream implements RegisteredStrea
     }
 
     @Override
-    public void addWindowAssiger(WindowAssigner<E> windowAssigner) {
+    public void addWindowAssiger(WindowAssigner<E, ?> windowAssigner) {
         assigners.add(windowAssigner);
     }
 

@@ -11,4 +11,7 @@ public interface Time {
     }
 
     ET getEvaluationTimeInstants();
+
+    void addEvaluationTimeInstants(TimeInstant i);
+
 }

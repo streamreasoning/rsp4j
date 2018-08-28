@@ -22,4 +22,9 @@ public class TimeImpl implements Time {
     public ET getEvaluationTimeInstants() {
         return TimeFactory.getEvaluationTimeInstants();
     }
+
+    @Override
+    public void addEvaluationTimeInstants(TimeInstant et) {
+        TimeFactory.getEvaluationTimeInstants().add(et);
+    }
 }

@@ -50,18 +50,17 @@ public class SDSManagerImpl implements SDSManager {
 
         query.getWindowMap().forEach((WindowNode wo, Stream s) -> {
 
-            WindowOperator<Graph> w;
+            WindowOperator<Graph, Graph> w;
+            IRI iri = RDFUtils.createIRI(wo.iri());
             if (wo.getStep() == -1) {
-                w = new CQELSTimeWindowOperator(RDFUtils.createIRI(wo.iri()), wo.getRange(), wo.getT0(), query.getTime());
+                w = new CQELSTimeWindowOperator(iri, wo.getRange(), wo.getT0(), query.getTime(), tick, report, reportGrain);
             } else
-                w = new CSPARQLTimeWindowOperator(RDFUtils.createIRI(wo.iri()), wo.getRange(), wo.getStep(), wo.getT0(), query.getTime());
+                w = new CSPARQLTimeWindowOperator(iri, wo.getRange(), wo.getStep(), wo.getT0(), query.getTime(), tick, report, reportGrain);
 
-            IRI iri = RDFUtils.createIRI(w.iri());
+
             RegisteredStream<Graph> s1 = registeredStreams.get(s.getURI());
-            WindowAssigner<Graph> wa = w.apply(s1);
-            wa.report(report);
-            wa.tick(tick);
-            wa.report_grain(reportGrain);
+            WindowAssigner<Graph, Graph> wa = w.apply(s1);
+
             if (wo.named()) {
                 TimeVarying<Graph> tvg = wa.set(cqe);
                 sds.add(iri, tvg);

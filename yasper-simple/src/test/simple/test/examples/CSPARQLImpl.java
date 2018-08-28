@@ -1,11 +1,13 @@
 package simple.test.examples;
 
+import it.polimi.yasper.core.engine.EngineConfiguration;
 import it.polimi.yasper.core.engine.features.QueryRegistrationFeature;
 import it.polimi.yasper.core.engine.features.StreamRegistrationFeature;
-import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
 import it.polimi.yasper.core.rspql.sds.SDS;
 import it.polimi.yasper.core.rspql.sds.SDSManager;
+import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
+import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
+import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.spe.operators.r2s.result.QueryResultFormatter;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
@@ -15,8 +17,6 @@ import it.polimi.yasper.core.spe.tick.Tick;
 import it.polimi.yasper.core.stream.RegisteredStream;
 import it.polimi.yasper.core.stream.rdf.RDFStream;
 import it.polimi.yasper.core.stream.rdf.RegisteredRDFStream;
-import it.polimi.yasper.core.engine.EngineConfiguration;
-import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
 import org.apache.commons.rdf.api.Graph;
 import simple.sds.SDSManagerImpl;
 
@@ -36,11 +36,7 @@ public class CSPARQLImpl implements QueryRegistrationFeature, StreamRegistration
     protected Map<String, ContinuousQueryExecution> queryExecutions;
     protected Map<String, ContinuousQuery> registeredQueries;
     protected Map<String, List<QueryResultFormatter>> queryObservers;
-<<<<<<< HEAD
     protected Map<String, RegisteredStream<Graph>> registeredStreams;
-=======
-    protected Map<String, RegisteredStream> registeredStreams;
->>>>>>> f4e3f198cbac6b64dbc4729d69e3254ff8542346
     private ReportGrain report_grain;
 
     public CSPARQLImpl(long t0, EngineConfiguration rsp_config) {

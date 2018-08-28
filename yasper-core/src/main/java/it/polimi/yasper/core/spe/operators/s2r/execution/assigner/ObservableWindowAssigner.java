@@ -6,7 +6,7 @@ import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.tick.Tick;
 import it.polimi.yasper.core.spe.tick.Ticker;
-import it.polimi.yasper.core.spe.tick.TickerImpl;
+import it.polimi.yasper.core.spe.tick.secret.TickerFactory;
 import it.polimi.yasper.core.spe.time.Time;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.IRI;
@@ -14,33 +14,22 @@ import org.apache.commons.rdf.api.IRI;
 import java.util.Observable;
 
 @Log4j
-public abstract class ObservableWindowAssigner<E> extends Observable implements WindowAssigner<E> {
+public abstract class ObservableWindowAssigner<E, O> extends Observable implements WindowAssigner<E, O> {
 
     protected Tick tick;
-    protected ReportGrain aw;
+    protected ReportGrain grain;
     protected Report report;
     protected final Ticker ticker;
     protected final Time time;
     protected final IRI iri;
 
-    protected ObservableWindowAssigner(IRI iri, Time time, Ticker ticker) {
+    protected ObservableWindowAssigner(IRI iri, Time time, Tick tick, Report report, ReportGrain grain) {
         this.time = time;
         this.iri = iri;
-        this.ticker = ticker;
-    }
-
-    @Override
-    public void report(Report report) {
+        this.tick = tick;
+        this.ticker = TickerFactory.tick(tick, this);
         this.report = report;
-    }
-
-    public void tick(Tick t) {
-        this.tick = t;
-    }
-
-    @Override
-    public void report_grain(ReportGrain aw) {
-        this.aw = aw;
+        this.grain = grain;
     }
 
     @Override
@@ -58,7 +47,7 @@ public abstract class ObservableWindowAssigner<E> extends Observable implements 
         return tick;
     }
 
-    protected Content<E> setVisible(long t_e, Window w, Content<E> c) {
+    protected Content<O> setVisible(long t_e, Window w, Content<O> c) {
         log.debug("Report [" + w.getO() + "," + w.getC() + ") with Content " + c + "");
         setChanged();
         notifyObservers(t_e);

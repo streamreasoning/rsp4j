@@ -1,11 +1,9 @@
-package it.polimi.yasper.core.spe.tick;
+package it.polimi.yasper.core.spe.tick.secret;
 
-import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
 import it.polimi.yasper.core.spe.operators.s2r.execution.instance.Window;
-import it.polimi.yasper.core.spe.time.TimeFactory;
-import it.polimi.yasper.core.spe.time.TimeInstant;
-import lombok.NoArgsConstructor;
+import it.polimi.yasper.core.spe.tick.Ticker;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -20,25 +18,21 @@ import lombok.Setter;
  * (c) batch-driven, where either a new batch arrival or the progress of tapp causes a system to react.
  **/
 
-@NoArgsConstructor
-public class TickerImpl<E> implements Ticker<E> {
+@RequiredArgsConstructor
+public class BatchTicker implements Ticker {
+
+    private int curr = 0;
+    protected final WindowAssigner<?, ?> wa;
 
     @Setter
-    private WindowAssigner<E> wa;
+    private int batch;
 
     @Override
-    public Content<E> tick(long t_e, Window w) {
-        TimeFactory.getEvaluationTimeInstants().add(new TimeInstant(t_e));
-        switch (wa.tick()) {
-            case TIME_DRIVEN:
-                if (t_e > wa.time().getAppTime()) {
-                    return wa.compute(t_e, w);
-                }
-            case TUPLE_DRIVEN:
-                return wa.compute(t_e, w);
-            case BATCH_DRIVEN:
-            default:
-                return wa.compute(t_e, w);
+    public void tick(long t_e, Window w) {
+        curr++;
+        if (curr == batch) {
+            wa.compute(t_e, w);
+            curr = 0;
         }
     }
 }

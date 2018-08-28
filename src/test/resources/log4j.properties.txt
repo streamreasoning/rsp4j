@@ -1,0 +1,5 @@
+log4j.rootLogger=WARN, Console
+com.espertech.esper.queryplan=ALL, Console
+log4j.appender.Console=org.apache.log4j.ConsoleAppender
+log4j.appender.Console.layout=org.apache.log4j.PatternLayout
+log4j.appender.Console.layout.ConversionPattern=%d - %-40C{1} [%p] - %-25c{1} - %-50m %n

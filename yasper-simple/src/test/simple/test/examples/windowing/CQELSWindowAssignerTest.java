@@ -1,20 +1,19 @@
 package simple.test.examples.windowing;
 
-import it.polimi.yasper.core.spe.tick.Tick;
-import it.polimi.yasper.core.spe.tick.TickerImpl;
-import simple.windowing.CQELSWindowAssigner;
-import simple.test.examples.StreamViewImpl;
+import it.polimi.yasper.core.rspql.RDFUtils;
 import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
+import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
 import it.polimi.yasper.core.spe.report.strategies.OnContentChange;
+import it.polimi.yasper.core.spe.tick.Tick;
 import it.polimi.yasper.core.spe.time.TimeImpl;
-import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
-import it.polimi.yasper.core.rspql.RDFUtils;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.Triple;
 import org.junit.Test;
+import simple.test.examples.StreamViewImpl;
+import simple.windowing.CQELSWindowAssigner;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -31,21 +30,14 @@ public class CQELSWindowAssignerTest {
         Tick tick = Tick.TUPLE_DRIVEN;
         ReportGrain report_grain = ReportGrain.SINGLE;
 
-        TickerImpl ticker = new TickerImpl();
         TimeImpl time = new TimeImpl();
-        WindowAssigner<Graph> wa = new CQELSWindowAssigner(RDFUtils.createIRI("w1"), 3000, 0, time, ticker);
 
-        ticker.setWa(wa);
-
-        wa.report(report);
-        wa.tick(tick);
-        wa.report_grain(report_grain);
+        WindowAssigner<Graph, Graph> wa = new CQELSWindowAssigner(RDFUtils.createIRI("w1"), 3000, 0, time, tick, report, report_grain);
 
         Tester tester = new Tester();
 
         StreamViewImpl v = new StreamViewImpl();
         TimeVarying timeVarying = wa.set(v);
-
 
         v.addObserver((o, arg) -> {
             Long arg1 = (Long) arg;
@@ -172,7 +164,7 @@ public class CQELSWindowAssignerTest {
         unexpected.add(triple2);
         tester.setUnexpected_dstream(unexpected);
 
-        current_time=7000;
+        current_time = 7000;
         wa.notify(graph, current_time);
 
         assertEquals(current_time, time.getAppTime());

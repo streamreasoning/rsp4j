@@ -2,18 +2,20 @@ package it.polimi.yasper.core.spe.operators.s2r.execution.assigner;
 
 
 import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
-import it.polimi.yasper.core.spe.tick.Tick;
 import it.polimi.yasper.core.spe.content.Content;
 import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.spe.report.Report;
-import it.polimi.yasper.core.spe.report.ReportGrain;
-import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.operators.s2r.execution.instance.Window;
-import org.apache.commons.rdf.api.Graph;
+import it.polimi.yasper.core.spe.report.Report;
+import it.polimi.yasper.core.spe.tick.Tick;
+import it.polimi.yasper.core.spe.time.Time;
 
 import java.util.List;
 
-public interface WindowAssigner<E> {
+/*
+ * I represents the variable type of the input, e.g., RDF TRIPLE, RDF GRAPHS OR TUPLE
+ * O represents the variable type of the maintained status, e.g., BAG of RDF Triple, RDF Graph (set) or RELATION
+ * */
+public interface WindowAssigner<I, O> {
 
     Report report();
 
@@ -21,24 +23,18 @@ public interface WindowAssigner<E> {
 
     Time time();
 
-    Content<E> getContent(long now);
+    Content<O> getContent(long now);
 
-    List<Content> getContents(long now);
+    List<Content<O>> getContents(long now);
 
-    void report(Report report);
+    TimeVarying<O> set(ContinuousQueryExecution content);
 
-    void tick(Tick timeDriven);
-
-    TimeVarying<E> set(ContinuousQueryExecution content);
-
-    void report_grain(ReportGrain aw);
-
-    void notify(E arg, long ts);
+    void notify(I arg, long ts);
 
     String iri();
 
     boolean named();
 
-    Content<E> compute(long t_e, Window w);
+    Content<O> compute(long t_e, Window w);
 
 }

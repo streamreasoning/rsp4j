@@ -1,20 +1,19 @@
 package simple.test.examples.windowing;
 
-import it.polimi.yasper.core.spe.tick.Tick;
-import it.polimi.yasper.core.spe.tick.TickerImpl;
-import simple.windowing.CSPARQLWindowAssigner;
-import simple.test.examples.StreamViewImpl;
+import it.polimi.yasper.core.rspql.RDFUtils;
 import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
+import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
 import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.report.ReportImpl;
 import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
+import it.polimi.yasper.core.spe.tick.Tick;
 import it.polimi.yasper.core.spe.time.TimeImpl;
-import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
-import it.polimi.yasper.core.rspql.RDFUtils;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.Triple;
 import org.junit.Test;
+import simple.test.examples.StreamViewImpl;
+import simple.windowing.CSPARQLWindowAssigner;
 
 import static junit.framework.TestCase.assertTrue;
 
@@ -33,17 +32,11 @@ public class CSPARQLWindowAssignerTest {
 
 
         //WINDOW DECLARATION
-        TickerImpl ticker = new TickerImpl();
         TimeImpl time = new TimeImpl();
 
-        WindowAssigner<Graph> windowAssigner = new CSPARQLWindowAssigner(RDFUtils.createIRI("w1"), 2000, 2000, scope, 0, time, ticker);
-
-        ticker.setWa(windowAssigner);
+        WindowAssigner<Graph, Graph> windowAssigner = new CSPARQLWindowAssigner(RDFUtils.createIRI("w1"), 2000, 2000, scope, 0, time, tick, report, report_grain);
 
         //ENGINE INTERNALS - HOW THE REPORTING POLICY, TICK AND REPORT GRAIN INFLUENCE THE RUNTIME
-        windowAssigner.report(report);
-        windowAssigner.tick(tick);
-        windowAssigner.report_grain(report_grain);
 
         StreamViewImpl v = new StreamViewImpl();
         TimeVarying timeVarying = windowAssigner.set(v);

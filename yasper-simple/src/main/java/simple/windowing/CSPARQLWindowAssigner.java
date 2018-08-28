@@ -7,12 +7,13 @@ import it.polimi.yasper.core.spe.content.ContentGraph;
 import it.polimi.yasper.core.spe.content.EmptyGraphContent;
 import it.polimi.yasper.core.spe.exceptions.OutOfOrderElementException;
 import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.spe.tick.Ticker;
-import it.polimi.yasper.core.spe.tick.TickerImpl;
-import it.polimi.yasper.core.spe.time.Time;
 import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.ObservableWindowAssigner;
 import it.polimi.yasper.core.spe.operators.s2r.execution.instance.Window;
 import it.polimi.yasper.core.spe.operators.s2r.execution.instance.WindowImpl;
+import it.polimi.yasper.core.spe.report.Report;
+import it.polimi.yasper.core.spe.report.ReportGrain;
+import it.polimi.yasper.core.spe.tick.Tick;
+import it.polimi.yasper.core.spe.time.Time;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
@@ -21,7 +22,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j
-public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph> {
+public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph, Graph> {
 
     private final long a, b;
     private final long t0;
@@ -31,8 +32,8 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph> {
     private long tc0;
     private long toi;
 
-    public CSPARQLWindowAssigner(IRI iri, long a, long b, long t0, long tc0, Time instance, Ticker ticker) {
-        super(iri, instance, ticker);
+    public CSPARQLWindowAssigner(IRI iri, long a, long b, long t0, long tc0, Time instance, Tick tick, Report report, ReportGrain grain) {
+        super(iri, instance, tick, report, grain);
         this.a = a;
         this.b = b;
         this.t0 = t0;
@@ -60,7 +61,7 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph> {
     }
 
     @Override
-    public List<Content> getContents(long t_e) {
+    public List<Content<Graph>> getContents(long t_e) {
         return active_windows.keySet().stream()
                 .filter(w -> w.getO() <= t_e && t_e < w.getC())
                 .map(active_windows::get).collect(Collectors.toList());

@@ -7,10 +7,10 @@ import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner
  */
 
 //TODO wrap schema for RDFUtils stream?
-public interface RegisteredStream<E> extends Stream {
+public interface RegisteredStream<I> extends Stream {
 
-    void addWindowAssiger(WindowAssigner<E> windowAssigner);
+    void addWindowAssiger(WindowAssigner<I, ?> windowAssigner);
 
-    void put(E e, long ts);
+    void put(I e, long ts);
 
 }

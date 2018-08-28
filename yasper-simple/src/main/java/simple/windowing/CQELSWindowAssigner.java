@@ -10,7 +10,9 @@ import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecutio
 import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.ObservableWindowAssigner;
 import it.polimi.yasper.core.spe.operators.s2r.execution.instance.Window;
 import it.polimi.yasper.core.spe.operators.s2r.execution.instance.WindowImpl;
-import it.polimi.yasper.core.spe.tick.Ticker;
+import it.polimi.yasper.core.spe.report.Report;
+import it.polimi.yasper.core.spe.report.ReportGrain;
+import it.polimi.yasper.core.spe.tick.Tick;
 import it.polimi.yasper.core.spe.time.Time;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.Graph;
@@ -21,7 +23,7 @@ import java.util.stream.Collectors;
 
 //TODO rename as C-SPARQL window operator
 @Log4j
-public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph> {
+public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph, Graph> {
 
     private final long a;
 
@@ -34,8 +36,8 @@ public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph> {
     private long toi;
 
 
-    public CQELSWindowAssigner(IRI iri, long a, long tc0, Time instance, Ticker ticker) {
-        super(iri, instance, ticker);
+    public CQELSWindowAssigner(IRI iri, long a, long tc0, Time instance, Tick tick, Report report, ReportGrain grain) {
+        super(iri, instance, tick, report, grain);
         this.a = a;
         this.tc0 = tc0;
         this.toi = 0;
@@ -63,7 +65,7 @@ public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph> {
     }
 
     @Override
-    public List<Content> getContents(long t_e) {
+    public List<Content<Graph>> getContents(long t_e) {
         return windows.keySet().stream()
                 .filter(w -> w.getO() <= t_e && t_e < w.getC())
                 .map(windows::get).collect(Collectors.toList());
