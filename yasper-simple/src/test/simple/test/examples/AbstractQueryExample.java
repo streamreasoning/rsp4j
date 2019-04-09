@@ -1,17 +1,18 @@
 package simple.test.examples;
 
-import it.polimi.yasper.core.rspql.RDFUtils;
-import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
-import it.polimi.yasper.core.spe.operators.s2r.WindowOperator;
-import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
-import it.polimi.yasper.core.spe.report.Report;
-import it.polimi.yasper.core.spe.report.ReportGrain;
-import it.polimi.yasper.core.spe.report.ReportImpl;
-import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
-import it.polimi.yasper.core.spe.tick.Tick;
-import it.polimi.yasper.core.spe.time.TimeFactory;
-import it.polimi.yasper.core.stream.rdf.RegisteredRDFStream;
+import it.polimi.yasper.core.RDFUtils;
+import it.polimi.yasper.core.operators.s2r.StreamToRelationOperator;
+import it.polimi.yasper.core.querying.ContinuousQueryExecution;
+import it.polimi.yasper.core.sds.timevarying.TimeVarying;
+import it.polimi.yasper.core.secret.report.Report;
+import it.polimi.yasper.core.enums.ReportGrain;
+import it.polimi.yasper.core.secret.report.ReportImpl;
+import it.polimi.yasper.core.secret.report.strategies.OnWindowClose;
+import it.polimi.yasper.core.enums.Tick;
+import it.polimi.yasper.core.secret.time.TimeFactory;
+import it.polimi.yasper.core.stream.data.DataStreamImpl;
 import org.apache.commons.rdf.api.Graph;
+import simple.querying.ContinuousQueryExecutionImpl;
 import simple.windowing.CSPARQLTimeWindowOperator;
 
 public class AbstractQueryExample {
@@ -33,18 +34,22 @@ public class AbstractQueryExample {
 
         //QUERY
 
+        ContinuousQueryExecution cqe = new ContinuousQueryExecutionImpl(
+                null, null, null, null);
+
         //STREAM DECLARATION
-        RegisteredRDFStream<Graph> stream = new RegisteredRDFStream<>("s1");
+        DataStreamImpl<Graph> stream = new DataStreamImpl<>("s1");
 
         //WINDOW DECLARATION
-        WindowOperator<Graph, Graph> windowOperator = new CSPARQLTimeWindowOperator(RDFUtils.createIRI("w1"), 2000, 2000, scope, TimeFactory.getInstance(), tick, report, report_grain);
+        StreamToRelationOperator<Graph, Graph> windowOperator = new CSPARQLTimeWindowOperator(RDFUtils.createIRI("w1"), 2000, 2000, scope, TimeFactory.getInstance(), tick, report, report_grain,cqe);
 
         //ENGINE INTERNALS - HOW THE REPORTING POLICY, TICK AND REPORT GRAIN INFLUENCE THE RUNTIME
-        WindowAssigner<Graph, Graph> windowAssigner = windowOperator.apply(stream);
+
+
+
+        TimeVarying<Graph> timeVarying = windowOperator.apply(stream);
 
         StreamViewImpl v = new StreamViewImpl();
-
-        TimeVarying<Graph> timeVarying = windowAssigner.set(v);
 
         v.addObserver((o, arg) -> {
             Long arg1 = (Long) arg;

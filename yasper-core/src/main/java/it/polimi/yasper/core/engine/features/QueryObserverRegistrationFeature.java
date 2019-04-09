@@ -1,7 +1,7 @@
 package it.polimi.yasper.core.engine.features;
 
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
-import it.polimi.yasper.core.spe.operators.r2s.result.QueryResultFormatter;
+import it.polimi.yasper.core.querying.ContinuousQuery;
+import it.polimi.yasper.core.format.QueryResultFormatter;
 
 public interface QueryObserverRegistrationFeature {
 

@@ -1,10 +1,10 @@
 package simple.querying;
 
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
-import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowNode;
-import it.polimi.yasper.core.spe.operators.r2r.syntax.RSPQLBaseVisitor;
-import it.polimi.yasper.core.spe.operators.r2r.syntax.RSPQLParser;
-import it.polimi.yasper.core.rspql.RDFUtils;
+import it.polimi.yasper.core.querying.ContinuousQuery;
+import it.polimi.yasper.core.operators.s2r.syntax.WindowNode;
+import it.polimi.yasper.core.querying.syntax.RSPQLBaseVisitor;
+import it.polimi.yasper.core.querying.syntax.RSPQLParser;
+import it.polimi.yasper.core.RDFUtils;
 import org.apache.commons.lang.NotImplementedException;
 import simple.windowing.WindowNodeImpl;
 
@@ -55,7 +55,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
     public Object visitOutputStream(RSPQLParser.OutputStreamContext ctx) {
         String iri = trimTags(ctx.sourceSelector().iri().IRIREF().getText());
         query.setOutputStream(iri);
-        return null;
+        return query.getOutputStream();
     }
 
     /**

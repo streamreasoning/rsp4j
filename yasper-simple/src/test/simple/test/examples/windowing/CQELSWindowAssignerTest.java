@@ -1,14 +1,14 @@
 package simple.test.examples.windowing;
 
-import it.polimi.yasper.core.rspql.RDFUtils;
-import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
-import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
-import it.polimi.yasper.core.spe.report.Report;
-import it.polimi.yasper.core.spe.report.ReportGrain;
-import it.polimi.yasper.core.spe.report.ReportImpl;
-import it.polimi.yasper.core.spe.report.strategies.OnContentChange;
-import it.polimi.yasper.core.spe.tick.Tick;
-import it.polimi.yasper.core.spe.time.TimeImpl;
+import it.polimi.yasper.core.RDFUtils;
+import it.polimi.yasper.core.sds.timevarying.TimeVarying;
+import it.polimi.yasper.core.operators.s2r.execution.assigner.Assigner;
+import it.polimi.yasper.core.secret.report.Report;
+import it.polimi.yasper.core.enums.ReportGrain;
+import it.polimi.yasper.core.secret.report.ReportImpl;
+import it.polimi.yasper.core.secret.report.strategies.OnContentChange;
+import it.polimi.yasper.core.enums.Tick;
+import it.polimi.yasper.core.secret.time.TimeImpl;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.Triple;
 import org.junit.Test;
@@ -30,9 +30,9 @@ public class CQELSWindowAssignerTest {
         Tick tick = Tick.TUPLE_DRIVEN;
         ReportGrain report_grain = ReportGrain.SINGLE;
 
-        TimeImpl time = new TimeImpl();
+        TimeImpl time = new TimeImpl(0);
 
-        WindowAssigner<Graph, Graph> wa = new CQELSWindowAssigner(RDFUtils.createIRI("w1"), 3000, 0, time, tick, report, report_grain);
+        Assigner<Graph, Graph> wa = new CQELSWindowAssigner(RDFUtils.createIRI("w1"), 3000,  time, tick, report, report_grain);
 
         Tester tester = new Tester();
 

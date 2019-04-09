@@ -1,14 +1,14 @@
 package simple.test.examples.windowing;
 
-import it.polimi.yasper.core.rspql.RDFUtils;
-import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
-import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
-import it.polimi.yasper.core.spe.report.Report;
-import it.polimi.yasper.core.spe.report.ReportGrain;
-import it.polimi.yasper.core.spe.report.ReportImpl;
-import it.polimi.yasper.core.spe.report.strategies.OnWindowClose;
-import it.polimi.yasper.core.spe.tick.Tick;
-import it.polimi.yasper.core.spe.time.TimeImpl;
+import it.polimi.yasper.core.RDFUtils;
+import it.polimi.yasper.core.sds.timevarying.TimeVarying;
+import it.polimi.yasper.core.operators.s2r.execution.assigner.Assigner;
+import it.polimi.yasper.core.secret.report.Report;
+import it.polimi.yasper.core.enums.ReportGrain;
+import it.polimi.yasper.core.secret.report.ReportImpl;
+import it.polimi.yasper.core.secret.report.strategies.OnWindowClose;
+import it.polimi.yasper.core.enums.Tick;
+import it.polimi.yasper.core.secret.time.TimeImpl;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.Triple;
 import org.junit.Test;
@@ -28,13 +28,12 @@ public class CSPARQLWindowAssignerTest {
         Tick tick = Tick.TIME_DRIVEN;
         ReportGrain report_grain = ReportGrain.SINGLE;
 
-        int scope = 0;
 
 
         //WINDOW DECLARATION
-        TimeImpl time = new TimeImpl();
+        TimeImpl time = new TimeImpl(0);
 
-        WindowAssigner<Graph, Graph> windowAssigner = new CSPARQLWindowAssigner(RDFUtils.createIRI("w1"), 2000, 2000, scope, 0, time, tick, report, report_grain);
+        Assigner<Graph, Graph> windowAssigner = new CSPARQLWindowAssigner(RDFUtils.createIRI("w1"), 2000, 2000,  time, tick, report, report_grain);
 
         //ENGINE INTERNALS - HOW THE REPORTING POLICY, TICK AND REPORT GRAIN INFLUENCE THE RUNTIME
 

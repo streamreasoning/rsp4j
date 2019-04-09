@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>it.polimi.sr.yasper</groupId>
     <artifactId>yasper</artifactId>
-    <version>2.1.0</version>
+    <version>2.2.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <github.release>2.1.0</github.release>
+        <github.release>2.2.0</github.release>
     </properties>
 
     <repositories>

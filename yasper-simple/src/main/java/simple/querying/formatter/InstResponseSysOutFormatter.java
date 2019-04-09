@@ -1,7 +1,7 @@
 package simple.querying.formatter;
 
-import it.polimi.yasper.core.spe.operators.r2s.result.QueryResultFormatter;
-import simple.querying.SelectInstResponse;
+import it.polimi.yasper.core.format.QueryResultFormatter;
+import org.apache.commons.rdf.api.Triple;
 
 import java.util.Observable;
 
@@ -17,9 +17,7 @@ public class InstResponseSysOutFormatter extends QueryResultFormatter {
 
     @Override
     public void update(Observable o, Object arg) {
-        super.update(o, arg);
-        SelectInstResponse sr = (SelectInstResponse) arg;
-        System.err.println("[" + sr.getTriples() + "] Result");
-
+        Triple t = (Triple) arg;
+        System.out.println(t);
     }
 }

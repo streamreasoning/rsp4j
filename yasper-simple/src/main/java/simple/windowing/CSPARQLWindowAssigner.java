@@ -1,19 +1,19 @@
 package simple.windowing;
 
-import it.polimi.yasper.core.rspql.RDFUtils;
-import it.polimi.yasper.core.rspql.timevarying.TimeVaryingGraph;
-import it.polimi.yasper.core.spe.content.Content;
-import it.polimi.yasper.core.spe.content.ContentGraph;
-import it.polimi.yasper.core.spe.content.EmptyGraphContent;
-import it.polimi.yasper.core.spe.exceptions.OutOfOrderElementException;
-import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.ObservableWindowAssigner;
-import it.polimi.yasper.core.spe.operators.s2r.execution.instance.Window;
-import it.polimi.yasper.core.spe.operators.s2r.execution.instance.WindowImpl;
-import it.polimi.yasper.core.spe.report.Report;
-import it.polimi.yasper.core.spe.report.ReportGrain;
-import it.polimi.yasper.core.spe.tick.Tick;
-import it.polimi.yasper.core.spe.time.Time;
+import it.polimi.yasper.core.RDFUtils;
+import it.polimi.yasper.core.exceptions.OutOfOrderElementException;
+import it.polimi.yasper.core.operators.s2r.execution.assigner.ObservableWindowAssigner;
+import it.polimi.yasper.core.operators.s2r.execution.instance.Window;
+import it.polimi.yasper.core.operators.s2r.execution.instance.WindowImpl;
+import it.polimi.yasper.core.querying.ContinuousQueryExecution;
+import simple.querying.TimeVaryingGraph;
+import it.polimi.yasper.core.secret.content.Content;
+import it.polimi.yasper.core.secret.content.ContentGraph;
+import it.polimi.yasper.core.secret.content.EmptyGraphContent;
+import it.polimi.yasper.core.secret.report.Report;
+import it.polimi.yasper.core.enums.ReportGrain;
+import it.polimi.yasper.core.enums.Tick;
+import it.polimi.yasper.core.secret.time.Time;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
@@ -25,19 +25,17 @@ import java.util.stream.Collectors;
 public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph, Graph> {
 
     private final long a, b;
-    private final long t0;
 
     private Map<Window, Content<Graph>> active_windows;
     private Set<Window> to_evict;
-    private long tc0;
+    private long t0;
     private long toi;
 
-    public CSPARQLWindowAssigner(IRI iri, long a, long b, long t0, long tc0, Time instance, Tick tick, Report report, ReportGrain grain) {
+    public CSPARQLWindowAssigner(IRI iri, long a, long b, Time instance, Tick tick, Report report, ReportGrain grain) {
         super(iri, instance, tick, report, grain);
         this.a = a;
         this.b = b;
-        this.t0 = t0;
-        this.tc0 = tc0;
+        this.t0 = instance.getScope();
         this.toi = 0;
         this.active_windows = new HashMap<>();
         this.to_evict = new HashSet<>();
@@ -107,7 +105,7 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph, Graph
     }
 
     private void scope(long t_e) {
-        long c_sup = (long) Math.ceil(((double) Math.abs(t_e - tc0) / (double) b)) * b;
+        long c_sup = (long) Math.ceil(((double) Math.abs(t_e - t0) / (double) b)) * b;
         long o_i = c_sup - a;
         log.debug("Calculating the Windows to Open. First one opens at [" + o_i + "] and closes at [" + c_sup + "]");
 
@@ -137,7 +135,7 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph, Graph
 
     @Override
     public TimeVaryingGraph set(ContinuousQueryExecution content) {
-        this.addObserver(content);
+        this.addObserver((Observer) content);
         //TODO Generalize the type of content using an ENUM
         return new TimeVaryingGraph(this, iri, RDFUtils.createGraph());
     }
