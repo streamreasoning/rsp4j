@@ -1,12 +1,12 @@
 package simple.querying.formatter;
 
 
-import it.polimi.yasper.core.spe.operators.r2r.AbstractContinuousQuery;
-import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowNode;
-import it.polimi.yasper.core.spe.time.Time;
-import it.polimi.yasper.core.spe.time.TimeFactory;
-import it.polimi.yasper.core.stream.Stream;
-import it.polimi.yasper.core.stream.rdf.RDFStream;
+import it.polimi.yasper.core.querying.AbstractContinuousQuery;
+import it.polimi.yasper.core.operators.s2r.syntax.WindowNode;
+import it.polimi.yasper.core.secret.time.Time;
+import it.polimi.yasper.core.secret.time.TimeFactory;
+import it.polimi.yasper.core.stream.web.WebStream;
+import it.polimi.yasper.core.stream.web.WebStreamImpl;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -17,14 +17,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ContinuousQueryImpl extends AbstractContinuousQuery {
     private final String id;
-    private Map<WindowNode, Stream> windowMap = new HashMap<>();
+    private Map<WindowNode, WebStream> windowMap = new HashMap<>();
     private List<String> graphURIs = new ArrayList<>();
     private List<String> namedwindowsURIs = new ArrayList<>();
     private List<String> namedGraphURIs = new ArrayList<>();
 
     @Override
     public void addNamedWindow(String streamUri, WindowNode wo) {
-        Stream s = new RDFStream(streamUri);
+        WebStream s = new WebStreamImpl(streamUri);
         windowMap.put(wo, s);
     }
 
@@ -39,7 +39,7 @@ public class ContinuousQueryImpl extends AbstractContinuousQuery {
     }
 
     @Override
-    public Map<WindowNode, Stream> getWindowMap() {
+    public Map<WindowNode, WebStream> getWindowMap() {
         return windowMap;
     }
 
@@ -56,6 +56,11 @@ public class ContinuousQueryImpl extends AbstractContinuousQuery {
     @Override
     public List<String> getNamedGraphURIs() {
         return namedGraphURIs;
+    }
+
+    @Override
+    public List<String> getResultVars() {
+        return new ArrayList<>();
     }
 
     @Override

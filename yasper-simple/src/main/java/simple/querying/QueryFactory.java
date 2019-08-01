@@ -1,9 +1,9 @@
 package simple.querying;
 
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
-import it.polimi.yasper.core.spe.operators.r2r.syntax.CaseChangingCharStream;
-import it.polimi.yasper.core.spe.operators.r2r.syntax.RSPQLLexer;
-import it.polimi.yasper.core.spe.operators.r2r.syntax.RSPQLParser;
+import it.polimi.yasper.core.querying.ContinuousQuery;
+import it.polimi.yasper.core.querying.syntax.CaseChangingCharStream;
+import it.polimi.yasper.core.querying.syntax.RSPQLLexer;
+import it.polimi.yasper.core.querying.syntax.RSPQLParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.DefaultErrorStrategy;

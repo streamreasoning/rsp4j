@@ -1,25 +1,25 @@
 package simple.sds;
 
-import it.polimi.yasper.core.rspql.RDFUtils;
-import it.polimi.yasper.core.rspql.sds.SDS;
-import it.polimi.yasper.core.rspql.sds.SDSManager;
-import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
-import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
-import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.spe.operators.s2r.WindowOperator;
-import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
-import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowNode;
-import it.polimi.yasper.core.spe.report.Report;
-import it.polimi.yasper.core.spe.report.ReportGrain;
-import it.polimi.yasper.core.spe.tick.Tick;
-import it.polimi.yasper.core.stream.RegisteredStream;
-import it.polimi.yasper.core.stream.Stream;
-import lombok.NonNull;
+import it.polimi.yasper.core.RDFUtils;
+import it.polimi.yasper.core.enums.ReportGrain;
+import it.polimi.yasper.core.enums.Tick;
+import it.polimi.yasper.core.operators.s2r.StreamToRelationOperator;
+import it.polimi.yasper.core.operators.s2r.syntax.WindowNode;
+import it.polimi.yasper.core.querying.ContinuousQuery;
+import it.polimi.yasper.core.querying.ContinuousQueryExecution;
+import it.polimi.yasper.core.sds.SDS;
+import it.polimi.yasper.core.sds.SDSConfiguration;
+import it.polimi.yasper.core.sds.SDSManager;
+import it.polimi.yasper.core.sds.timevarying.TimeVarying;
+import it.polimi.yasper.core.secret.report.Report;
+import it.polimi.yasper.core.stream.data.WebDataStream;
+import it.polimi.yasper.core.stream.web.WebStream;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import simple.querying.ContinuousQueryExecutionImpl;
+import simple.querying.R2RImpl;
+import simple.querying.Rstream;
 import simple.windowing.CQELSTimeWindowOperator;
 import simple.windowing.CSPARQLTimeWindowOperator;
 
@@ -29,43 +29,38 @@ import java.util.Map;
 public class SDSManagerImpl implements SDSManager {
 
     private final ContinuousQuery query;
-    private final QueryConfiguration config;
-    @NonNull
-    private Map<String, RegisteredStream<Graph>> registeredStreams;
-    @NonNull
-    private Report report;
-    @NonNull
-    private ReportGrain reportGrain;
-    @NonNull
-    private Tick tick;
-    @NonNull
-    private long t0;
+    private final SDSConfiguration config;
+    private final Map<String, WebDataStream<Graph>> registeredStreams;
+    private final Report report;
+    private final ReportGrain reportGrain;
+    private final Tick tick;
+    private final long t0;
 
     private ContinuousQueryExecution cqe;
     private SDSImpl sds;
 
     public SDS build() {
         this.sds = new SDSImpl(this);
-        this.cqe = new ContinuousQueryExecutionImpl(sds, sds, query);
 
-        query.getWindowMap().forEach((WindowNode wo, Stream s) -> {
+        this.cqe = new ContinuousQueryExecutionImpl(sds, query, new R2RImpl(sds, query), new Rstream());
 
-            WindowOperator<Graph, Graph> w;
+        query.getWindowMap().forEach((WindowNode wo, WebStream s) -> {
+
+            StreamToRelationOperator<Graph, Graph> w;
             IRI iri = RDFUtils.createIRI(wo.iri());
+
             if (wo.getStep() == -1) {
-                w = new CQELSTimeWindowOperator(iri, wo.getRange(), wo.getT0(), query.getTime(), tick, report, reportGrain);
+                w = new CQELSTimeWindowOperator(iri, wo.getRange(), wo.getT0(), query.getTime(), tick, report, reportGrain, cqe);
             } else
-                w = new CSPARQLTimeWindowOperator(iri, wo.getRange(), wo.getStep(), wo.getT0(), query.getTime(), tick, report, reportGrain);
+                w = new CSPARQLTimeWindowOperator(iri, wo.getRange(), wo.getStep(), wo.getT0(), query.getTime(), tick, report, reportGrain, cqe);
 
 
-            RegisteredStream<Graph> s1 = registeredStreams.get(s.getURI());
-            WindowAssigner<Graph, Graph> wa = w.apply(s1);
+            TimeVarying<Graph> tvg = w.apply(registeredStreams.get(s.getURI()));
 
             if (wo.named()) {
-                TimeVarying<Graph> tvg = wa.set(cqe);
                 sds.add(iri, tvg);
             } else {
-                sds.add(wa.set(cqe));
+                sds.add(tvg);
             }
         });
 

@@ -17,9 +17,9 @@
  */
 package simple.sds;
 
-import it.polimi.yasper.core.rspql.sds.SDS;
-import it.polimi.yasper.core.rspql.timevarying.TimeVarying;
-import it.polimi.yasper.core.rspql.RDFUtils;
+import it.polimi.yasper.core.sds.SDS;
+import it.polimi.yasper.core.sds.timevarying.TimeVarying;
+import it.polimi.yasper.core.RDFUtils;
 import lombok.AllArgsConstructor;
 import org.apache.commons.rdf.api.*;
 import org.apache.commons.rdf.simple.DatasetGraphView;
@@ -40,7 +40,7 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
 
     private static final int TO_STRING_MAX = 10;
     private final Set<Quad> quads = new HashSet<>();
-    private final Set<TimeVarying> defs = new HashSet<>();
+    private final Set<TimeVarying<Graph>> defs = new HashSet<>();
     private final Map<IRI, TimeVarying<Graph>> tvgs = new HashMap<>();
     private final IRI def;
 
@@ -202,6 +202,11 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
     public Stream<BlankNodeOrIRI> getGraphNames() {
         // Not very efficient..
         return stream().map(Quad::getGraphName).filter(Optional::isPresent).map(Optional::get).distinct();
+    }
+
+    @Override
+    public Collection<TimeVarying<Graph>> asTimeVaryingEs() {
+        return defs;
     }
 
     @Override

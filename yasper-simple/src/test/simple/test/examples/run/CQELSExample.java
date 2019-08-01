@@ -1,18 +1,18 @@
 package simple.test.examples.run;
 
-import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
-import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowNode;
-import it.polimi.yasper.core.stream.rdf.RegisteredRDFStream;
-import it.polimi.yasper.core.engine.EngineConfiguration;
-import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
-import it.polimi.yasper.core.rspql.RDFUtils;
+import it.polimi.yasper.core.querying.ContinuousQueryExecution;
+import it.polimi.yasper.core.querying.ContinuousQuery;
+import it.polimi.yasper.core.operators.s2r.syntax.WindowNode;
+import it.polimi.yasper.core.stream.data.DataStreamImpl;
+import it.polimi.yasper.core.engine.config.EngineConfiguration;
+import it.polimi.yasper.core.sds.SDSConfiguration;
+import it.polimi.yasper.core.RDFUtils;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.rdf.api.Graph;
 import simple.querying.formatter.ContinuousQueryImpl;
 import simple.querying.formatter.InstResponseSysOutFormatter;
 import simple.test.examples.CQELSmpl;
-import simple.test.examples.RDFStreamDecl;
+import simple.test.examples.WebStreamDecl;
 import simple.windowing.WindowNodeImpl;
 
 import java.net.URL;
@@ -28,15 +28,16 @@ public class CQELSExample {
     public static void main(String[] args) throws ConfigurationException {
 
         URL resource = CQELSExample.class.getResource("/default.properties");
-        QueryConfiguration config = new QueryConfiguration(resource.getPath());
+        SDSConfiguration config = new SDSConfiguration(resource.getPath());
         EngineConfiguration ec = EngineConfiguration.loadConfig("/default.properties");
 
         sr = new CQELSmpl(0, ec);
 
         //STREAM DECLARATION
-        RDFStreamDecl stream = new RDFStreamDecl("stream1");
+        WebStreamDecl stream = new WebStreamDecl("stream1");
 
-        RegisteredRDFStream painter_reg = sr.register(stream);
+        DataStreamImpl painter_reg = sr.register(stream);
+
 
         //_____
 

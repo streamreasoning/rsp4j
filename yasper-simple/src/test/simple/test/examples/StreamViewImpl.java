@@ -1,23 +1,27 @@
 package simple.test.examples;
 
-import it.polimi.yasper.core.rspql.sds.SDS;
-import it.polimi.yasper.core.spe.content.Content;
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
-import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.spe.operators.r2s.result.InstantaneousResult;
-import it.polimi.yasper.core.spe.operators.r2s.result.QueryResultFormatter;
-import it.polimi.yasper.core.spe.operators.s2r.execution.assigner.WindowAssigner;
+import it.polimi.yasper.core.sds.SDS;
+import it.polimi.yasper.core.secret.content.Content;
+import it.polimi.yasper.core.querying.ContinuousQuery;
+import it.polimi.yasper.core.operators.r2r.RelationToRelationOperator;
+import it.polimi.yasper.core.querying.ContinuousQueryExecution;
+import it.polimi.yasper.core.operators.r2s.RelationToStreamOperator;
+import it.polimi.yasper.core.format.QueryResultFormatter;
+import it.polimi.yasper.core.operators.s2r.StreamToRelationOperator;
+import it.polimi.yasper.core.operators.s2r.execution.assigner.Assigner;
+import it.polimi.yasper.core.stream.data.WebDataStream;
+import org.apache.commons.rdf.api.Triple;
 
 import java.util.Observable;
 import java.util.Observer;
 
-public class StreamViewImpl extends Observable implements ContinuousQueryExecution, Observer {
+public class StreamViewImpl extends Observable implements ContinuousQueryExecution<Triple,Triple,Triple>, Observer {
 
     private Content content;
 
     @Override
     public void update(Observable o, Object arg) {
-        WindowAssigner window_assigner = (WindowAssigner) o;
+        Assigner window_assigner = (Assigner) o;
         this.content = window_assigner.getContent((Long) arg);
         setChanged();
         notifyObservers(arg);
@@ -30,7 +34,7 @@ public class StreamViewImpl extends Observable implements ContinuousQueryExecuti
 
 
     @Override
-    public InstantaneousResult eval(long ts) {
+    public WebDataStream<Triple> outstream() {
         return null;
     }
 
@@ -39,13 +43,24 @@ public class StreamViewImpl extends Observable implements ContinuousQueryExecuti
         return null;
     }
 
+
     @Override
-    public String getQueryID() {
+    public SDS getSDS() {
         return null;
     }
 
     @Override
-    public SDS getSDS() {
+    public StreamToRelationOperator<Triple,Triple>[] getS2R() {
+        return new StreamToRelationOperator[0];
+    }
+
+    @Override
+    public RelationToRelationOperator<Triple> getR2R() {
+        return null;
+    }
+
+    @Override
+    public RelationToStreamOperator<Triple>getR2S() {
         return null;
     }
 

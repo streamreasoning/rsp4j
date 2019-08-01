@@ -1,7 +1,7 @@
 package simple.windowing;
 
-import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowType;
-import it.polimi.yasper.core.spe.operators.s2r.syntax.WindowNode;
+import it.polimi.yasper.core.operators.s2r.syntax.WindowType;
+import it.polimi.yasper.core.operators.s2r.syntax.WindowNode;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.rdf.api.IRI;

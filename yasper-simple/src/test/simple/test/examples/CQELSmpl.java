@@ -1,22 +1,22 @@
 package simple.test.examples;
 
-import it.polimi.yasper.core.engine.EngineConfiguration;
+import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.engine.features.QueryRegistrationFeature;
 import it.polimi.yasper.core.engine.features.StreamRegistrationFeature;
-import it.polimi.yasper.core.rspql.sds.SDS;
-import it.polimi.yasper.core.rspql.sds.SDSManager;
-import it.polimi.yasper.core.spe.operators.r2r.ContinuousQuery;
-import it.polimi.yasper.core.spe.operators.r2r.QueryConfiguration;
-import it.polimi.yasper.core.spe.operators.r2r.execution.ContinuousQueryExecution;
-import it.polimi.yasper.core.spe.operators.r2s.result.QueryResultFormatter;
-import it.polimi.yasper.core.spe.report.Report;
-import it.polimi.yasper.core.spe.report.ReportGrain;
-import it.polimi.yasper.core.spe.report.ReportImpl;
-import it.polimi.yasper.core.spe.report.strategies.OnContentChange;
-import it.polimi.yasper.core.spe.tick.Tick;
-import it.polimi.yasper.core.stream.RegisteredStream;
-import it.polimi.yasper.core.stream.rdf.RDFStream;
-import it.polimi.yasper.core.stream.rdf.RegisteredRDFStream;
+import it.polimi.yasper.core.sds.SDS;
+import it.polimi.yasper.core.sds.SDSManager;
+import it.polimi.yasper.core.querying.ContinuousQuery;
+import it.polimi.yasper.core.sds.SDSConfiguration;
+import it.polimi.yasper.core.querying.ContinuousQueryExecution;
+import it.polimi.yasper.core.format.QueryResultFormatter;
+import it.polimi.yasper.core.secret.report.Report;
+import it.polimi.yasper.core.enums.ReportGrain;
+import it.polimi.yasper.core.secret.report.ReportImpl;
+import it.polimi.yasper.core.secret.report.strategies.OnContentChange;
+import it.polimi.yasper.core.enums.Tick;
+import it.polimi.yasper.core.stream.data.WebDataStream;
+import it.polimi.yasper.core.stream.web.WebStreamImpl;
+import it.polimi.yasper.core.stream.data.DataStreamImpl;
 import org.apache.commons.rdf.api.Graph;
 import simple.sds.SDSManagerImpl;
 
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class CQELSmpl implements QueryRegistrationFeature, StreamRegistrationFeature<RegisteredRDFStream, RDFStream> {
+public class CQELSmpl implements QueryRegistrationFeature, StreamRegistrationFeature<DataStreamImpl, WebStreamImpl> {
 
     private final long t0;
     private Report report;
@@ -36,7 +36,7 @@ public class CQELSmpl implements QueryRegistrationFeature, StreamRegistrationFea
     protected Map<String, ContinuousQueryExecution> queryExecutions;
     protected Map<String, ContinuousQuery> registeredQueries;
     protected Map<String, List<QueryResultFormatter>> queryObservers;
-    protected Map<String, RegisteredStream<Graph>> registeredStreams;
+    protected Map<String, WebDataStream<Graph>> registeredStreams;
     private ReportGrain report_grain;
 
 
@@ -55,7 +55,7 @@ public class CQELSmpl implements QueryRegistrationFeature, StreamRegistrationFea
     }
 
     @Override
-    public ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c) {
+    public ContinuousQueryExecution register(ContinuousQuery q, SDSConfiguration c) {
         SDSManager builder = new SDSManagerImpl(q, c, registeredStreams, report, report_grain, tick, t0);
         SDS build = builder.build();
         return builder.getContinuousQueryExecution();
@@ -67,8 +67,8 @@ public class CQELSmpl implements QueryRegistrationFeature, StreamRegistrationFea
     }
 
     @Override
-    public RegisteredRDFStream register(RDFStream s) {
-        RegisteredRDFStream rs = new RegisteredRDFStream(s.getURI());
+    public DataStreamImpl register(WebStreamImpl s) {
+        DataStreamImpl rs = new DataStreamImpl(s.getURI());
         registeredStreams.put(s.getURI(), rs);
         return rs;
     }
