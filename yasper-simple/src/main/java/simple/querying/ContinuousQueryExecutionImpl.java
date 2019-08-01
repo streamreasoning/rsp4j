@@ -13,6 +13,7 @@ import org.apache.commons.rdf.api.Triple;
 
 import java.util.Collection;
 import java.util.Observable;
+import java.util.stream.Stream;
 
 /**
  * Created by Riccardo on 12/08/16.
@@ -80,9 +81,7 @@ public class ContinuousQueryExecutionImpl extends ContinuousQueryExecutionObserv
     public void update(Observable o, Object arg) {
         Long now = (Long) arg;
 
-        Collection<SolutionMapping<Triple>> eval = r2r.eval(now);
-
-        eval.forEach(o1 -> {
+        r2r.eval(now).forEach(o1 -> {
             Triple eval1 = r2s.eval(o1, now);
             setChanged();
             notifyObservers(eval1);

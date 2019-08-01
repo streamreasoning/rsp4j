@@ -10,6 +10,7 @@ import org.apache.commons.rdf.api.Triple;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class R2RImpl implements RelationToRelationOperator<Triple> {
 
@@ -24,11 +25,11 @@ public class R2RImpl implements RelationToRelationOperator<Triple> {
     }
 
     @Override
-    public Collection<SolutionMapping<Triple>> eval(long ts) {
+    public Stream<SolutionMapping<Triple>> eval(long ts) {
         sds.materialize(ts);
 
         return ds.stream()
-                .map(Quad::asTriple).map(triple -> new SelectInstResponse(query.getID() + "/ans/" + ts, ts, triple)).collect(Collectors.toList());
+                .map(Quad::asTriple).map(triple -> new SelectInstResponse(query.getID() + "/ans/" + ts, ts, triple));
 
     }
 }
