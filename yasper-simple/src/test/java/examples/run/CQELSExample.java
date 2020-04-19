@@ -1,4 +1,4 @@
-package simple.test.examples.run;
+package examples.run;
 
 import it.polimi.yasper.core.querying.ContinuousQueryExecution;
 import it.polimi.yasper.core.querying.ContinuousQuery;
@@ -11,8 +11,8 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.rdf.api.Graph;
 import simple.querying.formatter.ContinuousQueryImpl;
 import simple.querying.formatter.InstResponseSysOutFormatter;
-import simple.test.examples.CSPARQLImpl;
-import simple.test.examples.WebStreamDecl;
+import examples.CQELSmpl;
+import examples.WebStreamDecl;
 import simple.windowing.WindowNodeImpl;
 
 import java.net.URL;
@@ -21,28 +21,29 @@ import java.time.Duration;
 /**
  * Created by Riccardo on 03/08/16.
  */
-public class CSPARQLExample {
+public class CQELSExample {
 
-    static CSPARQLImpl sr;
+    static CQELSmpl sr;
 
     public static void main(String[] args) throws ConfigurationException {
 
-        URL resource = CSPARQLExample.class.getResource("/default.properties");
+        URL resource = CQELSExample.class.getResource("/default.properties");
         SDSConfiguration config = new SDSConfiguration(resource.getPath());
         EngineConfiguration ec = EngineConfiguration.loadConfig("/default.properties");
 
-        sr = new CSPARQLImpl(0, ec);
+        sr = new CQELSmpl(0, ec);
 
         //STREAM DECLARATION
-        WebStreamDecl s = new WebStreamDecl("stream1");
+        WebStreamDecl stream = new WebStreamDecl("stream1");
 
-        DataStreamImpl stream = sr.register(s);
+        DataStreamImpl painter_reg = sr.register(stream);
+
 
         //_____
 
         ContinuousQuery q = new ContinuousQueryImpl("q1");
 
-        WindowNode wn = new WindowNodeImpl(RDFUtils.createIRI("w1"), Duration.ofSeconds(2), Duration.ofSeconds(2), 0);
+        WindowNode wn = new WindowNodeImpl(RDFUtils.createIRI("w1"), Duration.ofSeconds(2), 0);
 
         q.addNamedWindow("stream1", wn);
 
@@ -54,41 +55,41 @@ public class CSPARQLExample {
 
         Graph graph = RDFUtils.getInstance().createGraph();
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S1"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O1")));
-        stream.put(graph, 1000);
+
+        painter_reg.put(graph, 1000);
+        ;
 
         graph = RDFUtils.getInstance().createGraph();
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S2"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O2")));
-        stream.put(graph, 1999);
+
+        painter_reg.put(graph, 1999);
 
         graph = RDFUtils.getInstance().createGraph();
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S3"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O3")));
-        stream.put(graph, 2001);
+        painter_reg.put(graph, 2001);
 
         graph = RDFUtils.getInstance().createGraph();
 
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S4"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O4")));
-        stream.put(graph, 3000);
 
+        painter_reg.put(graph, 3000);
 
         graph = RDFUtils.getInstance().createGraph();
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S5"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O5")));
-        stream.put(graph, 5000);
-
+        painter_reg.put(graph, 5000);
 
         graph = RDFUtils.getInstance().createGraph();
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S6"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O6")));
-        stream.put(graph, 5000);
-        stream.put(graph, 6000);
+        painter_reg.put(graph, 5000);
+        painter_reg.put(graph, 6000);
 
 
         graph = RDFUtils.getInstance().createGraph();
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S7"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O7")));
-        stream.put(graph, 7000);
+        painter_reg.put(graph, 7000);
 
-        //stream.put(new simple.test.examples.windowing.RDFStreamDecl.Elem(3000, graph));
-
+        //stream.put(new examples.windowing.RDFStreamDecl.Elem(3000, graph));
 
     }
-
 
 }

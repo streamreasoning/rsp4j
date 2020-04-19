@@ -26,7 +26,7 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph, Graph
 
     private final long a, b;
 
-    private Map<Window, Content<Graph>> active_windows;
+    private Map<Window, Content<Graph,Graph>> active_windows;
     private Set<Window> to_evict;
     private long t0;
     private long toi;
@@ -47,7 +47,7 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph, Graph
     }
 
     @Override
-    public Content<Graph> getContent(long t_e) {
+    public Content<Graph,Graph> getContent(long t_e) {
         Optional<Window> max = active_windows.keySet().stream()
                 .filter(w -> w.getO() < t_e && w.getC() <= t_e)
                 .max(Comparator.comparingLong(Window::getC));
@@ -59,7 +59,7 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph, Graph
     }
 
     @Override
-    public List<Content<Graph>> getContents(long t_e) {
+    public List<Content<Graph,Graph>> getContents(long t_e) {
         return active_windows.keySet().stream()
                 .filter(w -> w.getO() <= t_e && t_e < w.getC())
                 .map(active_windows::get).collect(Collectors.toList());
@@ -126,8 +126,8 @@ public class CSPARQLWindowAssigner extends ObservableWindowAssigner<Graph, Graph
     }
 
 
-    public Content<Graph> compute(long t_e, Window w) {
-        Content<Graph> content = active_windows.containsKey(w) ? active_windows.get(w) : new EmptyGraphContent();
+    public Content<Graph,Graph> compute(long t_e, Window w) {
+        Content<Graph,Graph> content = active_windows.containsKey(w) ? active_windows.get(w) : new EmptyGraphContent();
         time.setAppTime(t_e);
         return setVisible(t_e, w, content);
     }

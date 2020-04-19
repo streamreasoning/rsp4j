@@ -1,12 +1,12 @@
 package it.polimi.yasper.core.operators.s2r.execution.assigner;
 
 
+import it.polimi.yasper.core.enums.Tick;
+import it.polimi.yasper.core.operators.s2r.execution.instance.Window;
+import it.polimi.yasper.core.querying.ContinuousQueryExecution;
 import it.polimi.yasper.core.sds.timevarying.TimeVarying;
 import it.polimi.yasper.core.secret.content.Content;
-import it.polimi.yasper.core.querying.ContinuousQueryExecution;
-import it.polimi.yasper.core.operators.s2r.execution.instance.Window;
 import it.polimi.yasper.core.secret.report.Report;
-import it.polimi.yasper.core.enums.Tick;
 import it.polimi.yasper.core.secret.time.Time;
 
 import java.util.List;
@@ -23,9 +23,9 @@ public interface Assigner<I, O> extends Consumer<I> {
 
     Time time();
 
-    Content<O> getContent(long now);
+    Content<I, O> getContent(long now);
 
-    List<Content<O>> getContents(long now);
+    List<Content<I, O>> getContents(long now);
 
     TimeVarying<O> set(ContinuousQueryExecution content);
 
@@ -33,6 +33,6 @@ public interface Assigner<I, O> extends Consumer<I> {
 
     boolean named();
 
-    Content<O> compute(long t_e, Window w);
+    Content<I, O> compute(long t_e, Window w);
 
 }

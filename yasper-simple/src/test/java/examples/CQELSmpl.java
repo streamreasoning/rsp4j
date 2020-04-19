@@ -1,4 +1,4 @@
-package simple.test.examples;
+package examples;
 
 import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.engine.features.QueryRegistrationFeature;

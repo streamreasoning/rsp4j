@@ -47,7 +47,7 @@ public abstract class ObservableWindowAssigner<E, O> extends Observable implemen
         return tick;
     }
 
-    protected Content<O> setVisible(long t_e, Window w, Content<O> c) {
+    protected Content<E,O> setVisible(long t_e, Window w, Content<E,O> c) {
         log.debug("Report [" + w.getO() + "," + w.getC() + ") with Content " + c + "");
         setChanged();
         notifyObservers(t_e);

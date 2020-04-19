@@ -1,22 +1,22 @@
 package simple.windowing;
 
 import it.polimi.yasper.core.RDFUtils;
+import it.polimi.yasper.core.enums.ReportGrain;
+import it.polimi.yasper.core.enums.Tick;
 import it.polimi.yasper.core.exceptions.OutOfOrderElementException;
 import it.polimi.yasper.core.operators.s2r.execution.assigner.ObservableWindowAssigner;
 import it.polimi.yasper.core.operators.s2r.execution.instance.Window;
 import it.polimi.yasper.core.operators.s2r.execution.instance.WindowImpl;
 import it.polimi.yasper.core.querying.ContinuousQueryExecution;
-import simple.querying.TimeVaryingGraph;
 import it.polimi.yasper.core.secret.content.Content;
 import it.polimi.yasper.core.secret.content.ContentGraph;
 import it.polimi.yasper.core.secret.content.EmptyGraphContent;
 import it.polimi.yasper.core.secret.report.Report;
-import it.polimi.yasper.core.enums.ReportGrain;
-import it.polimi.yasper.core.enums.Tick;
 import it.polimi.yasper.core.secret.time.Time;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
+import simple.querying.TimeVaryingGraph;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,7 +27,7 @@ public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph, Graph> 
 
     private final long a;
 
-    private Map<Window, Content<Graph>> windows;
+    private Map<Window, Content<Graph, Graph>> windows;
     private Map<Graph, Long> r_stream;
     private Map<Graph, Long> d_stream;
 
@@ -53,7 +53,7 @@ public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph, Graph> 
     }
 
     @Override
-    public Content<Graph> getContent(long t_e) {
+    public Content<Graph, Graph> getContent(long t_e) {
         Optional<Window> max = windows.keySet().stream()
                 .filter(w -> w.getO() < t_e && w.getC() <= t_e)
                 .max(Comparator.comparingLong(Window::getC));
@@ -65,7 +65,7 @@ public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph, Graph> 
     }
 
     @Override
-    public List<Content<Graph>> getContents(long t_e) {
+    public List<Content<Graph, Graph>> getContents(long t_e) {
         return windows.keySet().stream()
                 .filter(w -> w.getO() <= t_e && t_e < w.getC())
                 .map(windows::get).collect(Collectors.toList());
@@ -82,7 +82,7 @@ public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph, Graph> 
         }
 
         Window active = scope(t_e);
-        Content<Graph> content = windows.get(active);
+        Content<Graph, Graph> content = windows.get(active);
 
         r_stream.entrySet().stream().filter(ee -> ee.getValue() < active.getO()).forEach(ee -> d_stream.put(ee.getKey(), ee.getValue()));
 
@@ -128,8 +128,8 @@ public class CQELSWindowAssigner extends ObservableWindowAssigner<Graph, Graph> 
         to_evict.add(w);
     }
 
-    public Content<Graph> compute(long t_e, Window w) {
-        Content<Graph> content = windows.containsKey(w) ? windows.get(w) : new EmptyGraphContent();
+    public Content<Graph, Graph> compute(long t_e, Window w) {
+        Content<Graph, Graph> content = windows.containsKey(w) ? windows.get(w) : new EmptyGraphContent();
         time.setAppTime(t_e);
         return setVisible(t_e, w, content);
     }

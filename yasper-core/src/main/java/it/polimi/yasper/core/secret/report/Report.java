@@ -1,8 +1,8 @@
 package it.polimi.yasper.core.secret.report;
 
 
-import it.polimi.yasper.core.secret.content.Content;
 import it.polimi.yasper.core.operators.s2r.execution.instance.Window;
+import it.polimi.yasper.core.secret.content.Content;
 import it.polimi.yasper.core.secret.report.strategies.ReportingStrategy;
 
 /**
@@ -11,14 +11,14 @@ import it.polimi.yasper.core.secret.report.strategies.ReportingStrategy;
  * and result reporting.
  * SPEs use different reporting strategies.
  * Botan et al. identified four basic reporting strategies.
- 1. Content change (Rcc): reporting is done for t only if the content has changed since t   1.
- 2. Window close (Rwc): reporting is done for t only when the active window closes (i.e., |Scope(t)| = !).
- 3. Non-empty content (Rne): reporting is done for t only if the content at t is not empty.
- 4. Periodic (Rpr): reporting is done for t only if it is a multiple of x , where x denotes the reporting frequency.
- * **/
+ * 1. Content change (Rcc): reporting is done for t only if the content has changed since t   1.
+ * 2. Window close (Rwc): reporting is done for t only when the active window closes (i.e., |Scope(t)| = !).
+ * 3. Non-empty content (Rne): reporting is done for t only if the content at t is not empty.
+ * 4. Periodic (Rpr): reporting is done for t only if it is a multiple of x , where x denotes the reporting frequency.
+ **/
 public interface Report {
 
-    boolean report(Window w, Content c, long tapp, long tsys);
+    boolean report(Window w, Content<?, ?> c, long tapp, long tsys);
 
     void add(ReportingStrategy r);
 

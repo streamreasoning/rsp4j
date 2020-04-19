@@ -1,4 +1,4 @@
-package simple.test.examples;
+package examples;
 
 import it.polimi.yasper.core.sds.SDS;
 import it.polimi.yasper.core.secret.content.Content;

@@ -1,4 +1,4 @@
-package simple.test.examples.windowing;
+package examples.windowing;
 
 import it.polimi.yasper.core.RDFUtils;
 import it.polimi.yasper.core.sds.timevarying.TimeVarying;
@@ -12,7 +12,7 @@ import it.polimi.yasper.core.secret.time.TimeImpl;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.Triple;
 import org.junit.Test;
-import simple.test.examples.StreamViewImpl;
+import examples.StreamViewImpl;
 import simple.windowing.CSPARQLWindowAssigner;
 
 import static junit.framework.TestCase.assertTrue;
