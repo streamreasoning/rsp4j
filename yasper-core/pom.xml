@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>yasper-core</artifactId>
-    <version>${project.version}</version>
+    <version>${revision}</version>
 
     <build>
         <plugins>

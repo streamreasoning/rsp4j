@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>yasper-simple</artifactId>
-    <version>${project.version}</version>
+    <version>${revision}</version>
 
     <repositories>
         <repository>
