@@ -2,7 +2,7 @@ package it.polimi.yasper.core.secret.content;
 
 import org.apache.commons.rdf.api.Graph;
 
-public class EmptyGraphContent implements Content<Graph> {
+public class EmptyGraphContent implements Content<Graph,Graph> {
 
     long ts = System.currentTimeMillis();
 

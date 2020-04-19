@@ -1,14 +1,14 @@
 package it.polimi.yasper.core.secret.content;
 
-import it.polimi.yasper.core.secret.time.TimeFactory;
 import it.polimi.yasper.core.RDFUtils;
+import it.polimi.yasper.core.secret.time.TimeFactory;
 import org.apache.commons.rdf.api.Graph;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ContentGraph implements Content<Graph> {
+public class ContentGraph implements Content<Graph, Graph> {
     private List<Graph> elements;
     private long last_timestamp_changed;
 
