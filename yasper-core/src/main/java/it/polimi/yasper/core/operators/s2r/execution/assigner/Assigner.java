@@ -4,6 +4,7 @@ package it.polimi.yasper.core.operators.s2r.execution.assigner;
 import it.polimi.yasper.core.enums.Tick;
 import it.polimi.yasper.core.operators.s2r.execution.instance.Window;
 import it.polimi.yasper.core.querying.ContinuousQueryExecution;
+import it.polimi.yasper.core.sds.SDS;
 import it.polimi.yasper.core.sds.timevarying.TimeVarying;
 import it.polimi.yasper.core.secret.content.Content;
 import it.polimi.yasper.core.secret.report.Report;
@@ -27,7 +28,7 @@ public interface Assigner<I, O> extends Consumer<I> {
 
     List<Content<I, O>> getContents(long now);
 
-    TimeVarying<O> set(ContinuousQueryExecution content);
+    TimeVarying<O> set(SDS<O> content);
 
     String iri();
 

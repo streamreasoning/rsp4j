@@ -7,7 +7,7 @@ YASPER is inspired by the OWL API, and other work that aim at spreading the Sema
 In this repository, two Maven projects are present:
 
 - yasper-core, which contains the interfaces and abstractions required to develop your RSP engine.
-- yasper-simple, which is an reference implementation that aims at showing yasper-core's usage by providing examples.
+- yasper-simple, which is an reference implementation that aims at showing yasper-core's usage by providing it.polimi.deib.rsp.test.examples.
 
 Futher adoption of YASPER will be listed below. A on-going [documentation](https://github.com/riccardotommasini/yasper/wiki) is also available. 
 
