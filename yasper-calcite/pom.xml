@@ -16,15 +16,12 @@
         <yasper.version>2.3.0</yasper.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
-
-
     <dependencies>
+        <dependency>
+            <groupId>com.github.jsonld-java</groupId>
+            <artifactId>jsonld-java</artifactId>
+            <version>0.13.0</version>
+        </dependency>
         <dependency>
             <groupId>it.polimi.sr.yasper</groupId>
             <artifactId>yasper-core</artifactId>
@@ -80,6 +77,11 @@
             <groupId>eu.optique-project</groupId>
             <artifactId>r2rml-api-rdf4j-binding</artifactId>
             <version>0.6.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.jsonld-java</groupId>
+                    <artifactId>jsonld-java</artifactId>
+                </exclusion></exclusions>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.calcite/calcite-avatica -->
 
