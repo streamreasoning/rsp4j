@@ -1,14 +1,12 @@
-package it.polimi.csparql2.jena.operators;
+package neo4j;
 
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.SafeIterator;
-import it.polimi.csparql2.jena.stream.JenaGraphContent;
 import it.polimi.jasper.operators.s2r.AbstractEsperWindowAssigner;
 import it.polimi.jasper.sds.tv.EsperTimeVaryingGeneric;
 import it.polimi.jasper.sds.tv.NamedEsperTimeVaryingGeneric;
 import it.polimi.jasper.streams.items.StreamItem;
 import it.polimi.yasper.core.enums.Maintenance;
-import it.polimi.yasper.core.enums.ReportGrain;
 import it.polimi.yasper.core.enums.Tick;
 import it.polimi.yasper.core.operators.s2r.StreamToRelationOperator;
 import it.polimi.yasper.core.operators.s2r.execution.instance.Window;
@@ -20,23 +18,22 @@ import it.polimi.yasper.core.secret.report.Report;
 import it.polimi.yasper.core.secret.time.Time;
 import it.polimi.yasper.core.stream.data.WebDataStream;
 import lombok.RequiredArgsConstructor;
-import org.apache.jena.graph.Graph;
-import org.apache.jena.mem.GraphMem;
+import org.neo4j.graphdb.GraphDatabaseService;
 
 import java.util.List;
 import java.util.Observable;
 
 @RequiredArgsConstructor
-public class EsperGGWindowOperator implements StreamToRelationOperator<Graph, Graph> {
+public class EsperPGWindowOperator implements StreamToRelationOperator<PGraph, PGraph> {
 
     private final Tick tick;
     private final Report report;
     private final Boolean eventtime;
-    private final ReportGrain reportGrain;
     private final Maintenance maintenance;
     private final Time time;
     private final WindowNode wo;
-    private final SDS<Graph> context;
+    private final SDS<PGraph> context;
+    private final GraphDatabaseService db;
 
     @Override
     public String iri() {
@@ -49,22 +46,21 @@ public class EsperGGWindowOperator implements StreamToRelationOperator<Graph, Gr
     }
 
     @Override
-    public TimeVarying<Graph> apply(WebDataStream<Graph> s) {
+    public TimeVarying<PGraph> apply(WebDataStream<PGraph> s) {
         EsperGGWindowAssigner consumer = new EsperGGWindowAssigner(s.getURI());
         s.addConsumer(consumer);
         return consumer.set(context);
     }
 
-    class EsperGGWindowAssigner extends AbstractEsperWindowAssigner<Graph, Graph> {
+    class EsperGGWindowAssigner extends AbstractEsperWindowAssigner<PGraph, PGraph> {
 
         public EsperGGWindowAssigner(String name) {
-            super(name, EsperGGWindowOperator.this.tick, EsperGGWindowOperator.this.maintenance, EsperGGWindowOperator.this.report, EsperGGWindowOperator.this.eventtime, EsperGGWindowOperator.this.time, wo);
-
+            super(name, EsperPGWindowOperator.this.tick, Maintenance.NAIVE, EsperPGWindowOperator.this.report, EsperPGWindowOperator.this.eventtime, EsperPGWindowOperator.this.time, EsperPGWindowOperator.this.wo);
         }
 
-        public Content<Graph, Graph> getContent(long now) {
+        public Content<PGraph, PGraph> getContent(long now) {
             SafeIterator<EventBean> iterator = statement.safeIterator();
-            JenaGraphContent events = new JenaGraphContent(new GraphMem());
+            ContentPGraphBean events = new ContentPGraphBean(db);
             events.setLast_timestamp_changed(now);
             while (iterator.hasNext()) {
                 events.add(iterator.next());
@@ -73,26 +69,26 @@ public class EsperGGWindowOperator implements StreamToRelationOperator<Graph, Gr
         }
 
         @Override
-        public List<Content<Graph, Graph>> getContents(long now) {
+        public List<Content<PGraph, PGraph>> getContents(long now) {
             return null;
         }
 
 
         @Override
-        public TimeVarying<Graph> set(SDS<Graph> sds) {
-            EsperTimeVaryingGeneric<Graph, Graph> n = named()
-                    ? new NamedEsperTimeVaryingGeneric<>(new JenaGraphContent(), name, EsperGGWindowOperator.this.maintenance, report, this, sds)
-                    : new EsperTimeVaryingGeneric<>(new JenaGraphContent(), EsperGGWindowOperator.this.maintenance, report, this, sds);
+        public TimeVarying<PGraph> set(SDS<PGraph> sds) {
+            EsperTimeVaryingGeneric<PGraph, PGraph> n = named()
+                    ? new NamedEsperTimeVaryingGeneric<>(new ContentPGraphBean(db), name, EsperPGWindowOperator.this.maintenance, report, this, sds)
+                    : new EsperTimeVaryingGeneric<>(new ContentPGraphBean(db), EsperPGWindowOperator.this.maintenance, report, this, sds);
             statement.addListener(n);
             return n;
         }
 
         @Override
-        public void notify(Graph arg, long ts) {
+        public void notify(PGraph arg, long ts) {
             process(arg, ts);
         }
 
-        public boolean process(Graph g, long now) {
+        public boolean process(PGraph g, long now) {
 
             long appTime = time.getAppTime();
 
@@ -110,12 +106,12 @@ public class EsperGGWindowOperator implements StreamToRelationOperator<Graph, Gr
 
         @Override
         public void update(Observable o, Object arg) {
-            StreamItem<Graph> arg1 = (StreamItem<Graph>) arg;
+            StreamItem<PGraph> arg1 = (StreamItem<PGraph>) arg;
             process(arg1.getTypedContent(), eventtime ? arg1.getAppTimestamp() : arg1.getSysTimestamp());
         }
 
         @Override
-        public Content<Graph, Graph> compute(long l, Window window) {
+        public Content<PGraph, PGraph> compute(long l, Window window) {
             return null;
             //TODO
         }

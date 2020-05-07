@@ -36,7 +36,7 @@ public class JenaContinuousQueryExecution extends Observable implements Observer
     private final RelationToStreamOperator<Binding> r2s;
     private List<StreamToRelationOperator<Graph, Graph>> s2rs;
     private final RelationToRelationOperator<Binding> r2r;
-    private final SDS sds;
+    private final SDS<Graph> sds;
     private final ContinuousQuery query;
     private final Query q;
     private final Template template;
@@ -44,7 +44,7 @@ public class JenaContinuousQueryExecution extends Observable implements Observer
     protected QueryExecution execution;
     protected IRIResolver resolver;
 
-    public JenaContinuousQueryExecution(IRIResolver resolver, WebDataStream out, ContinuousQuery query, SDS sds, RelationToRelationOperator<Binding> r2r, RelationToStreamOperator<Binding> r2s, List<StreamToRelationOperator<Graph, Graph>> s2rs) {
+    public JenaContinuousQueryExecution(IRIResolver resolver, WebDataStream out, ContinuousQuery query, SDS<Graph> sds, RelationToRelationOperator<Binding> r2r, RelationToStreamOperator<Binding> r2s, List<StreamToRelationOperator<Graph, Graph>> s2rs) {
         this.resolver = resolver;
         this.query = query;
         this.q = (Query) query;

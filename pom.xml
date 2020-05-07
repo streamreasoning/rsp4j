@@ -11,12 +11,6 @@
         <github.release>${project.version}</github.release>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
 
     <packaging>pom</packaging>
     <modules>
@@ -24,6 +18,8 @@
         <module>yasper-simple</module>
         <module>yasper-esper</module>
         <module>yasper-csparql</module>
+        <module>yasper-calcite</module>
+        <module>yasper-neo4j</module>
     </modules>
 
     <dependencyManagement>

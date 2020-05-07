@@ -3,10 +3,14 @@ package it.polimi.jasper.operators.s2r;
 import com.espertech.esper.client.EPAdministrator;
 import com.espertech.esper.client.EPRuntime;
 import com.espertech.esper.client.EPStatement;
+import it.polimi.jasper.operators.s2r.epl.EPLFactory;
 import it.polimi.jasper.operators.s2r.epl.RuntimeManager;
+import it.polimi.jasper.utils.EncodingUtils;
+import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.enums.ReportGrain;
 import it.polimi.yasper.core.enums.Tick;
 import it.polimi.yasper.core.operators.s2r.execution.assigner.Assigner;
+import it.polimi.yasper.core.operators.s2r.syntax.WindowNode;
 import it.polimi.yasper.core.secret.report.Report;
 import it.polimi.yasper.core.secret.time.Time;
 import lombok.Getter;
@@ -28,13 +32,13 @@ public abstract class AbstractEsperWindowAssigner<I, O> implements Assigner<I, O
     protected Tick tick;
     protected ReportGrain reportGrain = ReportGrain.SINGLE;
 
-    public AbstractEsperWindowAssigner(String name, Tick tick, Report report, boolean event_time, EPStatement stm, Time time) {
-        this.name = name;
+    public AbstractEsperWindowAssigner(String name, Tick tick, Maintenance m, Report report, boolean event_time, Time time, WindowNode wo) {
+        this.name = EncodingUtils.encode(name);
         this.tick = tick;
         this.report = report;
         this.eventtime = event_time;
         this.runtime = RuntimeManager.getEPRuntime();
-        this.statement = stm;
+        this.statement = EPLFactory.getWindowAssigner(tick, m, report, eventtime, name, wo.getStep(), wo.getRange(), wo.getUnitStep(), wo.getUnitRange(), wo.getType(), time);
         this.time = time;
     }
 
