@@ -6,6 +6,8 @@ import it.polimi.yasper.core.operators.r2r.RelationToRelationOperator;
 import it.polimi.yasper.core.querying.result.SolutionMapping;
 import it.polimi.yasper.core.sds.SDS;
 import lombok.extern.log4j.Log4j;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.ext.com.google.common.collect.Streams;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Triple;
@@ -79,6 +81,11 @@ public class R2ROperatorSPARQLEnt implements RelationToRelationOperator<Binding>
     }
 
     @Override
+    public void setInitialBinding(Binding binding) {
+        execution.setInitialBinding(binding);
+    }
+
+    @Override
     public Dataset getDataset() {
         return ds;
     }
@@ -146,6 +153,16 @@ public class R2ROperatorSPARQLEnt implements RelationToRelationOperator<Binding>
     @Override
     public boolean execAsk() {
         return execution.execAsk();
+    }
+
+    @Override
+    public JsonArray execJson() {
+        return execution.execJson();
+    }
+
+    @Override
+    public Iterator<JsonObject> execJsonItems() {
+        return  execution.execJsonItems();
     }
 
     @Override

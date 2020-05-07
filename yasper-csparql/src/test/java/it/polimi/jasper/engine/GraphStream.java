@@ -39,7 +39,7 @@ public class GraphStream extends WebStreamImpl implements Runnable {
             Model m = ModelFactory.createDefaultModel();
             Random r = new Random();
 
-            String uri = "http://www.streamreasoning/it.polimi.jasper.test/artist#";
+            String uri = "http://www.streamreasoning/artist#";
             Resource person = ResourceFactory.createResource(stream_uri + "/artist1");
             Resource type = ResourceFactory.createResource(uri + this.type);
             Property hasAge = ResourceFactory.createProperty(uri + "hasAge");

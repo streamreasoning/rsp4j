@@ -32,13 +32,13 @@ public abstract class AbstractEsperWindowAssigner<I, O> implements Assigner<I, O
     protected Tick tick;
     protected ReportGrain reportGrain = ReportGrain.SINGLE;
 
-    public AbstractEsperWindowAssigner(String name, Tick tick, Maintenance m, Report report, boolean event_time, Time time, WindowNode wo) {
-        this.name = EncodingUtils.encode(name);
+    public AbstractEsperWindowAssigner(String stream, Tick tick, Maintenance m, Report report, boolean event_time, Time time, WindowNode wo) {
+        this.name = EncodingUtils.encode(stream);
         this.tick = tick;
         this.report = report;
         this.eventtime = event_time;
         this.runtime = RuntimeManager.getEPRuntime();
-        this.statement = EPLFactory.getWindowAssigner(tick, m, report, eventtime, name, wo.getStep(), wo.getRange(), wo.getUnitStep(), wo.getUnitRange(), wo.getType(), time);
+        this.statement = EPLFactory.getWindowAssigner(tick, m, report, eventtime, stream, wo.getStep(), wo.getRange(), wo.getUnitStep(), wo.getUnitRange(), wo.getType(), time);
         this.time = time;
     }
 
