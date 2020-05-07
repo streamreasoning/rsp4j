@@ -1,5 +1,7 @@
-## Jasper
+# YASPER CORE
 
+
+## INSTALLATION USING MAVEN
 
 ```xml
  <repositories>
@@ -11,12 +13,10 @@
  </repositories>
 <dependency>
    <groupId>com.github.riccardotommasini.yasper</groupId>
-     <artifactId>jasper</artifactId>
+     <artifactId>yasper-core</artifactId>
        <version>${tag}</version>
  </dependency>
 ```
-
-## Apache Jena
 
 
 

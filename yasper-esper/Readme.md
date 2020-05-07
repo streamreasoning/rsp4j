@@ -1,7 +1,7 @@
 # YASPER ESPER (AKA ONSPER)
 
 
-## INSTLLATION USING MAVEN
+## INSTALLATION USING MAVEN
 
 ```xml
  <repositories>
@@ -20,7 +20,7 @@
 
 
 ## Jasper
-
+## INSTALLATION USING MAVEN
 
 ```xml
  <repositories>
@@ -39,6 +39,7 @@
 
 ## Seraph
 
+## INSTALLATION USING MAVEN
 
 ```xml
  <repositories>

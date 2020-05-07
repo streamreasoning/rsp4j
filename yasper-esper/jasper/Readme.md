@@ -1,4 +1,5 @@
-## Seraph
+## Jasper
+## INSTALLATION USING MAVEN
 
 
 ```xml
@@ -11,14 +12,12 @@
  </repositories>
 <dependency>
    <groupId>com.github.riccardotommasini.yasper</groupId>
-     <artifactId>seraph</artifactId>
+     <artifactId>jasper</artifactId>
        <version>${tag}</version>
  </dependency>
 ```
 
-## Neo4J
-
-### Cypher
+## Apache Jena
 
 
 
