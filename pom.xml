@@ -22,6 +22,8 @@
     <modules>
         <module>yasper-core</module>
         <module>yasper-simple</module>
+        <module>yasper-esper</module>
+        <module>yasper-csparql</module>
     </modules>
 
     <dependencyManagement>

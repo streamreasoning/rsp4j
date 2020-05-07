@@ -1,0 +1,14 @@
+PREFIX ars: <http://www.streamreasoning/it.polimi.jasper.test/artist#>
+PREFIX afn: <http://jena.apache.org/ARQ/function#>
+REGISTER RSTREAM <s1> AS
+SELECT ?uuid ?a
+FROM NAMED WINDOW <win2> ON <http://differenthost:12134/stream2> [RANGE PT5S STEP PT0.5S]
+WHERE  {
+    WINDOW ?w {
+        ?a a ars:Writer ;
+           ars:hasAge ?age .
+    }
+
+     BIND( UUID() as ?uuid )
+
+}

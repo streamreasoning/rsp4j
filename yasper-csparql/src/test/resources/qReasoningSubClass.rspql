@@ -1,0 +1,11 @@
+PREFIX c: <http://www.streamreasoning.org/ontologies/2018/9/colors#>
+
+REGISTER RSTREAM <s1> AS
+SELECT (COUNT(?w) AS ?cntWarm) (COUNT(?c) AS ?cntCold) ((?cntWarm>?cntCold) as ?moreWarmThanCold)  
+FROM NAMED WINDOW <rw> ON <http://localhost:1255/streams/red> [RANGE PT15S STEP PT5S]
+FROM NAMED WINDOW <bw> ON <http://localhost:1255/streams/blue> [RANGE PT15S STEP PT5S]
+WHERE {
+	{ WINDOW ?ww { ?w a c:Warm .} }
+	UNION
+	{ WINDOW ?cw { ?c a c:Cold .} }
+}

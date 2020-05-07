@@ -3,6 +3,9 @@ package it.polimi.yasper.core;
 import org.apache.commons.rdf.api.*;
 import org.apache.commons.rdf.simple.SimpleRDF;
 
+import java.util.Iterator;
+import java.util.ServiceLoader;
+
 public class RDFUtils {
 
     private static RDF rdf;
@@ -12,12 +15,13 @@ public class RDFUtils {
     }
 
     public static RDF getInstance() {
+        ServiceLoader<RDF> loader = ServiceLoader.load(RDF.class);
+        Iterator<RDF> iterator = loader.iterator();
+        RDF rdf = iterator.next();
         if (rdf == null) {
             rdf = new SimpleRDF();
         }
-
         return rdf;
-
     }
 
     public static Graph createGraph() {
@@ -41,6 +45,6 @@ public class RDFUtils {
     }
 
     public static RDFTerm createLiteral(String lexicalForm, String s) {
-       return getInstance().createLiteral(lexicalForm, s);
+        return getInstance().createLiteral(lexicalForm, s);
     }
 }
