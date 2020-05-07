@@ -16,7 +16,6 @@ import it.polimi.yasper.core.sds.SDSConfiguration;
 import it.polimi.yasper.core.sds.timevarying.TimeVarying;
 import it.polimi.yasper.core.secret.report.ReportImpl;
 import it.polimi.yasper.core.stream.data.DataStreamImpl;
-import neo4j.*;
 import org.apache.commons.configuration.ConfigurationException;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.test.TestDatabaseManagementServiceBuilder;
