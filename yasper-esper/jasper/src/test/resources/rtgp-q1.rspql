@@ -1,0 +1,14 @@
+#Who Likes What
+
+PREFIX ex: <http://www.streamreasoning/CSPARQLEngine/test#>
+
+REGISTER RSTREAM <s1> AS
+SELECT *
+FROM NAMED WINDOW <win2> ON <stream2> [RANGE PT10S STEP PT10S]
+WHERE  {
+    WINDOW ?w {
+        ?s ex:likes ?o ;
+           ex:timestamp ?t .
+    }
+}
+ORDER BY ?t

@@ -17,7 +17,6 @@
         <module>yasper-core</module>
         <module>yasper-simple</module>
         <module>yasper-esper</module>
-        <module>yasper-csparql</module>
         <module>yasper-calcite</module>
         <module>yasper-neo4j</module>
     </modules>

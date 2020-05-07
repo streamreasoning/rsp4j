@@ -9,10 +9,15 @@
     <version>2.3.0</version>
 
     <parent>
-        <artifactId>yasper</artifactId>
         <groupId>it.polimi.sr.yasper</groupId>
+        <artifactId>yasper</artifactId>
         <version>2.3.0</version>
     </parent>
+
+    <modules>
+        <module>jasper</module>
+        <module>seraph</module>
+    </modules>
 
     <dependencies>
         <dependency>
@@ -29,16 +34,6 @@
             <groupId>it.polimi.sr.yasper</groupId>
             <artifactId>yasper-core</artifactId>
             <version>${github.release}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4</artifactId>
-            <version>4.7.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
-            <version>4.7</version>
         </dependency>
     </dependencies>
 </project>
