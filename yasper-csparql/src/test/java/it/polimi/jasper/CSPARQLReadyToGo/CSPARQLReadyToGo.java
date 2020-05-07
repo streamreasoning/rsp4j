@@ -1,8 +1,8 @@
 package it.polimi.jasper.CSPARQLReadyToGo;
 
+import it.polimi.sr.rsp.csparql.engine.CSPARQLEngine;
 import it.polimi.jasper.CSPARQLReadyToGo.streams.LBSMARDFStreamTestGenerator;
-import it.polimi.csparql2.jena.engine.Jasper;
-import it.polimi.csparql2.jena.formatter.sysout.GenericResponseSysOutFormatter;
+import it.polimi.sr.rsp.csparql.formatter.sysout.GenericResponseSysOutFormatter;
 import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.querying.ContinuousQuery;
 import it.polimi.yasper.core.querying.ContinuousQueryExecution;
@@ -21,7 +21,7 @@ import java.net.URL;
  */
 public class CSPARQLReadyToGo {
 
-    static Jasper sr;
+    static CSPARQLEngine sr;
 
     public static void main(String[] args) throws InterruptedException, IOException, ConfigurationException {
 
@@ -42,7 +42,7 @@ public class CSPARQLReadyToGo {
         LBSMARDFStreamTestGenerator writer;
         DataStreamImpl<Graph> register;
 
-        sr = new Jasper(0, ec);
+        sr = new CSPARQLEngine(0, ec);
 
         switch (key) {
             case WHO_LIKES_WHAT:

@@ -1,7 +1,7 @@
 package it.polimi.jasper.engine.geldt;
 
-import it.polimi.csparql2.jena.engine.Jasper;
-import it.polimi.csparql2.jena.formatter.sysout.ResponseFormatterFactory;
+import it.polimi.sr.rsp.csparql.engine.CSPARQLEngine;
+import it.polimi.sr.rsp.csparql.formatter.sysout.ResponseFormatterFactory;
 import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.querying.ContinuousQueryExecution;
 import it.polimi.yasper.core.sds.SDSConfiguration;
@@ -24,7 +24,7 @@ public class GELDTArticleExample extends GELDTExample {
         SDSConfiguration config = new SDSConfiguration(resource.getPath());
         EngineConfiguration ec = EngineConfiguration.loadConfig("/geldt/csparqlGELDT.properties");
 
-        sr = new Jasper(0, ec);
+        sr = new CSPARQLEngine(0, ec);
 
         type = "article";
         GELDTGraphStream dt = new GELDTGraphStream(3, "Donald Trump", type);

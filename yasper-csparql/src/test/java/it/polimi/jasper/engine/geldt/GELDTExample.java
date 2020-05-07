@@ -1,6 +1,6 @@
 package it.polimi.jasper.engine.geldt;
 
-import it.polimi.csparql2.jena.engine.Jasper;
+import it.polimi.sr.rsp.csparql.engine.CSPARQLEngine;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -12,7 +12,7 @@ import java.net.URL;
  */
 public abstract class GELDTExample {
 
-    static Jasper sr;
+    static CSPARQLEngine sr;
     static String type = "image";
 
     public static String getQuery(String nameQuery, String suffix, String type) throws IOException {

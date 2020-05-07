@@ -1,6 +1,6 @@
 #HOW_MANY_USERS_LIKE_THE_SAME_OBJ
 
-PREFIX ex: <http://www.streamreasoning/jasper/test#>
+PREFIX ex: <http://www.streamreasoning/CSPARQLEngine/test#>
 
 REGISTER RSTREAM <s1> AS
 SELECT ?o (count(?s) as ?countUsers)

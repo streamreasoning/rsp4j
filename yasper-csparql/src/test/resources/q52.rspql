@@ -1,4 +1,4 @@
-PREFIX ars: <http://www.streamreasoning/it.polimi.jasper.test/artist#>
+PREFIX ars: <http://www.streamreasoning/it.polimi.CSPARQLEngine.test/artist#>
 PREFIX afn: <http://jena.apache.org/ARQ/function#>
 REGISTER RSTREAM <s1> AS
 SELECT ?uuid ?a

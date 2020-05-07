@@ -1,7 +1,7 @@
 package it.polimi.jasper.engine.color;
 
-import it.polimi.csparql2.jena.engine.Jasper;
-import it.polimi.csparql2.jena.formatter.sysout.ResponseFormatterFactory;
+import it.polimi.sr.rsp.csparql.engine.CSPARQLEngine;
+import it.polimi.sr.rsp.csparql.formatter.sysout.ResponseFormatterFactory;
 import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.querying.ContinuousQuery;
 import it.polimi.yasper.core.querying.ContinuousQueryExecution;
@@ -20,7 +20,7 @@ import java.net.URL;
  */
 public class ColorsCSPARQLExample {
 
-    static Jasper sr;
+    static CSPARQLEngine sr;
 
     public static void main(String[] args) throws InterruptedException, IOException, ConfigurationException {
 
@@ -28,7 +28,7 @@ public class ColorsCSPARQLExample {
         SDSConfiguration config = new SDSConfiguration(resource.getPath());
         EngineConfiguration ec = EngineConfiguration.loadConfig("/csparqlColors.properties");
 
-        sr = new Jasper(0, ec);
+        sr = new CSPARQLEngine(0, ec);
 
         ColorsGraphStream red = new ColorsGraphStream("Red", "http://localhost:1255/streams/red");
         ColorsGraphStream green = new ColorsGraphStream("Green", "http://localhost:1255/streams/green");

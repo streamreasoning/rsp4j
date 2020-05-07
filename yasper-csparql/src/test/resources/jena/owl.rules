@@ -109,7 +109,7 @@
 -> (owl:Restriction rdfs:subClassOf owl:Class).
 
 # This is true in OWL-full but does lead to rather a lot of additional conclusions that
-# are not helpful for the practical it.polimi.jasper.test cases, explore consequences of retricting
+# are not helpful for the practical it.polimi.CSPARQLEngine.test cases, explore consequences of retricting
 # closer to OWL/DL
 #-> (rdfs:Class rdfs:subClassOf owl:Class).
 

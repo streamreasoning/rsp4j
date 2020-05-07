@@ -1,6 +1,6 @@
 package it.polimi.jasper.engine;
 
-import it.polimi.csparql2.jena.engine.Jasper;
+import it.polimi.sr.rsp.csparql.engine.CSPARQLEngine;
 import it.polimi.yasper.core.engine.config.ConfigurationUtils;
 import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.querying.ContinuousQuery;
@@ -21,7 +21,7 @@ import java.net.URL;
  */
 public class CSPARQLExample {
 
-    static Jasper sr;
+    static CSPARQLEngine sr;
 
     public static void main(String[] args) throws InterruptedException, IOException, ConfigurationException {
 
@@ -31,7 +31,7 @@ public class CSPARQLExample {
 
         config.setProperty(ConfigurationUtils.TBOX_LOCATION, "https://raw.githubusercontent.com/riccardotommasini/csparql2/master/src/test/resources/artist.tbox.owl?token=ACeO0Zrl_qG-5YPpHh6T_VvZYqXsxFgJks5brMV-wA%3D%3D");
 
-        sr = new Jasper(0, ec);
+        sr = new CSPARQLEngine(0, ec);
 
         GraphStream writer = new GraphStream("Writer", "http://differenthost:12134/stream2", 1);
 

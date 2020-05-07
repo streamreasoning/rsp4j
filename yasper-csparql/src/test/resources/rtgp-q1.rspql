@@ -1,6 +1,6 @@
 #Who Likes What
 
-PREFIX ex: <http://www.streamreasoning/jasper/test#>
+PREFIX ex: <http://www.streamreasoning/CSPARQLEngine/test#>
 
 REGISTER RSTREAM <s1> AS
 SELECT *

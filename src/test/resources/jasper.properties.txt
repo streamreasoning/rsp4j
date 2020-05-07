@@ -1,10 +1,10 @@
-rsp_engine.query_class=it.polimi.jasper.parser.RSPQuery
+rsp_engine.query_class=it.polimi.CSPARQLEngine.parser.RSPQuery
 rsp_engine.tbox_location=/Users/riccardo/_Projects/RSP/yasper/yasper-jena/src/main/resources/artist.tbox.owl
 rsp_engine.sds.mantainance=NAIVE
 rsp_engine.reasoning=true
 rsp_engine.reasoning.entailment=RHODF
 rsp_engine.time=EventTime
 rsp_engine.partialwindow=false
-rsp_engine.base_uri=http://streamreasoning.org/jasper/
-rsp_engine.stream.item.class=it.polimi.jasper.engine.streaming.items.GraphStreamSchema
+rsp_engine.base_uri=http://streamreasoning.org/CSPARQLEngine/
+rsp_engine.stream.item.class=it.polimi.CSPARQLEngine.engine.streaming.items.GraphStreamSchema
 rsp_engine.response_format=TTL

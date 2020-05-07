@@ -1,4 +1,4 @@
-PREFIX : <http://streamreasoning.org/jasper/streams/>
+PREFIX : <http://streamreasoning.org/CSPARQLEngine/streams/>
 REGISTER ISTREAM <s1> AS
 CONSTRUCT {?s ?p ?o .}
 FROM NAMED WINDOW <win1> ON <stream1> [RANGE PT5S STEP PT2S]
