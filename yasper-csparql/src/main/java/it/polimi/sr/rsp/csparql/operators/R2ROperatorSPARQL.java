@@ -6,6 +6,8 @@ import it.polimi.yasper.core.operators.r2r.RelationToRelationOperator;
 import it.polimi.yasper.core.querying.result.SolutionMapping;
 import it.polimi.yasper.core.sds.SDS;
 import lombok.extern.log4j.Log4j;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.ext.com.google.common.collect.Streams;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Triple;
@@ -57,7 +59,7 @@ public class R2ROperatorSPARQL implements RelationToRelationOperator<Binding>, Q
         //TODO fix up to stream
         String id = baseURI + "result/" + ts;
         this.execution = QueryExecutionFactory.create(query, ds);
-        return Streams.stream(this.execution.execSelect()).map(querySolution -> ((org.apache.jena.sparql.core.ResultBinding) querySolution).getBinding()).map(b -> new SolutionMappingImpl(id, b, this.resultVars, ts));
+        return Streams.stream(this.execution.execSelect()).map(querySolution -> ((org.apache.jena.sparql.core.ResultBinding) querySolution).getBinding()).map(b -> new SolutionMappingImpl<>(id, b, this.resultVars, ts));
     }
 
     private List<Binding> getSolutionSet(ResultSet results) {
@@ -145,6 +147,16 @@ public class R2ROperatorSPARQL implements RelationToRelationOperator<Binding>, Q
     }
 
     @Override
+    public JsonArray execJson() {
+        return execution.execJson();
+    }
+
+    @Override
+    public Iterator<JsonObject> execJsonItems() {
+        return  execution.execJsonItems();
+    }
+
+    @Override
     public void abort() {
         execution.abort();
     }
@@ -152,7 +164,11 @@ public class R2ROperatorSPARQL implements RelationToRelationOperator<Binding>, Q
     @Override
     public void close() {
         execution.close();
+    }
 
+    @Override
+    public void setInitialBinding(Binding binding) {
+        execution.setInitialBinding(binding);
     }
 
     @Override

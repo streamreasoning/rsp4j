@@ -81,7 +81,7 @@ public class EsperGGWindowOperator implements StreamToRelationOperator<Graph, Gr
         @Override
         public TimeVarying<Graph> set(SDS<Graph> sds) {
             EsperTimeVaryingGeneric<Graph, Graph> n = named()
-                    ? new NamedEsperTimeVaryingGeneric<>(new JenaGraphContent(), name, EsperGGWindowOperator.this.maintenance, report, this, sds)
+                    ? new NamedEsperTimeVaryingGeneric<>(new JenaGraphContent(), wo.iri(), EsperGGWindowOperator.this.maintenance, report, this, sds)
                     : new EsperTimeVaryingGeneric<>(new JenaGraphContent(), EsperGGWindowOperator.this.maintenance, report, this, sds);
             statement.addListener(n);
             return n;

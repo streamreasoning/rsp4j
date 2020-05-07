@@ -12,7 +12,7 @@
     <artifactId>yasper-csparql</artifactId>
 
     <properties>
-        <jena.version>3.9.0</jena.version>
+        <jena.version>3.14.0</jena.version>
     </properties>
 
     <dependencies>

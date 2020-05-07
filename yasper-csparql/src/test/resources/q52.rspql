@@ -1,7 +1,7 @@
-PREFIX ars: <http://www.streamreasoning/it.polimi.CSPARQLEngine.test/artist#>
+PREFIX ars: <http://www.streamreasoning/artist#>
 PREFIX afn: <http://jena.apache.org/ARQ/function#>
 REGISTER RSTREAM <s1> AS
-SELECT ?uuid ?a
+SELECT  ?a ?age ?uuid
 FROM NAMED WINDOW <win2> ON <http://differenthost:12134/stream2> [RANGE PT5S STEP PT0.5S]
 WHERE  {
     WINDOW ?w {
@@ -10,5 +10,4 @@ WHERE  {
     }
 
      BIND( UUID() as ?uuid )
-
 }
