@@ -6,12 +6,13 @@ YASPER is inspired by the OWL API, and other work that aim at spreading the Sema
 
 In this repository, the following  projects are present:
 
-- [yasper-core](./yasper-core/Readme.md), which contains the interfaces and abstractions required to develop your RSP engine.
-- [yasper-simple](./yasper-simple/Readme.md), which is an reference implementation that aims at showing yasper-core's usage by providing it.polimi.deib.rsp.test.examples.
-- [yasper-esper](./yasper-esper/Readme.md), which is an implementation that uses [Esper]() as a windowing engine and relies on the following modules    
-            - [Jasper](./yasper-esper/jasper/Readme.md) (AKA CSPARQL Engine 2.0): this RSP engine uses Apache Jena to execute SPARQL-like queries over RDF Streams 
-            - [Seraph](./yasper-esper/seraph/Readme.md): this RSP engine uses Neo4J to execute Cypher-like queries over RDF Streams *Experimental*
-- [yasper-calcite](./yasper-calcite/Readme.me): which uses Apache Calcite and Ontopic to evaluate SPARQL-like queries over virtual RDF Streams.
+* [yasper-core](./yasper-core/Readme.md), which contains the interfaces and abstractions required to develop your RSP engine.
+* [yasper-simple](./yasper-simple/Readme.md), which is an reference implementation that aims at showing yasper-core's usage by providing it.polimi.deib.rsp.test.examples.
+* [yasper-esper](./yasper-esper/Readme.md), which is an implementation that uses [Esper]() as a windowing engine and relies on the following modules    
+  * [Jasper](./yasper-esper/jasper/Readme.md) (AKA CSPARQL Engine 2.0): this RSP engine uses Apache Jena to execute SPARQL-like queries over RDF Streams
+
+  * [Seraph](./yasper-esper/seraph/Readme.md): this RSP engine uses Neo4J to execute Cypher-like queries over RDF Streams *Experimental*
+* [yasper-calcite](./yasper-calcite/Readme.me): which uses Apache Calcite and Ontopic to evaluate SPARQL-like queries over virtual RDF Streams.
 
 Futher adoption of YASPER will be listed below. A on-going [documentation](https://github.com/riccardotommasini/yasper/wiki) is also available. 
 
