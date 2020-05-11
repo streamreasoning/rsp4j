@@ -90,10 +90,12 @@ public class JenaContinuousQueryExecution extends Observable implements Observer
         Node etime = NodeFactory.createLiteral(now + "", XSDDatatype.XSDdateTimeStamp);
         Binding timestamp = BindingFactory.binding(Var.alloc("eventTime"), etime);
         Binding merge = Algebra.merge(eval, timestamp);
-        Node ptime = NodeFactory.createLiteral(System.currentTimeMillis() + "", XSDDatatype.XSDdateTimeStamp);
+        Node ptime = NodeFactory.createLiteral(System.currentTimeMillis() + "", XSDDatatype.XSDlong);
         timestamp = BindingFactory.binding(Var.alloc("processingTime"), ptime);
         merge = Algebra.merge(merge, timestamp);
         table.addBinding(merge);
+
+
         return table;
     }
 

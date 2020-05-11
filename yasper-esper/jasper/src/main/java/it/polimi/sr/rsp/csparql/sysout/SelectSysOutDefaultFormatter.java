@@ -7,7 +7,7 @@ public class SelectSysOutDefaultFormatter extends SelectResponseDefaultFormatter
     }
 
     @Override
-    protected void out(String s) {
+    public void out(String s) {
         System.out.println(s);
     }
 }

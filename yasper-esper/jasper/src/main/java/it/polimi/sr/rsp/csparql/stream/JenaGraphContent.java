@@ -1,29 +1,18 @@
 package it.polimi.sr.rsp.csparql.stream;
 
 import it.polimi.jasper.secret.content.ContentEventBean;
-import it.polimi.sr.rsp.csparql.engine.ContinuousQueryExecutionFactory;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.GraphUtil;
 import org.apache.jena.mem.GraphMem;
-import org.apache.jena.reasoner.Reasoner;
 
 @Log4j
 public class JenaGraphContent extends ContentEventBean<Graph, Graph> {
 
     private Graph content;
 
-    public JenaGraphContent(Graph content) {
-        this.content = content;
-    }
-
     public JenaGraphContent() {
-        content = graph();
-    }
-
-    private static Graph graph() {
-        Reasoner reasoner = ContinuousQueryExecutionFactory.getReasoner();
-        return reasoner != null ? reasoner.bind(new GraphMem()) : new GraphMem();
+        content = new GraphMem();
     }
 
     @Override

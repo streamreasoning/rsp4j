@@ -14,7 +14,6 @@ import java.util.List;
 public abstract class ContentEventBean<I, O> implements Content<I, O> {
 
     protected List<I> elements;
-
     @Setter
     private long last_timestamp_changed;
 
@@ -97,7 +96,7 @@ public abstract class ContentEventBean<I, O> implements Content<I, O> {
 
     public void update(EventBean[] newData, EventBean[] oldData, long event_time) {
         eval(newData, oldData);
-        setLast_timestamp_changed(event_time);
+        last_timestamp_changed = event_time;
     }
 
     public abstract void replace(O coalesce);

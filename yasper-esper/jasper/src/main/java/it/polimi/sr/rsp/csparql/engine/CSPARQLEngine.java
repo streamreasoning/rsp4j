@@ -88,7 +88,7 @@ public class CSPARQLEngine extends EsperRSPEngine<Graph> implements QueryObserve
                 this.tick,
                 this.stream_registration_service,
                 this.maintenance,
-                this.tbox,
+                c.getTboxLocation(),
                 this.entailment);
 
 

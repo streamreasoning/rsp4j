@@ -74,10 +74,6 @@ public abstract class EsperRSPEngine<T> implements StreamRegistrationFeature<Dat
             this.entailment = Entailment.NONE;
         else {
             this.entailment = Entailment.valueOf(entailment);
-            this.tbox = rsp_config.getString("rsp_engine.tbox_location");
-            if (tbox == null) {
-                throw new RuntimeException("Not Specified TBOX");
-            }
         }
 
         this.enabled_recursion = rsp_config.isRecursionEnables();

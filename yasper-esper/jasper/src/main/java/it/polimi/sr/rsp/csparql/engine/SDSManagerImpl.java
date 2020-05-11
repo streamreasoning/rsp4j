@@ -29,6 +29,7 @@ import it.polimi.yasper.core.stream.web.WebStream;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;
+import org.apache.jena.mem.GraphMem;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.impl.InfModelImpl;
@@ -67,7 +68,7 @@ public class SDSManagerImpl implements SDSManager {
     private final CSPARQLEngine CSPARQLEngine;
 
     @Getter
-    protected Reasoner reasoner;
+    protected static Reasoner reasoner;
 
     @Getter
     private SDSImpl<Graph> sds;
@@ -135,7 +136,8 @@ public class SDSManagerImpl implements SDSManager {
 
         WebStream outputStream = query.getOutputStream();
 
-        this.out = CSPARQLEngine.register(outputStream);
+        if (outputStream != null)
+            this.out = CSPARQLEngine.register(outputStream);
 
         List<StreamToRelationOperator<Graph, Graph>> windows = query.getWindowMap().entrySet().stream().map(e -> {
 
@@ -198,6 +200,11 @@ public class SDSManagerImpl implements SDSManager {
             default:
                 return reasoner;
         }
+    }
+
+
+    public Graph graph() {
+        return reasoner != null ? reasoner.bind(new GraphMem()) : new GraphMem();
     }
 
 }

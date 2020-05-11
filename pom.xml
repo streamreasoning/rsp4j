@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>it.polimi.sr.yasper</groupId>
     <artifactId>yasper</artifactId>
-    <version>2.3.0</version>
+    <version>2.5.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -18,7 +18,7 @@
         <module>yasper-simple</module>
         <module>yasper-esper</module>
         <module>yasper-calcite</module>
-        <module>yasper-neo4j</module>
+        <module>sper</module>
     </modules>
 
     <dependencyManagement>
@@ -47,6 +47,11 @@
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-runtime</artifactId>
                 <version>4.7</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.12</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

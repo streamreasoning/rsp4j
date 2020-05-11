@@ -46,10 +46,11 @@ public class R2ROperatorSPARQLEnt implements RelationToRelationOperator<Binding>
         MultiUnion graph = new MultiUnion();
         ds = DatasetFactory.wrap(DatasetGraphFactory.create(graph));
         sds.asTimeVaryingEs().forEach(tvg -> {
+            InfGraph infGraph = new InfModelImpl(this.reasoner.bind(tvg.get())).getInfGraph();
             if (tvg.named()) {
-                ds.addNamedModel(tvg.iri(), new InfModelImpl((InfGraph) (tvg.get())));
+                ds.addNamedModel(tvg.iri(), new InfModelImpl(infGraph));
             } else {
-                ((MultiUnion) ds.getDefaultModel().getGraph()).addGraph(new InfModelImpl((InfGraph) (tvg.get())).getInfGraph());
+                ((MultiUnion) ds.getDefaultModel().getGraph()).addGraph(infGraph);
             }
         });
 

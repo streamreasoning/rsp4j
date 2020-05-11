@@ -125,6 +125,6 @@ public abstract class SelectResponseDefaultFormatter extends QueryResultFormatte
         }
     }
 
-    protected abstract void out(String s);
+    public abstract void out(String s);
 
 }

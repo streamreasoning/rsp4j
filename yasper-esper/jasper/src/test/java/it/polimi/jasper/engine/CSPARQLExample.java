@@ -1,6 +1,7 @@
 package it.polimi.jasper.engine;
 
 import it.polimi.sr.rsp.csparql.engine.CSPARQLEngine;
+import it.polimi.sr.rsp.csparql.sysout.ResponseFormatterFactory;
 import it.polimi.yasper.core.engine.config.ConfigurationUtils;
 import it.polimi.yasper.core.engine.config.EngineConfiguration;
 import it.polimi.yasper.core.querying.ContinuousQuery;
@@ -29,7 +30,6 @@ public class CSPARQLExample {
         SDSConfiguration config = new SDSConfiguration(resource.getPath());
         EngineConfiguration ec = EngineConfiguration.loadConfig("/csparql.properties");
 
-        config.setProperty(ConfigurationUtils.TBOX_LOCATION, "https://raw.githubusercontent.com/riccardotommasini/csparql2/master/src/test/resources/artist.tbox.owl?token=ACeO0Zrl_qG-5YPpHh6T_VvZYqXsxFgJks5brMV-wA%3D%3D");
 
         sr = new CSPARQLEngine(0, ec);
 
@@ -55,7 +55,8 @@ public class CSPARQLExample {
 
         WebDataStream outputStream = cqe.outstream();
 
-        outputStream.addConsumer((o, l) -> System.out.println(o));
+        if (outputStream != null)
+            outputStream.addConsumer((o, l) -> System.out.println(o));
 
         //In real application we do not have to start the stream.
         (new Thread(writer)).start();

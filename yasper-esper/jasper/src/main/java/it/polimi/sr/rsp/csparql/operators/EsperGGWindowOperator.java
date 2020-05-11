@@ -6,6 +6,7 @@ import it.polimi.jasper.operators.s2r.AbstractEsperWindowAssigner;
 import it.polimi.jasper.sds.tv.EsperTimeVaryingGeneric;
 import it.polimi.jasper.sds.tv.NamedEsperTimeVaryingGeneric;
 import it.polimi.jasper.streams.items.StreamItem;
+import it.polimi.sr.rsp.csparql.engine.SDSManagerImpl;
 import it.polimi.sr.rsp.csparql.stream.JenaGraphContent;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.enums.ReportGrain;
@@ -14,6 +15,7 @@ import it.polimi.yasper.core.operators.s2r.StreamToRelationOperator;
 import it.polimi.yasper.core.operators.s2r.execution.instance.Window;
 import it.polimi.yasper.core.operators.s2r.syntax.WindowNode;
 import it.polimi.yasper.core.sds.SDS;
+import it.polimi.yasper.core.sds.SDSManager;
 import it.polimi.yasper.core.sds.timevarying.TimeVarying;
 import it.polimi.yasper.core.secret.content.Content;
 import it.polimi.yasper.core.secret.report.Report;
@@ -22,6 +24,9 @@ import it.polimi.yasper.core.stream.data.WebDataStream;
 import lombok.RequiredArgsConstructor;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.mem.GraphMem;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.impl.InfModelImpl;
+import org.apache.jena.reasoner.Reasoner;
 
 import java.util.List;
 import java.util.Observable;
@@ -64,7 +69,7 @@ public class EsperGGWindowOperator implements StreamToRelationOperator<Graph, Gr
 
         public Content<Graph, Graph> getContent(long now) {
             SafeIterator<EventBean> iterator = statement.safeIterator();
-            JenaGraphContent events = new JenaGraphContent(new GraphMem());
+            JenaGraphContent events = new JenaGraphContent();
             events.setLast_timestamp_changed(now);
             while (iterator.hasNext()) {
                 events.add(iterator.next());

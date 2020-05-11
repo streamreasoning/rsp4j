@@ -15,6 +15,8 @@ import org.apache.jena.graph.compose.MultiUnion;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.impl.ModelCom;
+import org.apache.jena.sparql.algebra.Algebra;
+import org.apache.jena.sparql.algebra.Op;
 import org.apache.jena.sparql.core.DatasetGraphFactory;
 import org.apache.jena.sparql.core.Quad;
 import org.apache.jena.sparql.engine.binding.Binding;
@@ -58,6 +60,8 @@ public class R2ROperatorSPARQL implements RelationToRelationOperator<Binding>, Q
     public Stream<SolutionMapping<Binding>> eval(long ts) {
         //TODO fix up to stream
         String id = baseURI + "result/" + ts;
+
+
         this.execution = QueryExecutionFactory.create(query, ds);
         return Streams.stream(this.execution.execSelect()).map(querySolution -> ((org.apache.jena.sparql.core.ResultBinding) querySolution).getBinding()).map(b -> new SolutionMappingImpl<>(id, b, this.resultVars, ts));
     }

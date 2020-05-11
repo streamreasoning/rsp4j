@@ -12,6 +12,7 @@ import it.polimi.yasper.core.operators.r2s.RelationToStreamOperator;
 import it.polimi.yasper.core.sds.SDS;
 import it.polimi.yasper.core.stream.data.WebDataStream;
 import org.apache.jena.graph.Graph;
+import org.apache.jena.mem.GraphMem;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
