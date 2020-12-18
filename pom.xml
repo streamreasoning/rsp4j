@@ -1,8 +1,8 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>it.polimi.sr.yasper</groupId>
-    <artifactId>yasper</artifactId>
+    <groupId>it.polimi.sr.rsp</groupId>
+    <artifactId>rsp4j</artifactId>
     <version>2.5.0</version>
 
     <properties>
@@ -11,14 +11,10 @@
         <github.release>${project.version}</github.release>
     </properties>
 
-
     <packaging>pom</packaging>
     <modules>
-        <module>yasper-core</module>
-        <module>yasper-simple</module>
-        <module>yasper-esper</module>
-        <module>yasper-calcite</module>
-        <module>sper</module>
+        <module>api</module>
+        <module>yasper</module>
     </modules>
 
     <dependencyManagement>

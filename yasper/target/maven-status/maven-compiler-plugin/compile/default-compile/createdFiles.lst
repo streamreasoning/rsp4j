@@ -1,0 +1,7 @@
+it/polimi/deib/rsp/simple/sds/SDSImpl.class
+it/polimi/deib/rsp/simple/querying/formatter/ContinuousQueryImpl.class
+it/polimi/deib/rsp/simple/sds/SDSImpl$NamedGraph.class
+it/polimi/deib/rsp/simple/sds/SDSManagerImpl.class
+it/polimi/deib/rsp/simple/querying/SelectInstResponse.class
+it/polimi/deib/rsp/simple/querying/formatter/InstResponseSysOutFormatter.class
+it/polimi/deib/rsp/simple/querying/QueryFactory.class

@@ -1,7 +1,0 @@
-PREFIX : <https://www.gdeltproject.org/ontology#>
-REGISTER RSTREAM <s1> AS
-SELECT *
-FROM NAMED WINDOW <ww> ON <https://www.gdeltproject.org/streams/image> [RANGE PT15S STEP PT5S]
-WHERE {
-	WINDOW <ww> { ?image a :Image .}
-}
