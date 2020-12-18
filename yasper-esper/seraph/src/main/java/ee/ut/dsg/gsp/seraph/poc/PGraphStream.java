@@ -20,7 +20,6 @@ public class PGraphStream extends WebStreamImpl implements Runnable {
     public void run() {
         while (true){
             stream.put(new PGraphImpl(),System.currentTimeMillis());
-            Thread.sleep(5000);
         }
     }
     public void setWritable(EPLStream<PGraph> register) {

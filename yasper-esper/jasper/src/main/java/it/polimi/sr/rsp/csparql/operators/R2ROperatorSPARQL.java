@@ -1,6 +1,7 @@
 package it.polimi.sr.rsp.csparql.operators;
 
 import it.polimi.jasper.querying.results.SolutionMappingImpl;
+import it.polimi.sr.rsp.csparql.syntax.QueryFactory;
 import it.polimi.sr.rsp.csparql.syntax.RSPQLJenaQuery;
 import it.polimi.yasper.core.operators.r2r.RelationToRelationOperator;
 import it.polimi.yasper.core.querying.result.SolutionMapping;
@@ -60,7 +61,6 @@ public class R2ROperatorSPARQL implements RelationToRelationOperator<Binding>, Q
     public Stream<SolutionMapping<Binding>> eval(long ts) {
         //TODO fix up to stream
         String id = baseURI + "result/" + ts;
-
 
         this.execution = QueryExecutionFactory.create(query, ds);
         return Streams.stream(this.execution.execSelect()).map(querySolution -> ((org.apache.jena.sparql.core.ResultBinding) querySolution).getBinding()).map(b -> new SolutionMappingImpl<>(id, b, this.resultVars, ts));

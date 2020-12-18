@@ -44,7 +44,7 @@ public class KaypherExample {
             SDSConfiguration config = new SDSConfiguration(path);
 
 
-            Seraph q = new Seraph("MATCH (n:Person)-[p]->(n1:Person) RETURN n, keys(n)");
+            Seraph q = new Seraph("MATCH (n:Person)-[p]->(n1:Person) RETURN COUNT(n) as count");
 
             SDSImpl<PGraph> sds = new SDSImpl<PGraph>();
 

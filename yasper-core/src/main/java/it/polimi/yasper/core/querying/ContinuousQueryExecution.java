@@ -25,6 +25,8 @@ public interface ContinuousQueryExecution<I, E1, E2> {
 
     RelationToStreamOperator<E2> getR2S();
 
+    /** these methods are necessary for the execution semantics.
+     * Indeed, according to RSP-QL and CQL is also possible to expose the results without a proper output stream **/
     void add(QueryResultFormatter o);
 
     void remove(QueryResultFormatter o);

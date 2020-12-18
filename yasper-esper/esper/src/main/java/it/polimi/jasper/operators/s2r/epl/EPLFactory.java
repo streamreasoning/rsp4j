@@ -62,11 +62,10 @@ public class EPLFactory {
 
         //SETTING TICK
         OutputLimitUnit events = OutputLimitUnit.EVENTS;
-//
-//        if (Tick.TIME_DRIVEN.equals(tick)) {
-//            TimePeriodExpression timePeriod = getTimePeriod((int) step, unitStep);
-//            outputLimitClause = OutputLimitClause.create(snapshot, timePeriod);
-//            stmt.setOutputLimitClause(outputLimitClause);
+
+        TimePeriodExpression timePeriod = getTimePeriod((int) step, unitStep);
+        outputLimitClause = OutputLimitClause.create(snapshot, timePeriod);
+        stmt.setOutputLimitClause(outputLimitClause);
 //        } else if (Tick.BATCH_DRIVEN.equals(tick)) {
 //            outputLimitClause = new OutputLimitClause(snapshot, (double) step);
 //            stmt.setOutputLimitClause(outputLimitClause);
