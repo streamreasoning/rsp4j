@@ -2,9 +2,9 @@
 
 [![DOI](https://zenodo.org/badge/322566440.svg)](https://zenodo.org/badge/latestdoi/322566440)
 
-YASPER is a library to build RDF Stream Processing (RSP) Engines according with the reference model RSP-QL [1](http://jeanpi.org/wp/media/rspql_ijswis_dellaglio_2015.pdf). 
+RSP4J is a library to build RDF Stream Processing (RSP) Engines according with the reference model RSP-QL [1](http://jeanpi.org/wp/media/rspql_ijswis_dellaglio_2015.pdf). 
 
-YASPER is inspired by the OWL API, and other work that aim at spreading the Semantic Web (Stream Reasoning) research by means of practical and usable software tools.
+RSP4J is inspired by the OWL API, and other work that aim at spreading the Semantic Web (Stream Reasoning) research by means of practical and usable software tools.
 
 In this repository, the following  projects are present:
 
