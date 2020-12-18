@@ -24,10 +24,17 @@ YASPER is an open and ongoing project. Welcome adoption as well as suggestion or
        <url>https://jitpack.io</url>
    </repository>
 
- </repositories>
 <dependency>
-   <groupId>com.github.riccardotommasini.yasper</groupId>
-     <artifactId>yasper-core</artifactId>
-       <version>${tag}</version>
- </dependency>
+  <groupId>com.github.streamreasoning.rsp4j</groupId>
+  <artifactId>api</artifactId>
+   <version>1.0.0</version>
+</dependency>
+  
+and 
+  
+<dependency>
+  <groupId>com.github.streamreasoning.rsp4j</groupId>
+  <artifactId>yasper</artifactId>
+   <version>1.0.0</version>
+</dependency>
 ```
