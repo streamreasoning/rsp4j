@@ -1,18 +1,18 @@
 package it.polimi.deib.rsp.test.examples.windowing;
 
-import it.polimi.deib.rsp.simple.sds.SDSImpl;
-import it.polimi.deib.rsp.simple.querying.operators.windowing.CSPARQLWindowAssigner;
-import it.polimi.deib.rsp.test.examples.StreamViewImpl;
-import it.polimi.yasper.core.RDFUtils;
-import it.polimi.yasper.core.enums.ReportGrain;
-import it.polimi.yasper.core.enums.Tick;
-import it.polimi.yasper.core.operators.s2r.execution.assigner.Assigner;
-import it.polimi.yasper.core.sds.SDS;
-import it.polimi.yasper.core.sds.timevarying.TimeVarying;
-import it.polimi.yasper.core.secret.report.Report;
-import it.polimi.yasper.core.secret.report.ReportImpl;
-import it.polimi.yasper.core.secret.report.strategies.OnWindowClose;
-import it.polimi.yasper.core.secret.time.TimeImpl;
+import it.polimi.deib.sr.rsp.yasper.sds.SDSImpl;
+import it.polimi.deib.sr.rsp.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
+import it.polimi.deib.sr.rsp.yasper.StreamViewImpl;
+import it.polimi.deib.sr.rsp.api.RDFUtils;
+import it.polimi.deib.sr.rsp.api.enums.ReportGrain;
+import it.polimi.deib.sr.rsp.api.enums.Tick;
+import it.polimi.deib.sr.rsp.api.operators.s2r.execution.assigner.StreamToRelationOp;
+import it.polimi.deib.sr.rsp.api.sds.SDS;
+import it.polimi.deib.sr.rsp.api.sds.timevarying.TimeVarying;
+import it.polimi.deib.sr.rsp.api.secret.report.Report;
+import it.polimi.deib.sr.rsp.api.secret.report.ReportImpl;
+import it.polimi.deib.sr.rsp.api.secret.report.strategies.OnWindowClose;
+import it.polimi.deib.sr.rsp.api.secret.time.TimeImpl;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.Triple;
 import org.junit.Test;
@@ -35,13 +35,13 @@ public class CSPARQLWindowAssignerTest {
         //WINDOW DECLARATION
         TimeImpl time = new TimeImpl(0);
 
-        Assigner<Graph, Graph> windowAssigner = new CSPARQLWindowAssigner(RDFUtils.createIRI("w1"), 2000, 2000, time, tick, report, report_grain);
+        StreamToRelationOp<Graph, Graph> windowStreamToRelationOp = new CSPARQLStreamToRelationOp(RDFUtils.createIRI("w1"), 2000, 2000, time, tick, report, report_grain);
 
         //ENGINE INTERNALS - HOW THE REPORTING POLICY, TICK AND REPORT GRAIN INFLUENCE THE RUNTIME
 
         StreamViewImpl v = new StreamViewImpl();
 
-        TimeVarying<Graph> timeVarying = windowAssigner.set(sds);
+        TimeVarying<Graph> timeVarying = windowStreamToRelationOp.set(sds);
 
         Tester tester = new Tester();
 
@@ -62,7 +62,7 @@ public class CSPARQLWindowAssignerTest {
 
         tester.setExpected(graph);
         //RUNTIME DATA
-        windowAssigner.notify(graph, 1000);
+        windowStreamToRelationOp.notify(graph, 1000);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple1 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S2"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O2"));
@@ -70,7 +70,7 @@ public class CSPARQLWindowAssignerTest {
 
         expected.add(triple1);
         tester.setExpected(expected);
-        windowAssigner.notify(graph, 1000);
+        windowStreamToRelationOp.notify(graph, 1000);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple2 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S3"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O3"));
@@ -79,7 +79,7 @@ public class CSPARQLWindowAssignerTest {
         expected.add(triple2);
         tester.setExpected(expected);
 
-        windowAssigner.notify(graph, 2001);
+        windowStreamToRelationOp.notify(graph, 2001);
         graph = RDFUtils.getInstance().createGraph();
 
         Triple triple3 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S4"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O4"));
@@ -88,7 +88,7 @@ public class CSPARQLWindowAssignerTest {
         expected.add(triple3);
         tester.setExpected(expected);
 
-        windowAssigner.notify(graph, 3000);
+        windowStreamToRelationOp.notify(graph, 3000);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple4 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S5"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O5"));
@@ -97,7 +97,7 @@ public class CSPARQLWindowAssignerTest {
         expected.add(triple4);
         tester.setExpected(expected);
 
-        windowAssigner.notify(graph, 5000);
+        windowStreamToRelationOp.notify(graph, 5000);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple5 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S6"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O6"));
@@ -106,8 +106,8 @@ public class CSPARQLWindowAssignerTest {
         expected.add(triple5);
         tester.setExpected(expected);
 
-        windowAssigner.notify(graph, 5000);
-        windowAssigner.notify(graph, 5000);
+        windowStreamToRelationOp.notify(graph, 5000);
+        windowStreamToRelationOp.notify(graph, 5000);
 
         graph = RDFUtils.getInstance().createGraph();
         Triple triple6 = RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S7"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O7"));
@@ -116,7 +116,7 @@ public class CSPARQLWindowAssignerTest {
         expected.add(triple6);
         tester.setExpected(expected);
 
-        windowAssigner.notify(graph, 7000);
+        windowStreamToRelationOp.notify(graph, 7000);
     }
 
     private class Tester {

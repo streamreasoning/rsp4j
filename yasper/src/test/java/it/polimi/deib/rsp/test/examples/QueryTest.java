@@ -1,7 +1,7 @@
 package it.polimi.deib.rsp.test.examples;
 
-import it.polimi.deib.rsp.simple.querying.QueryFactory;
-import it.polimi.yasper.core.querying.ContinuousQuery;
+import it.polimi.deib.sr.rsp.yasper.querying.QueryFactory;
+import it.polimi.deib.sr.rsp.api.querying.ContinuousQuery;
 
 import java.io.IOException;
 

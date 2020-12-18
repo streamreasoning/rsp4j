@@ -1,18 +1,19 @@
 package it.polimi.deib.rsp.test.examples;
 
-import it.polimi.deib.rsp.simple.sds.SDSImpl;
-import it.polimi.deib.rsp.simple.querying.operators.windowing.CSPARQLTimeWindowOperator;
-import it.polimi.yasper.core.RDFUtils;
-import it.polimi.yasper.core.enums.ReportGrain;
-import it.polimi.yasper.core.enums.Tick;
-import it.polimi.yasper.core.operators.s2r.StreamToRelationOperator;
-import it.polimi.yasper.core.sds.SDS;
-import it.polimi.yasper.core.sds.timevarying.TimeVarying;
-import it.polimi.yasper.core.secret.report.Report;
-import it.polimi.yasper.core.secret.report.ReportImpl;
-import it.polimi.yasper.core.secret.report.strategies.OnWindowClose;
-import it.polimi.yasper.core.secret.time.TimeFactory;
-import it.polimi.yasper.core.stream.data.DataStreamImpl;
+import it.polimi.deib.sr.rsp.yasper.StreamViewImpl;
+import it.polimi.deib.sr.rsp.yasper.examples.RDFStream;
+import it.polimi.deib.sr.rsp.yasper.sds.SDSImpl;
+import it.polimi.deib.sr.rsp.yasper.querying.operators.windowing.CSPARQLTimeWindowOperator;
+import it.polimi.deib.sr.rsp.api.RDFUtils;
+import it.polimi.deib.sr.rsp.api.enums.ReportGrain;
+import it.polimi.deib.sr.rsp.api.enums.Tick;
+import it.polimi.deib.sr.rsp.api.operators.s2r.StreamToRelationOperatorFactory;
+import it.polimi.deib.sr.rsp.api.sds.SDS;
+import it.polimi.deib.sr.rsp.api.sds.timevarying.TimeVarying;
+import it.polimi.deib.sr.rsp.api.secret.report.Report;
+import it.polimi.deib.sr.rsp.api.secret.report.ReportImpl;
+import it.polimi.deib.sr.rsp.api.secret.report.strategies.OnWindowClose;
+import it.polimi.deib.sr.rsp.api.secret.time.TimeFactory;
 import org.apache.commons.rdf.api.Graph;
 
 public class AbstractQueryExample {
@@ -36,10 +37,10 @@ public class AbstractQueryExample {
 
         SDS sds = new SDSImpl();
         //STREAM DECLARATION
-        DataStreamImpl<Graph> stream = new DataStreamImpl<>("s1");
+        RDFStream stream = new RDFStream("s1");
 
         //WINDOW DECLARATION
-        StreamToRelationOperator<Graph, Graph> windowOperator = new CSPARQLTimeWindowOperator(RDFUtils.createIRI("w1"), 2000, 2000, scope, TimeFactory.getInstance(), tick, report, report_grain, sds);
+        StreamToRelationOperatorFactory<Graph, Graph> windowOperator = new CSPARQLTimeWindowOperator(RDFUtils.createIRI("w1"), 2000, 2000, scope, TimeFactory.getInstance(), tick, report, report_grain, sds);
 
         //ENGINE INTERNALS - HOW THE REPORTING POLICY, TICK AND REPORT GRAIN INFLUENCE THE RUNTIME
 

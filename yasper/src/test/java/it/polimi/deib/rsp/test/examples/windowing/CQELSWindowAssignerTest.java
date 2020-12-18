@@ -1,21 +1,21 @@
 package it.polimi.deib.rsp.test.examples.windowing;
 
-import it.polimi.deib.rsp.simple.sds.SDSImpl;
-import it.polimi.yasper.core.RDFUtils;
-import it.polimi.yasper.core.sds.SDS;
-import it.polimi.yasper.core.sds.timevarying.TimeVarying;
-import it.polimi.yasper.core.operators.s2r.execution.assigner.Assigner;
-import it.polimi.yasper.core.secret.report.Report;
-import it.polimi.yasper.core.enums.ReportGrain;
-import it.polimi.yasper.core.secret.report.ReportImpl;
-import it.polimi.yasper.core.secret.report.strategies.OnContentChange;
-import it.polimi.yasper.core.enums.Tick;
-import it.polimi.yasper.core.secret.time.TimeImpl;
+import it.polimi.deib.sr.rsp.yasper.sds.SDSImpl;
+import it.polimi.deib.sr.rsp.api.RDFUtils;
+import it.polimi.deib.sr.rsp.api.sds.SDS;
+import it.polimi.deib.sr.rsp.api.sds.timevarying.TimeVarying;
+import it.polimi.deib.sr.rsp.api.operators.s2r.execution.assigner.StreamToRelationOp;
+import it.polimi.deib.sr.rsp.api.secret.report.Report;
+import it.polimi.deib.sr.rsp.api.enums.ReportGrain;
+import it.polimi.deib.sr.rsp.api.secret.report.ReportImpl;
+import it.polimi.deib.sr.rsp.api.secret.report.strategies.OnContentChange;
+import it.polimi.deib.sr.rsp.api.enums.Tick;
+import it.polimi.deib.sr.rsp.api.secret.time.TimeImpl;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.Triple;
 import org.junit.Test;
-import it.polimi.deib.rsp.test.examples.StreamViewImpl;
-import it.polimi.deib.rsp.simple.querying.operators.windowing.CQELSWindowAssigner;
+import it.polimi.deib.sr.rsp.yasper.StreamViewImpl;
+import it.polimi.deib.sr.rsp.yasper.querying.operators.windowing.CQELSStreamToRelationOp;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -36,7 +36,7 @@ public class CQELSWindowAssignerTest {
 
         TimeImpl time = new TimeImpl(0);
 
-        Assigner<Graph, Graph> wa = new CQELSWindowAssigner(RDFUtils.createIRI("w1"), 3000,  time, tick, report, report_grain);
+        StreamToRelationOp<Graph, Graph> wa = new CQELSStreamToRelationOp(RDFUtils.createIRI("w1"), 3000,  time, tick, report, report_grain);
 
         Tester tester = new Tester();
 

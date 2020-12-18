@@ -1,0 +1,35 @@
+package it.polimi.deib.sr.rsp.api.querying;
+
+import it.polimi.deib.sr.rsp.api.format.QueryResultFormatter;
+import it.polimi.deib.sr.rsp.api.operators.r2r.RelationToRelationOperator;
+import it.polimi.deib.sr.rsp.api.operators.r2s.RelationToStreamOperator;
+import it.polimi.deib.sr.rsp.api.operators.s2r.StreamToRelationOperatorFactory;
+import it.polimi.deib.sr.rsp.api.sds.SDS;
+import it.polimi.deib.sr.rsp.api.stream.data.WebDataStream;
+
+/**
+ * Created by Riccardo on 12/08/16.
+ */
+
+public interface ContinuousQueryExecution<I, E1, E2> {
+
+    <O> WebDataStream<O> outstream();
+
+    ContinuousQuery getContinuousQuery();
+
+    SDS<E1> getSDS();
+
+    StreamToRelationOperatorFactory<I, E1>[] getS2R();
+
+    RelationToRelationOperator<E2> getR2R();
+
+    RelationToStreamOperator<E2> getR2S();
+
+    /** these methods are necessary for the execution semantics.
+     * Indeed, according to RSP-QL and CQL is also possible to expose the results without a proper output stream **/
+    void add(QueryResultFormatter o);
+
+    void remove(QueryResultFormatter o);
+
+}
+

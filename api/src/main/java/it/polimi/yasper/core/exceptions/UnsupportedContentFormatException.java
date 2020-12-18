@@ -1,4 +1,0 @@
-package it.polimi.yasper.core.exceptions;
-
-public class UnsupportedContentFormatException extends RuntimeException {
-}
