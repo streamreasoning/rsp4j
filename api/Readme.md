@@ -1,10 +1,9 @@
-# YASPER CORE
+# API
 
 
 ## INSTALLATION USING MAVEN
 
 ```xml
-   </repository>
 <dependency>
   <groupId>com.github.streamreasoning.rsp4j</groupId>
   <artifactId>api</artifactId>
