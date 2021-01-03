@@ -1,13 +1,11 @@
 package it.polimi.deib.sr.rsp.yasper.examples;
 
-import it.polimi.deib.sr.rsp.yasper.WebStreamDecl;
-import it.polimi.deib.sr.rsp.yasper.engines.CQELSmpl;
 import it.polimi.deib.sr.rsp.api.querying.ContinuousQueryExecution;
 import it.polimi.deib.sr.rsp.api.querying.ContinuousQuery;
 import it.polimi.deib.sr.rsp.api.operators.s2r.syntax.WindowNode;
 import it.polimi.deib.sr.rsp.api.engine.config.EngineConfiguration;
-import it.polimi.deib.sr.rsp.api.sds.SDSConfiguration;
 import it.polimi.deib.sr.rsp.api.RDFUtils;
+import it.polimi.deib.sr.rsp.yasper.engines.Yasper;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.rdf.api.Graph;
 import it.polimi.deib.sr.rsp.yasper.querying.formatter.ContinuousQueryImpl;
@@ -15,7 +13,6 @@ import it.polimi.deib.sr.rsp.yasper.querying.formatter.InstResponseSysOutFormatt
 import it.polimi.deib.sr.rsp.yasper.querying.operators.windowing.WindowNodeImpl;
 import org.apache.commons.rdf.api.Triple;
 
-import java.net.URL;
 import java.time.Duration;
 
 /**
@@ -23,14 +20,12 @@ import java.time.Duration;
  */
 public class CQELSExample {
 
-    static CQELSmpl sr;
 
     public static void main(String[] args) throws ConfigurationException {
 
-        URL resource = CQELSExample.class.getResource("/default.properties");
-        EngineConfiguration ec = EngineConfiguration.loadConfig("/default.properties");
+        EngineConfiguration ec = EngineConfiguration.loadConfig("/cqels.properties");
 
-        sr = new CQELSmpl(0, ec);
+        Yasper sr = new Yasper(ec);
 
         //STREAM DECLARATION
         RDFStream painter_reg = new RDFStream("stream1");
@@ -45,7 +40,7 @@ public class CQELSExample {
 
         q.addNamedWindow("stream1", wn);
 
-        ContinuousQueryExecution<Graph,Graph, Triple> cqe = sr.register(q);
+        ContinuousQueryExecution<Graph, Graph, Triple> cqe = sr.register(q);
 
         cqe.outstream().addConsumer(new InstResponseSysOutFormatter("TTL", true));
 
@@ -53,9 +48,7 @@ public class CQELSExample {
 
         Graph graph = RDFUtils.getInstance().createGraph();
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S1"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O1")));
-
         painter_reg.put(graph, 1000);
-        ;
 
         graph = RDFUtils.getInstance().createGraph();
         graph.add(RDFUtils.getInstance().createTriple(RDFUtils.getInstance().createIRI("S2"), RDFUtils.getInstance().createIRI("p"), RDFUtils.getInstance().createIRI("O2")));

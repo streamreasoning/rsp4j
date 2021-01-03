@@ -1,7 +1,7 @@
 package it.polimi.deib.sr.rsp.api.enums;
 
 public enum Tick {
-    TIME_DRIVEN("time"), BATCH_DRIVEN("batch"), TUPLE_DRIVEN("tuple");
+    TIME_DRIVEN("TIME_DRIVEN"), BATCH_DRIVEN("BATCH_DRIVEN"), TUPLE_DRIVEN("TUPLE_DRIVEN");
 
     private final String name;
 

@@ -1,18 +1,13 @@
 package it.polimi.deib.sr.rsp.yasper;
 
-import it.polimi.deib.sr.rsp.api.format.QueryResultFormatter;
 import it.polimi.deib.sr.rsp.api.operators.r2r.RelationToRelationOperator;
 import it.polimi.deib.sr.rsp.api.operators.r2s.RelationToStreamOperator;
-import it.polimi.deib.sr.rsp.api.operators.s2r.StreamToRelationOperatorFactory;
 import it.polimi.deib.sr.rsp.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import it.polimi.deib.sr.rsp.api.querying.ContinuousQuery;
 import it.polimi.deib.sr.rsp.api.querying.result.SolutionMapping;
-import it.polimi.deib.sr.rsp.api.sds.ContinuousQueryExecutionFactory;
 import it.polimi.deib.sr.rsp.api.sds.SDS;
 import it.polimi.deib.sr.rsp.api.stream.data.WebDataStream;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.api.Triple;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,16 +28,14 @@ public class ContinuousQueryExecutionImpl<I, E1, E2> extends ContinuousQueryExec
     private final ContinuousQuery query;
     private final WebDataStream<E2> outstream;
     private List<StreamToRelationOp<I, E1>> s2rs;
-    private ContinuousQueryExecutionFactory factory;
 
-    public ContinuousQueryExecutionImpl(SDS sds, ContinuousQuery query, ContinuousQueryExecutionFactory factory, WebDataStream<E2> outstream, RelationToRelationOperator<E2> r2r, RelationToStreamOperator<E2> r2s, StreamToRelationOp<I, E1>... s2rs) {
+    public ContinuousQueryExecutionImpl(SDS sds, ContinuousQuery query, WebDataStream<E2> outstream, RelationToRelationOperator<E2> r2r, RelationToStreamOperator<E2> r2s, StreamToRelationOp<I, E1>... s2rs) {
         super(sds, query);
         this.s2rs = Arrays.asList(s2rs);
         this.query = query;
         this.sds = sds;
         this.r2r = r2r;
         this.r2s = r2s;
-        this.factory = factory;
         this.outstream = outstream;
     }
 

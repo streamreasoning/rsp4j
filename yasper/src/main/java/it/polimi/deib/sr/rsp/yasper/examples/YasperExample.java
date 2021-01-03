@@ -1,17 +1,17 @@
 package it.polimi.deib.sr.rsp.yasper.examples;
 
-import it.polimi.deib.sr.rsp.api.stream.data.WebDataStream;
-import it.polimi.deib.sr.rsp.api.querying.ContinuousQueryExecution;
-import it.polimi.deib.sr.rsp.api.querying.ContinuousQuery;
-import it.polimi.deib.sr.rsp.api.operators.s2r.syntax.WindowNode;
-import it.polimi.deib.sr.rsp.api.engine.config.EngineConfiguration;
 import it.polimi.deib.sr.rsp.api.RDFUtils;
+import it.polimi.deib.sr.rsp.api.engine.config.EngineConfiguration;
+import it.polimi.deib.sr.rsp.api.operators.s2r.syntax.WindowNode;
+import it.polimi.deib.sr.rsp.api.querying.ContinuousQuery;
+import it.polimi.deib.sr.rsp.api.querying.ContinuousQueryExecution;
+import it.polimi.deib.sr.rsp.api.stream.data.WebDataStream;
 import it.polimi.deib.sr.rsp.yasper.engines.Yasper;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.rdf.api.Graph;
 import it.polimi.deib.sr.rsp.yasper.querying.formatter.ContinuousQueryImpl;
 import it.polimi.deib.sr.rsp.yasper.querying.formatter.InstResponseSysOutFormatter;
 import it.polimi.deib.sr.rsp.yasper.querying.operators.windowing.WindowNodeImpl;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.RDF;
 import org.apache.commons.rdf.api.Triple;
@@ -21,7 +21,7 @@ import java.time.Duration;
 /**
  * Created by Riccardo on 03/08/16.
  */
-public class CSPARQLExample {
+public class YasperExample {
 
 
     public static void main(String[] args) throws ConfigurationException {
@@ -48,9 +48,7 @@ public class CSPARQLExample {
         WebDataStream<Triple> outstream = cqe.outstream();
         outstream.addConsumer(new InstResponseSysOutFormatter("TTL", true));
 
-
         //RUNTIME DATA
-
 
         RDF instance = RDFUtils.getInstance();
         Graph graph = instance.createGraph();

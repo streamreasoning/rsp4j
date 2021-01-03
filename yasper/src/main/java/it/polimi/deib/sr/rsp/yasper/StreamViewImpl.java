@@ -1,5 +1,6 @@
 package it.polimi.deib.sr.rsp.yasper;
 
+import it.polimi.deib.sr.rsp.api.querying.result.SolutionMapping;
 import it.polimi.deib.sr.rsp.api.sds.SDS;
 import it.polimi.deib.sr.rsp.api.secret.content.Content;
 import it.polimi.deib.sr.rsp.api.querying.ContinuousQuery;
@@ -14,6 +15,7 @@ import org.apache.commons.rdf.api.Triple;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.stream.Stream;
 
 public class StreamViewImpl extends Observable implements ContinuousQueryExecution<Triple,Triple,Triple>, Observer {
 
@@ -67,5 +69,10 @@ public class StreamViewImpl extends Observable implements ContinuousQueryExecuti
     @Override
     public void add(StreamToRelationOp<Triple, Triple> op) {
 
+    }
+
+    @Override
+    public Stream<SolutionMapping<Triple>> eval(Long now) {
+        return null;
     }
 }

@@ -22,7 +22,7 @@ public class CQELSTimeWindowOperatorFactory implements StreamToRelationOperatorF
     private final ReportGrain grain;
     private ContinuousQueryExecution<Graph,Graph, Triple> context;
 
-    public CQELSTimeWindowOperatorFactory(long a, long t0, Time time, Tick tick, Report report, ReportGrain grain, ContinuousQueryExecution<Graph,Graph, Triple> context) {
+    public CQELSTimeWindowOperatorFactory(long a, long b, long t0, Time time, Tick tick, Report report, ReportGrain grain, ContinuousQueryExecution<Graph,Graph, Triple> context) {
         this.a = a;
         this.t0 = t0;
         this.time = time;

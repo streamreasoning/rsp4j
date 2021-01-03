@@ -1,5 +1,6 @@
 package it.polimi.deib.sr.rsp.api.engine.config;
 
+import it.polimi.deib.sr.rsp.api.enums.T0;
 import it.polimi.deib.sr.rsp.api.secret.report.Report;
 import it.polimi.deib.sr.rsp.api.secret.report.ReportImpl;
 import it.polimi.deib.sr.rsp.api.secret.report.strategies.NonEmptyContent;
@@ -15,6 +16,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
 import java.net.URL;
+import java.time.Instant;
 
 import static it.polimi.deib.sr.rsp.api.engine.config.ConfigurationUtils.*;
 
@@ -36,7 +38,36 @@ public class EngineConfiguration extends PropertiesConfiguration {
         return getDefault();
     }
 
+    public Report report() {
+        Report report = new ReportImpl();
+        if (this.onContentChange())
+            report.add(new OnContentChange());
+        if (this.onWindowClose())
+            report.add(new OnWindowClose());
+        if (this.nonEmptyContent())
+            report.add(new NonEmptyContent());
+        if (this.periodic())
+            report.add(new Periodic());
+        return report;
+    }
 
+    public long gett0() {
+        switch (t0()) {
+            case ZERO:
+                return 0;
+            case SYSTEM:
+            default:
+                return Instant.now().toEpochMilli();
+        }
+    }
+
+    public T0 t0() {
+        return T0.valueOf(this.getString(t0, T0.ZERO.name()));
+    }
+
+    public String getBaseIRI() {
+        return this.getString(BASE_IRI, "http://linkeddata.stream/engine/yasper/");
+    }
 
     public Boolean isUsingEventTime() {
         return Times.EventTime.equals(Times.valueOf(this.getString(TIME, Times.EventTime.name())));
@@ -89,11 +120,6 @@ public class EngineConfiguration extends PropertiesConfiguration {
         return StreamSchema.UNKNOWN;
     }
 
-    public String getBaseIRI() {
-        return this.getString(BASE_IRI);
-    }
-
-
     public boolean onWindowClose() {
         return this.getBoolean(REPORT_STRATEGY_WC, false);
     }
@@ -111,11 +137,11 @@ public class EngineConfiguration extends PropertiesConfiguration {
     }
 
     public Tick getTick() {
-        return Tick.valueOf(getString(TICK));
+        return Tick.valueOf(getString(TICK, Tick.TUPLE_DRIVEN.name()));
     }
 
     public ReportGrain getReportGrain() {
-        return ReportGrain.valueOf(getString(REPORT_GRAIN));
+        return ReportGrain.valueOf(getString(REPORT_GRAIN, ReportGrain.SINGLE.name()));
     }
 
     public Report getReport() {
@@ -125,7 +151,7 @@ public class EngineConfiguration extends PropertiesConfiguration {
             report.add(new OnContentChange());
         if (nonEmptyContent())
             report.add(new NonEmptyContent());
-        if (onContentChange())
+        if (onWindowClose())
             report.add(new OnWindowClose());
         if (periodic())
             report.add(new Periodic());

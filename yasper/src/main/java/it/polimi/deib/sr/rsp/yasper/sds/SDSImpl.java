@@ -49,9 +49,6 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
     private final Map<IRI, TimeVarying<Graph>> tvgs = new HashMap<>();
     private final IRI def;
 
-    public SDSImpl(ContinuousQueryExecutionFactoryImpl sdsManager) {
-        this.def = RDFUtils.createIRI("def");
-    }
 
     public SDSImpl() {
         this.def = RDFUtils.createIRI("def");
@@ -256,7 +253,6 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
 
         return this;
     }
-
 
 
     @AllArgsConstructor

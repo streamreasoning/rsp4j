@@ -23,6 +23,7 @@ public class ConfigurationUtils {
     public static final String REASONING_ENTAILMENT = ENGINE + "reasoning.entailment";
     public static final String REASONING_RULE_PATH = ENGINE + "reasoning.rulepath";
     public static final String TIME = ENGINE + "time";
+    public static final String t0 = ENGINE + "t0";
     public static final String PARTIAL_WINDOW = ENGINE + "partialwindow";
     public static final String BASE_IRI = ENGINE + "base_iri";
 
