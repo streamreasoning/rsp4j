@@ -1,6 +1,7 @@
 *.class
 *.DS_Store
 
+target/
 
 *.iml
 # Mobile Tools for Java (J2ME)
@@ -16,9 +17,7 @@ hs_err_pid*
 /bin/
 /target/
 /generated/
-/yasper-*/target/
-/yasper-core/target/
-/yasper-jena/target/
+/yasper/target/*
 
 .classpath
 .idea/

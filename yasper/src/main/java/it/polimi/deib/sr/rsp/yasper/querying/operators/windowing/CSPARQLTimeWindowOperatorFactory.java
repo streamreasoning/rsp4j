@@ -12,41 +12,31 @@ import it.polimi.deib.sr.rsp.api.stream.data.WebDataStream;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 
-public class CQELSTimeWindowOperator implements StreamToRelationOperatorFactory<Graph, Graph> {
+public class CSPARQLTimeWindowOperator implements StreamToRelationOperatorFactory<Graph, Graph> {
 
-    private final long a, t0;
-    private final IRI iri;
+    private final long a, b, t0;
     private final Time time;
     private final Tick tick;
     private final Report report;
     private final ReportGrain grain;
-    private SDS<Graph> context;
+    private final SDS<Graph> context;
 
-    public CQELSTimeWindowOperator(IRI iri, long a, long t0, Time time, Tick tick, Report report, ReportGrain grain, SDS<Graph> context) {
-        this.iri = iri;
+    public CSPARQLTimeWindowOperator(long a, long b, long t0, Time time, Tick tick, Report report, ReportGrain grain, SDS<Graph> context) {
         this.a = a;
+        this.b = b;
         this.t0 = t0;
         this.time = time;
         this.tick = tick;
         this.report = report;
         this.grain = grain;
-        this.context=context;
+        this.context = context;
     }
 
-    @Override
-    public String iri() {
-        return iri.getIRIString();
-    }
 
     @Override
-    public boolean named() {
-        return iri != null;
-    }
-
-    @Override
-    public TimeVarying<Graph> apply(WebDataStream<Graph> s) {
-        StreamToRelationOp<Graph, Graph> windowStreamToRelationOp = new CQELSStreamToRelationOp(iri, a, time, tick, report, grain);
+    public TimeVarying<Graph> apply(WebDataStream<Graph> s, IRI iri) {
+        StreamToRelationOp<Graph, Graph> windowStreamToRelationOp = new CSPARQLStreamToRelationOp(iri, a, b, time, tick, report, grain);
         s.addConsumer(windowStreamToRelationOp);
-        return windowStreamToRelationOp.set(this.context);
+        return windowStreamToRelationOp.set(context);
     }
 }

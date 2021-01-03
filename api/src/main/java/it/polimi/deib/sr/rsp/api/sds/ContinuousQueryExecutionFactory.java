@@ -7,8 +7,6 @@ import it.polimi.deib.sr.rsp.api.querying.ContinuousQueryExecution;
  */
 public interface SDSManager {
 
-    SDS build();
-
-    ContinuousQueryExecution getContinuousQueryExecution();
+    ContinuousQueryExecution build();
 
 }
