@@ -13,6 +13,7 @@ import org.apache.commons.rdf.api.Graph;
 import it.polimi.deib.sr.rsp.yasper.querying.formatter.ContinuousQueryImpl;
 import it.polimi.deib.sr.rsp.yasper.querying.formatter.InstResponseSysOutFormatter;
 import it.polimi.deib.sr.rsp.yasper.querying.operators.windowing.WindowNodeImpl;
+import org.apache.commons.rdf.api.Triple;
 
 import java.net.URL;
 import java.time.Duration;
@@ -27,15 +28,14 @@ public class CQELSExample {
     public static void main(String[] args) throws ConfigurationException {
 
         URL resource = CQELSExample.class.getResource("/default.properties");
-        SDSConfiguration config = new SDSConfiguration(resource.getPath());
         EngineConfiguration ec = EngineConfiguration.loadConfig("/default.properties");
 
         sr = new CQELSmpl(0, ec);
 
         //STREAM DECLARATION
-        WebStreamDecl stream = new WebStreamDecl("stream1");
+        RDFStream painter_reg = new RDFStream("stream1");
 
-        RDFStream painter_reg = sr.register(stream);
+        sr.register(painter_reg);
 
         //_____
 
@@ -45,9 +45,9 @@ public class CQELSExample {
 
         q.addNamedWindow("stream1", wn);
 
-        ContinuousQueryExecution cqe = sr.register(q, config);
+        ContinuousQueryExecution<Graph,Graph, Triple> cqe = sr.register(q);
 
-        cqe.add(new InstResponseSysOutFormatter("TTL", true));
+        cqe.outstream().addConsumer(new InstResponseSysOutFormatter("TTL", true));
 
         //RUNTIME DATA
 

@@ -8,10 +8,10 @@ import it.polimi.deib.sr.rsp.api.operators.s2r.execution.assigner.Consumer;
  */
 
 //TODO wrap schema for RDFUtils stream?
-public interface WebDataStream<I> extends WebStream {
+public interface WebDataStream<E> extends WebStream {
 
-    void addConsumer(Consumer<I> windowAssigner);
+    void addConsumer(Consumer<E> windowAssigner);
 
-    void put(I e, long ts);
+    void put(E e, long ts);
 
 }

@@ -32,7 +32,7 @@ public class QueryFactory {
         System.out.println("ISTREAM? " + c.isIstream());
         System.out.println("SELECT? " + c.isSelectType());
         c.getWindowMap().keySet().forEach(x -> {
-            System.out.println(x.iri() + " " + c.getWindowMap().get(x).getURI());
+            System.out.println(x.iri() + " " + c.getWindowMap().get(x).uri());
         });
         // Query pattern in WHERE clause not yet managed, depends what the internal BGP representation will be.
     }

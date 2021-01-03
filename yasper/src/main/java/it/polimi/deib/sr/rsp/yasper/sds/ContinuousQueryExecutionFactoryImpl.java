@@ -1,5 +1,7 @@
 package it.polimi.deib.sr.rsp.yasper.sds;
 
+import it.polimi.deib.sr.rsp.yasper.examples.RDFStream;
+import it.polimi.deib.sr.rsp.yasper.examples.RDFTripleStream;
 import it.polimi.deib.sr.rsp.yasper.querying.operators.R2RImpl;
 import it.polimi.deib.sr.rsp.yasper.querying.operators.windowing.CQELSTimeWindowOperatorFactory;
 import it.polimi.deib.sr.rsp.yasper.querying.operators.windowing.CSPARQLTimeWindowOperatorFactory;
@@ -11,7 +13,7 @@ import it.polimi.deib.sr.rsp.api.operators.s2r.syntax.WindowNode;
 import it.polimi.deib.sr.rsp.api.querying.ContinuousQuery;
 import it.polimi.deib.sr.rsp.api.querying.ContinuousQueryExecution;
 import it.polimi.deib.sr.rsp.api.sds.SDS;
-import it.polimi.deib.sr.rsp.api.sds.SDSManager;
+import it.polimi.deib.sr.rsp.api.sds.ContinuousQueryExecutionFactory;
 import it.polimi.deib.sr.rsp.api.sds.timevarying.TimeVarying;
 import it.polimi.deib.sr.rsp.api.secret.report.Report;
 import it.polimi.deib.sr.rsp.api.stream.data.WebDataStream;
@@ -21,11 +23,12 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import it.polimi.deib.sr.rsp.yasper.ContinuousQueryExecutionImpl;
+import org.apache.commons.rdf.api.Triple;
 
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class SDSManagerImpl implements SDSManager {
+public class ContinuousQueryExecutionFactoryImpl implements ContinuousQueryExecutionFactory {
 
     private final ContinuousQuery query;
     private final Map<String, WebDataStream<Graph>> registeredStreams;
@@ -34,13 +37,15 @@ public class SDSManagerImpl implements SDSManager {
     private final Tick tick;
     private final long t0;
 
-    private ContinuousQueryExecution cqe;
+    private ContinuousQueryExecution<Graph,Graph, Triple> cqe;
     private SDSImpl sds;
 
-    public ContinuousQueryExecution build() {
+    public ContinuousQueryExecution<Graph,Graph, Triple> build() {
         this.sds = new SDSImpl(this);
 
-        this.cqe = new ContinuousQueryExecutionImpl(sds, query, new R2RImpl(sds, query), new Rstream());
+        RDFTripleStream out = new RDFTripleStream(query.getID());
+
+        this.cqe = new ContinuousQueryExecutionImpl<Graph,Graph, Triple>(sds, query, this, out, new R2RImpl(sds, query), new Rstream());
 
         query.getWindowMap().forEach((WindowNode wo, WebStream s) -> {
 
@@ -48,9 +53,9 @@ public class SDSManagerImpl implements SDSManager {
             IRI iri = RDFUtils.createIRI(wo.iri());
 
             if (wo.getStep() == -1) {
-                w = new CQELSTimeWindowOperatorFactory(wo.getRange(), wo.getT0(), query.getTime(), tick, report, reportGrain, sds);
+                w = new CQELSTimeWindowOperatorFactory(wo.getRange(), wo.getT0(), query.getTime(), tick, report, reportGrain, cqe);
             } else
-                w = new CSPARQLTimeWindowOperatorFactory(wo.getRange(), wo.getStep(), wo.getT0(), query.getTime(), tick, report, reportGrain, sds);
+                w = new CSPARQLTimeWindowOperatorFactory(wo.getRange(), wo.getStep(), wo.getT0(), query.getTime(), tick, report, reportGrain, cqe);
 
 
             TimeVarying<Graph> tvg = w.apply(registeredStreams.get(s.uri()), iri);
@@ -60,9 +65,12 @@ public class SDSManagerImpl implements SDSManager {
             } else {
                 sds.add(tvg);
             }
+
         });
 
+
         return cqe;
+
     }
 
     public SDS sds() {

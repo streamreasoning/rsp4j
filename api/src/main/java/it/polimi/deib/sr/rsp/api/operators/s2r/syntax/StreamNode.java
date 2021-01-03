@@ -11,7 +11,7 @@ public class StreamNode implements WebStream {
     }
 
     @Override
-    public String getURI() {
+    public String uri() {
         return uri;
     }
 

@@ -41,7 +41,7 @@ public class CQELSWindowAssignerTest {
         Tester tester = new Tester();
 
         StreamViewImpl v = new StreamViewImpl();
-        TimeVarying timeVarying = wa.set(sds);
+        TimeVarying timeVarying = wa.get();
 
         v.addObserver((o, arg) -> {
             Long arg1 = (Long) arg;

@@ -1,11 +1,13 @@
 package it.polimi.deib.sr.rsp.api.querying;
 
-import it.polimi.deib.sr.rsp.api.format.QueryResultFormatter;
 import it.polimi.deib.sr.rsp.api.operators.r2r.RelationToRelationOperator;
 import it.polimi.deib.sr.rsp.api.operators.r2s.RelationToStreamOperator;
-import it.polimi.deib.sr.rsp.api.operators.s2r.StreamToRelationOperatorFactory;
+import it.polimi.deib.sr.rsp.api.operators.s2r.execution.assigner.StreamToRelationOp;
+import it.polimi.deib.sr.rsp.api.querying.result.SolutionMapping;
 import it.polimi.deib.sr.rsp.api.sds.SDS;
 import it.polimi.deib.sr.rsp.api.stream.data.WebDataStream;
+
+import java.util.stream.Stream;
 
 /**
  * Created by Riccardo on 12/08/16.
@@ -13,23 +15,20 @@ import it.polimi.deib.sr.rsp.api.stream.data.WebDataStream;
 
 public interface ContinuousQueryExecution<I, E1, E2> {
 
-    <O> WebDataStream<O> outstream();
+    WebDataStream<E2> outstream();
 
-    ContinuousQuery getContinuousQuery();
+    ContinuousQuery query();
 
-    SDS<E1> getSDS();
+    SDS<E1> sds();
 
-    StreamToRelationOperatorFactory<I, E1>[] getS2R();
+    StreamToRelationOp<I, E1>[] s2rs();
 
-    RelationToRelationOperator<E2> getR2R();
+    RelationToRelationOperator<E2> r2r();
 
-    RelationToStreamOperator<E2> getR2S();
+    RelationToStreamOperator<E2> r2s();
 
-    /** these methods are necessary for the execution semantics.
-     * Indeed, according to RSP-QL and CQL is also possible to expose the results without a proper output stream **/
-    void add(QueryResultFormatter o);
+    void add(StreamToRelationOp<I, E1> op);
 
-    void remove(QueryResultFormatter o);
-
+    Stream<SolutionMapping<E2>> eval(Long now);
 }
 

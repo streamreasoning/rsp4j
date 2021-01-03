@@ -5,8 +5,8 @@ import it.polimi.deib.sr.rsp.api.exceptions.OutOfOrderElementException;
 import it.polimi.deib.sr.rsp.api.operators.s2r.execution.assigner.ObservableStreamToRelationOp;
 import it.polimi.deib.sr.rsp.api.operators.s2r.execution.instance.Window;
 import it.polimi.deib.sr.rsp.api.operators.s2r.execution.instance.WindowImpl;
+import it.polimi.deib.sr.rsp.api.querying.ContinuousQueryExecution;
 import it.polimi.deib.sr.rsp.yasper.sds.TimeVaryingGraph;
-import it.polimi.deib.sr.rsp.api.sds.SDS;
 import it.polimi.deib.sr.rsp.api.secret.content.Content;
 import it.polimi.deib.sr.rsp.api.secret.content.ContentGraph;
 import it.polimi.deib.sr.rsp.api.secret.content.EmptyGraphContent;
@@ -47,7 +47,7 @@ public class CSPARQLStreamToRelationOp extends ObservableStreamToRelationOp<Grap
     }
 
     @Override
-    public Content<Graph,Graph> getContent(long t_e) {
+    public Content<Graph,Graph> content(long t_e) {
         Optional<Window> max = active_windows.keySet().stream()
                 .filter(w -> w.getO() < t_e && w.getC() <= t_e)
                 .max(Comparator.comparingLong(Window::getC));
@@ -132,11 +132,14 @@ public class CSPARQLStreamToRelationOp extends ObservableStreamToRelationOp<Grap
         return setVisible(t_e, w, content);
     }
 
+    @Override
+    public void link(ContinuousQueryExecution context) {
+        this.addObserver((Observer) context);
+    }
+
 
     @Override
-    public TimeVaryingGraph set(SDS<Graph> content) {
-        this.addObserver((Observer) content);
-        //TODO Generalize the type of content using an ENUM
+    public TimeVaryingGraph get() {
         return new TimeVaryingGraph(this, iri, RDFUtils.createGraph());
     }
 

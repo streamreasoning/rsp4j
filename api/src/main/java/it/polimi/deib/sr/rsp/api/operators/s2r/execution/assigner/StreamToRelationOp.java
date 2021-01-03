@@ -3,7 +3,7 @@ package it.polimi.deib.sr.rsp.api.operators.s2r.execution.assigner;
 
 import it.polimi.deib.sr.rsp.api.enums.Tick;
 import it.polimi.deib.sr.rsp.api.operators.s2r.execution.instance.Window;
-import it.polimi.deib.sr.rsp.api.sds.SDS;
+import it.polimi.deib.sr.rsp.api.querying.ContinuousQueryExecution;
 import it.polimi.deib.sr.rsp.api.sds.timevarying.TimeVarying;
 import it.polimi.deib.sr.rsp.api.secret.content.Content;
 import it.polimi.deib.sr.rsp.api.secret.report.Report;
@@ -15,6 +15,7 @@ import java.util.List;
  * I represents the variable type of the input, e.g., RDF TRIPLE, RDF GRAPHS OR TUPLE
  * O represents the variable type of the maintained status, e.g., BAG of RDF Triple, RDF Graph (set) or RELATION
  * */
+
 public interface StreamToRelationOp<I, O> extends Consumer<I> {
 
     Report report();
@@ -23,16 +24,19 @@ public interface StreamToRelationOp<I, O> extends Consumer<I> {
 
     Time time();
 
-    Content<I, O> getContent(long now);
+    Content<I, O> content(long now);
 
     List<Content<I, O>> getContents(long now);
 
-    TimeVarying<O> set(SDS<O> content);
+    TimeVarying<O> get();
 
     String iri();
 
-    boolean named();
+    default boolean named() {
+        return iri() != null;
+    }
 
     Content<I, O> compute(long t_e, Window w);
 
+    void link(ContinuousQueryExecution context);
 }

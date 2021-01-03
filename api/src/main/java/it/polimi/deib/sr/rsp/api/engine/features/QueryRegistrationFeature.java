@@ -6,8 +6,6 @@ import it.polimi.deib.sr.rsp.api.sds.SDSConfiguration;
 
 public interface QueryRegistrationFeature<Q extends ContinuousQuery> {
 
-    ContinuousQueryExecution register(Q q);
-
-    ContinuousQueryExecution register(Q q, SDSConfiguration c);
+    <I, C, O> ContinuousQueryExecution<I, C, O> register(Q q);
 
 }

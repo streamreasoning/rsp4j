@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: it.polimi.deib.rsp.test.examples.windowing.CQELSWindowAssignerTest
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.041 sec

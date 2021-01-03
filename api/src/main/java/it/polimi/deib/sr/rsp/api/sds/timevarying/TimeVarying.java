@@ -8,6 +8,8 @@ public interface TimeVarying<E> {
 
     String iri();
 
-    boolean named();
+    default boolean named() {
+        return iri() != null;
+    }
 
 }

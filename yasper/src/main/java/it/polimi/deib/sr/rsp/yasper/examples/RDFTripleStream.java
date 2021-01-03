@@ -2,30 +2,29 @@ package it.polimi.deib.sr.rsp.yasper.examples;
 
 import it.polimi.deib.sr.rsp.api.operators.s2r.execution.assigner.Consumer;
 import it.polimi.deib.sr.rsp.api.stream.data.WebDataStream;
-import it.polimi.deib.sr.rsp.api.stream.web.WebStreamImpl;
 import org.apache.commons.rdf.api.Graph;
+import org.apache.commons.rdf.api.Triple;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RDFStream implements WebDataStream<Graph> {
+public class RDFTripleStream implements WebDataStream<Triple> {
 
     protected String stream_uri;
 
-    public RDFStream(String stream_uri) {
+    public RDFTripleStream(String stream_uri) {
         this.stream_uri = stream_uri;
     }
 
-    protected List<Consumer<Graph>> consumers = new ArrayList<>();
-
+    protected List<Consumer<Triple>> consumers = new ArrayList<>();
 
     @Override
-    public void addConsumer(Consumer<Graph> c) {
+    public void addConsumer(Consumer<Triple> c) {
         consumers.add(c);
     }
 
     @Override
-    public void put(Graph e, long ts) {
+    public void put(Triple e, long ts) {
         consumers.forEach(graphConsumer -> graphConsumer.notify(e, ts));
     }
 

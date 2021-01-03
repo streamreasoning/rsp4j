@@ -11,7 +11,7 @@ import org.apache.commons.rdf.api.IRI;
 @RequiredArgsConstructor
 public class TimeVaryingGraph implements TimeVarying<Graph> {
 
-    private final StreamToRelationOp<Graph, Graph> wa;
+    private final StreamToRelationOp<Graph, Graph> op;
     private IRI name;
     private Graph graph;
 
@@ -22,7 +22,7 @@ public class TimeVaryingGraph implements TimeVarying<Graph> {
      **/
     @Override
     public void materialize(long ts) {
-        graph = wa.getContent(ts).coalesce();
+        graph = op.content(ts).coalesce();
     }
 
     @Override
@@ -35,9 +35,5 @@ public class TimeVaryingGraph implements TimeVarying<Graph> {
         return name.getIRIString();
     }
 
-    @Override
-    public boolean named() {
-        return name != null;
-    }
 
 }

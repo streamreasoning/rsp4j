@@ -8,7 +8,7 @@ import java.util.ServiceLoader;
 
 public class RDFUtils {
 
-    private static RDF rdf;
+    private static final RDF rdf;
 
     static {
         rdf = new SimpleRDF();

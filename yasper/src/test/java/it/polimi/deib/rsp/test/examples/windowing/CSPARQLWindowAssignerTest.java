@@ -41,7 +41,7 @@ public class CSPARQLWindowAssignerTest {
 
         StreamViewImpl v = new StreamViewImpl();
 
-        TimeVarying<Graph> timeVarying = windowStreamToRelationOp.set(sds);
+        TimeVarying<Graph> timeVarying = windowStreamToRelationOp.get();
 
         Tester tester = new Tester();
 

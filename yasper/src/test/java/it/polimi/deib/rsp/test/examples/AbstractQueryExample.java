@@ -3,7 +3,7 @@ package it.polimi.deib.rsp.test.examples;
 import it.polimi.deib.sr.rsp.yasper.StreamViewImpl;
 import it.polimi.deib.sr.rsp.yasper.examples.RDFStream;
 import it.polimi.deib.sr.rsp.yasper.sds.SDSImpl;
-import it.polimi.deib.sr.rsp.yasper.querying.operators.windowing.CSPARQLTimeWindowOperator;
+import it.polimi.deib.sr.rsp.yasper.querying.operators.windowing.CSPARQLTimeWindowOperatorFactory;
 import it.polimi.deib.sr.rsp.api.RDFUtils;
 import it.polimi.deib.sr.rsp.api.enums.ReportGrain;
 import it.polimi.deib.sr.rsp.api.enums.Tick;
@@ -40,12 +40,12 @@ public class AbstractQueryExample {
         RDFStream stream = new RDFStream("s1");
 
         //WINDOW DECLARATION
-        StreamToRelationOperatorFactory<Graph, Graph> windowOperator = new CSPARQLTimeWindowOperator(RDFUtils.createIRI("w1"), 2000, 2000, scope, TimeFactory.getInstance(), tick, report, report_grain, sds);
+        StreamToRelationOperatorFactory<Graph, Graph> windowOperator = new CSPARQLTimeWindowOperatorFactory(2000, 2000, scope, TimeFactory.getInstance(), tick, report, report_grain, null);
 
         //ENGINE INTERNALS - HOW THE REPORTING POLICY, TICK AND REPORT GRAIN INFLUENCE THE RUNTIME
 
 
-        TimeVarying<Graph> timeVarying = windowOperator.apply(stream);
+        TimeVarying<Graph> timeVarying = windowOperator.apply(stream,RDFUtils.createIRI("w1"));
 
         StreamViewImpl v = new StreamViewImpl();
 

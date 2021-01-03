@@ -22,7 +22,7 @@ public class StreamViewImpl extends Observable implements ContinuousQueryExecuti
     @Override
     public void update(Observable o, Object arg) {
         StreamToRelationOp window_streamToRelationOp = (StreamToRelationOp) o;
-        this.content = window_streamToRelationOp.getContent((Long) arg);
+        this.content = window_streamToRelationOp.content((Long) arg);
         setChanged();
         notifyObservers(arg);
     }
@@ -39,37 +39,33 @@ public class StreamViewImpl extends Observable implements ContinuousQueryExecuti
     }
 
     @Override
-    public ContinuousQuery getContinuousQuery() {
+    public ContinuousQuery query() {
         return null;
     }
 
 
     @Override
-    public SDS getSDS() {
+    public SDS sds() {
         return null;
     }
 
     @Override
-    public StreamToRelationOperatorFactory<Triple,Triple>[] getS2R() {
-        return new StreamToRelationOperatorFactory[0];
+    public StreamToRelationOp<Triple,Triple>[] s2rs() {
+        return new StreamToRelationOp[0];
     }
 
     @Override
-    public RelationToRelationOperator<Triple> getR2R() {
+    public RelationToRelationOperator<Triple> r2r() {
         return null;
     }
 
     @Override
-    public RelationToStreamOperator<Triple>getR2S() {
+    public RelationToStreamOperator<Triple> r2s() {
         return null;
     }
 
     @Override
-    public void add(QueryResultFormatter o) {
-    }
-
-    @Override
-    public void remove(QueryResultFormatter o) {
+    public void add(StreamToRelationOp<Triple, Triple> op) {
 
     }
 }

@@ -9,7 +9,7 @@ public class WebStreamImpl implements WebStream {
     }
 
     @Override
-    public String getURI() {
+    public String uri() {
         return stream_uri;
     }
 

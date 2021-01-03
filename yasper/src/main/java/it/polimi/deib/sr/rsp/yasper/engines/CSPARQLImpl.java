@@ -5,9 +5,8 @@ import it.polimi.deib.sr.rsp.api.engine.config.EngineConfiguration;
 import it.polimi.deib.sr.rsp.api.engine.features.QueryRegistrationFeature;
 import it.polimi.deib.sr.rsp.api.engine.features.StreamRegistrationFeature;
 import it.polimi.deib.sr.rsp.api.sds.SDS;
-import it.polimi.deib.sr.rsp.api.sds.SDSManager;
+import it.polimi.deib.sr.rsp.api.sds.ContinuousQueryExecutionFactory;
 import it.polimi.deib.sr.rsp.api.querying.ContinuousQuery;
-import it.polimi.deib.sr.rsp.api.sds.SDSConfiguration;
 import it.polimi.deib.sr.rsp.api.querying.ContinuousQueryExecution;
 import it.polimi.deib.sr.rsp.api.format.QueryResultFormatter;
 import it.polimi.deib.sr.rsp.api.secret.report.Report;
@@ -16,16 +15,16 @@ import it.polimi.deib.sr.rsp.api.secret.report.ReportImpl;
 import it.polimi.deib.sr.rsp.api.secret.report.strategies.OnWindowClose;
 import it.polimi.deib.sr.rsp.api.enums.Tick;
 import it.polimi.deib.sr.rsp.api.stream.data.WebDataStream;
-import it.polimi.deib.sr.rsp.api.stream.web.WebStreamImpl;
 import org.apache.commons.rdf.api.Graph;
-import it.polimi.deib.sr.rsp.yasper.sds.SDSManagerImpl;
+import it.polimi.deib.sr.rsp.yasper.sds.ContinuousQueryExecutionFactoryImpl;
+import org.apache.commons.rdf.api.Triple;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-public class CSPARQLImpl implements QueryRegistrationFeature, StreamRegistrationFeature<RDFStream, WebStreamImpl> {
+public class CSPARQLImpl implements QueryRegistrationFeature, StreamRegistrationFeature<RDFStream, RDFStream> {
 
     private final long t0;
     private Report report;
@@ -54,22 +53,14 @@ public class CSPARQLImpl implements QueryRegistrationFeature, StreamRegistration
     }
 
     @Override
-    public RDFStream register(WebStreamImpl s) {
-        RDFStream rs = new RDFStream(s.getURI());
-        registeredStreams.put(s.getURI(), rs);
-        return rs;
+    public RDFStream register(RDFStream s) {
+        registeredStreams.put(s.uri(), s);
+        return s;
     }
 
     @Override
-    public ContinuousQueryExecution register(ContinuousQuery q, SDSConfiguration c) {
-        SDSManager builder = new SDSManagerImpl(q, c, registeredStreams, report, report_grain, tick, t0);
-        SDS build = builder.build();
-        return builder.getContinuousQueryExecution();
-    }
-
-    @Override
-    public ContinuousQueryExecution register(ContinuousQuery q) {
-        return register(q, null);
+    public ContinuousQueryExecution<Graph,Graph, Triple> register(ContinuousQuery q) {
+        return new ContinuousQueryExecutionFactoryImpl(q, registeredStreams, report, report_grain, tick, t0).build();
     }
 
 

@@ -25,8 +25,6 @@ public class R2RImpl implements RelationToRelationOperator<Triple> {
 
     @Override
     public Stream<SolutionMapping<Triple>> eval(long ts) {
-        sds.materialize(ts);
-
         return ds.stream()
                 .map(Quad::asTriple).map(triple -> new SelectInstResponse(query.getID() + "/ans/" + ts, ts, triple));
 

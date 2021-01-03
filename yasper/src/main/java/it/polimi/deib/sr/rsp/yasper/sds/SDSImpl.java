@@ -17,9 +17,14 @@
  */
 package it.polimi.deib.sr.rsp.yasper.sds;
 
+import it.polimi.deib.sr.rsp.api.operators.r2r.RelationToRelationOperator;
+import it.polimi.deib.sr.rsp.api.operators.s2r.execution.assigner.ObservableStreamToRelationOp;
+import it.polimi.deib.sr.rsp.api.querying.ContinuousQueryExecution;
+import it.polimi.deib.sr.rsp.api.querying.result.SolutionMapping;
 import it.polimi.deib.sr.rsp.api.sds.SDS;
 import it.polimi.deib.sr.rsp.api.sds.timevarying.TimeVarying;
 import it.polimi.deib.sr.rsp.api.RDFUtils;
+import it.polimi.deib.sr.rsp.yasper.querying.SelectInstResponse;
 import lombok.AllArgsConstructor;
 import org.apache.commons.rdf.api.*;
 import org.apache.commons.rdf.simple.DatasetGraphView;
@@ -36,7 +41,7 @@ import java.util.stream.Stream;
  * <p>
  * All Stream operations are performed using parallel and unordered directives.
  */
-final public class SDSImpl implements Dataset, SDS<Graph>, Observer{
+final public class SDSImpl implements Dataset, SDS<Graph> {
 
     private static final int TO_STRING_MAX = 10;
     private final Set<Quad> quads = new HashSet<>();
@@ -44,7 +49,7 @@ final public class SDSImpl implements Dataset, SDS<Graph>, Observer{
     private final Map<IRI, TimeVarying<Graph>> tvgs = new HashMap<>();
     private final IRI def;
 
-    public SDSImpl(SDSManagerImpl sdsManager) {
+    public SDSImpl(ContinuousQueryExecutionFactoryImpl sdsManager) {
         this.def = RDFUtils.createIRI("def");
     }
 
@@ -225,12 +230,12 @@ final public class SDSImpl implements Dataset, SDS<Graph>, Observer{
     }
 
     @Override
-    public void materialize(final long ts) {
+    public SDS<Graph> materialize(final long ts) {
         //TODO here applies the consolidation strategies
         //Default consolidation coaleces all the current
         //content graphs and produces the SDS to who execute the query.
 
-        //I need to readd all the triples because the dataset works on quads
+        //I need to re-add all the triples because the dataset works on quads
         //Altenrativelt one can wrap it into a graph interface and update it directly within the tvg
         // this way there's no need to readd after materialization
 
@@ -248,12 +253,11 @@ final public class SDSImpl implements Dataset, SDS<Graph>, Observer{
                     return new NamedGraph(e.getKey(), e.getValue().get());
                 }).forEach(n -> n.g.stream()
                 .forEach(o -> this.add(n.name, o.getSubject(), o.getPredicate(), o.getObject())));
+
+        return this;
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        materialize((Long) arg);
-    }
+
 
     @AllArgsConstructor
     class NamedGraph {
