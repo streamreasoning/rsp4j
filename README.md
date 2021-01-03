@@ -11,9 +11,11 @@ In this repository, the following  projects are present:
 * [API](./api/Readme.md), which contains the interfaces and abstractions required to develop your RSP engine.
 * [yasper](./yasper/Readme.md), which is an reference implementation that aims at showing the API usage by providing it.polimi.deib.rsp.test.examples.
 
-Futher adoption of YASPER will be listed below. A on-going [documentation](https://github.com/riccardotommasini/yasper/wiki) is also available. 
+Futher adoption of YASPER will be listed below. 
 
-YASPER is an open and ongoing project. Welcome adoption as well as suggestion or request.
+A on-going [documentation](https://github.com/streamreasoning/rsp4j/wiki) is also available. 
+
+RSP4J and YASPER are open and ongoing projects. Welcome adoption as well as suggestion or request.
 
 ## Install Using Maven
 
