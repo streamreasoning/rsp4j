@@ -17,14 +17,9 @@
  */
 package it.polimi.deib.sr.rsp.yasper.sds;
 
-import it.polimi.deib.sr.rsp.api.operators.r2r.RelationToRelationOperator;
-import it.polimi.deib.sr.rsp.api.operators.s2r.execution.assigner.ObservableStreamToRelationOp;
-import it.polimi.deib.sr.rsp.api.querying.ContinuousQueryExecution;
-import it.polimi.deib.sr.rsp.api.querying.result.SolutionMapping;
+import it.polimi.deib.sr.rsp.api.RDFUtils;
 import it.polimi.deib.sr.rsp.api.sds.SDS;
 import it.polimi.deib.sr.rsp.api.sds.timevarying.TimeVarying;
-import it.polimi.deib.sr.rsp.api.RDFUtils;
-import it.polimi.deib.sr.rsp.yasper.querying.SelectInstResponse;
 import lombok.AllArgsConstructor;
 import org.apache.commons.rdf.api.*;
 import org.apache.commons.rdf.simple.DatasetGraphView;
