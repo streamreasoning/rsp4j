@@ -15,6 +15,7 @@
     <modules>
         <module>api</module>
         <module>yasper</module>
+        <module>examples</module>
     </modules>
 
     <dependencyManagement>
