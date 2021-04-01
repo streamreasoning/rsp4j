@@ -1,12 +1,12 @@
 package org.streamreasoning.rsp4j.examples.operators.r2r;
 
 
-import it.polimi.deib.sr.rsp.api.RDFUtils;
-import it.polimi.deib.sr.rsp.api.operators.r2r.RelationToRelationOperator;
-import it.polimi.deib.sr.rsp.api.querying.ContinuousQuery;
-import it.polimi.deib.sr.rsp.api.querying.result.SolutionMapping;
-import it.polimi.deib.sr.rsp.api.sds.SDS;
-import it.polimi.deib.sr.rsp.yasper.querying.SelectInstResponse;
+import org.streamreasoning.rsp4j.api.RDFUtils;
+import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
+import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
+import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
+import org.streamreasoning.rsp4j.api.sds.SDS;
+import org.streamreasoning.rsp4j.yasper.querying.SelectInstResponse;
 import org.apache.commons.rdf.api.Dataset;
 import org.apache.commons.rdf.api.Quad;
 import org.apache.commons.rdf.api.Triple;

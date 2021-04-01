@@ -1,8 +1,8 @@
 package org.streamreasoning.rsp4j.examples.stream;
 
 
-import it.polimi.deib.sr.rsp.api.stream.data.WebDataStream;
-import it.polimi.deib.sr.rsp.yasper.examples.RDFStream;
+import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.jena.JenaRDF;
 import org.apache.jena.rdf.model.Model;

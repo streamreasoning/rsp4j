@@ -1,0 +1,39 @@
+package org.streamreasoning.rsp4j.yasper.sds;
+
+import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
+import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.rdf.api.Graph;
+import org.apache.commons.rdf.api.IRI;
+
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class TimeVaryingGraph implements TimeVarying<Graph> {
+
+    private final StreamToRelationOp<Graph, Graph> op;
+    private IRI name;
+    private Graph graph;
+
+    /**
+     * The setTimestamp function merges the element
+     * in the content into a single graph
+     * and adds it to the current dataset.
+     **/
+    @Override
+    public void materialize(long ts) {
+        graph = op.content(ts).coalesce();
+    }
+
+    @Override
+    public Graph get() {
+        return graph;
+    }
+
+    @Override
+    public String iri() {
+        return name.getIRIString();
+    }
+
+
+}
