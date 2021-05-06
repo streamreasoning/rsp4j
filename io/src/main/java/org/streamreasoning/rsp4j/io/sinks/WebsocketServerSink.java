@@ -14,7 +14,6 @@ public class WebsocketServerSink<T> extends AbstractWebsocketSink<T> {
     private final int port;
     private  WebSocketOutputHandler socket;
     private  String wsURL;
-    private  StringSerializationStrategy<T> serializationStrategy;
     protected List<Consumer<T>> consumers = new ArrayList<>();
     private Service ws;
 
