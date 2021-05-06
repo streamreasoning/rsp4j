@@ -2,6 +2,7 @@ package org.streamreasoning.rsp4j.io.sources;
 
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Consumer;
 import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.io.WebDataStreamImpl;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingResult;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingStrategy;
 
@@ -16,19 +17,18 @@ import java.util.List;
  *
  * @param <T>  resulting objects after parsing
  */
-public class FileSource<T> implements WebDataStream<T> {
+public class FileSource<T> extends WebDataStreamImpl<T> {
 
   private final String filePath;
   private final long timeOut;
   private final ParsingStrategy<T> parsingStrategy;
-  protected List<Consumer<T>> consumers = new ArrayList<>();
-  protected String stream_uri;
+
 
   /**
    * Creates a new File sources that reads one line from a file in filePath and waits timeout time between lines.
    * The parsing strategy allows to convert the readed strings to objects of type T
    * @param filePath  path of the file
-   * @param timeOut  timeout between reading lines
+   * @param timeOut  timeout between reading lines (in milliseconds)
    * @param parsingStrategy  parsing strategy used for converting the strings to objects of type T
    */
   public FileSource(String filePath, long timeOut, ParsingStrategy<T> parsingStrategy) {
@@ -63,18 +63,5 @@ public class FileSource<T> implements WebDataStream<T> {
     }
   }
 
-  @Override
-  public void addConsumer(Consumer<T> c) {
-    consumers.add(c);
-  }
 
-  @Override
-  public void put(T t, long ts) {
-    consumers.forEach(graphConsumer -> graphConsumer.notify(t, ts));
-  }
-
-  @Override
-  public String uri() {
-    return this.stream_uri;
-  }
 }
