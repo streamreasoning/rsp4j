@@ -16,6 +16,7 @@
         <module>api</module>
         <module>yasper</module>
         <module>examples</module>
+        <module>io</module>
     </modules>
 
     <dependencyManagement>
@@ -112,5 +113,6 @@
             <artifactId>commons-rdf-api</artifactId>
             <version>0.5.0</version>
         </dependency>
+
     </dependencies>
 </project>
