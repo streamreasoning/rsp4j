@@ -7,6 +7,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.io.utils.parsing.ParsingResult;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingStrategy;
 
 import java.io.IOException;
@@ -33,8 +34,8 @@ public class WebSocketInputHandler<T> {
     @OnWebSocketMessage
     public void message(Session session, String message) throws IOException {
         log.debug("Received " + message);
-        T parsed = parsingStrategy.parse(message);
-        stream.put(parsed,System.currentTimeMillis());
+        ParsingResult<T> parsed = parsingStrategy.parse(message);
+        stream.put(parsed.getResult(),parsed.getTimeStamp());
     }
 
 

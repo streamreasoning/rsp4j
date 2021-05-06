@@ -13,5 +13,5 @@ public interface ParsingStrategy<T> {
      * @param parseString  the string that needs parsing
      * @return  the parsed object
      */
-    public T parse(String parseString);
+    public ParsingResult<T> parse(String parseString);
 }

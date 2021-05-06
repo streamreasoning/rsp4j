@@ -7,6 +7,7 @@ import org.apache.commons.rdf.api.Triple;
 import org.apache.commons.rdf.simple.SimpleRDF;
 import org.junit.Test;
 import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFParsingStrategy;
+import org.streamreasoning.rsp4j.io.utils.parsing.ParsingResult;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingStrategy;
 
 
@@ -34,7 +35,8 @@ public class ParsingStrategyTest {
     }
     public static void parseAndCompare(String message, RDFBase base){
         ParsingStrategy<Graph> jenaRDFParser = new JenaRDFParsingStrategy(base);
-        Graph parsedGraph = jenaRDFParser.parse(message);
+        ParsingResult<Graph> parsedResult = jenaRDFParser.parse(message);
+        Graph parsedGraph = parsedResult.getResult();
         Graph graph = createGraph();
         compareGraph(graph,parsedGraph);
     }
