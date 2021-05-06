@@ -13,7 +13,7 @@ package org.streamreasoning.rsp4j.io.utils.parsing;
 public class ParsingResult<T> {
 
     private final T object;
-    private final long timeStamp;
+    private long timeStamp;
 
     /**
      * Creates new ParsingResult with custom time stamp
@@ -39,6 +39,14 @@ public class ParsingResult<T> {
      */
     public long getTimeStamp(){
         return timeStamp;
+    }
+
+    /**
+     * Sets the time stamp
+     * @param timeStamp  time stamp
+     */
+    public void setTimeStamp(long timeStamp){
+        this.timeStamp = timeStamp;
     }
 
     /**

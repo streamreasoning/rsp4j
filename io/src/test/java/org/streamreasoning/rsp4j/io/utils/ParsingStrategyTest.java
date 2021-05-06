@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFParsingStrategy;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingResult;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingStrategy;
+import org.streamreasoning.rsp4j.io.utils.parsing.TimeExtractingParsingStrategy;
 
 
 import java.util.Set;
@@ -93,4 +94,25 @@ public class ParsingStrategyTest {
                         + "}";
         parseAndCompare(message,base);
     }
+    @Test
+    public void timeExtractionParsingTest(){
+        RDFBase base = RDFBase.NT;
+        // first test with time at index 0
+        String message = "12345, <http://test/subject> <http://test/property> <http://test/object>.";
+        ParsingStrategy<Graph> jenaRDFParser = new JenaRDFParsingStrategy(base);
+        TimeExtractingParsingStrategy<Graph> timeExtractor = new TimeExtractingParsingStrategy<>(0,",",jenaRDFParser);
+        ParsingResult<Graph> parsedResult = timeExtractor.parse(message);
+        Graph parsedGraph = parsedResult.getResult();
+        Graph graph = createGraph();
+        compareGraph(graph,parsedGraph);
+        assertEquals(12345l,parsedResult.getTimeStamp());
+        // now check with time at index 1
+        message = "<http://test/subject> <http://test/property> <http://test/object>., 12345";
+        timeExtractor = new TimeExtractingParsingStrategy<>(1,",",jenaRDFParser);
+        parsedResult = timeExtractor.parse(message);
+        parsedGraph = parsedResult.getResult();
+        compareGraph(graph,parsedGraph);
+        assertEquals(12345l,parsedResult.getTimeStamp());
+    }
+
 }
