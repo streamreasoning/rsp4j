@@ -12,6 +12,10 @@ public abstract class AbstractWebsocketSink<T> implements WebDataStream<T> {
     protected List<Consumer<T>> consumers = new ArrayList<>();
     protected String stream_uri;
     protected StringSerializationStrategy<T> serializationStrategy;
+
+    /**
+     * Start the socket
+     */
     public abstract void startSocket();
 
     @Override

@@ -43,7 +43,7 @@ public class WebSocketTest {
         JenaRDFParsingStrategy parsingStrategy = new JenaRDFParsingStrategy(RDFBase.NT);
         // next we create a websocket client as source that uses the parsing strategy
         WebsocketClientSource<Graph> websocketSource = new WebsocketClientSource<Graph>("ws://localhost:9000/test",parsingStrategy);
-        websocketSource.stream();
+        websocketSource.startSocket();
         BufferedConsumer<Graph> bufferedConsumer = new BufferedConsumer<>();
         websocketSource.addConsumer(bufferedConsumer);
 

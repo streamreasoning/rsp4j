@@ -14,6 +14,13 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A Websocket Source that function as a client, i.e. it can connect to a remote websocket server and receive data.
+ * This class is wrapper around the WebStream providing WebSocket functionality.
+ * It uses a ParsingStrategy to convert the received strings through the websocket channel to object of type T.
+ *
+ * @param <T>  output type of the sink
+ */
 @Log4j
 public class WebsocketClientSource<T> implements WebDataStream<T> {
 
@@ -22,16 +29,29 @@ public class WebsocketClientSource<T> implements WebDataStream<T> {
     protected String wsUrl;
     protected String stream_uri;
 
+    /**
+     * Creates a Websocket client that functions as a Source
+     *
+     * @param stream_uri  the uri of the WebStream, this is only used for linking to the WebStream internally
+     * @param wsUrl  the uri of the remove websocket server
+     * @param parsingStrategy  the parsing strategy that converts received strings to objects of type T
+     */
     public WebsocketClientSource(String stream_uri, String wsUrl, ParsingStrategy<T> parsingStrategy){
         this.stream_uri = stream_uri;
         this.wsUrl = wsUrl;
         this.parsingStrategy = parsingStrategy;
     }
+    /**
+     * Creates a Websocket client that functions as a Source, it uses the wsURL as stream uri
+     *
+     * @param wsUrl  the uri of the remove websocket server, which is also used as stream uri
+     * @param parsingStrategy  the parsing strategy that converts received strings to objects of type T
+     */
     public WebsocketClientSource(String wsUrl, ParsingStrategy<T> parsingStrategy){
         this(wsUrl,wsUrl,parsingStrategy);
     }
 
-    public void stream() {
+    public void startSocket() {
         WebSocketClient client = new WebSocketClient();
 
         WebSocketInputHandler<T> socket = new WebSocketInputHandler<T>(this, parsingStrategy);
