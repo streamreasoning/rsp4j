@@ -6,5 +6,7 @@ public interface Window {
 
     long getO();
 
+    boolean isClosed();
+
 }
 
