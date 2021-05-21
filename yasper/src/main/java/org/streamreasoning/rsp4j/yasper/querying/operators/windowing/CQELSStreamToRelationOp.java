@@ -1,6 +1,5 @@
 package org.streamreasoning.rsp4j.yasper.querying.operators.windowing;
 
-import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.exceptions.OutOfOrderElementException;
@@ -8,36 +7,35 @@ import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Observable
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.Window;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.WindowImpl;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
+import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.secret.content.Content;
-import org.streamreasoning.rsp4j.api.secret.content.ContentGraph;
-import org.streamreasoning.rsp4j.api.secret.content.EmptyGraphContent;
+import org.streamreasoning.rsp4j.api.secret.content.ContentFactory;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
-import org.streamreasoning.rsp4j.yasper.sds.TimeVaryingGraph;
+import org.streamreasoning.rsp4j.yasper.sds.TimeVaryingObject;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 //TODO rename as C-SPARQL window operator
 @Log4j
-public class CQELSStreamToRelationOp extends ObservableStreamToRelationOp<Graph, Graph> {
+public class CQELSStreamToRelationOp<T1, T2> extends ObservableStreamToRelationOp<T1, T2> {
 
     private final long a;
 
-    private Map<Window, Content<Graph, Graph>> windows;
-    private Map<Graph, Long> r_stream;
-    private Map<Graph, Long> d_stream;
+    private Map<Window, Content<T1, T2>> windows;
+    private Map<T1, Long> r_stream;
+    private Map<T1, Long> d_stream;
 
     private Set<Window> to_evict;
     private long tc0;
     private long toi;
 
 
-    public CQELSStreamToRelationOp(IRI iri, long a, Time instance, Tick tick, Report report, ReportGrain grain) {
-        super(iri, instance, tick, report, grain);
+    public CQELSStreamToRelationOp(IRI iri, long a, Time instance, Tick tick, Report report, ReportGrain grain, ContentFactory<T1, T2> cf) {
+        super(iri, instance, tick, report, grain, cf);
         this.a = a;
         this.tc0 = instance.getScope();
         this.toi = 0;
@@ -53,7 +51,7 @@ public class CQELSStreamToRelationOp extends ObservableStreamToRelationOp<Graph,
     }
 
     @Override
-    public Content<Graph, Graph> content(long t_e) {
+    public Content<T1, T2> content(long t_e) {
         Optional<Window> max = windows.keySet().stream()
                 .filter(w -> w.getO() < t_e && w.getC() <= t_e)
                 .max(Comparator.comparingLong(Window::getC));
@@ -61,18 +59,18 @@ public class CQELSStreamToRelationOp extends ObservableStreamToRelationOp<Graph,
         if (max.isPresent())
             return windows.get(max.get());
 
-        return new EmptyGraphContent();
+        return cf.createEmpty();
     }
 
     @Override
-    public List<Content<Graph, Graph>> getContents(long t_e) {
+    public List<Content<T1, T2>> getContents(long t_e) {
         return windows.keySet().stream()
                 .filter(w -> w.getO() <= t_e && t_e < w.getC())
                 .map(windows::get).collect(Collectors.toList());
     }
 
 
-    protected void windowing(Graph e, long ts) {
+    protected void windowing(T1 e, long ts) {
         log.debug("Received element (" + e + "," + ts + ")");
         long t_e = ts;
 
@@ -82,7 +80,7 @@ public class CQELSStreamToRelationOp extends ObservableStreamToRelationOp<Graph,
         }
 
         Window active = scope(t_e);
-        Content<Graph, Graph> content = windows.get(active);
+        Content<T1, T2> content = windows.get(active);
 
         r_stream.entrySet().stream().filter(ee -> ee.getValue() < active.getO()).forEach(ee -> d_stream.put(ee.getKey(), ee.getValue()));
 
@@ -120,7 +118,7 @@ public class CQELSStreamToRelationOp extends ObservableStreamToRelationOp<Graph,
         log.debug("Computing Window [" + o_i + "," + (o_i + a) + ") if absent");
 
         WindowImpl active = new WindowImpl(o_i, t_e);
-        windows.computeIfAbsent(active, window -> new ContentGraph());
+        windows.computeIfAbsent(active, window -> cf.create());
         return active;
     }
 
@@ -128,8 +126,8 @@ public class CQELSStreamToRelationOp extends ObservableStreamToRelationOp<Graph,
         to_evict.add(w);
     }
 
-    public Content<Graph, Graph> compute(long t_e, Window w) {
-        Content<Graph, Graph> content = windows.containsKey(w) ? windows.get(w) : new EmptyGraphContent();
+    public Content<T1, T2> compute(long t_e, Window w) {
+        Content<T1, T2> content = windows.containsKey(w) ? windows.get(w) : cf.createEmpty();
         time.setAppTime(t_e);
         return setVisible(t_e, w, content);
     }
@@ -141,8 +139,8 @@ public class CQELSStreamToRelationOp extends ObservableStreamToRelationOp<Graph,
 
 
     @Override
-    public TimeVaryingGraph get() {
-        return new TimeVaryingGraph(this, iri, RDFUtils.createGraph());
+    public TimeVarying<T2> get() {
+        return new TimeVaryingObject<>(this, iri);
     }
 
 }

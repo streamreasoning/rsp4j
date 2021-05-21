@@ -1,5 +1,6 @@
 package org.streamreasoning.rsp4j.yasper.windowing;
 
+import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.sds.SDS;
@@ -36,7 +37,7 @@ public class CQELSWindowAssignerTest {
 
         TimeImpl time = new TimeImpl(0);
 
-        StreamToRelationOp<Graph, Graph> wa = new CQELSStreamToRelationOp(RDFUtils.createIRI("w1"), 3000,  time, tick, report, report_grain);
+        StreamToRelationOp<Graph, Graph> wa = new CQELSStreamToRelationOp(RDFUtils.createIRI("w1"), 3000,  time, tick, report, report_grain, new GraphContentFactory());
 
         Tester tester = new Tester();
 

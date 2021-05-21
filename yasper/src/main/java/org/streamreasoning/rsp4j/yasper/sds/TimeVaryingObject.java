@@ -7,13 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 
-@AllArgsConstructor
 @RequiredArgsConstructor
-public class TimeVaryingGraph implements TimeVarying<Graph> {
+public class TimeVaryingObject<E> implements TimeVarying<E> {
 
-    private final StreamToRelationOp<Graph, Graph> op;
-    private IRI name;
-    private Graph graph;
+    private final StreamToRelationOp<?, E> op;
+    private final IRI name;
+    private E graph;
 
     /**
      * The setTimestamp function merges the element
@@ -26,7 +25,7 @@ public class TimeVaryingGraph implements TimeVarying<Graph> {
     }
 
     @Override
-    public Graph get() {
+    public E get() {
         return graph;
     }
 

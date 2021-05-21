@@ -1,5 +1,6 @@
 package org.streamreasoning.rsp4j.yasper.windowing;
 
+import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
 import org.streamreasoning.rsp4j.yasper.StreamViewImpl;
@@ -35,7 +36,7 @@ public class CSPARQLWindowAssignerTest {
         //WINDOW DECLARATION
         TimeImpl time = new TimeImpl(0);
 
-        StreamToRelationOp<Graph, Graph> windowStreamToRelationOp = new CSPARQLStreamToRelationOp(RDFUtils.createIRI("w1"), 2000, 2000, time, tick, report, report_grain);
+        StreamToRelationOp<Graph, Graph> windowStreamToRelationOp = new CSPARQLStreamToRelationOp(RDFUtils.createIRI("w1"), 2000, 2000, time, tick, report, report_grain, new GraphContentFactory());
 
         //ENGINE INTERNALS - HOW THE REPORTING POLICY, TICK AND REPORT GRAIN INFLUENCE THE RUNTIME
 
