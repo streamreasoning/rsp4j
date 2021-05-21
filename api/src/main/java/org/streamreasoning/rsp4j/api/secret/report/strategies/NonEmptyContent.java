@@ -2,7 +2,6 @@ package org.streamreasoning.rsp4j.api.secret.report.strategies;
 
 
 import org.streamreasoning.rsp4j.api.secret.content.Content;
-import org.streamreasoning.rsp4j.api.secret.content.EmptyGraphContent;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.Window;
 
 /**
@@ -13,7 +12,7 @@ public class NonEmptyContent implements ReportingStrategy {
 
     @Override
     public boolean match(Window w, Content c, long tapp, long tsys) {
-        return c.size() > 0 || (c instanceof EmptyGraphContent);
+        return c.size() > 0;
     }
 
 }

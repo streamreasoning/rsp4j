@@ -2,7 +2,6 @@ package org.streamreasoning.rsp4j.api.sds;
 
 import org.streamreasoning.rsp4j.api.engine.config.ConfigurationUtils;
 import org.streamreasoning.rsp4j.api.enums.Maintenance;
-import lombok.extern.log4j.Log4j;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
@@ -11,7 +10,6 @@ import java.net.URL;
 /**
  * Created by riccardo on 10/07/2017.
  */
-@Log4j
 public class SDSConfiguration extends PropertiesConfiguration {
 
 
