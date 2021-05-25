@@ -18,9 +18,9 @@ import java.util.*;
 import java.util.function.Consumer;
 
 @Log4j
-public class CSPARQLStreamToRelationOpSingle<I extends EventBean> extends ObservableStreamToRelationOp<I, Collection<I>> {
+public class CSPARQLStreamToRelationOpSingle<I extends EventBean<V>,V> extends ObservableStreamToRelationOp<I, Collection<I>> {
 
-    private Scope<I,Collection<I>> scope;
+    private final Scope<I> scope;
     private final WindowBuffer<I> windowBuffer;
 
     public CSPARQLStreamToRelationOpSingle(IRI iri, long size, long b, Time instance, Tick tick, Report report, ReportGrain grain) {
@@ -29,7 +29,7 @@ public class CSPARQLStreamToRelationOpSingle<I extends EventBean> extends Observ
         this.windowBuffer = new WindowBuffer<>(instance.getScope());
     }
 
-    public CSPARQLStreamToRelationOpSingle(IRI iri, Time time, Tick tick, Report report, ReportGrain grain, Scope<I, Collection<I>> scope) {
+    public CSPARQLStreamToRelationOpSingle(IRI iri, Time time, Tick tick, Report report, ReportGrain grain, Scope<I> scope) {
         super(iri, time, tick, report, grain);
         this.scope = scope;
         this.windowBuffer = new WindowBuffer<>(time.getScope());
@@ -46,7 +46,7 @@ public class CSPARQLStreamToRelationOpSingle<I extends EventBean> extends Observ
 
         windowBuffer.add(arg, ts);
 
-        Iterator<? extends Window> itWindow = scope.apply(arg, ts, windowBuffer);
+        Iterator<? extends Window> itWindow = scope.apply(arg, ts);
 
         itWindow.forEachRemaining((Consumer<Window>) window -> {
             /*
@@ -79,7 +79,7 @@ public class CSPARQLStreamToRelationOpSingle<I extends EventBean> extends Observ
 
     @Override
     public TimeVarying<Collection<I>> get() {
-        return null;
+        return new TimeVaryingCollection<I,V>(this, iri,Collections.emptySet());
     }
 
     @Override

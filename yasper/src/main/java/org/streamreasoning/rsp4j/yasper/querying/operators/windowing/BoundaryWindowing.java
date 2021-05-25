@@ -1,20 +1,27 @@
 package org.streamreasoning.rsp4j.yasper.querying.operators.windowing;
 
-public class BoundaryWindowing<I extends EventBean<V>, V extends Comparable<V>,O> extends FrameWindowing<I,V,O>{
 
-    protected BoundaryWindowing(V[] boundaries, String attribute, long threshold) {
+/**
+ *
+ * @param <I>
+ * @param <V>
+ */
+public class BoundaryWindowing<I extends EventBean<V>, V extends Comparable<V>> extends FrameWindowing<I,V>{
+
+    public BoundaryWindowing(V[] boundaries, String attribute) {
         super();
         this.frameState.initBoundaries(boundaries);
         this.openPred = i -> {
             for (int j = 0; j < boundaries.length; j++) {
-                if (j != 0){
-                    if(i.getValue(attribute).compareTo(frameState.getBoundary(j)) > 0
-                            && frameState.compareCurrentBoundary(j-1)){
+                if (j == boundaries.length - 1) {
+                    if (i.getValue(attribute).compareTo(frameState.getBoundary(j)) > 0
+                            && (!frameState.compareCurrentBoundary(j) || frameState.isFirst())) {
                         frameState.setCurrentBoundary(j);
                         return true;
                     }
-                }else if(i.getValue(attribute).compareTo(frameState.getBoundary(j)) > 0 &&
-                        i.getValue(attribute).compareTo(frameState.getBoundary(j+1)) < 0) {
+                } else if (i.getValue(attribute).compareTo(frameState.getBoundary(j)) > 0 &&
+                        i.getValue(attribute).compareTo(frameState.getBoundary(j + 1)) < 0
+                        && (!frameState.compareCurrentBoundary(j) || frameState.isFirst())) {
                     frameState.setCurrentBoundary(j);
                     return true;
                 }
@@ -22,10 +29,15 @@ public class BoundaryWindowing<I extends EventBean<V>, V extends Comparable<V>,O
             return false;
         };
         this.updatePred = i -> i.getValue(attribute).compareTo(frameState.getBoundary(frameState.getCurrentBoundary())) > 0 &&
-                i.getValue(attribute).compareTo(frameState.getBoundary(frameState.getCurrentBoundary()+1)) < 0;
-        this.closePred = i -> i.getValue(attribute).compareTo(frameState.getBoundary(frameState.getCurrentBoundary()+1)) >= 0;
+                i.getValue(attribute).compareTo(frameState.getBoundary(frameState.getCurrentBoundary() + 1)) < 0 && !frameState.isFirst();
+        this.closePred = i -> {
+            if (frameState.getCurrentBoundary() + 1 == boundaries.length - 1)
+                return i.getValue(attribute).compareTo(frameState.getBoundary(frameState.getCurrentBoundary())) < 0 && !frameState.isFirst();
+            else
+                return (i.getValue(attribute).compareTo(frameState.getBoundary(frameState.getCurrentBoundary() + 1)) >= 0 ||
+                        i.getValue(attribute).compareTo(frameState.getBoundary(frameState.getCurrentBoundary())) < 0) && !frameState.isFirst();
+        };
     }
-
 
     @Override
     public void close(long ts) {

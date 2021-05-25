@@ -4,24 +4,25 @@ package org.streamreasoning.rsp4j.yasper.querying.operators.windowing;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.Window;
 import org.streamreasoning.rsp4j.api.secret.content.Content;
 
-import java.util.Collection;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 public class WindowBuffer<I> implements Content<I, Collection<I>> {
 
 
-    private final SortedMap<Long,I> internalBuffer = new TreeMap<>();
+    private SortedMap<Long,I> internalBuffer = new TreeMap<>();
     private final SortedMap<Long,I> activeWindow = new TreeMap<>();
+    private final SortedSet<Window> windows;
     private long lastWinUpdateTime;
 
     public WindowBuffer(long lastWinUpdateTime) {
         this.lastWinUpdateTime = lastWinUpdateTime;
+        this.windows = new TreeSet<>((o1, o2) -> (int) (o1.getC() - o2.getC()));
     }
 
     public void advance(Window w){
-        internalBuffer.subMap(w.getO(),w.getC());
-        lastWinUpdateTime = w.getO();
+        internalBuffer = internalBuffer.tailMap(w.getO());
+        lastWinUpdateTime = w.getC();
+        windows.add(w);
     }
 
     @Override

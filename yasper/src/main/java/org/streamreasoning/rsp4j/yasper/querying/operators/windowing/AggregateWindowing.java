@@ -2,16 +2,22 @@ package org.streamreasoning.rsp4j.yasper.querying.operators.windowing;
 
 import java.util.function.BiFunction;
 
-public class AggregateWindowing<I extends EventBean<V>,V extends Comparable<V>,O> extends FrameWindowing<I,V, O>{
+
+/**
+ *
+ * @param <I>
+ * @param <V>
+ */
+public class AggregateWindowing<I extends EventBean<V>,V extends Comparable<V>> extends FrameWindowing<I,V>{
 
     private final BiFunction<I,V,V> agg;
     private final V startValue;
 
-    protected AggregateWindowing(I arg, BiFunction<I,V,V> agg, V startValue, V threshold) {
+    public AggregateWindowing(BiFunction<I, V, V> agg, V startValue, V threshold) {
         super();
         this.openPred = i -> frameState.isTsStartNull();
-        this.updatePred = i -> frameState.getAuxiliaryValue().compareTo(threshold) < 0;
-        this.closePred = this.updatePred.negate();
+        this.updatePred = i -> !frameState.isFirst() && frameState.getAuxiliaryValue().compareTo(threshold) < 0;
+        this.closePred = i -> !frameState.isFirst() && !(frameState.getAuxiliaryValue().compareTo(threshold) < 0);
         this.agg = agg;
         this.startValue = startValue;
     }

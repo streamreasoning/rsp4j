@@ -7,20 +7,26 @@ import org.streamreasoning.rsp4j.api.secret.content.Content;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.function.Predicate;
 
-public abstract class FrameWindowing<I,V,O> implements Scope<I,O> {
+public abstract class FrameWindowing<I,V> implements Scope<I> {
 
 
     protected Predicate<I> closePred, updatePred, openPred;
-    protected CandidateWindow candidateWindow;
+    protected CandidateWindow candidateWindow = new CandidateWindow(0L, 0L);
+    private boolean init = true;
 
     //Final Windows map, with the end timestamp as the key
     protected SortedMap<Long, Window> windows;
     protected final FrameState<V> frameState = new FrameState<>();
 
+    public FrameWindowing() {
+        this.windows = new TreeMap<>();
+    }
+
     @Override
-    public Iterator<? extends Window> apply(I arg, long ts, Content<I,O> currentContent) {
+    public Iterator<? extends Window> apply(I arg, long ts) {
         windows.headMap(ts).clear();
         if(closePred.test(arg))
             close(ts);
@@ -28,6 +34,9 @@ public abstract class FrameWindowing<I,V,O> implements Scope<I,O> {
             update(ts, arg);
         if (openPred.test(arg))
             open(ts,arg);
+
+        if(init)
+            candidateWindow = new CandidateWindow(0L,ts);
 
         if(!windows.isEmpty())
             return windows.tailMap(ts).values().iterator();

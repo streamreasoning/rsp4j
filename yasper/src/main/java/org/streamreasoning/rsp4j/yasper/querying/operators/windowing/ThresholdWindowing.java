@@ -2,11 +2,11 @@ package org.streamreasoning.rsp4j.yasper.querying.operators.windowing;
 
 import java.util.Comparator;
 
-public class ThresholdWindowing<I extends EventBean<V>,V extends Comparable<V>,O> extends FrameWindowing<I,V,O>{
+public class ThresholdWindowing<I extends EventBean<V>,V extends Comparable<V>> extends FrameWindowing<I,V>{
 
     private final int min = 0;
 
-    protected ThresholdWindowing(String attribute, Comparator<V> comparator, V threshold) {
+    public ThresholdWindowing(String attribute, Comparator<V> comparator, V threshold) {
         super();
         this.openPred = i -> comparator.compare(i.getValue(attribute), threshold)>0 &&
                 frameState.getCount() == 0;

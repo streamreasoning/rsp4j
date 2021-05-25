@@ -1,18 +1,25 @@
 package org.streamreasoning.rsp4j.yasper.querying.operators.windowing;
 
+import java.util.Comparator;
+
 public class FrameState<V> {
 
     private long count;
     private long tsStart;
     private V[] boundaries;
-    private int boundary = 0;
+    private int boundary = -1;
     private V auxiliaryValue;
     private boolean first = true;
     private boolean tsStartNull = true;
 
+    public boolean isFirst() {
+        return first;
+    }
 
     public V getBoundary(int i) {
-        return boundaries[i];
+        if(i<0 || i>boundaries.length-1)
+            return boundaries[0];
+        else return boundaries[i];
     }
 
     public void initBoundaries(V[] boundaries) {
@@ -21,10 +28,11 @@ public class FrameState<V> {
 
     public void setCurrentBoundary(int boundary) {
         this.boundary = boundary;
+        first = false;
     }
 
     public boolean compareCurrentBoundary(int i) {
-        return i == boundary || first;
+        return i == boundary;
     }
 
     public int getCurrentBoundary() {
@@ -43,6 +51,7 @@ public class FrameState<V> {
         return auxiliaryValue;
     }
 
+
     public boolean isTsStartNull() {
         return tsStartNull;
     }
@@ -58,6 +67,7 @@ public class FrameState<V> {
 
     public void setAuxiliaryValue(V auxiliaryValue) {
         this.auxiliaryValue = auxiliaryValue;
+        this.first = false;
     }
 
     public void incrementCounter(){

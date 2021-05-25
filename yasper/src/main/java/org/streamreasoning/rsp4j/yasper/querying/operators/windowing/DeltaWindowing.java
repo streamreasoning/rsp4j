@@ -1,13 +1,17 @@
 package org.streamreasoning.rsp4j.yasper.querying.operators.windowing;
 
-public class DeltaWindowing<I extends EventBean<Long>,O> extends FrameWindowing<I,Long,O>{
+public class DeltaWindowing<I extends EventBean<Long>> extends FrameWindowing<I,Long>{
 
     private final String attribute;
 
-    protected DeltaWindowing(I arg, String attribute, long threshold) {
+    public DeltaWindowing(String attribute, long threshold) {
         super();
         this.openPred = i -> frameState.isTsStartNull();
-        this.updatePred = i -> Math.abs(frameState.getAuxiliaryValue()-arg.getValue(attribute)) > threshold;
+        this.updatePred = i -> {
+            if (frameState.getAuxiliaryValue() == null) {
+                return true;
+            } else return Math.abs(frameState.getAuxiliaryValue()-i.getValue(attribute)) > threshold;
+        };
         this.closePred = this.updatePred.negate();
         this.attribute = attribute;
     }

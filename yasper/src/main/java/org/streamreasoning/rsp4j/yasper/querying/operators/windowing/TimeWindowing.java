@@ -8,7 +8,7 @@ import org.streamreasoning.rsp4j.api.secret.content.Content;
 import java.util.Collections;
 import java.util.Iterator;
 
-public class TimeWindowing<I,O> implements Scope<I,O> {
+public class TimeWindowing<I> implements Scope<I> {
 
     private Window currentOpenWindow;
     private final long startingTime, size, hop;
@@ -21,7 +21,7 @@ public class TimeWindowing<I,O> implements Scope<I,O> {
     }
 
     @Override
-    public Iterator<? extends Window> apply(I arg, long ts, Content<I,O> content) {
+    public Iterator<? extends Window> apply(I arg, long ts) {
         if(ts<startingTime)
             this.currentOpenWindow = new WindowImpl(startingTime,startingTime);
 
