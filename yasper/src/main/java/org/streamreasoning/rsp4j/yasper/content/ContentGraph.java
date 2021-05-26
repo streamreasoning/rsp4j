@@ -1,6 +1,7 @@
-package org.streamreasoning.rsp4j.api.secret.content;
+package org.streamreasoning.rsp4j.yasper.content;
 
 import org.streamreasoning.rsp4j.api.RDFUtils;
+import org.streamreasoning.rsp4j.api.secret.content.Content;
 import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
 import org.apache.commons.rdf.api.Graph;
 

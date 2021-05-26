@@ -11,7 +11,7 @@
         <github.release>${project.version}</github.release>
     </properties>
 
-    <packaging>pom</packaging>
+    <packaging>pom</packaging>j
     <modules>
         <module>api</module>
         <module>yasper</module>
@@ -49,7 +49,7 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.18.12</version>
+                <version>1.18.20</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -1,6 +1,7 @@
-package org.streamreasoning.rsp4j.api.secret.content;
+package org.streamreasoning.rsp4j.yasper.content;
 
 import org.apache.commons.rdf.api.Graph;
+import org.streamreasoning.rsp4j.api.secret.content.Content;
 
 public class EmptyGraphContent implements Content<Graph,Graph> {
 
