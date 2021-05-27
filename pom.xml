@@ -1,8 +1,8 @@
     <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>it.polimi.sr.rsp</groupId>
-    <artifactId>rsp4j</artifactId>
+    <groupId>org.streamreasoning.rsp4j</groupId>
+    <artifactId>rsp4j-parent</artifactId>
     <version>1.0.0</version>
 
     <properties>
@@ -11,12 +11,13 @@
         <github.release>${project.version}</github.release>
     </properties>
 
-    <packaging>pom</packaging>
+    <packaging>pom</packaging>j
     <modules>
         <module>api</module>
         <module>yasper</module>
         <module>examples</module>
         <module>abstraction</module>
+        <module>io</module>
     </modules>
 
     <dependencyManagement>
@@ -49,7 +50,7 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.18.12</version>
+                <version>1.18.20</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -113,5 +114,6 @@
             <artifactId>commons-rdf-api</artifactId>
             <version>0.5.0</version>
         </dependency>
+
     </dependencies>
 </project>

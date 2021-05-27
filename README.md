@@ -9,7 +9,7 @@ RSP4J is inspired by the OWL API, and other work that aim at spreading the Seman
 In this repository, the following  projects are present:
 
 * [API](./api/Readme.md), which contains the interfaces and abstractions required to develop your RSP engine.
-* [yasper](./yasper/Readme.md), which is an reference implementation that aims at showing the API usage by providing it.polimi.deib.rsp.test.examples.
+* [yasper](./yasper/Readme.md), which is an reference implementation that aims at showing the API usage by providing org.streamreasoning.rsp4j.yasper.examples.
 
 Futher adoption of YASPER will be listed below. 
 
