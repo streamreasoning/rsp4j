@@ -39,12 +39,12 @@ public class CSPARQLTimeWindowOperatorFactory implements StreamToRelationOperato
 
 
     @Override
-    public TimeVarying<Graph> apply(WebDataStream<Graph> s, IRI iri) {
+    public StreamToRelationOp<Graph, Graph> apply(WebDataStream<Graph> s, IRI iri) {
         StreamToRelationOp<Graph, Graph> windowStreamToRelationOp = new CSPARQLStreamToRelationOp(iri, a, b, time, tick, report, grain, cf);
         s.addConsumer(windowStreamToRelationOp);
         if(context!=null) {
             context.add(windowStreamToRelationOp);
         }
-        return windowStreamToRelationOp.get();
+        return windowStreamToRelationOp;
     }
 }

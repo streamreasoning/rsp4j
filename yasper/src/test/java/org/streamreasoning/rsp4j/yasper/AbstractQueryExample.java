@@ -1,5 +1,6 @@
 package org.streamreasoning.rsp4j.yasper;
 
+import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.yasper.StreamViewImpl;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
@@ -44,8 +45,8 @@ public class AbstractQueryExample {
 
         //ENGINE INTERNALS - HOW THE REPORTING POLICY, TICK AND REPORT GRAIN INFLUENCE THE RUNTIME
 
-
-        TimeVarying<Graph> timeVarying = windowOperator.apply(stream,RDFUtils.createIRI("w1"));
+        StreamToRelationOp<Graph, Graph> s2r = windowOperator.apply(stream,RDFUtils.createIRI("w1"));
+        TimeVarying<Graph> timeVarying = s2r.get();
 
         StreamViewImpl v = new StreamViewImpl();
 

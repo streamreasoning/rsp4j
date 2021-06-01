@@ -55,27 +55,28 @@ public class CPTest {
         StreamToRelationOperatorFactory<Graph, Graph> windowOperator = new CSPARQLTimeWindowOperatorFactory(2000, 2000, scope, TimeFactory.getInstance(), tick, report, report_grain, null);
 
         //SDS
-        SDS sds = new SDSImpl();
+        SDS<Graph> sds = new SDSImpl();
         //R2R
         ContinuousQuery q = new ContinuousQueryImpl("q1");
 
-        RelationToRelationOperator r2r = new R2RImpl(sds, q);
+        RelationToRelationOperator<Triple> r2r = new R2RImpl(sds, q);
 
-        Task t = new Task.TaskBuilder()
-                .addSource(stream)
-                .addS2R("stream1",windowOperator,"w1")
-                .addR2R("w1",r2r)
-                .addR2S("out",new Rstream())
-                .addSDS(sds)
-                .addContinuousQuery(q)
-                .addSink(outStream)
-                .build();
-        ContinuousProgram cp = new ContinuousProgram.ContinuousProgramBuilder()
+
+        Task<Graph,Graph,Triple> t =
+        new Task.TaskBuilder()
+            .addS2R("stream1", windowOperator, "w1")
+            .addR2R("w1", r2r)
+            .addR2S("out", new Rstream<Graph>())
+            .build();
+        ContinuousProgram<Graph,Graph,Triple> cp = new ContinuousProgram.ContinuousProgramBuilder()
+                .in(stream)
+                .setSDS(sds)
                 .addTask(t)
+                .out(outStream)
                 .build();
-        ContinuousQueryExecution<Graph, Graph, Triple> cqe = cp.getContinuousQueryExecution();
-        WebDataStream<Triple> outstream = cqe.outstream();
-        outstream.addConsumer(new InstResponseSysOutFormatter("TTL", true));
+
+        outStream.addConsumer(new InstResponseSysOutFormatter("TTL", true));
+
 
         //RUNTIME DATA
 
@@ -89,9 +90,13 @@ public class CPTest {
         graph.add(instance.createTriple(instance.createIRI("S2"), p, instance.createIRI("O2")));
         stream.put(graph, 1999);
 
+
+        //cp.eval(1999l);
         graph = instance.createGraph();
         graph.add(instance.createTriple(instance.createIRI("S3"), p, instance.createIRI("O3")));
         stream.put(graph, 2001);
+
+
 
         graph = instance.createGraph();
 

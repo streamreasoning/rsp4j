@@ -37,10 +37,10 @@ public class CQELSTimeWindowOperatorFactory implements StreamToRelationOperatorF
     }
 
     @Override
-    public TimeVarying<Graph> apply(WebDataStream<Graph> s, IRI iri) {
+    public StreamToRelationOp<Graph, Graph> apply(WebDataStream<Graph> s, IRI iri) {
         StreamToRelationOp<Graph, Graph> windowStreamToRelationOp = new CQELSStreamToRelationOp(iri, a, time, tick, report, grain,cf);
         s.addConsumer(windowStreamToRelationOp);
         context.add(windowStreamToRelationOp);
-        return windowStreamToRelationOp.get();
+        return windowStreamToRelationOp;
     }
 }

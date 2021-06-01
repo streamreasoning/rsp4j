@@ -8,6 +8,7 @@ import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.format.QueryResultFormatter;
 import org.streamreasoning.rsp4j.api.operators.s2r.StreamToRelationOperatorFactory;
+import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
@@ -105,8 +106,8 @@ public class Yasper implements QueryRegistrationFeature<ContinuousQuery>, Stream
 //                (wo.getRange(), wo.getT0(), query.getTime(), tick, report, reportGrain, cqe);
 //            } else
 //                w = new CSPARQLTimeWindowOperatorFactory(wo.getRange(), wo.getStep(), wo.getT0(), query.getTime(), tick, report, reportGrain, cqe);
-
-                TimeVarying<Graph> tvg = w.apply(registeredStreams.get(s.uri()), iri);
+                StreamToRelationOp<Graph, Graph> s2r = w.apply(registeredStreams.get(s.uri()), iri);
+                TimeVarying<Graph> tvg = s2r.get();
 
                 if (wo.named()) {
                     sds.add(iri, tvg);
