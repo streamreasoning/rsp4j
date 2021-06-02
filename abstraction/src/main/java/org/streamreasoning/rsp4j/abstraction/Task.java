@@ -14,12 +14,15 @@ public class Task<I, R, O> {
     private final Set<S2RContainer<I, R>> s2rs;
     private final List<R2RContainer<R>> r2rs;
     private final Set<R2SContainer<O>> r2ss;
-
+    private List<AggregationContainer> aggregations;
+    private Map<String, String> prefixes;
 
     public Task(TaskBuilder<I, R, O> builder) {
         this.s2rs = builder.s2rs;
         this.r2rs = builder.r2rs;
         this.r2ss = builder.r2ss;
+        this.prefixes = builder.prefixes;
+        this.aggregations = builder.aggregations;
     }
 
 
@@ -34,13 +37,16 @@ public class Task<I, R, O> {
     public Set<R2SContainer<O>> getR2Ss() {
         return r2ss;
     }
+    public List<AggregationContainer> getAggregations(){
+        return aggregations;
+    }
 
     public static class TaskBuilder<I, R, O> {
 
         private Set<S2RContainer<I, R>> s2rs;
         private List<R2RContainer<R>> r2rs;
         private Set<R2SContainer<O>> r2ss;
-
+        private List<AggregationContainer> aggregations;
         private Map<String, String> prefixes;
 
         public TaskBuilder() {
@@ -48,6 +54,7 @@ public class Task<I, R, O> {
             this.r2rs = new ArrayList<>();
             this.r2ss = new HashSet<>();
             this.prefixes = new HashMap<String, String>();
+            this.aggregations = new ArrayList<>();
         }
 
         public TaskBuilder<I, R, O> prefix(String prefix, String url) {
@@ -61,18 +68,22 @@ public class Task<I, R, O> {
         }
 
         public TaskBuilder<I, R, O> addR2R(String tvgName, RelationToRelationOperator<R> r2rFactory) {
-            this.r2rs.add(new R2RContainer<R>(tvgName, r2rFactory));
+            r2rs.add(new R2RContainer<R>(tvgName, r2rFactory));
             return this;
         }
 
         public TaskBuilder<I, R, O> addR2S(String sinkURI, RelationToStreamOperator<O> r2sFactory) {
-            this.r2ss.add(new R2SContainer<O>(sinkURI, r2sFactory));
+            r2ss.add(new R2SContainer<O>(sinkURI, r2sFactory));
+            return this;
+        }
+        public TaskBuilder<I, R, O> aggregate(String tvgName, String functionName, String inputVariable, String outputVariable) {
+            aggregations.add(new AggregationContainer(tvgName,functionName,inputVariable,outputVariable));
             return this;
         }
 
 
-        public Task build() {
-            return new Task(this);
+        public Task<I, R, O> build() {
+            return new Task<I, R, O>(this);
         }
 
 
@@ -84,7 +95,7 @@ public class Task<I, R, O> {
         @Getter
         private String sourceURI;
         @Getter
-        private StreamToRelationOp<I, R> s2r;
+        private StreamToRelationOp<I, R> s2rOperator;
         @Getter
         private String tvgName;
     }
@@ -95,7 +106,7 @@ public class Task<I, R, O> {
         @Getter
         private String tvgName;
         @Getter
-        private RelationToRelationOperator<R> r2rFactory;
+        private RelationToRelationOperator<R> r2rOperator;
 
     }
 
@@ -105,7 +116,20 @@ public class Task<I, R, O> {
         @Getter
         private String sinkURI;
         @Getter
-        private RelationToStreamOperator<O> r2rFactory;
+        private RelationToStreamOperator<O> r2sOperator;
+
+    }
+    @RequiredArgsConstructor
+    @AllArgsConstructor
+    public static class AggregationContainer<O> {
+        @Getter
+        private String tvgName;
+        @Getter
+        private String functionName;
+        @Getter
+        private String inputVariable;
+        @Getter
+        private String outputVariable;
 
     }
 }

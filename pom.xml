@@ -11,7 +11,7 @@
         <github.release>${project.version}</github.release>
     </properties>
 
-    <packaging>pom</packaging>j
+    <packaging>pom</packaging>
     <modules>
         <module>api</module>
         <module>yasper</module>

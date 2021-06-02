@@ -1,26 +1,22 @@
 package org.streamreasoning.rsp4j.abstraction;
 
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
-import org.apache.commons.rdf.api.Triple;
+import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunction;
+import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegistry;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
-import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
 import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
-import org.streamreasoning.rsp4j.yasper.ContinuousQueryExecutionImpl;
 import org.streamreasoning.rsp4j.yasper.ContinuousQueryExecutionObserver;
-import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
-import org.streamreasoning.rsp4j.yasper.querying.operators.R2RImpl;
-import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Log4j
@@ -29,6 +25,7 @@ public class ContinuousProgram<I, R, O> extends ContinuousQueryExecutionObserver
     private List<Task<I, R, O>> tasks;
     private WebDataStream<I> inputStream;
     private WebDataStream<O> outputStream;
+
     private SDS<R> sds;
 
 
@@ -51,7 +48,7 @@ public class ContinuousProgram<I, R, O> extends ContinuousQueryExecutionObserver
                 IRI iri = RDFUtils.createIRI(streamURI);
 
                 if (inputStream != null) {
-                    TimeVarying<R> tvg = s2rContainer.<I, R>getS2r().link(this).apply(inputStream);
+                    TimeVarying<R> tvg = s2rContainer.<I, R>getS2rOperator().link(this).apply(inputStream);
 
                     if (tvg.named()) {
                         sds.add(iri, tvg);
@@ -71,7 +68,24 @@ public class ContinuousProgram<I, R, O> extends ContinuousQueryExecutionObserver
         for (Task<I, R, O> task : tasks) {
             Set<Task.R2SContainer<O>> r2ss = task.getR2Ss();
             for (Task.R2SContainer<O> r2s : r2ss) {
-                eval(now).forEach(o1 -> outstream().put((O) r2s.getR2rFactory().eval(o1, now), now));
+               Set<SolutionMapping<O>> collection = eval(now).collect(Collectors.toSet());
+        if (!task.getAggregations().isEmpty()) {
+          for (Task.AggregationContainer<O> aggregationContainer : task.getAggregations()) {
+            AggregationFunction aggregationFunction =
+                AggregationFunctionRegistry.getInstance()
+                    .getFunction(aggregationContainer.getFunctionName())
+                    .get();
+            SolutionMapping<O> aggregation =
+                aggregationFunction.evaluate(
+                    aggregationContainer.getInputVariable(),
+                    aggregationContainer.getOutputVariable(),
+                    collection);
+            outputStream.put((O) r2s.getR2sOperator().eval(aggregation, now),now);
+          }
+        } else {
+
+          eval(now).forEach(o1 -> outstream().put((O) r2s.getR2sOperator().eval(o1, now), now));
+        }
             }
         }
 
@@ -115,7 +129,7 @@ public class ContinuousProgram<I, R, O> extends ContinuousQueryExecutionObserver
     public Stream<SolutionMapping<O>> eval(Long now) {
         sds.materialize(now);
         Task<I, R, O> iroTask = tasks.get(0);
-        RelationToRelationOperator<R> r2rFactory = iroTask.getR2Rs().get(0).getR2rFactory();
+        RelationToRelationOperator<R> r2rFactory = iroTask.getR2Rs().get(0).getR2rOperator();
         Stream<SolutionMapping<R>> eval = r2rFactory.eval(now);
         Stream<SolutionMapping<O>> rStream = eval.map(rsm -> rsm.map(r -> (SolutionMapping<O>) r));
         return rStream;
