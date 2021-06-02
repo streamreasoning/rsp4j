@@ -70,22 +70,22 @@ public class ContinuousProgram<I, R, O> extends ContinuousQueryExecutionObserver
         if (task.getAggregations().isEmpty()) {
           eval(now).forEach(o1 -> outstream().put((O) r2s.getR2sOperator().eval(o1, now), now));
         } else {
-          Set<SolutionMapping<O>> collection = eval(now).collect(Collectors.toSet());
-          for (Task.AggregationContainer<O> aggregationContainer : task.getAggregations()) {
-            Optional<SolutionMapping<O>> aggregation =
-                evaluateAggregation(collection, aggregationContainer);
-            if (aggregation.isPresent()) {
-              outputStream.put((O) r2s.getR2sOperator().eval(aggregation.get(), now), now);
-            }
-          }
+          handleAggregations(task,r2s,now);
         }
       }
     }
   }
 
-  private Optional<SolutionMapping<O>> evaluateAggregation(
-      Collection<SolutionMapping<O>> collection,
-      Task.AggregationContainer<O> aggregationContainer) {
+  private void handleAggregations(Task<I, R, O> task,Task.R2SContainer<O> r2s, long timestamp ){
+    Set<SolutionMapping<O>> collection = eval(timestamp).collect(Collectors.toSet());
+    for (Task.AggregationContainer<O> aggregationContainer : task.getAggregations()) {
+      Optional<SolutionMapping<O>> aggregation = evaluateAggregation(collection, aggregationContainer);
+      if (aggregation.isPresent()) {
+        outputStream.put((O) r2s.getR2sOperator().eval(aggregation.get(), timestamp), timestamp);
+      }
+    }
+  }
+  private Optional<SolutionMapping<O>> evaluateAggregation(Collection<SolutionMapping<O>> collection, Task.AggregationContainer<O> aggregationContainer) {
     AggregationFunctionRegistry functionRegistry = AggregationFunctionRegistry.getInstance();
     Optional<AggregationFunction> aggregationFunction =
         functionRegistry.getFunction(aggregationContainer.getFunctionName());
