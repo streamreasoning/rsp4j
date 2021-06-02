@@ -24,17 +24,16 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @Log4j
-public class ContinuousProgram<I,R,O> extends ContinuousQueryExecutionObserver<I,R,O> {
+public class ContinuousProgram<I, R, O> extends ContinuousQueryExecutionObserver<I, R, O> {
 
-    private List<Task<I,R,O>> tasks;
+    private List<Task<I, R, O>> tasks;
     private WebDataStream<I> inputStream;
     private WebDataStream<O> outputStream;
     private SDS<R> sds;
 
 
-
-    public ContinuousProgram(ContinuousProgramBuilder builder){
-        super(builder.sds,null);
+    public ContinuousProgram(ContinuousProgramBuilder builder) {
+        super(builder.sds, null);
         this.tasks = builder.tasks;
         this.inputStream = builder.inputStream;
         this.outputStream = builder.outputStream;
@@ -43,26 +42,24 @@ public class ContinuousProgram<I,R,O> extends ContinuousQueryExecutionObserver<I
         linkStreamsToOperators();
     }
 
-    private void linkStreamsToOperators(){
-        for(Task task: tasks){
-            Set<Task.S2RContainer> s2rs = task.getS2Rs();
-            for(Task.S2RContainer s2rContainer :s2rs){
+    private void linkStreamsToOperators() {
+        for (Task<I, R, O> task : tasks) {
+            Set<Task.S2RContainer<I, R>> s2rs = task.<I, R>getS2Rs();
+            for (Task.S2RContainer<I, R> s2rContainer : s2rs) {
                 String streamURI = s2rContainer.getSourceURI();
                 String tvgName = s2rContainer.getTvgName();
                 IRI iri = RDFUtils.createIRI(streamURI);
 
-                if(inputStream!=null) {
-                    StreamToRelationOp<I, R> s2r = s2rContainer.getS2rFactory().apply(inputStream, iri);
-                    s2r.link(this);
-                    TimeVarying<R> tvg = s2r.get();
+                if (inputStream != null) {
+                    TimeVarying<R> tvg = s2rContainer.<I, R>getS2r().link(this).apply(inputStream);
 
                     if (tvg.named()) {
                         sds.add(iri, tvg);
                     } else {
                         sds.add(tvg);
                     }
-                }else{
-                    log.error(String.format("No stream found for IRI %s",streamURI));
+                } else {
+                    log.error(String.format("No stream found for IRI %s", streamURI));
                 }
             }
         }
@@ -71,11 +68,11 @@ public class ContinuousProgram<I,R,O> extends ContinuousQueryExecutionObserver<I
     @Override
     public void update(Observable o, Object arg) {
         Long now = (Long) arg;
-        for (Task task : tasks) {
-          Set<Task.R2SContainer> r2ss = task.getR2Ss();
-          for (Task.R2SContainer r2s : r2ss) {
-              eval(now).forEach(o1 -> outstream().put((O) r2s.getR2rFactory().eval(o1, now), now));
-          }
+        for (Task<I, R, O> task : tasks) {
+            Set<Task.R2SContainer<O>> r2ss = task.getR2Ss();
+            for (Task.R2SContainer<O> r2s : r2ss) {
+                eval(now).forEach(o1 -> outstream().put((O) r2s.getR2rFactory().eval(o1, now), now));
+            }
         }
 
     }
@@ -117,43 +114,46 @@ public class ContinuousProgram<I,R,O> extends ContinuousQueryExecutionObserver<I
 
     public Stream<SolutionMapping<O>> eval(Long now) {
         sds.materialize(now);
-
-
-        return tasks.get(0).getR2Rs().get(0).getR2rFactory().eval(now);
+        Task<I, R, O> iroTask = tasks.get(0);
+        RelationToRelationOperator<R> r2rFactory = iroTask.getR2Rs().get(0).getR2rFactory();
+        Stream<SolutionMapping<R>> eval = r2rFactory.eval(now);
+        Stream<SolutionMapping<O>> rStream = eval.map(rsm -> rsm.map(r -> (SolutionMapping<O>) r));
+        return rStream;
     }
 
 
-
-    public static class ContinuousProgramBuilder<I,R,O>{
-        private List<Task<I,R,O>> tasks;
+    public static class ContinuousProgramBuilder<I, R, O> {
+        private List<Task<I, R, O>> tasks;
         private WebDataStream<I> inputStream;
         private WebDataStream<O> outputStream;
         private SDS<I> sds;
 
-        public ContinuousProgramBuilder(){
+        public ContinuousProgramBuilder() {
             tasks = new ArrayList<>();
         }
 
-        public ContinuousProgramBuilder in(WebDataStream<I> stream){
+        public ContinuousProgramBuilder<I, R, O> in(WebDataStream<I> stream) {
             this.inputStream = stream;
             return this;
         }
-        public ContinuousProgramBuilder out(WebDataStream<O> stream){
+
+        public ContinuousProgramBuilder<I, R, O> out(WebDataStream<O> stream) {
             this.outputStream = stream;
             return this;
         }
 
-        public ContinuousProgramBuilder addTask(Task task){
+        public ContinuousProgramBuilder<I, R, O> addTask(Task<I, R, O> task) {
             tasks.add(task);
             return this;
         }
-        public ContinuousProgramBuilder setSDS(SDS<I> sds){
+
+        public ContinuousProgramBuilder<I, R, O> setSDS(SDS<I> sds) {
             this.sds = sds;
             return this;
         }
 
-        public ContinuousProgram build(){
-            return new ContinuousProgram(this);
+        public ContinuousProgram<I, R, O> build() {
+            return new ContinuousProgram<I, R, O>(this);
         }
 
     }

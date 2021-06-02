@@ -1,5 +1,6 @@
 package org.streamreasoning.rsp4j.yasper.querying.operators.windowing;
 
+import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.exceptions.OutOfOrderElementException;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.ObservableStreamToRelationOp;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.Window;
@@ -7,6 +8,7 @@ import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.WindowImpl
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.secret.content.ContentFactory;
+import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
 import org.streamreasoning.rsp4j.yasper.sds.TimeVaryingObject;
 import org.streamreasoning.rsp4j.api.secret.content.Content;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
@@ -131,8 +133,15 @@ public class CSPARQLStreamToRelationOp<T1, T2> extends ObservableStreamToRelatio
     }
 
     @Override
-    public void link(ContinuousQueryExecution context) {
+    public CSPARQLStreamToRelationOp<T1, T2> link(ContinuousQueryExecution<T1, T2, ?> context) {
         this.addObserver((Observer) context);
+        return this;
+    }
+
+    @Override
+    public TimeVarying<T2> apply(WebDataStream<T1> s) {
+        s.addConsumer(this);
+        return new TimeVaryingObject<>(this, RDFUtils.createIRI(s.uri()));
     }
 
 

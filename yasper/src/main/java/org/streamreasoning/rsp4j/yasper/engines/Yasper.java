@@ -16,6 +16,7 @@ import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
+import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
 import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
 import org.streamreasoning.rsp4j.api.stream.web.WebStream;
 import org.streamreasoning.rsp4j.yasper.ContinuousQueryExecutionImpl;
@@ -38,8 +39,9 @@ public class Yasper implements QueryRegistrationFeature<ContinuousQuery>, Stream
 
     private final long t0;
     private final String baseUri;
-    private final String windowOperatorFactory;
+    //    private final String windowOperatorFactory;
     private final String S2RFactory = "yasper.window_operator_factory";
+    private final StreamToRelationOperatorFactory<Graph, Graph> wf;
     private Report report;
     private Tick tick;
     protected EngineConfiguration rsp_config;
@@ -51,19 +53,32 @@ public class Yasper implements QueryRegistrationFeature<ContinuousQuery>, Stream
     private ReportGrain report_grain;
 
 
-    public Yasper(EngineConfiguration rsp_config) {
+    public Yasper(EngineConfiguration rsp_config) throws NoSuchMethodException, ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException {
         this.rsp_config = rsp_config;
         this.report = rsp_config.getReport();
         this.baseUri = rsp_config.getBaseIRI();
         this.report_grain = rsp_config.getReportGrain();
         this.tick = rsp_config.getTick();
         this.t0 = rsp_config.gett0();
-        this.windowOperatorFactory = rsp_config.getString(S2RFactory);
+//        this.windowOperatorFactory =
         this.assignedSDS = new HashMap<>();
         this.registeredQueries = new HashMap<>();
         this.registeredStreams = new HashMap<>();
         this.queryObservers = new HashMap<>();
         this.queryExecutions = new HashMap<>();
+
+        Class<?> aClass = Class.forName(rsp_config.getString(S2RFactory));
+        this.wf = (StreamToRelationOperatorFactory<Graph, Graph>) aClass
+                .getConstructor(
+                        Time.class,
+                        Tick.class,
+                        Report.class,
+                        ReportGrain.class)
+                .newInstance(
+                        TimeFactory.getInstance(),
+                        tick,
+                        report,
+                        report_grain);
 
     }
 
@@ -78,56 +93,29 @@ public class Yasper implements QueryRegistrationFeature<ContinuousQuery>, Stream
         ContinuousQueryExecution<Graph, Graph, Triple> cqe = new ContinuousQueryExecutionImpl<Graph, Graph, Triple>(sds, q, out, new R2RImpl(sds, q), new Rstream());
 
         q.getWindowMap().forEach((WindowNode wo, WebStream s) -> {
-            try {
-                StreamToRelationOperatorFactory<Graph, Graph> w;
-                IRI iri = RDFUtils.createIRI(wo.iri());
-
-                Class<?> aClass = Class.forName(windowOperatorFactory);
-                w = (StreamToRelationOperatorFactory<Graph, Graph>) aClass
-                        .getConstructor(long.class,
-                                long.class,
-                                long.class,
-                                Time.class,
-                                Tick.class,
-                                Report.class,
-                                ReportGrain.class,
-                                ContinuousQueryExecution.class)
-                        .newInstance(wo.getRange(),
-                                wo.getStep(),
-                                wo.getT0(),
-                                q.getTime(),
-                                tick,
-                                report,
-                                report_grain,
-                                cqe);
+            StreamToRelationOperatorFactory<Graph, Graph> w;
+            IRI iri = RDFUtils.createIRI(wo.iri());
 
 //            if (wo.getStep() == -1) {
 //                w = new
 //                (wo.getRange(), wo.getT0(), query.getTime(), tick, report, reportGrain, cqe);
 //            } else
 //                w = new CSPARQLTimeWindowOperatorFactory(wo.getRange(), wo.getStep(), wo.getT0(), query.getTime(), tick, report, reportGrain, cqe);
-                StreamToRelationOp<Graph, Graph> s2r = w.apply(registeredStreams.get(s.uri()), iri);
-                TimeVarying<Graph> tvg = s2r.get();
+//                StreamToRelationOp<Graph, Graph> s2r = w.apply(registeredStreams.get(s.uri()), iri);
+            StreamToRelationOp<Graph, Graph> wop = wf.build(wo.getRange(), wo.getStep(), wo.getT0()).link(cqe);
+            TimeVarying<Graph> tvg = wop.apply(registeredStreams.get(s.uri()));
 
+            if (wo.named()) {
                 if (wo.named()) {
                     sds.add(iri, tvg);
                 } else {
                     sds.add(tvg);
                 }
-
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
             }
         });
+
         return cqe;
+
     }
 
     @Override

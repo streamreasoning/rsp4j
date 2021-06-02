@@ -17,6 +17,7 @@
             <groupId>org.streamreasoning.rsp4j</groupId>
             <artifactId>api</artifactId>
             <version>${github.release}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

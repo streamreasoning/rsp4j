@@ -13,6 +13,7 @@ import org.streamreasoning.rsp4j.yasper.querying.formatter.InstResponseSysOutFor
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.WindowNodeImpl;
 import org.apache.commons.rdf.api.Triple;
 
+import java.lang.reflect.InvocationTargetException;
 import java.time.Duration;
 
 /**
@@ -21,7 +22,7 @@ import java.time.Duration;
 public class CQELSExample {
 
 
-    public static void main(String[] args) throws ConfigurationException {
+    public static void main(String[] args) throws ConfigurationException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         EngineConfiguration ec = EngineConfiguration.loadConfig("/cqels.properties");
 

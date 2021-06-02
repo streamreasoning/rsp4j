@@ -9,6 +9,7 @@ import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.StreamToRelationOperatorFactory;
+import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
 import org.streamreasoning.rsp4j.api.sds.SDS;
@@ -52,7 +53,9 @@ public class CPTest {
 
 
         //WINDOW DECLARATION
-        StreamToRelationOperatorFactory<Graph, Graph> windowOperator = new CSPARQLTimeWindowOperatorFactory(2000, 2000, scope, TimeFactory.getInstance(), tick, report, report_grain, null);
+        StreamToRelationOperatorFactory<Graph, Graph> windowOperatorFactory = new CSPARQLTimeWindowOperatorFactory( TimeFactory.getInstance(), tick, report, report_grain);
+
+        StreamToRelationOp<Graph, Graph> build = windowOperatorFactory.build(2000, 2000, scope);
 
         //SDS
         SDS<Graph> sds = new SDSImpl();
@@ -64,7 +67,7 @@ public class CPTest {
 
         Task<Graph,Graph,Triple> t =
         new Task.TaskBuilder()
-            .addS2R("stream1", windowOperator, "w1")
+            .addS2R("stream1", build, "w1")
             .addR2R("w1", r2r)
             .addR2S("out", new Rstream<Graph>())
             .build();

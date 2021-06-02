@@ -4,6 +4,8 @@ import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.querying.result.SolutionMappingBase;
 import org.apache.commons.rdf.api.Triple;
 
+import java.util.function.Function;
+
 public class SelectInstResponse extends SolutionMappingBase<Triple> {
 
 
