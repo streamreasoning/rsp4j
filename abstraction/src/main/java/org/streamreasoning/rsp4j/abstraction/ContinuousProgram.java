@@ -22,153 +22,165 @@ import java.util.stream.Stream;
 @Log4j
 public class ContinuousProgram<I, R, O> extends ContinuousQueryExecutionObserver<I, R, O> {
 
+  private List<Task<I, R, O>> tasks;
+  private WebDataStream<I> inputStream;
+  private WebDataStream<O> outputStream;
+
+  private SDS<R> sds;
+
+  public ContinuousProgram(ContinuousProgramBuilder builder) {
+    super(builder.sds, null);
+    this.tasks = builder.tasks;
+    this.inputStream = builder.inputStream;
+    this.outputStream = builder.outputStream;
+    this.sds = builder.sds;
+
+    linkStreamsToOperators();
+  }
+
+  private void linkStreamsToOperators() {
+    for (Task<I, R, O> task : tasks) {
+      Set<Task.S2RContainer<I, R>> s2rs = task.<I, R>getS2Rs();
+      for (Task.S2RContainer<I, R> s2rContainer : s2rs) {
+        String streamURI = s2rContainer.getSourceURI();
+        String tvgName = s2rContainer.getTvgName();
+        IRI iri = RDFUtils.createIRI(streamURI);
+
+        if (inputStream != null) {
+          TimeVarying<R> tvg = s2rContainer.<I, R>getS2rOperator().link(this).apply(inputStream);
+
+          if (tvg.named()) {
+            sds.add(iri, tvg);
+          } else {
+            sds.add(tvg);
+          }
+        } else {
+          log.error(String.format("No stream found for IRI %s", streamURI));
+        }
+      }
+    }
+  }
+
+  @Override
+  public void update(Observable o, Object arg) {
+    Long now = (Long) arg;
+    for (Task<I, R, O> task : tasks) {
+      Set<Task.R2SContainer<O>> r2ss = task.getR2Ss();
+      for (Task.R2SContainer<O> r2s : r2ss) {
+        if (task.getAggregations().isEmpty()) {
+          eval(now).forEach(o1 -> outstream().put((O) r2s.getR2sOperator().eval(o1, now), now));
+        } else {
+          Set<SolutionMapping<O>> collection = eval(now).collect(Collectors.toSet());
+          for (Task.AggregationContainer<O> aggregationContainer : task.getAggregations()) {
+            Optional<SolutionMapping<O>> aggregation =
+                evaluateAggregation(collection, aggregationContainer);
+            if (aggregation.isPresent()) {
+              outputStream.put((O) r2s.getR2sOperator().eval(aggregation.get(), now), now);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  private Optional<SolutionMapping<O>> evaluateAggregation(
+      Collection<SolutionMapping<O>> collection,
+      Task.AggregationContainer<O> aggregationContainer) {
+    AggregationFunctionRegistry functionRegistry = AggregationFunctionRegistry.getInstance();
+    Optional<AggregationFunction> aggregationFunction =
+        functionRegistry.getFunction(aggregationContainer.getFunctionName());
+    SolutionMapping<O> aggregation = null;
+    if (aggregationFunction.isPresent()) {
+      aggregation =
+          aggregationFunction
+              .get()
+              .evaluate(
+                  aggregationContainer.getInputVariable(),
+                  aggregationContainer.getOutputVariable(),
+                  collection);
+
+    } else {
+      log.error("Function " + aggregationContainer.getFunctionName() + " not found in Registry!");
+    }
+    return Optional.ofNullable(aggregation);
+  }
+
+  @Override
+  public WebDataStream<O> outstream() {
+    return outputStream;
+  }
+
+  @Override
+  public ContinuousQuery query() {
+    return null;
+  }
+
+  @Override
+  public SDS<R> sds() {
+    return sds;
+  }
+
+  @Override
+  public StreamToRelationOp<I, R>[] s2rs() {
+    return new StreamToRelationOp[0];
+  }
+
+  @Override
+  public RelationToRelationOperator<O> r2r() {
+    return null;
+  }
+
+  @Override
+  public RelationToStreamOperator<O> r2s() {
+    return null;
+  }
+
+  @Override
+  public void add(StreamToRelationOp<I, R> op) {
+    op.link(this);
+  }
+
+  public Stream<SolutionMapping<O>> eval(Long now) {
+    sds.materialize(now);
+    Task<I, R, O> iroTask = tasks.get(0);
+    RelationToRelationOperator<R> r2rFactory = iroTask.getR2Rs().get(0).getR2rOperator();
+    Stream<SolutionMapping<R>> eval = r2rFactory.eval(now);
+    Stream<SolutionMapping<O>> rStream = eval.map(rsm -> rsm.map(r -> (SolutionMapping<O>) r));
+    return rStream;
+  }
+
+  public static class ContinuousProgramBuilder<I, R, O> {
     private List<Task<I, R, O>> tasks;
     private WebDataStream<I> inputStream;
     private WebDataStream<O> outputStream;
+    private SDS<I> sds;
 
-    private SDS<R> sds;
-
-
-    public ContinuousProgram(ContinuousProgramBuilder builder) {
-        super(builder.sds, null);
-        this.tasks = builder.tasks;
-        this.inputStream = builder.inputStream;
-        this.outputStream = builder.outputStream;
-        this.sds = builder.sds;
-
-        linkStreamsToOperators();
+    public ContinuousProgramBuilder() {
+      tasks = new ArrayList<>();
     }
 
-    private void linkStreamsToOperators() {
-        for (Task<I, R, O> task : tasks) {
-            Set<Task.S2RContainer<I, R>> s2rs = task.<I, R>getS2Rs();
-            for (Task.S2RContainer<I, R> s2rContainer : s2rs) {
-                String streamURI = s2rContainer.getSourceURI();
-                String tvgName = s2rContainer.getTvgName();
-                IRI iri = RDFUtils.createIRI(streamURI);
-
-                if (inputStream != null) {
-                    TimeVarying<R> tvg = s2rContainer.<I, R>getS2rOperator().link(this).apply(inputStream);
-
-                    if (tvg.named()) {
-                        sds.add(iri, tvg);
-                    } else {
-                        sds.add(tvg);
-                    }
-                } else {
-                    log.error(String.format("No stream found for IRI %s", streamURI));
-                }
-            }
-        }
+    public ContinuousProgramBuilder<I, R, O> in(WebDataStream<I> stream) {
+      this.inputStream = stream;
+      return this;
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        Long now = (Long) arg;
-        for (Task<I, R, O> task : tasks) {
-            Set<Task.R2SContainer<O>> r2ss = task.getR2Ss();
-            for (Task.R2SContainer<O> r2s : r2ss) {
-               Set<SolutionMapping<O>> collection = eval(now).collect(Collectors.toSet());
-        if (!task.getAggregations().isEmpty()) {
-          for (Task.AggregationContainer<O> aggregationContainer : task.getAggregations()) {
-            AggregationFunction aggregationFunction =
-                AggregationFunctionRegistry.getInstance()
-                    .getFunction(aggregationContainer.getFunctionName())
-                    .get();
-            SolutionMapping<O> aggregation =
-                aggregationFunction.evaluate(
-                    aggregationContainer.getInputVariable(),
-                    aggregationContainer.getOutputVariable(),
-                    collection);
-            outputStream.put((O) r2s.getR2sOperator().eval(aggregation, now),now);
-          }
-        } else {
-
-          eval(now).forEach(o1 -> outstream().put((O) r2s.getR2sOperator().eval(o1, now), now));
-        }
-            }
-        }
-
+    public ContinuousProgramBuilder<I, R, O> out(WebDataStream<O> stream) {
+      this.outputStream = stream;
+      return this;
     }
 
-    @Override
-    public WebDataStream<O> outstream() {
-        return outputStream;
+    public ContinuousProgramBuilder<I, R, O> addTask(Task<I, R, O> task) {
+      tasks.add(task);
+      return this;
     }
 
-    @Override
-    public ContinuousQuery query() {
-        return null;
+    public ContinuousProgramBuilder<I, R, O> setSDS(SDS<I> sds) {
+      this.sds = sds;
+      return this;
     }
 
-    @Override
-    public SDS<R> sds() {
-        return sds;
+    public ContinuousProgram<I, R, O> build() {
+      return new ContinuousProgram<I, R, O>(this);
     }
-
-    @Override
-    public StreamToRelationOp<I, R>[] s2rs() {
-        return new StreamToRelationOp[0];
-    }
-
-    @Override
-    public RelationToRelationOperator<O> r2r() {
-        return null;
-    }
-
-    @Override
-    public RelationToStreamOperator<O> r2s() {
-        return null;
-    }
-
-    @Override
-    public void add(StreamToRelationOp<I, R> op) {
-        op.link(this);
-    }
-
-    public Stream<SolutionMapping<O>> eval(Long now) {
-        sds.materialize(now);
-        Task<I, R, O> iroTask = tasks.get(0);
-        RelationToRelationOperator<R> r2rFactory = iroTask.getR2Rs().get(0).getR2rOperator();
-        Stream<SolutionMapping<R>> eval = r2rFactory.eval(now);
-        Stream<SolutionMapping<O>> rStream = eval.map(rsm -> rsm.map(r -> (SolutionMapping<O>) r));
-        return rStream;
-    }
-
-
-    public static class ContinuousProgramBuilder<I, R, O> {
-        private List<Task<I, R, O>> tasks;
-        private WebDataStream<I> inputStream;
-        private WebDataStream<O> outputStream;
-        private SDS<I> sds;
-
-        public ContinuousProgramBuilder() {
-            tasks = new ArrayList<>();
-        }
-
-        public ContinuousProgramBuilder<I, R, O> in(WebDataStream<I> stream) {
-            this.inputStream = stream;
-            return this;
-        }
-
-        public ContinuousProgramBuilder<I, R, O> out(WebDataStream<O> stream) {
-            this.outputStream = stream;
-            return this;
-        }
-
-        public ContinuousProgramBuilder<I, R, O> addTask(Task<I, R, O> task) {
-            tasks.add(task);
-            return this;
-        }
-
-        public ContinuousProgramBuilder<I, R, O> setSDS(SDS<I> sds) {
-            this.sds = sds;
-            return this;
-        }
-
-        public ContinuousProgram<I, R, O> build() {
-            return new ContinuousProgram<I, R, O>(this);
-        }
-
-    }
+  }
 }
