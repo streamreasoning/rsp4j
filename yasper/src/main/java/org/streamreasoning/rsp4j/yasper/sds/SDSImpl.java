@@ -249,6 +249,18 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
         return this;
     }
 
+    @Override
+    public Stream<Graph> toStream() {
+        Map<Optional<BlankNodeOrIRI>, List<Quad>> collect = stream().collect(Collectors.groupingBy(Quad::getGraphName));
+        IRI aDefault = RDFUtils.createIRI("default");
+
+        return collect.entrySet().stream().map(e -> {
+            BlankNodeOrIRI blankNodeOrIRI = e.getKey().orElse(aDefault);
+            return RDFUtils.createGraph(blankNodeOrIRI, e.getValue());
+        });
+
+    }
+
 
     @AllArgsConstructor
     class NamedGraph {

@@ -8,6 +8,7 @@ import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
 import lombok.extern.log4j.Log4j;
+import org.streamreasoning.rsp4j.yasper.querying.SelectInstResponse;
 
 import java.util.Arrays;
 import java.util.List;
@@ -83,7 +84,7 @@ public class ContinuousQueryExecutionImpl<I, E1, E2> extends ContinuousQueryExec
     @Override
     public Stream<SolutionMapping<E2>> eval(Long now) {
         sds.materialize(now);
-        return r2r.eval(now);
+        return r2r.eval(now).map(triple -> new SelectInstResponse<>(query.getID() + "/ans/" + now, now, triple));
     }
 }
 

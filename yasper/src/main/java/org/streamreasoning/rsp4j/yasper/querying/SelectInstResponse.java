@@ -2,24 +2,21 @@ package org.streamreasoning.rsp4j.yasper.querying;
 
 import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.querying.result.SolutionMappingBase;
-import org.apache.commons.rdf.api.Triple;
 
-import java.util.function.Function;
-
-public class SelectInstResponse extends SolutionMappingBase<Triple> {
+public class SelectInstResponse<T> extends SolutionMappingBase<T> {
 
 
-    public SelectInstResponse(String id, long cep_timestamp, Triple triples) {
+    public SelectInstResponse(String id, long cep_timestamp, T triples) {
         super(id, System.currentTimeMillis(), cep_timestamp, triples);
     }
 
     @Override
-    public SolutionMapping<Triple> difference(SolutionMapping<Triple> r) {
+    public SolutionMapping<T> difference(SolutionMapping<T> r) {
         return null;
     }
 
     @Override
-    public SolutionMapping<Triple> intersection(SolutionMapping<Triple> new_response) {
+    public SolutionMapping<T> intersection(SolutionMapping<T> new_response) {
         return null;
     }
 

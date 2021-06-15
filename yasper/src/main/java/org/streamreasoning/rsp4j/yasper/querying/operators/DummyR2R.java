@@ -1,6 +1,8 @@
 package org.streamreasoning.rsp4j.yasper.querying.operators;
 
+import org.apache.commons.rdf.api.Dataset;
 import org.apache.commons.rdf.api.Graph;
+import org.apache.commons.rdf.api.Quad;
 import org.apache.commons.rdf.api.Triple;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
@@ -10,20 +12,22 @@ import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-public class R2RImpl implements RelationToRelationOperator<Triple> {
+public class DummyR2R implements RelationToRelationOperator<Triple> {
 
     private final SDS<Graph> sds;
     private final ContinuousQuery query;
+    private final Dataset ds;
 
-    public R2RImpl(SDS<Graph> sds, ContinuousQuery query) {
+    public DummyR2R(SDS<Graph> sds, ContinuousQuery query) {
         this.sds = sds;
         this.query = query;
+        this.ds = (Dataset) sds;
     }
 
     @Override
     public Stream<Triple> eval(long ts) {
-        return sds.toStream().flatMap(Graph::stream);
-
+        return ds.stream()
+                .map(Quad::asTriple);
     }
 
     @Override
