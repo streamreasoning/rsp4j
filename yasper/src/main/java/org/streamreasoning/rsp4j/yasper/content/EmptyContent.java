@@ -1,17 +1,14 @@
 package org.streamreasoning.rsp4j.yasper.content;
 
-import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.api.RDF;
-import org.apache.commons.rdf.simple.SimpleRDF;
 import org.streamreasoning.rsp4j.api.secret.content.Content;
 
-public class EmptyGraphContent implements Content<Graph,Graph> {
+public class EmptyContent<I, O> implements Content<I, O> {
 
     long ts = System.currentTimeMillis();
-    private RDF rdf ;
+    private O o;
 
-    public EmptyGraphContent(){
-        rdf = new SimpleRDF();
+    public EmptyContent(O o) {
+        this.o = o;
     }
 
 
@@ -21,7 +18,7 @@ public class EmptyGraphContent implements Content<Graph,Graph> {
     }
 
     @Override
-    public void add(Graph e) {
+    public void add(I e) {
         throw new UnsupportedOperationException();
     }
 
@@ -31,7 +28,7 @@ public class EmptyGraphContent implements Content<Graph,Graph> {
     }
 
     @Override
-    public Graph coalesce() {
-        return rdf.createGraph();
+    public O coalesce() {
+        return o;
     }
 }

@@ -1,10 +1,15 @@
+import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.RDF;
+import org.apache.commons.rdf.jena.JenaRDF;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.junit.Test;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
 import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -81,5 +86,21 @@ public class CompositionalTest {
         bindings.forEach(System.out::println);
 
         bgp.eval(0).map(filter).filter(Objects::nonNull).map(projection).forEach(System.err::println);
+    }
+
+    @Test
+    public void testqueries() {
+
+        InputStream resource = CompositionalTest.class.getClassLoader().getResourceAsStream("BasicPatterns/model0.nt");
+        Model model = ModelFactory.createDefaultModel().read(resource, "", "TTL");
+        JenaRDF rdf = new JenaRDF();
+
+        Graph jenaGraph = rdf.asGraph(model);
+
+        SDSImpl sds = new SDSImpl();
+
+        jenaGraph.stream().forEach(q -> sds.add(rdf.createQuad(null, q.getSubject(), q.getPredicate(), q.getObject())));
+
+
     }
 }

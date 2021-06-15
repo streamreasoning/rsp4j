@@ -48,7 +48,7 @@ public class ContinuousProgram<I, R, O> extends ContinuousQueryExecutionObserver
                 IRI iri = RDFUtils.createIRI(streamURI);
 
                 if (inputStream != null) {
-                    TimeVarying<R> tvg = s2rContainer.<I, R>getS2r().link(this).apply(inputStream);
+                    TimeVarying<R> tvg = s2rContainer.<I, R>getS2rOperator().link(this).apply(inputStream);
 
                     if (tvg.named()) {
                         sds.add(iri, tvg);
@@ -68,7 +68,7 @@ public class ContinuousProgram<I, R, O> extends ContinuousQueryExecutionObserver
         for (Task<I, R, O> task : tasks) {
             Set<Task.R2SContainer<O>> r2ss = task.getR2Ss();
             for (Task.R2SContainer<O> r2s : r2ss) {
-                eval(now).forEach(o1 -> outstream().put((O) r2s.getR2rFactory().eval(o1, now), now));
+                eval(now).forEach(o1 -> outstream().put((O) r2s.getR2sOperator().eval(o1, now), now));
             }
         }
 

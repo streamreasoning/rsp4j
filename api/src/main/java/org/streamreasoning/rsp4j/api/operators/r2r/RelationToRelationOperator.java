@@ -14,3 +14,4 @@ public interface RelationToRelationOperator<T> {
     TimeVarying<Collection<T>> apply();
 
 }
+    
