@@ -1,6 +1,6 @@
 package org.streamreasoning.rsp;
 
-public interface Publisher {
+public interface Publisher extends Describable {
 
     Publisher stream(String id, boolean fragment);
 

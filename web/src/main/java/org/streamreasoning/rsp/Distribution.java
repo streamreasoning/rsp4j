@@ -1,6 +1,6 @@
 package org.streamreasoning.rsp;
 
-public interface Distribution {
+public interface Distribution extends Describable {
 
     Distribution access(String id, boolean fragment);
 
