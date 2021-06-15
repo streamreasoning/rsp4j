@@ -1,26 +1,23 @@
 package org.streamreasoning.rsp4j.abstraction;
 
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
-import org.apache.commons.rdf.api.Triple;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
-import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
 import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
-import org.streamreasoning.rsp4j.yasper.ContinuousQueryExecutionImpl;
 import org.streamreasoning.rsp4j.yasper.ContinuousQueryExecutionObserver;
-import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
-import org.streamreasoning.rsp4j.yasper.querying.operators.R2RImpl;
-import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
+import org.streamreasoning.rsp4j.yasper.querying.SelectInstResponse;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Set;
 import java.util.stream.Stream;
 
 @Log4j
@@ -115,9 +112,10 @@ public class ContinuousProgram<I, R, O> extends ContinuousQueryExecutionObserver
     public Stream<SolutionMapping<O>> eval(Long now) {
         sds.materialize(now);
         Task<I, R, O> iroTask = tasks.get(0);
-        RelationToRelationOperator<R> r2rFactory = iroTask.getR2Rs().get(0).getR2rFactory();
-        Stream<SolutionMapping<R>> eval = r2rFactory.eval(now);
-        Stream<SolutionMapping<O>> rStream = eval.map(rsm -> rsm.map(r -> (SolutionMapping<O>) r));
+        RelationToRelationOperator<R> r2rFactory = iroTask.getR2Rs().get(0).getR2rOperator();
+        Stream<R> eval = r2rFactory.eval(now);
+        //TODO this is conflcting
+        Stream<SolutionMapping<O>> rStream = eval.map(r -> new SelectInstResponse<>(query.getID() + "/ans/" + now, now, (O) r));
         return rStream;
     }
 
