@@ -11,20 +11,16 @@ import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.StreamToRelationOperatorFactory;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
-import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
 import org.streamreasoning.rsp4j.api.sds.SDS;
-import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
 import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
-import org.streamreasoning.rsp4j.yasper.ContinuousQueryExecutionImpl;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.streamreasoning.rsp4j.yasper.examples.RDFTripleStream;
 import org.streamreasoning.rsp4j.yasper.querying.formatter.ContinuousQueryImpl;
 import org.streamreasoning.rsp4j.yasper.querying.formatter.InstResponseSysOutFormatter;
-import org.streamreasoning.rsp4j.yasper.querying.operators.R2RImpl;
+import org.streamreasoning.rsp4j.yasper.querying.operators.DummyR2R;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLTimeWindowOperatorFactory;
 import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
@@ -55,19 +51,19 @@ public class CPTest {
         //WINDOW DECLARATION
         StreamToRelationOperatorFactory<Graph, Graph> windowOperatorFactory = new CSPARQLTimeWindowOperatorFactory( TimeFactory.getInstance(), tick, report, report_grain);
 
-        StreamToRelationOp<Graph, Graph> build = windowOperatorFactory.build(2000, 2000, scope);
+        StreamToRelationOp<Graph, Graph> s2r = windowOperatorFactory.build(2000, 2000, scope);
 
         //SDS
         SDS<Graph> sds = new SDSImpl();
         //R2R
         ContinuousQuery q = new ContinuousQueryImpl("q1");
 
-        RelationToRelationOperator<Triple> r2r = new R2RImpl(sds, q);
+        RelationToRelationOperator<Triple> r2r = new DummyR2R(sds, q);
 
 
         Task<Graph,Graph,Triple> t =
         new Task.TaskBuilder()
-            .addS2R("stream1", build, "w1")
+            .addS2R("stream1", s2r, "w1")
             .addR2R("w1", r2r)
             .addR2S("out", new Rstream<Graph>())
             .build();

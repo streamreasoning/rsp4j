@@ -15,6 +15,7 @@ public class JenaRDFSerializationStrategy implements StringSerializationStrategy
     public JenaRDFSerializationStrategy(RDFBase base){
         this.base = base;
     }
+
     @Override
     public String serialize(Graph object) {
         //convert Graph to Jena Model
