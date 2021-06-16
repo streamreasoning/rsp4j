@@ -1,8 +1,7 @@
 package org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner;
 
 
-import org.apache.commons.rdf.api.Graph;
-import org.streamreasoning.rsp4j.api.RDFUtils;
+import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.Window;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
@@ -27,6 +26,8 @@ public interface StreamToRelationOp<I, O> extends Consumer<I> {
 
     Time time();
 
+    ReportGrain grain();
+
     Content<I, O> content(long now);
 
     List<Content<I, O>> getContents(long now);
@@ -41,8 +42,7 @@ public interface StreamToRelationOp<I, O> extends Consumer<I> {
 
     Content<I, O> compute(long t_e, Window w);
 
-    StreamToRelationOp<I, O> link(ContinuousQueryExecution<I,O,?> context);
+    StreamToRelationOp<I, O> link(ContinuousQueryExecution<I, O, ?> context);
 
-
-     TimeVarying<O> apply(WebDataStream<I> s);
+    TimeVarying<O> apply(WebDataStream<I> s);
 }

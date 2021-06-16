@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 public interface RelationToRelationOperator<T> {
 
     //TODO this should not be time-aware
-    Stream<T> eval(long ts);
+    Stream<T> eval();
 
     TimeVarying<Collection<T>> apply();
 
