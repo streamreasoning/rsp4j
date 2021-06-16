@@ -1,27 +1,151 @@
 package org.streamreasoning.rsp4j.yasper.windowing;
 
-import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
-import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
-import org.streamreasoning.rsp4j.api.RDFUtils;
-import org.streamreasoning.rsp4j.api.sds.SDS;
-import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
-import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
-import org.streamreasoning.rsp4j.api.secret.report.Report;
-import org.streamreasoning.rsp4j.api.enums.ReportGrain;
-import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
-import org.streamreasoning.rsp4j.api.secret.report.strategies.OnContentChange;
-import org.streamreasoning.rsp4j.api.enums.Tick;
-import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
 import org.apache.commons.rdf.api.Graph;
+import org.apache.commons.rdf.api.IRI;
+import org.apache.commons.rdf.api.RDF;
 import org.apache.commons.rdf.api.Triple;
 import org.junit.Test;
+import org.streamreasoning.rsp4j.api.RDFUtils;
+import org.streamreasoning.rsp4j.api.enums.ReportGrain;
+import org.streamreasoning.rsp4j.api.enums.Tick;
+import org.streamreasoning.rsp4j.api.operators.r2s.WindowParameter;
+import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
+import org.streamreasoning.rsp4j.api.sds.SDS;
+import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
+import org.streamreasoning.rsp4j.api.secret.content.Content;
+import org.streamreasoning.rsp4j.api.secret.content.ContentFactory;
+import org.streamreasoning.rsp4j.api.secret.report.Report;
+import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
+import org.streamreasoning.rsp4j.api.secret.report.strategies.OnContentChange;
+import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
 import org.streamreasoning.rsp4j.yasper.StreamViewImpl;
+import org.streamreasoning.rsp4j.yasper.content.BindingContentFactory;
+import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarImpl;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CQELSStreamToRelationOp;
+import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CQELSTimeWindowOperatorBinding;
+import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CQELSTimeWindowOperatorBindingFactory;
+import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
+
+import java.lang.reflect.InvocationTargetException;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.streamreasoning.rsp4j.api.operators.r2s.WindowParameter.wrap;
 
 public class CQELSWindowAssignerTest {
+
+    @Test
+    public void genericConstruct() throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException {
+
+        Report report = new ReportImpl();
+
+        VarOrTerm s = new VarImpl("s");
+        VarOrTerm p = new VarImpl("p");
+        VarOrTerm o = new VarImpl("o");
+
+
+        ContentFactory<Graph, Binding> gcf = new BindingContentFactory(s, p, o);
+
+        report.add(new OnContentChange());
+
+        Tick tick = Tick.TUPLE_DRIVEN;
+        ReportGrain report_grain = ReportGrain.SINGLE;
+
+        TimeImpl time = new TimeImpl(0);
+
+        CQELSTimeWindowOperatorBindingFactory factory = new CQELSTimeWindowOperatorBindingFactory(time, tick, report, report_grain, s, p, o);
+
+        WindowParameter rangep = wrap(10000L);
+
+        assertEquals(10000L, rangep.get());
+        assertEquals(Long.class, rangep.type());
+
+
+        IRI iri = RDFUtils.createIRI("iri");
+        WindowParameter irip = wrap(iri);
+
+        assertEquals(iri, irip.get());
+
+        CQELSTimeWindowOperatorBinding<Graph, Binding> op = new CQELSTimeWindowOperatorBinding<>(iri, 10000L, time, tick, report, report_grain, gcf);
+
+        StreamToRelationOp<Graph, Binding> build = factory.build(
+                iri,
+                10000L,
+                time,
+                tick,
+                report,
+                report_grain,
+                gcf
+        );
+
+        assertEquals(tick, build.tick());
+        assertEquals(time, build.time());
+        assertEquals(report, build.report());
+        assertEquals(report_grain, build.grain());
+
+    }
+
+
+    @Test
+    public void testBGP() throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        Report report = new ReportImpl();
+
+        VarOrTerm s = new VarImpl("s");
+        VarOrTerm p = new VarImpl("p");
+        VarOrTerm o = new VarImpl("o");
+
+
+        ContentFactory<Graph, Binding> gcf = new BindingContentFactory(s, p, o);
+
+        report.add(new OnContentChange());
+
+        Tick tick = Tick.TUPLE_DRIVEN;
+        ReportGrain report_grain = ReportGrain.SINGLE;
+
+        TimeImpl time = new TimeImpl(0);
+
+        CQELSTimeWindowOperatorBindingFactory factory = new CQELSTimeWindowOperatorBindingFactory(time, tick, report, report_grain, s, p, o);
+
+
+        CQELSTimeWindowOperatorBinding<Graph, Binding> op = (CQELSTimeWindowOperatorBinding<Graph, Binding>) factory.build(
+                RDFUtils.createIRI("iri"),
+                3000L,
+                time,
+                tick,
+                report,
+                report_grain,
+                gcf
+        );
+
+        RDF rdf = RDFUtils.getInstance();
+
+        Graph graph = rdf.createGraph();
+
+        graph.add(rdf.createIRI("S1"), rdf.createIRI("p"), rdf.createIRI("O1"));
+        graph.add(rdf.createIRI("S2"), rdf.createIRI("q"), rdf.createIRI("O2"));
+        graph.add(rdf.createIRI("S3"), rdf.createIRI("p"), rdf.createIRI("O3"));
+
+
+        op.windowing(graph, 1000);
+        Content<Graph, Binding> content = op.content(1000);
+        System.out.println(content.coalesce());
+
+        graph = rdf.createGraph();
+
+        graph.add(rdf.createIRI("S4"), rdf.createIRI("p"), rdf.createIRI("O4"));
+        graph.add(rdf.createIRI("S5"), rdf.createIRI("q"), rdf.createIRI("O5"));
+        graph.add(rdf.createIRI("S6"), rdf.createIRI("p"), rdf.createIRI("O6"));
+        op.windowing(graph, 1001);
+
+        content = op.content(2001);
+
+        System.out.println(content.coalesce());
+
+
+    }
 
     @Test
     public void test() {
@@ -37,7 +161,7 @@ public class CQELSWindowAssignerTest {
 
         TimeImpl time = new TimeImpl(0);
 
-        StreamToRelationOp<Graph, Graph> wa = new CQELSStreamToRelationOp(RDFUtils.createIRI("w1"), 3000,  time, tick, report, report_grain, new GraphContentFactory());
+        StreamToRelationOp<Graph, Graph> wa = new CQELSStreamToRelationOp(RDFUtils.createIRI("w1"), 3000, time, tick, report, report_grain, new GraphContentFactory());
 
         Tester tester = new Tester();
 

@@ -62,7 +62,7 @@ public class Projection implements RelationToRelationOperator<Binding>, Function
     }
 
     @Override
-    public Stream<Binding> eval(long ts) {
+    public Stream<Binding> eval() {
         if (tvb != null)
             return tvb.map(f);
         else return solutions.stream().map(f);
@@ -73,7 +73,7 @@ public class Projection implements RelationToRelationOperator<Binding>, Function
         return new TimeVarying<Collection<Binding>>() {
             @Override
             public void materialize(long ts) {
-                List<Binding> collect = eval(ts).collect(Collectors.toList());
+                List<Binding> collect = eval().collect(Collectors.toList());
                 solutions.clear();
                 solutions.addAll(collect);
             }

@@ -73,7 +73,7 @@ public class CQELSTimeWindowOperator<T1, T2> extends ObservableStreamToRelationO
     }
 
 
-    protected void windowing(T1 e, long ts) {
+    public void windowing(T1 e, long ts) {
         log.debug("Received element (" + e + "," + ts + ")");
         long t_e = ts;
 

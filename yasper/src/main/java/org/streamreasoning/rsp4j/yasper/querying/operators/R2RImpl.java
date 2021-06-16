@@ -21,7 +21,7 @@ public class R2RImpl implements RelationToRelationOperator<Triple> {
     }
 
     @Override
-    public Stream<Triple> eval(long ts) {
+    public Stream<Triple> eval() {
         return sds.toStream().flatMap(Graph::stream);
 
     }

@@ -30,7 +30,7 @@ public class BGP implements RelationToRelationOperator<Binding> {
 
     @Override
     //it returns a stream of variable bindings, which is a sequence
-    public Stream<Binding> eval(long ts) {
+    public Stream<Binding> eval() {
         return sds.toStream().flatMap(Graph::stream)
                 .map(t -> {
                     Binding b = new BindingImpl();
@@ -59,7 +59,7 @@ public class BGP implements RelationToRelationOperator<Binding> {
             public void materialize(long ts) {
                 //time should not be important
                 solutions.clear();
-                solutions.addAll(eval(ts).collect(Collectors.toList()));
+                solutions.addAll(eval().collect(Collectors.toList()));
             }
 
             @Override

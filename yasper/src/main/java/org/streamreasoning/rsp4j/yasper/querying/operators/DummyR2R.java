@@ -25,7 +25,7 @@ public class DummyR2R implements RelationToRelationOperator<Triple> {
     }
 
     @Override
-    public Stream<Triple> eval(long ts) {
+    public Stream<Triple> eval() {
         return ds.stream()
                 .map(Quad::asTriple);
     }

@@ -30,7 +30,7 @@ public class Filter<T> implements RelationToRelationOperator<T>, Function<T, T> 
     }
 
     @Override
-    public Stream<T> eval(long ts) {
+    public Stream<T> eval() {
         if (solutions != null)
             return solutions
                     .filter(Objects::nonNull)
@@ -45,7 +45,7 @@ public class Filter<T> implements RelationToRelationOperator<T>, Function<T, T> 
         return new TimeVarying<Collection<T>>() {
             @Override
             public void materialize(long ts) {
-                List<T> collect = eval(ts).collect(Collectors.toList());
+                List<T> collect = eval().collect(Collectors.toList());
                 solutions2.clear();
                 solutions2.addAll(collect);
             }

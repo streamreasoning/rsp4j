@@ -10,6 +10,7 @@ import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.yasper.content.BindingContentFactory;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -25,7 +26,7 @@ public class CQELSTimeWindowOperatorBindingFactory implements StreamToRelationOp
     private final ContentFactory<Graph, Binding> cf;
 //    private ContinuousQueryExecution<Graph, Graph, Triple> context;
 
-    public CQELSTimeWindowOperatorBindingFactory(Time time, Tick tick, Report report, ReportGrain grain) {
+    public CQELSTimeWindowOperatorBindingFactory(Time time, Tick tick, Report report, ReportGrain grain, VarOrTerm... spo) {
 //        this.a = a;
 //        this.t0 = t0;
         this.time = time;
@@ -33,7 +34,7 @@ public class CQELSTimeWindowOperatorBindingFactory implements StreamToRelationOp
         this.report = report;
         this.grain = grain;
 //        this.context = context;
-        this.cf = new BindingContentFactory();
+        this.cf = new BindingContentFactory(spo[0], spo[1], spo[2]);
     }
 
     //TODO consider a Params interface
@@ -42,12 +43,12 @@ public class CQELSTimeWindowOperatorBindingFactory implements StreamToRelationOp
         return new CQELSTimeWindowOperatorBinding<>(null, a, time, tick, report, grain, cf);
     }
 
-    public StreamToRelationOp<Graph, Graph> build(Object... parameters) throws InvocationTargetException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public StreamToRelationOp<Graph, Binding> build(Object... parameters) throws InvocationTargetException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         //TODO remove iri from constructor
         String opclass = this.getClass().getCanonicalName().replace("Factory", "");
         Class<?> aClass = Class.forName(opclass);
         Constructor[] constructors = aClass.getConstructors();
-        return (StreamToRelationOp<Graph, Graph>) constructors[0].newInstance(parameters);
+        return (StreamToRelationOp<Graph, Binding>) constructors[0].newInstance(parameters);
     }
 
 

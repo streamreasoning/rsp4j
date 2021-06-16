@@ -65,7 +65,7 @@ public class CSPARQLStreamToRelationOp<T1, T2> extends ObservableStreamToRelatio
                 .map(active_windows::get).collect(Collectors.toList());
     }
 
-    protected void windowing(T1 e, long timestamp) {
+    public void windowing(T1 e, long timestamp) {
 
         log.debug("Received element (" + e + "," + timestamp + ")");
         long t_e = timestamp;

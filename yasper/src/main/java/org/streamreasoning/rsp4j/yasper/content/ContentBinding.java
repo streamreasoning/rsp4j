@@ -8,17 +8,21 @@ import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.BindingImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Var;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ContentBinding implements Content<Graph, Binding> {
 
-    private List<Binding> elements = new ArrayList<>();
+    private Set<Binding> elements = new HashSet<>();
     private long last_timestamp_changed;
     private VarOrTerm s, p, o;
+
+    public ContentBinding(VarOrTerm s, VarOrTerm p, VarOrTerm o) {
+        this.s = s;
+        this.p = p;
+        this.o = o;
+    }
+
 
     @Override
     public int size() {
@@ -54,6 +58,11 @@ public class ContentBinding implements Content<Graph, Binding> {
         return new Binding() {
 
             @Override
+            public String toString() {
+                return elements.toString();
+            }
+
+            @Override
             public Set<Var> variables() {
                 return elements.stream().flatMap(binding -> binding.variables().stream()).collect(Collectors.toSet());
             }
@@ -78,5 +87,10 @@ public class ContentBinding implements Content<Graph, Binding> {
                 return elements.stream().map(Binding::size).reduce(Integer::sum).orElse(0);
             }
         };
+    }
+
+    @Override
+    public String toString() {
+        return elements.toString();
     }
 }
