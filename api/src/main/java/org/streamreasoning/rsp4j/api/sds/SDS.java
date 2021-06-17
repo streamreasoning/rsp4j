@@ -19,8 +19,11 @@ public interface SDS<E> {
 
     default SDS<E> materialize(long ts) {
         asTimeVaryingEs().forEach(eTimeVarying -> eTimeVarying.materialize(ts));
+        materialized();
         return this;
     }
+
+    void materialized();
 
     Stream<E> toStream();
 }

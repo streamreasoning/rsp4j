@@ -43,6 +43,7 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
     private final Set<TimeVarying<Graph>> defs = new HashSet<>();
     private final Map<IRI, TimeVarying<Graph>> tvgs = new HashMap<>();
     private final IRI def;
+    private boolean materialized = false;
 
 
     public SDSImpl() {
@@ -246,19 +247,28 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
                 }).forEach(n -> n.g.stream()
                 .forEach(o -> this.add(n.name, o.getSubject(), o.getPredicate(), o.getObject())));
 
+        materialized();
         return this;
     }
 
     @Override
     public Stream<Graph> toStream() {
-        Map<Optional<BlankNodeOrIRI>, List<Quad>> collect = stream().collect(Collectors.groupingBy(Quad::getGraphName));
-        IRI aDefault = RDFUtils.createIRI("default");
+        if (materialized) {
+            materialized = false;
+            Map<Optional<BlankNodeOrIRI>, List<Quad>> collect = stream().collect(Collectors.groupingBy(Quad::getGraphName));
+            IRI aDefault = RDFUtils.createIRI("default");
 
-        return collect.entrySet().stream().map(e -> {
-            BlankNodeOrIRI blankNodeOrIRI = e.getKey().orElse(aDefault);
-            return RDFUtils.createGraph(blankNodeOrIRI, e.getValue());
-        });
+            return collect.entrySet().stream().map(e -> {
+                BlankNodeOrIRI blankNodeOrIRI = e.getKey().orElse(aDefault);
+                return RDFUtils.createGraph(blankNodeOrIRI, e.getValue());
+            });
+        } else throw new RuntimeException("SDS not materialized");
+    }
 
+
+    @Override
+    public void materialized() {
+        this.materialized = true;
     }
 
 
