@@ -72,4 +72,16 @@ public class TP implements RelationToRelationOperator<Graph, Binding> {
         };
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if(o==this){
+            return true;
+        }
+        if(!(o instanceof TP)){
+            return false;
+        }
+        TP tp = (TP) o;
+        return tp.s.equals(this.s) && tp.p.equals(this.p) && tp.o.equals(this.o);
+    }
+
 }

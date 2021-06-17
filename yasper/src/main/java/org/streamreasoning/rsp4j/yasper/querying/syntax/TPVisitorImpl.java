@@ -1,12 +1,39 @@
 package org.streamreasoning.rsp4j.yasper.querying.syntax;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
+import org.apache.commons.rdf.api.Graph;
+import org.apache.commons.rdf.api.IRI;
+import org.streamreasoning.rsp4j.api.RDFUtils;
+import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
+import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLBaseVisitor;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLParser;
+import org.streamreasoning.rsp4j.api.stream.web.WebStream;
+import org.streamreasoning.rsp4j.api.stream.web.WebStreamImpl;
+import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TermImpl;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarImpl;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
+import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.WindowNodeImpl;
 
-import java.util.List;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
 
+  private VarOrTerm s;
+  private VarOrTerm p;
+  private VarOrTerm o;
+  private String outputStreamIRI;
+  private Map<String, WindowNode> windowMap;
+  private String outputStreamType;
+
+  public TPVisitorImpl(){
+    windowMap = new HashMap<>();
+  }
   @Override
   public CQ visitTriplesTemplate(RSPQLParser.TriplesTemplateContext ctx) {
     RSPQLParser.TriplesSameSubjectContext t = ctx.triplesSameSubject();
@@ -52,7 +79,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
   @Override
   public CQ visitTriplesSameSubjectPath(RSPQLParser.TriplesSameSubjectPathContext ctx) {
     extractSubject(ctx.s);
-    extractPropertyObject(ctx.ps);
+    extractSinglePropertyObjectPair(ctx.ps);
 
     return super.visitTriplesSameSubjectPath(ctx);
   }
@@ -61,59 +88,104 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
     RSPQLParser.VarContext var = varOrTerm.var();
     RSPQLParser.GraphTermContext term = varOrTerm.graphTerm();
     if (var != null) {
-      String varText = var.getText();
-      System.out.println("subject var: " + varText);
+      s = createVar(var.getText());
     } else {
-      String termText = term.getText();
-      System.out.println("subject term: " + termText);
+      s = createTerm(term.getText());
     }
   }
 
-  private void extractPropertyObject(RSPQLParser.PropertyListPathNotEmptyContext po) {
-    for (RSPQLParser.PropertyListPathContext pCandidate : po.propertyListPath()) {
+  private void extractSinglePropertyObjectPair(RSPQLParser.PropertyListPathNotEmptyContext po) {
+    RSPQLParser.PropertyListPathContext pCandidate = po.propertyListPath(0);
+    if (pCandidate != null) {
       extractProperty(pCandidate);
-      for (RSPQLParser.ObjectPathContext object : pCandidate.objectListPath().objectPath()) {
+      RSPQLParser.ObjectPathContext object = pCandidate.objectListPath().objectPath(0);
+      if (object != null) {
         extractObject(object);
       }
     }
   }
 
   private void extractProperty(RSPQLParser.PropertyListPathContext propCandidate) {
-    String pText = "";
     if (propCandidate.verbPath() != null) {
-      pText = propCandidate.verbPath().getText();
-      System.out.println("property term: " + pText);
+      p = createTerm(propCandidate.verbPath().getText());
     } else {
-      pText = propCandidate.verbSimple().getText();
-      System.out.println("property var: " + pText);
+      p = createVar(propCandidate.verbSimple().getText());
     }
+  }
+  private VarImpl createVar(String varName){
+    if(varName.startsWith("?")){
+      varName=RDFUtils.trimFirst(varName);
+    }
+    return new VarImpl(varName);
+  }
+  private TermImpl createTerm(String textIRI) {
+    textIRI = RDFUtils.trimTags(textIRI);
+    return new TermImpl(RDFUtils.createIRI(textIRI));
   }
 
   private void extractObject(RSPQLParser.ObjectPathContext object) {
     if (object.graphNodePath().varOrTerm().var() != null) {
-      System.out.println("object var " + object.graphNodePath().varOrTerm().var().getText());
+      o = createVar(object.graphNodePath().varOrTerm().var().getText());
     } else {
-      System.out.println("object term " + object.graphNodePath().varOrTerm().graphTerm().getText());
+      o = createTerm(object.graphNodePath().varOrTerm().graphTerm().getText());
     }
   }
 
-  @Override
-  public CQ visitPropertyListPathNotEmpty(RSPQLParser.PropertyListPathNotEmptyContext ctx) {
-    return super.visitPropertyListPathNotEmpty(ctx);
+
+
+  public ContinuousQuery<Graph, Binding, Graph> generateQuery() {
+
+    WebStream stream = null;
+    WindowNode win= null;
+    Optional<Map.Entry<String, WindowNode>> window = windowMap.entrySet().stream().findFirst();
+    if(window.isPresent()){
+      stream = new WebStreamImpl(window.get().getKey());
+      win = window.get().getValue();
+
+    }
+    SimpleRSPQLQuery<Graph> query = new SimpleRSPQLQuery<Graph>("",stream,win,s,p,o);
+    windowMap.entrySet().forEach(e -> query.addNamedWindow(e.getKey(),e.getValue()));
+    RSPQLExtractionHelper.setOutputStreamType(query,outputStreamType);
+    query.setOutputStream(outputStreamIRI);
+    return query;
   }
 
-  @Override
-  public CQ visitPropertyListPath(RSPQLParser.PropertyListPathContext ctx) {
-    return super.visitPropertyListPath(ctx);
+  /**
+   * Set output stream type (ISTREAM, DSTREAM or RSTREAM)
+   *
+   * @param ctx
+   * @return
+   */
+  public CQ visitOutputStreamType(RSPQLParser.OutputStreamTypeContext ctx) {
+    this.outputStreamType = ctx.getText();
+
+    return super.visitOutputStreamType(ctx);
   }
 
-  @Override
-  public CQ visitObjectListPath(RSPQLParser.ObjectListPathContext ctx) {
-    return super.visitObjectListPath(ctx);
+  /**
+   * Set output stream URI
+   *
+   * @param ctx
+   * @return
+   */
+  public CQ visitOutputStream(RSPQLParser.OutputStreamContext ctx) {
+    outputStreamIRI = RSPQLExtractionHelper.extractOutputStream(ctx);
+
+    return super.visitOutputStream(ctx);
   }
 
-  @Override
-  public CQ visitObjectPath(RSPQLParser.ObjectPathContext ctx) {
-    return super.visitObjectPath(ctx);
+  /**
+   * Visit window definition clauses. For now we support only  logical windows
+   *
+   * @param ctx
+   * @return
+   */
+  public CQ visitNamedWindowClause(RSPQLParser.NamedWindowClauseContext ctx) {
+    Map.Entry<String,WindowNode> streamWindowPair = RSPQLExtractionHelper.extractNamedWindowClause(ctx);
+    windowMap.put(streamWindowPair.getKey(),streamWindowPair.getValue());
+
+    return super.visitNamedWindowClause(ctx);
   }
+
+
 }

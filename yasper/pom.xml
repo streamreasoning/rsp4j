@@ -30,6 +30,13 @@
             <artifactId>commons-rdf-jena</artifactId>
             <version>0.5.0</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.jsonld-java</groupId>
+                    <artifactId>jsonld-java</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
     </dependencies>
 </project>

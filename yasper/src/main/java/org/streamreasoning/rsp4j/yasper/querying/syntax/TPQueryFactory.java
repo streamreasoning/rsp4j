@@ -4,11 +4,12 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.DefaultErrorStrategy;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.syntax.CaseChangingCharStream;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLLexer;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLParser;
-import org.streamreasoning.rsp4j.yasper.querying.formatter.ContinuousQueryImpl;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -29,19 +30,16 @@ public class TPQueryFactory {
                 "WHERE {" +
                 "   ?s <http://testprop> ?o ." +
                 "}");
-        System.out.println("ISTREAM? " + c.isIstream());
-        System.out.println("SELECT? " + c.isSelectType());
-        c.getWindowMap().keySet().forEach(x -> {
-            System.out.println(x.iri() + " " + c.getWindowMap().get(x).uri());
-        });
+
+
     }
 
-    public static ContinuousQuery parse(String queryString){
+    public static ContinuousQuery<Graph, Binding, Graph> parse(String queryString){
         InputStream inputStream = new ByteArrayInputStream(queryString.getBytes());
         return parse(inputStream);
     }
 
-    public static ContinuousQuery parse(InputStream inputStream) {
+    public static ContinuousQuery<Graph, Binding, Graph> parse(InputStream inputStream) {
         try {
             // Ignore case for keywords
             CaseChangingCharStream charStream = new CaseChangingCharStream(CharStreams.fromStream(inputStream), true);
@@ -50,10 +48,9 @@ public class TPQueryFactory {
             RSPQLParser parser = new RSPQLParser(tokens);
             parser.setErrorHandler(new DefaultErrorStrategy());
             ParseTree tree = parser.queryUnit();
-            ContinuousQuery query = new ContinuousQueryImpl("w1");
             TPVisitorImpl visitor = new TPVisitorImpl();
             visitor.visit(tree);
-      System.out.println(query.getSPARQL());
+            ContinuousQuery<Graph, Binding, Graph> query = visitor.generateQuery();
             return query;
         } catch(IOException e) {
             System.err.println(e.getMessage());

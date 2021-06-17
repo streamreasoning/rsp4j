@@ -57,5 +57,21 @@ public class RDFUtils {
         return getInstance().createLiteral(lexicalForm, s);
     }
 
+    public static String trimTags(String s) {
+        return s.replaceAll("^<(.*)>$", "$1");
+    }
+    public static String trimQuotes(String s) {
+        return s.replaceAll("^['\"](.*)['\"]$", "$1");
+    }
+
+    public static String trimFirst(String s) {
+        return s.replaceAll("^.(.*)$", "$1");
+    }
+
+    public static String trimLast(String s) {
+        return s.replaceAll("^(.*).$", "$1");
+    }
+
+
 
 }
