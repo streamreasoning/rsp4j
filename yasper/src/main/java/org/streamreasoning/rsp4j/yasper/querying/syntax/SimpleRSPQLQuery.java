@@ -2,6 +2,7 @@ package org.streamreasoning.rsp4j.yasper.querying.syntax;
 
 
 import org.apache.commons.rdf.api.Graph;
+import org.streamreasoning.rsp4j.api.enums.StreamOperator;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class SimpleRSPQLQuery<O> implements RSPQL<O> {
 
@@ -32,6 +34,7 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
     private List<String> namedwindowsURIs = new ArrayList<>();
     private List<String> namedGraphURIs = new ArrayList<>();
 
+    private StreamOperator streamOperator;
     public SimpleRSPQLQuery(String id, WebStream stream, WindowNode win, VarOrTerm s, VarOrTerm p, VarOrTerm o) {
         this.id = id;
         this.outputStream = new WebStreamImpl(id);
@@ -54,32 +57,32 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
 
     @Override
     public void setIstream() {
-
+        streamOperator = StreamOperator.ISTREAM;
     }
 
     @Override
     public void setRstream() {
-
+        streamOperator = StreamOperator.RSTREAM;
     }
 
     @Override
     public void setDstream() {
-
+        streamOperator = StreamOperator.DSTREAM;
     }
 
     @Override
     public boolean isIstream() {
-        return false;
+        return streamOperator.equals(StreamOperator.ISTREAM);
     }
 
     @Override
     public boolean isRstream() {
-        return false;
+        return streamOperator.equals(StreamOperator.RSTREAM);
     }
 
     @Override
     public boolean isDstream() {
-        return false;
+        return streamOperator.equals(StreamOperator.DSTREAM);
     }
 
     @Override
