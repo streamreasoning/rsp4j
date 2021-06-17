@@ -27,9 +27,12 @@ public class BindingTest {
 
         SDSImpl sds = new SDSImpl();
 
+        sds.materialized();
+
         sds.add(instance.createQuad(null, instance.createIRI("S1"), instance.createIRI("p"), instance.createIRI("O1")));
 
         TP TP = new TP(s, p, o);
+
 
         List<Binding> collect = TP.eval(sds.toStream()).collect(Collectors.toList());
 
@@ -51,7 +54,7 @@ public class BindingTest {
         VarOrTerm o = new VarImpl("o");
 
         SDSImpl sds = new SDSImpl();
-
+        sds.materialized();
         sds.add(instance.createQuad(null, instance.createIRI("S1"), instance.createIRI("p"), instance.createIRI("O1")));
 
         TP TP = new TP(s, p, o);
@@ -79,7 +82,7 @@ public class BindingTest {
         SDSImpl sds = new SDSImpl();
 
         sds.add(instance.createQuad(null, instance.createIRI("S1"), instance.createIRI("p"), instance.createIRI("S1")));
-
+        sds.materialized();
         TP TP = new TP(s, p, o);
 
         List<Binding> collect = TP.eval(sds.toStream()).collect(Collectors.toList());
@@ -101,7 +104,7 @@ public class BindingTest {
         SDSImpl sds = new SDSImpl();
 
         sds.add(instance.createQuad(null, instance.createIRI("S1"), instance.createIRI("S1"), instance.createIRI("S1")));
-
+        sds.materialized();
         TP TP = new TP(s, s, s);
 
         List<Binding> collect = TP.eval(sds.toStream()).collect(Collectors.toList());
@@ -123,7 +126,7 @@ public class BindingTest {
         SDSImpl sds = new SDSImpl();
 
         sds.add(instance.createQuad(null, instance.createIRI("S1"), instance.createIRI("S1"), instance.createLiteral("string")));
-
+        sds.materialized();
         TP TP = new TP(s, s, l);
 
         List<Binding> collect = TP.eval(sds.toStream()).collect(Collectors.toList());

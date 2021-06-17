@@ -1,4 +1,4 @@
-package org.streamreasoning.rsp4j.yasper.querying.operators.r2r;
+package org.streamreasoning.rsp4j.yasper.querying.operators;
 
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.Triple;

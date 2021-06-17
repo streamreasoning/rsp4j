@@ -17,7 +17,6 @@ import java.util.stream.Stream;
 
 public class CompositionalTest {
 
-    @Test
     public void pipe() throws InterruptedException {
 
         RDF instance = RDFUtils.getInstance();
@@ -33,6 +32,8 @@ public class CompositionalTest {
         sds.add(instance.createQuad(null, instance.createIRI("S3"), instance.createIRI("p"), instance.createIRI("O3")));
 
         TP TP = new TP(s, p, o);
+
+        sds.materialize(0);
 
         Stream<Binding> eval = TP.eval(sds.toStream());
 //        eval.forEach(System.out::println);
@@ -73,6 +74,8 @@ public class CompositionalTest {
 
         TP TP = new TP(s, p, o);
 
+        sds.materialize(0);
+
         TimeVarying<Collection<Binding>> bgpres = TP.apply(sds);
 
         bgpres.materialize(0);
@@ -80,7 +83,10 @@ public class CompositionalTest {
         Filter<Binding> filter = new Filter<>(bgpres, binding -> binding.value(o).equals(instance.createIRI("O3")));
 
         TimeVarying<Collection<Binding>> fres = filter.apply((SDS<Binding>) null);
+
+
         fres.materialize(0);
+
         Projection projection = new Projection(fres, s);
 
         TimeVarying<Collection<Binding>> pres = projection.apply((SDS<Binding>) null);
@@ -88,6 +94,7 @@ public class CompositionalTest {
         Collection<Binding> bindings = pres.get();
         bindings.forEach(System.out::println);
 
+        sds.materialize(0);
         TP.eval(sds.toStream()).map(filter).filter(Objects::nonNull).map(projection).forEach(System.err::println);
     }
 

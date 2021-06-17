@@ -7,7 +7,6 @@ import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -64,9 +63,7 @@ public class Projection implements RelationToRelationOperator<Binding, Binding>,
 
     @Override
     public Stream<Binding> eval(Stream<Binding> sds) {
-        if (tvb != null)
-            return tvb.map(f);
-        else return solutions.stream().map(f);
+        return sds.map(f);
     }
 
     @Override
@@ -74,9 +71,9 @@ public class Projection implements RelationToRelationOperator<Binding, Binding>,
         return new TimeVarying<Collection<Binding>>() {
             @Override
             public void materialize(long ts) {
-                List<Binding> collect = eval(sds.toStream()).collect(Collectors.toList());
+                Stream<Binding> collect = tvb != null ? eval(tvb) : eval(solutions.stream());
                 solutions.clear();
-                solutions.addAll(collect);
+                solutions.addAll(collect.collect(Collectors.toList()));
             }
 
             @Override
