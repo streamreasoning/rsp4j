@@ -14,7 +14,7 @@ import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class R2RUpwardExtension implements RelationToRelationOperator<Triple> {
+public class R2RUpwardExtension implements RelationToRelationOperator<Triple,Triple> {
 
     private final SDS sds;
     private final ContinuousQuery query;
@@ -74,7 +74,7 @@ public class R2RUpwardExtension implements RelationToRelationOperator<Triple> {
     }
 
     @Override
-    public Stream<Triple> eval(long ts) {
+    public Stream<Triple> eval(Stream<Triple> sds) {
         RDF instance = RDFUtils.getInstance();
         Set<Triple> sol = new HashSet<Triple>();
         // iterate over the triples in the SDS
@@ -107,7 +107,7 @@ public class R2RUpwardExtension implements RelationToRelationOperator<Triple> {
     }
 
     @Override
-    public TimeVarying<Collection<Triple>> apply() {
+    public TimeVarying<Collection<Triple>> apply(SDS<Triple> sds) {
         return null;
     }
 }
