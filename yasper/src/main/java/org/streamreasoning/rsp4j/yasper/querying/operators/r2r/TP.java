@@ -12,17 +12,14 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class BGP implements RelationToRelationOperator<Binding> {
+public class TP implements RelationToRelationOperator<Graph, Binding> {
 
-    private final SDS<Graph> sds;
     private final VarOrTerm s;
     private final VarOrTerm p;
     private final VarOrTerm o;
 
-    private List<RelationToRelationOperator<Binding>> ops = new ArrayList<>();
 
-    public BGP(SDS<Graph> sds, VarOrTerm s, VarOrTerm p, VarOrTerm o) {
-        this.sds = sds;
+    public TP(VarOrTerm s, VarOrTerm p, VarOrTerm o) {
         this.s = s;
         this.p = p;
         this.o = o;
@@ -30,9 +27,10 @@ public class BGP implements RelationToRelationOperator<Binding> {
 
     @Override
     //it returns a stream of variable bindings, which is a sequence
-    public Stream<Binding> eval() {
-        return sds.toStream().flatMap(Graph::stream)
+    public Stream<Binding> eval(Stream<Graph> sds) {
+        return sds.flatMap(Graph::stream)
                 .map(t -> {
+
                     Binding b = new BindingImpl();
 
                     boolean sb = this.s.bind(b, t.getSubject());
@@ -52,14 +50,14 @@ public class BGP implements RelationToRelationOperator<Binding> {
     private List<Binding> solutions = new ArrayList<>();
 
     @Override
-    public TimeVarying<Collection<Binding>> apply() {
-
+    public TimeVarying<Collection<Binding>> apply(SDS<Graph> sds) {
+        //TODO this should return an SDS
         return new TimeVarying<Collection<Binding>>() {
             @Override
             public void materialize(long ts) {
                 //time should not be important
                 solutions.clear();
-                solutions.addAll(eval().collect(Collectors.toList()));
+                solutions.addAll(eval(sds.toStream()).collect(Collectors.toList()));
             }
 
             @Override

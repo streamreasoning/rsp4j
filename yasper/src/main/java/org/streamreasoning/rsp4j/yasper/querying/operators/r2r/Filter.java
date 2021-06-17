@@ -1,6 +1,7 @@
 package org.streamreasoning.rsp4j.yasper.querying.operators.r2r;
 
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
+import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Filter<T> implements RelationToRelationOperator<T>, Function<T, T> {
+public class Filter<T> implements RelationToRelationOperator<T, T>, Function<T, T> {
 
     private Stream<T> solutions;
     private Predicate<T> p;
@@ -30,7 +31,7 @@ public class Filter<T> implements RelationToRelationOperator<T>, Function<T, T> 
     }
 
     @Override
-    public Stream<T> eval() {
+    public Stream<T> eval(Stream<T> sds) {
         if (solutions != null)
             return solutions
                     .filter(Objects::nonNull)
@@ -41,11 +42,12 @@ public class Filter<T> implements RelationToRelationOperator<T>, Function<T, T> 
     }
 
     @Override
-    public TimeVarying<Collection<T>> apply() {
+    public TimeVarying<Collection<T>> apply(SDS<T> sds) {
+        //TODO this should return an SDS<O>
         return new TimeVarying<Collection<T>>() {
             @Override
             public void materialize(long ts) {
-                List<T> collect = eval().collect(Collectors.toList());
+                List<T> collect = eval(sds.toStream()).collect(Collectors.toList());
                 solutions2.clear();
                 solutions2.addAll(collect);
             }

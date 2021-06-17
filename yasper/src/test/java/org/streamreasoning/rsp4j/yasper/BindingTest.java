@@ -3,7 +3,7 @@ package org.streamreasoning.rsp4j.yasper;
 import org.apache.commons.rdf.api.RDF;
 import org.junit.Test;
 import org.streamreasoning.rsp4j.api.RDFUtils;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.BGP;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TP;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TermImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarImpl;
@@ -29,9 +29,9 @@ public class BindingTest {
 
         sds.add(instance.createQuad(null, instance.createIRI("S1"), instance.createIRI("p"), instance.createIRI("O1")));
 
-        BGP bgp = new BGP(sds, s, p, o);
+        TP TP = new TP(s, p, o);
 
-        List<Binding> collect = bgp.eval(0).collect(Collectors.toList());
+        List<Binding> collect = TP.eval(sds.toStream()).collect(Collectors.toList());
 
         assertEquals(1, collect.size());
 
@@ -54,10 +54,10 @@ public class BindingTest {
 
         sds.add(instance.createQuad(null, instance.createIRI("S1"), instance.createIRI("p"), instance.createIRI("O1")));
 
-        BGP bgp = new BGP(sds, s, p, o);
+        TP TP = new TP(s, p, o);
 
 
-        List<Binding> collect = bgp.eval(0).collect(Collectors.toList());
+        List<Binding> collect = TP.eval(sds.toStream()).collect(Collectors.toList());
 
         assertEquals(1, collect.size());
 
@@ -80,9 +80,9 @@ public class BindingTest {
 
         sds.add(instance.createQuad(null, instance.createIRI("S1"), instance.createIRI("p"), instance.createIRI("S1")));
 
-        BGP bgp = new BGP(sds, s, p, o);
+        TP TP = new TP(s, p, o);
 
-        List<Binding> collect = bgp.eval(0).collect(Collectors.toList());
+        List<Binding> collect = TP.eval(sds.toStream()).collect(Collectors.toList());
 
         assertEquals(1, collect.size());
 
@@ -102,9 +102,9 @@ public class BindingTest {
 
         sds.add(instance.createQuad(null, instance.createIRI("S1"), instance.createIRI("S1"), instance.createIRI("S1")));
 
-        BGP bgp = new BGP(sds, s, s, s);
+        TP TP = new TP(s, s, s);
 
-        List<Binding> collect = bgp.eval(0).collect(Collectors.toList());
+        List<Binding> collect = TP.eval(sds.toStream()).collect(Collectors.toList());
 
         assertEquals(1, collect.size());
 
@@ -124,9 +124,9 @@ public class BindingTest {
 
         sds.add(instance.createQuad(null, instance.createIRI("S1"), instance.createIRI("S1"), instance.createLiteral("string")));
 
-        BGP bgp = new BGP(sds, s, s, l);
+        TP TP = new TP(s, s, l);
 
-        List<Binding> collect = bgp.eval(0).collect(Collectors.toList());
+        List<Binding> collect = TP.eval(sds.toStream()).collect(Collectors.toList());
 
         assertEquals(1, collect.size());
 

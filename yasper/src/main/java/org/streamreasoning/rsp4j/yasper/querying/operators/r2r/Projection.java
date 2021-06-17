@@ -2,6 +2,7 @@ package org.streamreasoning.rsp4j.yasper.querying.operators.r2r;
 
 import org.apache.commons.rdf.api.RDFTerm;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
+import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Projection implements RelationToRelationOperator<Binding>, Function<Binding, Binding> {
+public class Projection implements RelationToRelationOperator<Binding, Binding>, Function<Binding, Binding> {
 
     private Stream<Binding> tvb;
     private final boolean star;
@@ -62,18 +63,18 @@ public class Projection implements RelationToRelationOperator<Binding>, Function
     }
 
     @Override
-    public Stream<Binding> eval() {
+    public Stream<Binding> eval(Stream<Binding> sds) {
         if (tvb != null)
             return tvb.map(f);
         else return solutions.stream().map(f);
     }
 
     @Override
-    public TimeVarying<Collection<Binding>> apply() {
+    public TimeVarying<Collection<Binding>> apply(SDS<Binding> sds) {
         return new TimeVarying<Collection<Binding>>() {
             @Override
             public void materialize(long ts) {
-                List<Binding> collect = eval().collect(Collectors.toList());
+                List<Binding> collect = eval(sds.toStream()).collect(Collectors.toList());
                 solutions.clear();
                 solutions.addAll(collect);
             }
