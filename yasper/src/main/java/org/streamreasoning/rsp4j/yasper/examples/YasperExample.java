@@ -1,29 +1,31 @@
 package org.streamreasoning.rsp4j.yasper.examples;
 
-import org.streamreasoning.rsp4j.api.RDFUtils;
-import org.streamreasoning.rsp4j.api.engine.config.EngineConfiguration;
-import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
-import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
-import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
-import org.streamreasoning.rsp4j.yasper.engines.Yasper;
-import org.streamreasoning.rsp4j.yasper.querying.formatter.ContinuousQueryImpl;
-import org.streamreasoning.rsp4j.yasper.querying.formatter.InstResponseSysOutFormatter;
-import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.WindowNodeImpl;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.RDF;
-import org.apache.commons.rdf.api.Triple;
+import org.streamreasoning.rsp4j.api.RDFUtils;
+import org.streamreasoning.rsp4j.api.engine.config.EngineConfiguration;
+import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
+import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
+import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.yasper.engines.Yasper;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TermImpl;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarImpl;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
+import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.WindowNodeImpl;
+import org.streamreasoning.rsp4j.yasper.querying.syntax.RSPQL;
+import org.streamreasoning.rsp4j.yasper.querying.syntax.SimpleRSPQLQuery;
 
 import java.lang.reflect.InvocationTargetException;
-import java.time.Duration;
 
 /**
  * Created by Riccardo on 03/08/16.
  */
 public class YasperExample {
 
+    static RDF instance = RDFUtils.getInstance();
 
     public static void main(String[] args) throws ConfigurationException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
@@ -36,24 +38,28 @@ public class YasperExample {
 
         sr.register(stream);
 
-        //_____
+        IRI p = instance.createIRI("p");
 
-        ContinuousQuery q = new ContinuousQueryImpl("q1");
+        VarOrTerm s = new VarImpl("s");
+        VarOrTerm pp = new TermImpl(p);
+        VarOrTerm o = new VarImpl("o");
 
-        WindowNode wn = new WindowNodeImpl(RDFUtils.createIRI("w1"), Duration.ofSeconds(2), Duration.ofSeconds(2), 0);
+
+        WindowNode wn = new WindowNodeImpl("w1", 2, 2, 0);
+
+        RSPQL<Binding> q = new SimpleRSPQLQuery<Binding>("q1", stream, wn, s, pp, o);
 
         q.addNamedWindow("stream1", wn);
 
-        ContinuousQueryExecution<Graph, Graph, Triple> cqe = sr.register(q);
+        ContinuousQueryExecution<Graph, Graph, Binding> cqe = sr.register(q);
 
-        WebDataStream<Triple> outstream = cqe.outstream();
-        outstream.addConsumer(new InstResponseSysOutFormatter("TTL", true));
+        WebDataStream<Binding> outstream = cqe.outstream();
+//        outstream.addConsumer(new InstResponseSysOutFormatter("TTL", true));
+        cqe.outstream().addConsumer((arg, ts) -> System.out.println(arg));
 
         //RUNTIME DATA
 
-        RDF instance = RDFUtils.getInstance();
         Graph graph = instance.createGraph();
-        IRI p = instance.createIRI("p");
         graph.add(instance.createTriple(instance.createIRI("S1"), p, instance.createIRI("O1")));
         stream.put(graph, 1000);
 
