@@ -36,6 +36,12 @@ public abstract class ObservableStreamToRelationOp<E, O> extends Observable impl
     }
 
     @Override
+    public ReportGrain grain() {
+        return grain;
+    }
+
+
+    @Override
     public void notify(E arg, long ts) {
         windowing(arg, ts);
     }
@@ -57,7 +63,7 @@ public abstract class ObservableStreamToRelationOp<E, O> extends Observable impl
         return c;
     }
 
-    protected abstract void windowing(E arg, long ts);
+    public abstract void windowing(E arg, long ts);
 
     @Override
     public String iri() {

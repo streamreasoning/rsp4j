@@ -1,12 +1,10 @@
 package org.streamreasoning.rsp4j.api.operators.s2r;
 
-import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
-import org.apache.commons.rdf.api.IRI;
+import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 
 
 public interface StreamToRelationOperatorFactory<I, O> {
 
-    TimeVarying<O> apply(WebDataStream<I> s, IRI iri);
+    StreamToRelationOp<I, O> build(long a, long b, long t0);
 
 }

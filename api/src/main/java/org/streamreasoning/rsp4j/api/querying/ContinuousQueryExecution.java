@@ -13,9 +13,9 @@ import java.util.stream.Stream;
  * Created by Riccardo on 12/08/16.
  */
 
-public interface ContinuousQueryExecution<I, E1, E2> {
+public interface ContinuousQueryExecution<I, E1, O> {
 
-    WebDataStream<E2> outstream();
+    WebDataStream<O> outstream();
 
     ContinuousQuery query();
 
@@ -23,12 +23,12 @@ public interface ContinuousQueryExecution<I, E1, E2> {
 
     StreamToRelationOp<I, E1>[] s2rs();
 
-    RelationToRelationOperator<E2> r2r();
+    RelationToRelationOperator<E1, O> r2r();
 
-    RelationToStreamOperator<E2> r2s();
+    RelationToStreamOperator<O> r2s();
 
     void add(StreamToRelationOp<I, E1> op);
 
-    Stream<SolutionMapping<E2>> eval(Long now);
+    Stream<SolutionMapping<O>> eval(Long now);
 }
 

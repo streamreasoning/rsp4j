@@ -17,30 +17,31 @@ import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 
 public class CQELSTimeWindowOperatorFactory implements StreamToRelationOperatorFactory<Graph, Graph> {
 
-    private final long a, t0;
+    //    private long a;
+//    private long t0;
     private final Time time;
     private final Tick tick;
     private final Report report;
     private final ReportGrain grain;
-    private final ContentFactory<Graph,Graph> cf;
-    private ContinuousQueryExecution<Graph,Graph, Triple> context;
+    private final ContentFactory<Graph, Graph> cf;
+//    private ContinuousQueryExecution<Graph, Graph, Triple> context;
 
-    public CQELSTimeWindowOperatorFactory(long a, long b, long t0, Time time, Tick tick, Report report, ReportGrain grain, ContinuousQueryExecution<Graph,Graph, Triple> context) {
-        this.a = a;
-        this.t0 = t0;
+    public CQELSTimeWindowOperatorFactory(Time time, Tick tick, Report report, ReportGrain grain) {
+//        this.a = a;
+//        this.t0 = t0;
         this.time = time;
         this.tick = tick;
         this.report = report;
         this.grain = grain;
-        this.context=context;
+//        this.context = context;
         this.cf = new GraphContentFactory();
     }
 
+    //TODO consider a Params interface
     @Override
-    public TimeVarying<Graph> apply(WebDataStream<Graph> s, IRI iri) {
-        StreamToRelationOp<Graph, Graph> windowStreamToRelationOp = new CQELSStreamToRelationOp(iri, a, time, tick, report, grain,cf);
-        s.addConsumer(windowStreamToRelationOp);
-        context.add(windowStreamToRelationOp);
-        return windowStreamToRelationOp.get();
+    public StreamToRelationOp<Graph, Graph> build(long a, long b, long t0) {
+        return new CQELSStreamToRelationOp<>(null, a, time, tick, report, grain, cf);
     }
+
+
 }

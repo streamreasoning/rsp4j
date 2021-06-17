@@ -4,6 +4,7 @@ import org.apache.commons.rdf.api.*;
 import org.apache.commons.rdf.simple.SimpleRDF;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.ServiceLoader;
 
 public class RDFUtils {
@@ -26,6 +27,14 @@ public class RDFUtils {
 
     public static Graph createGraph() {
         return getInstance().createGraph();
+    }
+
+    public static Graph createGraph(BlankNodeOrIRI name, List<Quad> quadList) {
+        Graph graph = getInstance().createGraph();
+        for (Quad quad : quadList) {
+            graph.add(quad.asTriple());
+        }
+        return graph;
     }
 
     public static IRI createIRI(String w1) {
