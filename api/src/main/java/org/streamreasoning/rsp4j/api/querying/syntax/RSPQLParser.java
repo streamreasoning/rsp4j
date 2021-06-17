@@ -1,14 +1,17 @@
-// Generated from /Users/riccardo/_Projects/RSP/yasper/yasper-core/src/main/java/it/polimi/yasper/core/quering/syntax/RSPQL.g4 by ANTLR 4.7
+// Generated from /Users/psbonte/Documents/Github/rsp4j/api/src/main/java/org/streamreasoning/rsp4j/api/querying/syntax/RSPQL.g4 by ANTLR 4.9.1
 package org.streamreasoning.rsp4j.api.querying.syntax;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
 import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class RSPQLParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.9.1", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -87,81 +90,91 @@ public class RSPQLParser extends Parser {
 		RULE_numericLiteralPositive = 135, RULE_numericLiteralNegative = 136, 
 		RULE_booleanLiteral = 137, RULE_string = 138, RULE_iri = 139, RULE_prefixedName = 140, 
 		RULE_blankNode = 141;
-	public static final String[] ruleNames = {
-		"queryUnit", "query", "prologue", "baseDecl", "prefixDecl", "registerClause", 
-		"outputStreamType", "outputStream", "selectQuery", "subSelect", "selectClause", 
-		"resultStar", "resultVar", "distinct", "reduced", "constructQuery", "describeQuery", 
-		"askQuery", "datasetClause", "defaultGraphClause", "namedGraphClause", 
-		"namedWindowClause", "windowUri", "streamUri", "window", "physicalWindow", 
-		"physicalRange", "physicalStep", "logicalWindow", "logicalRange", "logicalStep", 
-		"duration", "sourceSelector", "whereClause", "solutionModifier", "groupClause", 
-		"groupCondition", "havingClause", "havingCondition", "orderClause", "orderCondition", 
-		"limitOffsetClauses", "limitClause", "offsetClause", "valuesClause", "graphOrDefault", 
-		"graphRef", "quadPattern", "quads", "quadsNotTriples", "triplesTemplate", 
-		"groupGraphPattern", "groupGraphPatternSub", "triplesBlock", "graphPatternNotTriples", 
-		"optionalGraphPattern", "graphGraphPattern", "windowGraphPattern", "serviceGraphPattern", 
-		"bind", "inlineData", "dataBlock", "inlineDataOneVar", "inlineDataFull", 
-		"dataBlockValues", "dataBlockValue", "undef", "minusGraphPattern", "groupOrUnionGraphPattern", 
-		"filter", "constraint", "functionCall", "argList", "expressionList", "constructTemplate", 
-		"constructTriples", "triplesSameSubject", "propertyListNotEmpty", "propertyList", 
-		"verb", "type", "objectList", "object", "triplesSameSubjectPath", "propertyListPathNotEmpty", 
-		"propertyListPath", "verbPath", "verbSimple", "objectListPath", "objectPath", 
-		"path", "pathAlternative", "pathSequence", "pathElt", "pathEltOrInverse", 
-		"pathMod", "pathPrimary", "pathNegatedPropertySet", "pathOneInPropertySet", 
-		"integer", "triplesNode", "blankNodePropertyList", "triplesNodePath", 
-		"blankNodePropertyListPath", "collection", "collectionPath", "graphNode", 
-		"graphNodePath", "varOrTerm", "varOrIri", "var", "graphTerm", "expression", 
-		"conditionalOrExpression", "conditionalAndExpression", "valueLogical", 
-		"relationalExpression", "numericExpression", "additiveExpression", "multiExpr", 
-		"multiplicativeExpression", "unaryExpression", "primaryExpression", "brackettedExpression", 
-		"builtInCall", "regexExpression", "substringExpression", "strReplaceExpression", 
-		"existsFunc", "notExistsFunc", "aggregate", "iriOrFunction", "rdfliteral", 
-		"numericLiteral", "numericLiteralUnsigned", "numericLiteralPositive", 
-		"numericLiteralNegative", "booleanLiteral", "string", "iri", "prefixedName", 
-		"blankNode"
-	};
+	private static String[] makeRuleNames() {
+		return new String[] {
+			"queryUnit", "query", "prologue", "baseDecl", "prefixDecl", "registerClause", 
+			"outputStreamType", "outputStream", "selectQuery", "subSelect", "selectClause", 
+			"resultStar", "resultVar", "distinct", "reduced", "constructQuery", "describeQuery", 
+			"askQuery", "datasetClause", "defaultGraphClause", "namedGraphClause", 
+			"namedWindowClause", "windowUri", "streamUri", "window", "physicalWindow", 
+			"physicalRange", "physicalStep", "logicalWindow", "logicalRange", "logicalStep", 
+			"duration", "sourceSelector", "whereClause", "solutionModifier", "groupClause", 
+			"groupCondition", "havingClause", "havingCondition", "orderClause", "orderCondition", 
+			"limitOffsetClauses", "limitClause", "offsetClause", "valuesClause", 
+			"graphOrDefault", "graphRef", "quadPattern", "quads", "quadsNotTriples", 
+			"triplesTemplate", "groupGraphPattern", "groupGraphPatternSub", "triplesBlock", 
+			"graphPatternNotTriples", "optionalGraphPattern", "graphGraphPattern", 
+			"windowGraphPattern", "serviceGraphPattern", "bind", "inlineData", "dataBlock", 
+			"inlineDataOneVar", "inlineDataFull", "dataBlockValues", "dataBlockValue", 
+			"undef", "minusGraphPattern", "groupOrUnionGraphPattern", "filter", "constraint", 
+			"functionCall", "argList", "expressionList", "constructTemplate", "constructTriples", 
+			"triplesSameSubject", "propertyListNotEmpty", "propertyList", "verb", 
+			"type", "objectList", "object", "triplesSameSubjectPath", "propertyListPathNotEmpty", 
+			"propertyListPath", "verbPath", "verbSimple", "objectListPath", "objectPath", 
+			"path", "pathAlternative", "pathSequence", "pathElt", "pathEltOrInverse", 
+			"pathMod", "pathPrimary", "pathNegatedPropertySet", "pathOneInPropertySet", 
+			"integer", "triplesNode", "blankNodePropertyList", "triplesNodePath", 
+			"blankNodePropertyListPath", "collection", "collectionPath", "graphNode", 
+			"graphNodePath", "varOrTerm", "varOrIri", "var", "graphTerm", "expression", 
+			"conditionalOrExpression", "conditionalAndExpression", "valueLogical", 
+			"relationalExpression", "numericExpression", "additiveExpression", "multiExpr", 
+			"multiplicativeExpression", "unaryExpression", "primaryExpression", "brackettedExpression", 
+			"builtInCall", "regexExpression", "substringExpression", "strReplaceExpression", 
+			"existsFunc", "notExistsFunc", "aggregate", "iriOrFunction", "rdfliteral", 
+			"numericLiteral", "numericLiteralUnsigned", "numericLiteralPositive", 
+			"numericLiteralNegative", "booleanLiteral", "string", "iri", "prefixedName", 
+			"blankNode"
+		};
+	}
+	public static final String[] ruleNames = makeRuleNames();
 
-	private static final String[] _LITERAL_NAMES = {
-		null, "'BASE'", "'PREFIX'", "'REGISTER'", "'AS'", "'ISTREAM'", "'RSTREAM'", 
-		"'DSTREAM'", "'SELECT'", "'*'", "'('", "')'", "'DISTINCT'", "'REDUCED'", 
-		"'CONSTRUCT'", "'WHERE'", "'{'", "'}'", "'DESCRIBE'", "'ASK'", "'FROM'", 
-		"'NAMED'", "'WINDOW'", "'ON'", "'['", "']'", "'ELEMENTS'", "'STEP'", "'RANGE'", 
-		"'GROUP'", "'BY'", "'HAVING'", "'ORDER'", "'ASC'", "'DESC'", "'LIMIT'", 
-		"'OFFSET'", "'VALUES'", "'DEFAULT'", "'GRAPH'", "'.'", "'OPTIONAL'", "'SERVICE'", 
-		"'SILENT'", "'BIND'", "'UNDEF'", "'MINUS'", "'UNION'", "'FILTER'", "','", 
-		"';'", "'|'", "'/'", "'^'", "'?'", "'+'", "'!'", "'||'", "'&&'", "'='", 
-		"'!='", "'<'", "'>'", "'<='", "'>='", "'IN'", "'NOT'", "'-'", "'STR'", 
-		"'LANG'", "'LANGMATCHES'", "'DATATYPE'", "'BOUND'", "'IRI'", "'URI'", 
-		"'BNODE'", "'RAND'", "'ABS'", "'CEIL'", "'FLOOR'", "'ROUND'", "'CONCAT'", 
-		"'STRLEN'", "'UCASE'", "'LCASE'", "'ENCODE_FOR_URI'", "'CONTAINS'", "'STRSTARTS'", 
-		"'STRENDS'", "'STRBEFORE'", "'STRAFTER'", "'YEAR'", "'MONTH'", "'DAY'", 
-		"'HOURS'", "'MINUTES'", "'SECONDS'", "'TIMEZONE'", "'TZ'", "'NOW'", "'UUID'", 
-		"'STRUUID'", "'MD5'", "'SHA1'", "'SHA256'", "'SHA384'", "'SHA512'", "'COALESCE'", 
-		"'IF'", "'STRLANG'", "'STRDT'", "'SAMETERM'", "'ISIRI'", "'ISURI'", "'ISBLANK'", 
-		"'ISLITERAL'", "'ISNUMERIC'", "'REGEX'", "'SUBSTR'", "'REPLACE'", "'EXISTS'", 
-		"'COUNT'", "'SUM'", "'MIN'", "'MAX'", "'AVG'", "'SAMPLE'", "'GROUP_CONCAT'", 
-		"'SEPARATOR'", "'^^'", "'TRUE'", "'FALSE'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		"TYPE", "COMMENT", "DURATION", "IRIREF", "PNAME_NS", "PNAME_LN", "BLANK_NODE_LABEL", 
-		"VAR1", "VAR2", "LANGTAG", "INTEGER", "DECIMAL", "DOUBLE", "INTEGER_POSITIVE", 
-		"DECIMAL_POSITIVE", "DOUBLE_POSITIVE", "INTEGER_NEGATIVE", "DECIMAL_NEGATIVE", 
-		"DOUBLE_NEGATIVE", "EXPONENT", "STRING_LITERAL1", "STRING_LITERAL2", "STRING_LITERAL_LONG1", 
-		"STRING_LITERAL_LONG2", "ECHAR", "NIL", "WS", "ANON", "PN_CHARS_BASE", 
-		"PN_CHARS_U", "VARNAME", "PN_CHARS", "PN_PREFIX", "PN_LOCAL", "PLX", "PERCENT", 
-		"HEX", "PN_LOCAL_ESC", "ANYCHAR"
-	};
+	private static String[] makeLiteralNames() {
+		return new String[] {
+			null, "'BASE'", "'PREFIX'", "'REGISTER'", "'AS'", "'ISTREAM'", "'RSTREAM'", 
+			"'DSTREAM'", "'SELECT'", "'*'", "'('", "')'", "'DISTINCT'", "'REDUCED'", 
+			"'CONSTRUCT'", "'WHERE'", "'{'", "'}'", "'DESCRIBE'", "'ASK'", "'FROM'", 
+			"'NAMED'", "'WINDOW'", "'ON'", "'['", "']'", "'ELEMENTS'", "'STEP'", 
+			"'RANGE'", "'GROUP'", "'BY'", "'HAVING'", "'ORDER'", "'ASC'", "'DESC'", 
+			"'LIMIT'", "'OFFSET'", "'VALUES'", "'DEFAULT'", "'GRAPH'", "'.'", "'OPTIONAL'", 
+			"'SERVICE'", "'SILENT'", "'BIND'", "'UNDEF'", "'MINUS'", "'UNION'", "'FILTER'", 
+			"','", "';'", "'|'", "'/'", "'^'", "'?'", "'+'", "'!'", "'||'", "'&&'", 
+			"'='", "'!='", "'<'", "'>'", "'<='", "'>='", "'IN'", "'NOT'", "'-'", 
+			"'STR'", "'LANG'", "'LANGMATCHES'", "'DATATYPE'", "'BOUND'", "'IRI'", 
+			"'URI'", "'BNODE'", "'RAND'", "'ABS'", "'CEIL'", "'FLOOR'", "'ROUND'", 
+			"'CONCAT'", "'STRLEN'", "'UCASE'", "'LCASE'", "'ENCODE_FOR_URI'", "'CONTAINS'", 
+			"'STRSTARTS'", "'STRENDS'", "'STRBEFORE'", "'STRAFTER'", "'YEAR'", "'MONTH'", 
+			"'DAY'", "'HOURS'", "'MINUTES'", "'SECONDS'", "'TIMEZONE'", "'TZ'", "'NOW'", 
+			"'UUID'", "'STRUUID'", "'MD5'", "'SHA1'", "'SHA256'", "'SHA384'", "'SHA512'", 
+			"'COALESCE'", "'IF'", "'STRLANG'", "'STRDT'", "'SAMETERM'", "'ISIRI'", 
+			"'ISURI'", "'ISBLANK'", "'ISLITERAL'", "'ISNUMERIC'", "'REGEX'", "'SUBSTR'", 
+			"'REPLACE'", "'EXISTS'", "'COUNT'", "'SUM'", "'MIN'", "'MAX'", "'AVG'", 
+			"'SAMPLE'", "'GROUP_CONCAT'", "'SEPARATOR'", "'^^'", "'TRUE'", "'FALSE'"
+		};
+	}
+	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+	private static String[] makeSymbolicNames() {
+		return new String[] {
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			"TYPE", "COMMENT", "DURATION", "IRIREF", "PNAME_NS", "PNAME_LN", "BLANK_NODE_LABEL", 
+			"VAR1", "VAR2", "LANGTAG", "INTEGER", "DECIMAL", "DOUBLE", "INTEGER_POSITIVE", 
+			"DECIMAL_POSITIVE", "DOUBLE_POSITIVE", "INTEGER_NEGATIVE", "DECIMAL_NEGATIVE", 
+			"DOUBLE_NEGATIVE", "EXPONENT", "STRING_LITERAL1", "STRING_LITERAL2", 
+			"STRING_LITERAL_LONG1", "STRING_LITERAL_LONG2", "ECHAR", "NIL", "WS", 
+			"ANON", "PN_CHARS_BASE", "PN_CHARS_U", "VARNAME", "PN_CHARS", "PN_PREFIX", 
+			"PN_LOCAL", "PLX", "PERCENT", "HEX", "PN_LOCAL_ESC", "ANYCHAR"
+		};
+	}
+	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**
@@ -211,6 +224,7 @@ public class RSPQLParser extends Parser {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
+
 	public static class QueryUnitContext extends ParserRuleContext {
 		public QueryContext query() {
 			return getRuleContext(QueryContext.class,0);
@@ -5406,6 +5420,8 @@ public class RSPQLParser extends Parser {
 	}
 
 	public static class TriplesSameSubjectContext extends ParserRuleContext {
+		public VarOrTermContext s;
+		public PropertyListNotEmptyContext ps;
 		public VarOrTermContext varOrTerm() {
 			return getRuleContext(VarOrTermContext.class,0);
 		}
@@ -5468,9 +5484,9 @@ public class RSPQLParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(781);
-				varOrTerm();
+				((TriplesSameSubjectContext)_localctx).s = varOrTerm();
 				setState(782);
-				propertyListNotEmpty();
+				((TriplesSameSubjectContext)_localctx).ps = propertyListNotEmpty();
 				}
 				break;
 			case T__9:
@@ -5507,6 +5523,7 @@ public class RSPQLParser extends Parser {
 	}
 
 	public static class PropertyListNotEmptyContext extends ParserRuleContext {
+		public PropertyListContext p;
 		public List<PropertyListContext> propertyList() {
 			return getRuleContexts(PropertyListContext.class);
 		}
@@ -5540,7 +5557,7 @@ public class RSPQLParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(790);
-			propertyList();
+			((PropertyListNotEmptyContext)_localctx).p = propertyList();
 			setState(797);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -5579,6 +5596,8 @@ public class RSPQLParser extends Parser {
 	}
 
 	public static class PropertyListContext extends ParserRuleContext {
+		public VerbContext p;
+		public ObjectListContext os;
 		public VerbContext verb() {
 			return getRuleContext(VerbContext.class,0);
 		}
@@ -5611,9 +5630,9 @@ public class RSPQLParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(800);
-			verb();
+			((PropertyListContext)_localctx).p = verb();
 			setState(801);
-			objectList();
+			((PropertyListContext)_localctx).os = objectList();
 			}
 		}
 		catch (RecognitionException re) {
@@ -5736,6 +5755,7 @@ public class RSPQLParser extends Parser {
 	}
 
 	public static class ObjectListContext extends ParserRuleContext {
+		public ObjectContext o;
 		public List<ObjectContext> object() {
 			return getRuleContexts(ObjectContext.class);
 		}
@@ -5769,7 +5789,7 @@ public class RSPQLParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(809);
-			object();
+			((ObjectListContext)_localctx).o = object();
 			setState(814);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -5844,6 +5864,8 @@ public class RSPQLParser extends Parser {
 	}
 
 	public static class TriplesSameSubjectPathContext extends ParserRuleContext {
+		public VarOrTermContext s;
+		public PropertyListPathNotEmptyContext ps;
 		public VarOrTermContext varOrTerm() {
 			return getRuleContext(VarOrTermContext.class,0);
 		}
@@ -5906,9 +5928,9 @@ public class RSPQLParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(819);
-				varOrTerm();
+				((TriplesSameSubjectPathContext)_localctx).s = varOrTerm();
 				setState(820);
-				propertyListPathNotEmpty();
+				((TriplesSameSubjectPathContext)_localctx).ps = propertyListPathNotEmpty();
 				}
 				break;
 			case T__9:

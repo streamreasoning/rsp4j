@@ -1,6 +1,7 @@
 package org.streamreasoning.rsp4j.yasper.querying.formatter;
 
 
+
 import org.streamreasoning.rsp4j.api.querying.AbstractContinuousQuery;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
@@ -9,10 +10,7 @@ import org.streamreasoning.rsp4j.api.stream.web.WebStream;
 import org.streamreasoning.rsp4j.api.stream.web.WebStreamImpl;
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class ContinuousQueryImpl extends AbstractContinuousQuery {
@@ -72,4 +70,6 @@ public class ContinuousQueryImpl extends AbstractContinuousQuery {
     public Time getTime() {
         return TimeFactory.getInstance();
     }
+
+
 }

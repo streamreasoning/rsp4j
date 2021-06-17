@@ -1,4 +1,4 @@
-// Generated from /Users/riccardo/_Projects/RSP/yasper/yasper-core/src/main/java/it/polimi/yasper/core/quering/syntax/RSPQL.g4 by ANTLR 4.7
+// Generated from /Users/psbonte/Documents/Github/rsp4j/api/src/main/java/org/streamreasoning/rsp4j/api/querying/syntax/RSPQL.g4 by ANTLR 4.9.1
 package org.streamreasoning.rsp4j.api.querying.syntax;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 

@@ -402,6 +402,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
      * @return
      */
     public Object visitTriplesBlock(RSPQLParser.TriplesBlockContext ctx) {
+    System.out.println(ctx);
         //ElementPathBlock el = (ElementPathBlock) ctx.triplesSameSubjectPath().accept(this);
         //if(ctx.triplesBlock() != null){
         //    ElementPathBlock elb = (ElementPathBlock) ctx.triplesBlock().accept(this);

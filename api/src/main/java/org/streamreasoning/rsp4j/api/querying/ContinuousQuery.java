@@ -1,5 +1,6 @@
 package org.streamreasoning.rsp4j.api.querying;
 
+
 import org.streamreasoning.rsp4j.api.enums.StreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
@@ -67,4 +68,7 @@ public interface ContinuousQuery {
     String getSPARQL();
 
     Time getTime();
+
+
+
 }
