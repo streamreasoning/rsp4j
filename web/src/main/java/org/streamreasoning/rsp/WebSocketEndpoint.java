@@ -1,6 +1,8 @@
 package org.streamreasoning.rsp;
 
 import org.apache.commons.rdf.api.*;
+import org.streamreasoning.rsp.enums.Format;
+import org.streamreasoning.rsp.enums.License;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
 import org.streamreasoning.rsp4j.api.stream.web.WebStream;

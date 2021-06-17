@@ -1,7 +1,10 @@
 package org.streamreasoning.rsp;
 
-import lombok.SneakyThrows;
 import org.apache.commons.rdf.api.*;
+import org.streamreasoning.rsp.enums.Format;
+import org.streamreasoning.rsp.enums.License;
+import org.streamreasoning.rsp.enums.Protocol;
+import org.streamreasoning.rsp.enums.Security;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
 

@@ -1,4 +1,4 @@
-package org.streamreasoning.rsp;
+package org.streamreasoning.rsp.enums;
 
 public enum Security {
 
