@@ -60,7 +60,7 @@ public class CPTriplePatternTest {
         //R2R
         ContinuousTriplePatternQuery q = new ContinuousTriplePatternQuery("q1","stream1","?green rdf:type <http://color#Green>");
 
-        RelationToRelationOperator<TableRow> r2r = new TriplePatternR2R(sds, q);
+        RelationToRelationOperator<TableRow,TableRow> r2r = new TriplePatternR2R(sds, q);
 
 
         // REGISTER FUNCTION

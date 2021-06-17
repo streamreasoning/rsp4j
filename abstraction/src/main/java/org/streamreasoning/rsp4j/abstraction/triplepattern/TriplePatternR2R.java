@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class TriplePatternR2R implements RelationToRelationOperator<TableRow> {
+public class TriplePatternR2R implements RelationToRelationOperator<TableRow, TableRow> {
     private final SDS sds;
     private final ContinuousTriplePatternQuery query;
     private final Dataset ds;
@@ -40,13 +40,17 @@ public class TriplePatternR2R implements RelationToRelationOperator<TableRow> {
     }
 
     @Override
-    public Stream<TableRow> eval(long ts) {
+    public Stream<TableRow> eval(Stream<TableRow> sds) {
         Model dataModel = convertToJenaModel();
 
-        return evaluateQuery(dataModel, ts);
+        return evaluateQuery(dataModel, System.currentTimeMillis());
     }
 
     @Override
+    public TimeVarying<Collection<TableRow>> apply(SDS<TableRow> sds) {
+        return null;
+    }
+
     public TimeVarying<Collection<TableRow>> apply() {
         //TODO
         return null;

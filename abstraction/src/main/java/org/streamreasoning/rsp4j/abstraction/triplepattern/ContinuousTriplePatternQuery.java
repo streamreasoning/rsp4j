@@ -1,11 +1,11 @@
 package org.streamreasoning.rsp4j.abstraction.triplepattern;
 
 
-import org.streamreasoning.rsp4j.yasper.querying.formatter.ContinuousQueryImpl;
+import org.streamreasoning.rsp4j.yasper.querying.syntax.SimpleRSPQLQuery;
 
 
 
-public class ContinuousTriplePatternQuery extends ContinuousQueryImpl {
+public class ContinuousTriplePatternQuery extends SimpleRSPQLQuery {
   private String triplePattern;
   private String stream_uri;
 

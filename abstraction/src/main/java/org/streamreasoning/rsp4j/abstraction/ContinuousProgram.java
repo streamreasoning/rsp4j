@@ -95,7 +95,7 @@ public class ContinuousProgram<I, R, O> extends ContinuousQueryExecutionObserver
     }
 
     @Override
-    public RelationToRelationOperator<O> r2r() {
+    public RelationToRelationOperator<R, O> r2r() {
         return null;
     }
 
@@ -112,8 +112,8 @@ public class ContinuousProgram<I, R, O> extends ContinuousQueryExecutionObserver
     public Stream<SolutionMapping<O>> eval(Long now) {
         sds.materialize(now);
         Task<I, R, O> iroTask = tasks.get(0);
-        RelationToRelationOperator<R> r2rFactory = iroTask.getR2Rs().get(0).getR2rOperator();
-        Stream<R> eval = r2rFactory.eval(now);
+        RelationToRelationOperator<R, O> r2rFactory = iroTask.getR2Rs().get(0).getR2rOperator();
+        Stream<O> eval = r2rFactory.eval(sds.toStream());
         //TODO this is conflcting
         Stream<SolutionMapping<O>> rStream = eval.map(r -> new SelectInstResponse<>(query.getID() + "/ans/" + now, now, (O) r));
         return rStream;
