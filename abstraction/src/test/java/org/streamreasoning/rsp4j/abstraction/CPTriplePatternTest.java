@@ -76,7 +76,7 @@ public class CPTriplePatternTest {
         // REGISTER FUNCTION
         AggregationFunctionRegistry.getInstance().addFunction("COUNT",new CountFunction());
 
-        Task<Graph,Graph,Triple> t =
+        Task<Graph,TableRow,TableRow> t =
         new Task.TaskBuilder()
             .addS2R("stream1", build, "w1")
             .addR2R("w1", r2r)
