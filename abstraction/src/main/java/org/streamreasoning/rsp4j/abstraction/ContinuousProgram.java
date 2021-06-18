@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Log4j
@@ -112,10 +113,11 @@ public class ContinuousProgram<I, R, O> extends ContinuousQueryExecutionObserver
     public Stream<SolutionMapping<O>> eval(Long now) {
         sds.materialize(now);
         Task<I, R, O> iroTask = tasks.get(0);
-        RelationToRelationOperator<R, O> r2rFactory = iroTask.getR2Rs().get(0).getR2rOperator();
-        Stream<O> eval = r2rFactory.eval(sds.toStream());
+        RelationToRelationOperator<R, O> r2rOperator = iroTask.getR2Rs().get(0).getR2rOperator();
+        Stream<O> eval = r2rOperator.eval(sds.toStream());
         //TODO this is conflcting
-        Stream<SolutionMapping<O>> rStream = eval.map(r -> new SelectInstResponse<>(query.getID() + "/ans/" + now, now, (O) r));
+
+        Stream<SolutionMapping<O>> rStream = eval.map(r -> r2rOperator.createSolutionMapping(r));
         return rStream;
     }
 

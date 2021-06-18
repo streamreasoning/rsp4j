@@ -14,9 +14,11 @@ import org.apache.jena.sparql.engine.QueryIterator;
 import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.sse.SSE;
 import org.apache.jena.sparql.util.FmtUtils;
+import org.streamreasoning.rsp4j.abstraction.table.TableResponse;
 import org.streamreasoning.rsp4j.abstraction.table.TableRow;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
+import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 
@@ -49,6 +51,11 @@ public class TriplePatternR2R implements RelationToRelationOperator<TableRow, Ta
     @Override
     public TimeVarying<Collection<TableRow>> apply(SDS<TableRow> sds) {
         return null;
+    }
+
+    @Override
+    public SolutionMapping<TableRow> createSolutionMapping(TableRow result) {
+        return new TableResponse(query.getID() + "/ans/" + System.currentTimeMillis(), System.currentTimeMillis(),result);
     }
 
     public TimeVarying<Collection<TableRow>> apply() {

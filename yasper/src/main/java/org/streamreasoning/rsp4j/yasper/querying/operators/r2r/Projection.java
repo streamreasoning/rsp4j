@@ -2,6 +2,7 @@ package org.streamreasoning.rsp4j.yasper.querying.operators.r2r;
 
 import org.apache.commons.rdf.api.RDFTerm;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
+import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 
@@ -86,6 +87,11 @@ public class Projection implements RelationToRelationOperator<Binding, Binding>,
                 return null;
             }
         };
+    }
+
+    @Override
+    public SolutionMapping<Binding> createSolutionMapping(Binding result) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

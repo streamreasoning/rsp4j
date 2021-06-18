@@ -4,18 +4,22 @@ import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.RDF;
 import org.apache.commons.rdf.api.Triple;
+import org.junit.Test;
 import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegistry;
 import org.streamreasoning.rsp4j.abstraction.functions.CountFunction;
+import org.streamreasoning.rsp4j.abstraction.table.TableResponse;
 import org.streamreasoning.rsp4j.abstraction.table.TableRow;
 import org.streamreasoning.rsp4j.abstraction.table.TableRowStream;
 import org.streamreasoning.rsp4j.abstraction.table.TableRowsSysOutFormatter;
 import org.streamreasoning.rsp4j.abstraction.triplepattern.ContinuousTriplePatternQuery;
 import org.streamreasoning.rsp4j.abstraction.triplepattern.TriplePatternR2R;
+import org.streamreasoning.rsp4j.abstraction.utils.DummyConsumer;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.StreamToRelationOperatorFactory;
+import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Consumer;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
@@ -27,9 +31,15 @@ import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLTimeWindowOperatorFactory;
 import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+
 public class CPTriplePatternTest {
 
-    public static void main(String[] args){
+    @Test
+    public  void simpleTPAbstractionTest(){
         //ENGINE DEFINITION
         Report report = new ReportImpl();
         report.add(new OnWindowClose());
@@ -81,7 +91,8 @@ public class CPTriplePatternTest {
                 .out(outStream)
                 .build();
 
-        outStream.addConsumer(new TableRowsSysOutFormatter("TTL", true));
+        DummyConsumer<TableRow> dummyConsumer = new DummyConsumer<>();
+        outStream.addConsumer(dummyConsumer);
 
 
         //RUNTIME DATA
@@ -121,10 +132,12 @@ public class CPTriplePatternTest {
         stream.put(graph, 6000);
 
 
-        graph = instance.createGraph();
-        graph.add(instance.createTriple(instance.createIRI("S7"), p, instance.createIRI("http://color#Green")));
-        stream.put(graph, 7000);
 
 
+        assertEquals(2,dummyConsumer.getSize());
+        List<TableRow> expected = new ArrayList<>();
+        expected.add(new TableRow("green","<S1>"));
+        expected.add(new TableRow("green","<S4>"));
+        assertEquals(expected,dummyConsumer.getReceived());
     }
 }

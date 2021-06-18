@@ -4,8 +4,10 @@ import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.Triple;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
+import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
+import org.streamreasoning.rsp4j.yasper.querying.SelectInstResponse;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,5 +53,11 @@ public class R2RImpl implements RelationToRelationOperator<Graph, Triple> {
                 return null;
             }
         };
+    }
+
+    @Override
+    public SolutionMapping<Triple> createSolutionMapping(Triple result) {
+        return new SelectInstResponse<Triple>(query.getID() + "/ans/" + System.currentTimeMillis(), System.currentTimeMillis(),result);
+
     }
 }

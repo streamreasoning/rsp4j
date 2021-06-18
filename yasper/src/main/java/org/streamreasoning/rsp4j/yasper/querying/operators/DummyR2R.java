@@ -6,8 +6,10 @@ import org.apache.commons.rdf.api.Quad;
 import org.apache.commons.rdf.api.Triple;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
+import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
+import org.streamreasoning.rsp4j.yasper.querying.SelectInstResponse;
 
 import java.util.Collection;
 import java.util.stream.Stream;
@@ -33,5 +35,10 @@ public class DummyR2R implements RelationToRelationOperator<Graph, Triple> {
     @Override
     public TimeVarying<Collection<Triple>> apply(SDS<Graph> sds) {
         return null;
+    }
+
+    @Override
+    public SolutionMapping<Triple> createSolutionMapping(Triple result) {
+        return new SelectInstResponse<Triple>(query.getID() + "/ans/" + System.currentTimeMillis(), System.currentTimeMillis(),result);
     }
 }

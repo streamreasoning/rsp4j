@@ -1,6 +1,7 @@
 package org.streamreasoning.rsp4j.yasper.querying.operators.r2r;
 
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
+import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 
@@ -62,6 +63,11 @@ public class Filter<T> implements RelationToRelationOperator<T, T>, Function<T, 
                 return null;
             }
         };
+    }
+
+    @Override
+    public SolutionMapping<T> createSolutionMapping(T result) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
