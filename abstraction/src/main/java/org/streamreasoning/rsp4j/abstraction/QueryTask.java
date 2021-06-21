@@ -52,7 +52,7 @@ public class QueryTask extends Task<Graph,Graph,Binding, Binding>{
                 StreamToRelationOperatorFactory<Graph, Graph> windowOperatorFactory = new CSPARQLTimeWindowOperatorFactory( TimeFactory.getInstance(), tick, report, report_grain);
 
                 StreamToRelationOp<Graph, Graph> s2r = windowOperatorFactory.build(entry.getKey().getRange(), entry.getKey().getStep(), scope);
-              //  this.addS2R(entry.getValue().uri(),  s2r,entry.getKey().iri());
+                //this.addS2R(entry.getValue().uri(),  s2r,entry.getKey().iri());
             });
             // R2R DECLARATION
 

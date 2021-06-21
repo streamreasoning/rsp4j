@@ -177,47 +177,47 @@ public class CPTriplePatternTest {
     @Test
     public void triplePatternQueryTest(){
 
-//        RDFStream stream = new RDFStream("http://test/stream");
-//
-//
-//        ContinuousQuery<Graph, Graph, Binding> query = TPQueryFactory.parse("" +
-//                "REGISTER ISTREAM <http://out/stream> AS " +
-//                "SELECT * " +
-//                "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT2S STEP PT2S] " +
-//                "WHERE {" +
-//                "   ?green rdf:type <http://color#Green> ." +
-//                "}");
-//
-//
-//        //SDS
-//        SDS<Graph> sds = new SDSImpl();
-//        Task<Graph,Graph,Binding> t =
-//                new QueryTask.QueryTaskBuilder()
-//                        .fromQuery(query)
-//                        .build();
-//        ContinuousProgram<Graph,Graph,Triple> cp = new ContinuousProgram.ContinuousProgramBuilder()
-//                .in(stream)
-//                .setSDS(sds)
-//                .addTask(t)
-//                .out(query.getOutputStream())
-//                .build();
-//
-//        DummyConsumer<Binding> dummyConsumer = new DummyConsumer<>();
-//
-//        query.getOutputStream().addConsumer(dummyConsumer);
-//
-//        populateStream(stream,10000);
-//
-//
-//
-//
-//
-//
-//        assertEquals(2,dummyConsumer.getSize());
-//        List<TableRow> expected = new ArrayList<>();
-//        expected.add(new TableRow("green","<S1>"));
-//        expected.add(new TableRow("green","<S4>"));
-//        assertEquals(expected,dummyConsumer.getReceived());
+        RDFStream stream = new RDFStream("http://test/stream");
+
+
+        ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
+                "REGISTER ISTREAM <http://out/stream> AS " +
+                "SELECT * " +
+                "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT2S STEP PT2S] " +
+                "WHERE {" +
+                "   ?green rdf:type <http://color#Green> ." +
+                "}");
+
+
+        //SDS
+        SDS<Graph> sds = new SDSImpl();
+        Task<Graph,Graph,Binding,Binding> t =
+                new QueryTask.QueryTaskBuilder()
+                        .fromQuery(query)
+                        .build();
+        ContinuousProgram<Graph,Graph,Binding,Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
+                .in(stream)
+                .setSDS(sds)
+                .addTask(t)
+                .out(query.getOutputStream())
+                .build();
+
+        DummyConsumer<Binding> dummyConsumer = new DummyConsumer<>();
+
+        query.getOutputStream().addConsumer(dummyConsumer);
+
+        populateStream(stream,10000);
+
+
+
+
+
+
+        assertEquals(2,dummyConsumer.getSize());
+        List<TableRow> expected = new ArrayList<>();
+        expected.add(new TableRow("green","<S1>"));
+        expected.add(new TableRow("green","<S4>"));
+        assertEquals(expected,dummyConsumer.getReceived());
 
     }
 
