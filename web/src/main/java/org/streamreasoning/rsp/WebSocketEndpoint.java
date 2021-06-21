@@ -4,9 +4,6 @@ import org.apache.commons.rdf.api.*;
 import org.streamreasoning.rsp.enums.Format;
 import org.streamreasoning.rsp.enums.License;
 import org.streamreasoning.rsp4j.api.RDFUtils;
-import org.streamreasoning.rsp4j.api.stream.data.DataStream;
-import org.streamreasoning.rsp4j.api.stream.web.WebStream;
-import org.streamreasoning.rsp4j.io.DataStreamImpl;
 
 import static spark.Spark.*;
 
@@ -16,7 +13,8 @@ public class WebSocketEndpoint<E> implements WebStreamEndpoint<E> {
     private final License license;
     private final Format format;
     private WebSocketHandler wsh;
-
+    RDF rdf = RDFUtils.getInstance();
+    Graph graph = rdf.createGraph();
 
     public WebSocketEndpoint(String access, String path, License license, Format format) {
         this.access = access;
@@ -26,31 +24,24 @@ public class WebSocketEndpoint<E> implements WebStreamEndpoint<E> {
     }
 
     @Override
-    public DataStream<E> deploy() {
+    public WebDataStream<E> serve() {
         ignite();
-        DataStreamImpl<E> eDataStream = new DataStreamImpl<E>(path);
+        //TODO actually, we need to pass the subset that interests the stream
+        WebDataStream<E> eDataStream = new WebDataStreamImpl<E>(path, graph);
         eDataStream.addConsumer(wsh);
         return eDataStream;
     }
 
-    @Override
-    public WebStream serve() {
-        ignite();
-        return () -> path;
-    }
 
     private void ignite() {
         webSocket("/access/" + access, this.wsh = new WebSocketHandler());
-        get(path, (request, response) -> "Hello colours");
+        get(path, (request, response) -> graph.toString());
         init();
     }
 
 
     @Override
     public Graph describe() {
-        RDF rdf = RDFUtils.getInstance();
-        Graph graph = rdf.createGraph();
-
         BlankNode subject = rdf.createBlankNode();
         IRI dcatname = rdf.createIRI("access");
         IRI uripath = rdf.createIRI(path);
