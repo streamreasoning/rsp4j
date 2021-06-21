@@ -50,4 +50,9 @@ public class DataStreamImpl<T> implements DataStream<T> {
     public int hashCode() {
         return Objects.hash(stream_uri);
     }
+
+    @Override
+    public String toString() {
+        return stream_uri;
+    }
 }
