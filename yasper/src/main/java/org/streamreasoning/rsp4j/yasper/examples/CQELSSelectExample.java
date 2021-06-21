@@ -47,7 +47,7 @@ public class CQELSSelectExample {
 
         RSPQL<Binding> q = new SimpleRSPQLQuery<Binding>("q1", stream, window, s, pp, o);
 
-        ContinuousQueryExecution<Graph, Graph, Binding> cqe = sr.register(q);
+        ContinuousQueryExecution<Graph, Graph, Binding,Binding> cqe = sr.register(q);
 
         cqe.outstream().addConsumer((arg, ts) -> System.err.println(arg));
 

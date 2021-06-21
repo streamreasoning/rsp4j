@@ -18,25 +18,25 @@ import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLTimeWindowOperatorFactory;
 
-public class QueryTask extends Task<Graph,Graph,Binding>{
+public class QueryTask extends Task<Graph,Graph,Binding, Binding>{
 
 
 
-    public QueryTask(TaskBuilder<Graph, Graph, Binding> builder) {
+    public QueryTask(TaskBuilder<Graph, Graph, Binding, Binding> builder) {
         super(builder);
 
     }
 
 
 
-    public static class QueryTaskBuilder extends TaskBuilder<Graph, Graph, Binding> {
+    public static class QueryTaskBuilder extends TaskBuilder<Graph, Graph, Binding, Binding> {
 
 
         public QueryTaskBuilder() {
             super();
         }
 
-        public QueryTaskBuilder fromQuery(ContinuousQuery<Graph, Graph, Binding> query){
+        public QueryTaskBuilder fromQuery(ContinuousQuery<Graph, Graph, Binding, Binding> query){
             //add S2R
             Report report = new ReportImpl();
             report.add(new OnWindowClose());
@@ -52,7 +52,7 @@ public class QueryTask extends Task<Graph,Graph,Binding>{
                 StreamToRelationOperatorFactory<Graph, Graph> windowOperatorFactory = new CSPARQLTimeWindowOperatorFactory( TimeFactory.getInstance(), tick, report, report_grain);
 
                 StreamToRelationOp<Graph, Graph> s2r = windowOperatorFactory.build(entry.getKey().getRange(), entry.getKey().getStep(), scope);
-                this.addS2R(entry.getValue().uri(),  s2r,entry.getKey().iri());
+              //  this.addS2R(entry.getValue().uri(),  s2r,entry.getKey().iri());
             });
             // R2R DECLARATION
 

@@ -4,17 +4,16 @@ package org.streamreasoning.rsp4j.api.querying;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
-
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
-import org.streamreasoning.rsp4j.api.stream.web.WebStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 
 import java.util.Map;
 
 /**
  * TODO: This interface needs to be updated to contain setter and getters for all relevant query parts.
  */
-public interface ContinuousQuery<I, R, O> {//extends Task<I, Binding, O> {
+public interface ContinuousQuery<I, W, R, O> {//extends Task<I, Binding, O> {
 
     void addNamedWindow(String streamUri, WindowNode wo);
 
@@ -40,18 +39,18 @@ public interface ContinuousQuery<I, R, O> {//extends Task<I, Binding, O> {
 
     void setOutputStream(String uri);
 
-    WebStream getOutputStream();
+    DataStream<O> getOutputStream();
 
     String getID();
 
-    Map<? extends WindowNode, WebStream> getWindowMap();
+    Map<? extends WindowNode, DataStream<I>> getWindowMap();
 
     Time getTime();
 
-    RelationToRelationOperator<I, R> r2r();
+    RelationToRelationOperator<W, R> r2r();
 
-    StreamToRelationOp<I, I>[] s2r();
+    StreamToRelationOp<I, W>[] s2r();
 
-    RelationToStreamOperator<O> r2s();
+    RelationToStreamOperator<R,O> r2s();
 
 }

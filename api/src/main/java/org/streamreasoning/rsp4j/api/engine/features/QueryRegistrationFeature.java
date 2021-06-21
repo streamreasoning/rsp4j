@@ -5,6 +5,6 @@ import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 
 public interface QueryRegistrationFeature<Q extends ContinuousQuery> {
 
-    <I, C, O> ContinuousQueryExecution<I, C, O> register(Q q);
+    <I, W, R, O> ContinuousQueryExecution<I, W, R, O> register(Q q);
 
 }

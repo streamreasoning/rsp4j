@@ -4,7 +4,7 @@ import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.RDF;
 import org.streamreasoning.rsp4j.api.RDFUtils;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 
 import java.util.HashMap;
@@ -20,19 +20,19 @@ public class StreamGenerator {
   private static final Long TIMEOUT = 1000l;
 
   private final String[] colors = new String[]{"Blue", "Green","Red","Yellow", "Black", "Grey", "White"};
-  private final Map<String, WebDataStream<Graph>> activeStreams;
+  private final Map<String, DataStream<Graph>> activeStreams;
   private final AtomicBoolean isStreaming;
   private final Random randomGenerator;
   private AtomicLong streamIndexCounter;
 
   public StreamGenerator() {
     this.streamIndexCounter = new AtomicLong(0);
-    this.activeStreams = new HashMap<String, WebDataStream<Graph>>();
+    this.activeStreams = new HashMap<String, DataStream<Graph>>();
     this.isStreaming = new AtomicBoolean(false);
     randomGenerator = new Random(1336);
   }
 
-  public WebDataStream<Graph> getStream(String streamURI) {
+  public DataStream<Graph> getStream(String streamURI) {
     if (!activeStreams.containsKey(streamURI)) {
       RDFStream stream = new RDFStream(streamURI);
       activeStreams.put(streamURI, stream);
@@ -64,7 +64,7 @@ public class StreamGenerator {
     }
   }
 
-  private void generateDataAndAddToStream(WebDataStream<Graph> stream, long ts){
+  private void generateDataAndAddToStream(DataStream<Graph> stream, long ts){
     RDF instance = RDFUtils.getInstance();
     Graph graph = instance.createGraph();
     IRI p = instance.createIRI(PREFIX+"hasColor");

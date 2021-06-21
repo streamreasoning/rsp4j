@@ -1,17 +1,17 @@
 package org.streamreasoning.rsp4j.io.sinks;
 
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Consumer;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
-import org.streamreasoning.rsp4j.io.WebDataStreamImpl;
+import org.streamreasoning.rsp4j.io.DataStreamImpl;
 import org.streamreasoning.rsp4j.io.utils.serialization.StringSerializationStrategy;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public abstract class AbstractWebsocketSink<T> extends WebDataStreamImpl<T> {
+public abstract class AbstractWebsocketSink<T> extends DataStreamImpl<T> {
 
 
     protected StringSerializationStrategy<T> serializationStrategy;
+
+    public AbstractWebsocketSink(String stream_uri) {
+        super(stream_uri);
+    }
 
     /**
      * Start the socket

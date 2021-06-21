@@ -6,9 +6,9 @@ import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 /**
  * Created by riccardo on 05/09/2017.
  */
-public class Dstream<I> implements RelationToStreamOperator<I> {
+public class Dstream<R,O> implements RelationToStreamOperator<R,O> {
     private final int i;
-    private SolutionMapping<I> last_response;
+    private SolutionMapping<R> last_response;
 
     public Dstream(int i) {
         this.i = i;
@@ -19,10 +19,10 @@ public class Dstream<I> implements RelationToStreamOperator<I> {
     }
 
     @Override
-    public I eval(SolutionMapping<I> new_response, long ts) {
-        SolutionMapping<I> diff = last_response.difference(new_response);
+    public O eval(SolutionMapping<R> new_response, long ts) {
+        SolutionMapping<R> diff = last_response.difference(new_response);
         last_response = new_response;
-        return diff.get();
+        return (O)diff.get(); //TODO add converter
     }
 
 }

@@ -19,11 +19,11 @@ import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.api.stream.web.WebStream;
 import org.streamreasoning.rsp4j.yasper.ContinuousQueryExecutionImpl;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
-import org.streamreasoning.rsp4j.yasper.examples.WebStreamImpl;
+import org.streamreasoning.rsp4j.yasper.examples.StreamImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.syntax.RSPQL;
 import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
@@ -48,7 +48,7 @@ public class Yasper implements QueryRegistrationFeature<RSPQL>, StreamRegistrati
     protected Map<String, ContinuousQueryExecution> queryExecutions;
     protected Map<String, ContinuousQuery> registeredQueries;
     protected Map<String, List<QueryResultFormatter>> queryObservers;
-    protected Map<String, WebDataStream<Graph>> registeredStreams;
+    protected Map<String, DataStream<Graph>> registeredStreams;
     private ReportGrain report_grain;
 
 
@@ -82,14 +82,14 @@ public class Yasper implements QueryRegistrationFeature<RSPQL>, StreamRegistrati
     }
 
     @Override
-    public ContinuousQueryExecution<Graph, Graph, Binding> register(RSPQL q) {
+    public ContinuousQueryExecution<Graph, Graph, Binding,Binding> register(RSPQL q) {
 //        return new ContinuousQueryExecutionFactoryImpl(q, windowOperatorFactory, registeredStreams, report, report_grain, tick, t0).build();
 
         SDS<Graph> sds = new SDSImpl();
 
-        WebDataStream<Binding> out = new WebStreamImpl<Binding>(q.getID());
+        DataStream<Binding> out = new StreamImpl<Binding>(q.getID());
 
-        ContinuousQueryExecution<Graph, Graph, Binding> cqe = new ContinuousQueryExecutionImpl<Graph, Graph, Binding>(sds, q, out, q.r2r(), q.r2s());
+        ContinuousQueryExecution<Graph, Graph, Binding,Binding> cqe = new ContinuousQueryExecutionImpl<Graph, Graph, Binding,Binding>(sds, q, out, q.r2r(), q.r2s());
 
         Map<? extends WindowNode, WebStream> windowMap = q.getWindowMap();
 

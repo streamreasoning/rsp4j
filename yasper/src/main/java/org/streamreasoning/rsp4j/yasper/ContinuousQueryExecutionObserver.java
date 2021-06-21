@@ -13,7 +13,7 @@ import java.util.Observer;
  * Created by riccardo on 03/07/2017.
  */
 @AllArgsConstructor
-public abstract class ContinuousQueryExecutionObserver<I, E1, E2> extends Observable implements Observer, ContinuousQueryExecution<I, E1, E2> {
+public abstract class ContinuousQueryExecutionObserver<I, W, R, O> extends Observable implements Observer, ContinuousQueryExecution<I, W, R, O> {
 
     protected ContinuousQuery query;
     protected RelationToStreamOperator s2r;

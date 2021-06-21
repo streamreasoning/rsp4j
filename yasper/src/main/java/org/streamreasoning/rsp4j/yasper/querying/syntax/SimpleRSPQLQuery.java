@@ -9,35 +9,35 @@ import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRe
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
-import org.streamreasoning.rsp4j.api.stream.web.WebStream;
-import org.streamreasoning.rsp4j.api.stream.web.WebStreamImpl;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
+import org.streamreasoning.rsp4j.io.DataStreamImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TP;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TP;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 public class SimpleRSPQLQuery<O> implements RSPQL<O> {
 
     private String id;
 
-    private WebStream outputStream;
+    private DataStream<O> outputStream;
     private VarOrTerm s, p, o;
 
-    private Map<WindowNode, WebStream> windowMap = new HashMap<>();
+    private Map<WindowNode, DataStream<Graph>> windowMap = new HashMap<>();
     private List<String> graphURIs = new ArrayList<>();
     private List<String> namedwindowsURIs = new ArrayList<>();
     private List<String> namedGraphURIs = new ArrayList<>();
 
     private StreamOperator streamOperator;
-    public SimpleRSPQLQuery(String id, WebStream stream, WindowNode win, VarOrTerm s, VarOrTerm p, VarOrTerm o) {
+
+    public SimpleRSPQLQuery(String id, DataStream<Graph> stream, WindowNode win, VarOrTerm s, VarOrTerm p, VarOrTerm o) {
         this.id = id;
-        this.outputStream = new WebStreamImpl(id);
+        this.outputStream = new DataStreamImpl<O>(id);
         this.s = s;
         this.p = p;
         this.o = o;
@@ -51,8 +51,7 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
 
     @Override
     public void addNamedWindow(String streamUri, WindowNode wo) {
-        WebStream s = new WebStreamImpl(streamUri);
-        windowMap.put(wo, s);
+        windowMap.put(wo, new DataStreamImpl<>(streamUri));
     }
 
     @Override
@@ -107,11 +106,11 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
 
     @Override
     public void setOutputStream(String uri) {
-        this.outputStream = new WebStreamImpl(uri);
+        this.outputStream = new DataStreamImpl<>(uri);
     }
 
     @Override
-    public WebStream getOutputStream() {
+    public DataStream<O> getOutputStream() {
         return outputStream;
     }
 
@@ -122,7 +121,7 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
 
 
     @Override
-    public Map<WindowNode, WebStream> getWindowMap() {
+    public Map<WindowNode, DataStream<Graph>> getWindowMap() {
         return windowMap;
     }
 
@@ -143,7 +142,7 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
     }
 
     @Override
-    public RelationToStreamOperator<O> r2s() {
+    public RelationToStreamOperator<Binding,O> r2s() {
         return new Rstream();
     }
 }

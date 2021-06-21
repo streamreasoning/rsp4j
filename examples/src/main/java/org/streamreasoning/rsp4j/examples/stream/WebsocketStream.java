@@ -1,7 +1,7 @@
 package org.streamreasoning.rsp4j.examples.stream;
 
 
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.jena.JenaRDF;
@@ -57,8 +57,8 @@ public class WebsocketStream extends RDFStream {
     }
     @WebSocket
     public class WebSocketInputStream {
-        private WebDataStream<Graph> stream;
-        public WebSocketInputStream(WebDataStream<Graph> stream) {
+        private DataStream<Graph> stream;
+        public WebSocketInputStream(DataStream<Graph> stream) {
             this.stream=stream;
         }
         @OnWebSocketConnect

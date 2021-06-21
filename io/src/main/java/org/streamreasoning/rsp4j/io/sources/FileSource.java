@@ -1,23 +1,19 @@
 package org.streamreasoning.rsp4j.io.sources;
 
-import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Consumer;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
-import org.streamreasoning.rsp4j.io.WebDataStreamImpl;
+import org.streamreasoning.rsp4j.io.DataStreamImpl;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingResult;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingStrategy;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Source that reads data from file, line by line. Uses a ParsingStrategy to convert the strings to object of type T.
  *
  * @param <T>  resulting objects after parsing
  */
-public class FileSource<T> extends WebDataStreamImpl<T> {
+public class FileSource<T> extends DataStreamImpl<T> {
 
   private final String filePath;
   private final long timeOut;
@@ -32,6 +28,7 @@ public class FileSource<T> extends WebDataStreamImpl<T> {
    * @param parsingStrategy  parsing strategy used for converting the strings to objects of type T
    */
   public FileSource(String filePath, long timeOut, ParsingStrategy<T> parsingStrategy) {
+    super(filePath);
     this.filePath = filePath;
     this.timeOut = timeOut;
     this.parsingStrategy = parsingStrategy;

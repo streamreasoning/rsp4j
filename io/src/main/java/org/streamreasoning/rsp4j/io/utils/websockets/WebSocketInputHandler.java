@@ -6,7 +6,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingResult;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingStrategy;
 
@@ -15,9 +15,9 @@ import java.io.IOException;
 @WebSocket
 public class WebSocketInputHandler<T> {
     private final ParsingStrategy<T> parsingStrategy;
-    private WebDataStream<T> stream;
+    private DataStream<T> stream;
 
-    public WebSocketInputHandler(WebDataStream<T> stream, ParsingStrategy<T> parsingStrategy) {
+    public WebSocketInputHandler(DataStream<T> stream, ParsingStrategy<T> parsingStrategy) {
         this.stream=stream;
         this.parsingStrategy = parsingStrategy;
     }

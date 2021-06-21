@@ -8,14 +8,14 @@ import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.apache.commons.rdf.api.Triple;
 
 import java.util.Observable;
 import java.util.Observer;
 import java.util.stream.Stream;
 
-public class StreamViewImpl extends Observable implements ContinuousQueryExecution<Triple, Triple, Triple>, Observer {
+public class StreamViewImpl extends Observable implements ContinuousQueryExecution<Triple, Triple,Triple, Triple>, Observer {
 
     private Content content;
 
@@ -34,7 +34,7 @@ public class StreamViewImpl extends Observable implements ContinuousQueryExecuti
 
 
     @Override
-    public WebDataStream<Triple> outstream() {
+    public DataStream<Triple> outstream() {
         return null;
     }
 
@@ -60,7 +60,7 @@ public class StreamViewImpl extends Observable implements ContinuousQueryExecuti
     }
 
     @Override
-    public RelationToStreamOperator<Triple> r2s() {
+    public RelationToStreamOperator<Triple,Triple> r2s() {
         return null;
     }
 

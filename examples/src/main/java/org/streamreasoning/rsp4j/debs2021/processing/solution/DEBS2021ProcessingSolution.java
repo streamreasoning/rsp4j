@@ -19,9 +19,9 @@ import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
 import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.debs2021.utils.StreamGenerator;
-import org.streamreasoning.rsp4j.yasper.examples.WebStreamImpl;
+import org.streamreasoning.rsp4j.io.DataStreamImpl;
 import org.streamreasoning.rsp4j.yasper.querying.formatter.InstResponseSysOutFormatter;
 import org.streamreasoning.rsp4j.yasper.querying.operators.DummyR2R;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
@@ -37,9 +37,9 @@ public class DEBS2021ProcessingSolution {
 
     public static void main(String[] args) throws InterruptedException {
         StreamGenerator generator = new StreamGenerator();
-        WebDataStream<Graph> inputStream = generator.getStream("stream1");
+        DataStream<Graph> inputStream = generator.getStream("stream1");
 
-        WebStreamImpl outStream = new WebStreamImpl("out");
+        DataStreamImpl outStream = new DataStreamImpl("out");
 
 
         //ENGINE DEFINITION
@@ -79,13 +79,13 @@ public class DEBS2021ProcessingSolution {
         RelationToRelationOperator<Graph, Triple> r2r = new DummyR2R(sds, q);
 
 
-        Task<Graph, Graph, Triple> t =
+        Task<Graph, Graph, Triple,Triple> t =
                 new Task.TaskBuilder()
                         .addS2R("stream1", s2r, "w1")
                         .addR2R("w1", r2r)
-                        .addR2S("out", new Rstream<Graph>())
+                        .addR2S("out", new Rstream<Triple,Triple>())
                         .build();
-        ContinuousProgram<Graph, Graph, Triple> cp = new ContinuousProgram.ContinuousProgramBuilder()
+        ContinuousProgram<Graph, Graph, Triple, Triple> cp = new ContinuousProgram.ContinuousProgramBuilder()
                 .in(inputStream)
                 .setSDS(sds)
                 .addTask(t)

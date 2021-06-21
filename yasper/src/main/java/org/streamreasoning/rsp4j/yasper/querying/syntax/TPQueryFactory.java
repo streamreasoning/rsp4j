@@ -34,12 +34,12 @@ public class TPQueryFactory {
 
     }
 
-    public static ContinuousQuery<Graph, Graph, Binding> parse(String queryString){
+    public static ContinuousQuery<Graph, Graph,Binding, Binding> parse(String queryString){
         InputStream inputStream = new ByteArrayInputStream(queryString.getBytes());
         return parse(inputStream);
     }
 
-    public static ContinuousQuery<Graph, Graph, Binding> parse(InputStream inputStream) {
+    public static ContinuousQuery<Graph, Graph,Binding, Binding> parse(InputStream inputStream) {
         try {
             // Ignore case for keywords
             CaseChangingCharStream charStream = new CaseChangingCharStream(CharStreams.fromStream(inputStream), true);
@@ -50,7 +50,7 @@ public class TPQueryFactory {
             ParseTree tree = parser.queryUnit();
             TPVisitorImpl visitor = new TPVisitorImpl();
             visitor.visit(tree);
-            ContinuousQuery<Graph, Graph, Binding> query = visitor.generateQuery();
+            ContinuousQuery<Graph, Graph, Binding, Binding> query = visitor.generateQuery();
             return query;
         } catch(IOException e) {
             System.err.println(e.getMessage());

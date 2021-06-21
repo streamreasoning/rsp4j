@@ -6,14 +6,14 @@ import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 /**
  * Created by riccardo on 05/09/2017.
  */
-public class Rstream<T> implements RelationToStreamOperator<T> {
+public class Rstream<R,O> implements RelationToStreamOperator<R,O> {
 
     public static RelationToStreamOperator get() {
         return new Rstream();
     }
 
     @Override
-    public T eval(SolutionMapping<T> last_response, long ts) {
-        return last_response.get();
+    public O eval(SolutionMapping<R> last_response, long ts) {
+        return (O)last_response.get(); //TODO add converter
     }
 }

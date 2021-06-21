@@ -1,13 +1,8 @@
 package org.streamreasoning.rsp4j.io.sinks;
 
-import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Consumer;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
-import org.streamreasoning.rsp4j.io.WebDataStreamImpl;
+import org.streamreasoning.rsp4j.io.DataStreamImpl;
 import org.streamreasoning.rsp4j.io.utils.file.FileSinkConsumer;
 import org.streamreasoning.rsp4j.io.utils.serialization.StringSerializationStrategy;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * WebDataStream Sink that write to file. See FileSinkConsumer when only a consumer is needed to write to file.
@@ -15,7 +10,7 @@ import java.util.List;
  *
  * @param <T>  objects of type T that need to be written to file.
  */
-public class FileSink<T> extends WebDataStreamImpl<T> {
+public class FileSink<T> extends DataStreamImpl<T> {
     private final StringSerializationStrategy<T> serializatinStrategy;
     private final String path;
     private final FileSinkConsumer<T> fileConsumer;
@@ -28,6 +23,7 @@ public class FileSink<T> extends WebDataStreamImpl<T> {
      * @param serializationStrategy  serialization strategy used for converting object of type T to strings.
      */
     public FileSink(String path, StringSerializationStrategy<T> serializationStrategy){
+        super(path);
         this.path = path;
         this.serializatinStrategy = serializationStrategy;
         this.fileConsumer = new FileSinkConsumer<T>(path,serializationStrategy);

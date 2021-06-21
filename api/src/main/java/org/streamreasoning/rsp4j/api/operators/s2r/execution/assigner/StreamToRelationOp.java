@@ -9,7 +9,7 @@ import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.secret.content.Content;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
  * O represents the variable type of the maintained status, e.g., BAG of RDF Triple, RDF Graph (set) or RELATION
  * */
 
-public interface StreamToRelationOp<I, O> extends Consumer<I> {
+public interface StreamToRelationOp<I, W> extends Consumer<I> {
 
     Report report();
 
@@ -28,11 +28,11 @@ public interface StreamToRelationOp<I, O> extends Consumer<I> {
 
     ReportGrain grain();
 
-    Content<I, O> content(long now);
+    Content<I, W> content(long now);
 
-    List<Content<I, O>> getContents(long now);
+    List<Content<I, W>> getContents(long now);
 
-    TimeVarying<O> get();
+    TimeVarying<W> get();
 
     String iri();
 
@@ -40,9 +40,9 @@ public interface StreamToRelationOp<I, O> extends Consumer<I> {
         return iri() != null;
     }
 
-    Content<I, O> compute(long t_e, Window w);
+    Content<I, W> compute(long t_e, Window w);
 
-    StreamToRelationOp<I, O> link(ContinuousQueryExecution<I, O, ?> context);
+    StreamToRelationOp<I, W> link(ContinuousQueryExecution<I, W,?, ?> context);
 
-    TimeVarying<O> apply(WebDataStream<I> s);
+    TimeVarying<W> apply(DataStream<I> s);
 }

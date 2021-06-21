@@ -8,8 +8,10 @@ import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLBaseVisitor;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLParser;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.api.stream.web.WebStream;
 import org.streamreasoning.rsp4j.api.stream.web.WebStreamImpl;
+import org.streamreasoning.rsp4j.io.DataStreamImpl;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TermImpl;
@@ -133,13 +135,13 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
 
 
 
-  public ContinuousQuery<Graph, Graph, Binding> generateQuery() {
+  public ContinuousQuery<Graph, Graph,Binding, Binding> generateQuery() {
 
-    WebStream stream = null;
+    DataStream stream = null;
     WindowNode win= null;
     Optional<Map.Entry<String, WindowNode>> window = windowMap.entrySet().stream().findFirst();
     if(window.isPresent()){
-      stream = new WebStreamImpl(window.get().getKey());
+      stream = new DataStreamImpl(window.get().getKey());
       win = window.get().getValue();
 
     }

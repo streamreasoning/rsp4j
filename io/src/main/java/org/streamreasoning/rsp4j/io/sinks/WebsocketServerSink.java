@@ -32,6 +32,7 @@ public class WebsocketServerSink<T> extends AbstractWebsocketSink<T> {
      * @param serializationStrategy  the serialization strategy to convert objects of type T to strings
      */
     public WebsocketServerSink(String streamURI,int port, String wsPath, StringSerializationStrategy<T> serializationStrategy) {
+        super(streamURI);
         this.serializationStrategy = serializationStrategy;
         this.wsPath = wsPath;
         this.port = port;

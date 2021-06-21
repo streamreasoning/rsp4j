@@ -6,7 +6,7 @@ import org.streamreasoning.rsp.enums.License;
 import org.streamreasoning.rsp.enums.Protocol;
 import org.streamreasoning.rsp.enums.Security;
 import org.streamreasoning.rsp4j.api.RDFUtils;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,7 +147,7 @@ public class Main {
 
         wse.describe().stream().forEach(System.err::println);
 
-        WebDataStream<String> serve = wse.<String>deploy();
+        DataStream<String> serve = wse.<String>deploy();
 
 
         new Thread(() -> {
