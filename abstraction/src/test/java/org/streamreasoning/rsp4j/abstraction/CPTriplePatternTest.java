@@ -7,10 +7,8 @@ import org.apache.commons.rdf.api.Triple;
 import org.junit.Test;
 import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegistry;
 import org.streamreasoning.rsp4j.abstraction.functions.CountFunction;
-import org.streamreasoning.rsp4j.abstraction.table.TableResponse;
 import org.streamreasoning.rsp4j.abstraction.table.TableRow;
 import org.streamreasoning.rsp4j.abstraction.table.TableRowStream;
-import org.streamreasoning.rsp4j.abstraction.table.TableRowsSysOutFormatter;
 import org.streamreasoning.rsp4j.abstraction.triplepattern.ContinuousTriplePatternQuery;
 import org.streamreasoning.rsp4j.abstraction.triplepattern.TriplePatternR2R;
 import org.streamreasoning.rsp4j.abstraction.utils.DummyConsumer;
@@ -19,17 +17,20 @@ import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.StreamToRelationOperatorFactory;
-import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Consumer;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
+import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
 import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
 import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.yasper.stream.WebDataStreamWrapper;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLTimeWindowOperatorFactory;
+import org.streamreasoning.rsp4j.yasper.querying.syntax.TPQueryFactory;
 import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
 
 import java.util.ArrayList;
@@ -177,6 +178,54 @@ public class CPTriplePatternTest {
         expected.add(new TableRow("count","1"));
         expected.add(new TableRow("count","1"));
         assertEquals(expected,dummyConsumer.getReceived());
+    }
+
+    @Test
+    public void triplePatternQueryTest(){
+
+        RDFStream stream = new RDFStream("http://test/stream");
+
+
+        ContinuousQuery<Graph, Graph,Binding> query = TPQueryFactory.parse("" +
+                "REGISTER ISTREAM <http://out/stream> AS " +
+                "SELECT * " +
+                "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT2S STEP PT2S] " +
+                "WHERE {" +
+                "   ?green rdf:type <http://color#Green> ." +
+                "}");
+
+
+        //SDS
+        SDS<Graph> sds = new SDSImpl();
+        WebDataStream<Graph> wrappedStream = WebDataStreamWrapper.from(query.getOutputStream());
+        Task<Graph,Graph,Graph> t =
+                new QueryTask.QueryTaskBuilder()
+                        .fromQuery(query)
+                        .build();
+        ContinuousProgram<Graph,Graph,Triple> cp = new ContinuousProgram.ContinuousProgramBuilder()
+                .in(stream)
+                .setSDS(sds)
+                .addTask(t)
+                .out(wrappedStream)
+                .build();
+
+        DummyConsumer<Graph> dummyConsumer = new DummyConsumer<>();
+
+        wrappedStream.addConsumer(dummyConsumer);
+
+        populateStream(stream,10000);
+
+
+
+
+
+
+        assertEquals(2,dummyConsumer.getSize());
+        List<TableRow> expected = new ArrayList<>();
+        expected.add(new TableRow("green","<S1>"));
+        expected.add(new TableRow("green","<S4>"));
+        assertEquals(expected,dummyConsumer.getReceived());
+
     }
     private void populateStream(WebDataStream<Graph> stream,long startTime){
         //RUNTIME DATA

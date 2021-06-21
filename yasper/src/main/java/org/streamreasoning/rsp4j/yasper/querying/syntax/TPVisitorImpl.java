@@ -133,7 +133,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
 
 
 
-  public ContinuousQuery<Graph, Binding, Graph> generateQuery() {
+  public ContinuousQuery<Graph, Graph, Binding> generateQuery() {
 
     WebStream stream = null;
     WindowNode win= null;
@@ -143,7 +143,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
       win = window.get().getValue();
 
     }
-    SimpleRSPQLQuery<Graph> query = new SimpleRSPQLQuery<Graph>("",stream,win,s,p,o);
+    SimpleRSPQLQuery<Binding> query = new SimpleRSPQLQuery<>("",stream,win,s,p,o);
     windowMap.entrySet().forEach(e -> query.addNamedWindow(e.getKey(),e.getValue()));
     RSPQLExtractionHelper.setOutputStreamType(query,outputStreamType);
     query.setOutputStream(outputStreamIRI);

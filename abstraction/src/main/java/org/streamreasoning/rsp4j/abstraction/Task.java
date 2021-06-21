@@ -3,9 +3,21 @@ package org.streamreasoning.rsp4j.abstraction;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.rdf.api.Graph;
+import org.streamreasoning.rsp4j.abstraction.table.TableRowStream;
+import org.streamreasoning.rsp4j.api.enums.ReportGrain;
+import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
+import org.streamreasoning.rsp4j.api.operators.s2r.StreamToRelationOperatorFactory;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
+import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
+import org.streamreasoning.rsp4j.api.secret.report.Report;
+import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
+import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
+import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
+import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
+import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLTimeWindowOperatorFactory;
 
 import java.util.*;
 
@@ -24,7 +36,6 @@ public class Task<I, R, O> {
         this.prefixes = builder.prefixes;
         this.aggregations = builder.aggregations;
     }
-
 
     public Set<S2RContainer<I, R>> getS2Rs() {
         return s2rs;
@@ -63,18 +74,18 @@ public class Task<I, R, O> {
             return this;
         }
 
-        public TaskBuilder<I, R, O> addS2R(String sourceURI, StreamToRelationOp<I, R> s2rFactory, String tvgName) {
-            s2rs.add(new S2RContainer<I, R>(sourceURI, s2rFactory, tvgName));
+        public TaskBuilder<I, R, O> addS2R(String sourceURI, StreamToRelationOp<I, R> s2r, String tvgName) {
+            s2rs.add(new S2RContainer<I, R>(sourceURI, s2r, tvgName));
             return this;
         }
 
-        public TaskBuilder<I, R, O> addR2R(String tvgName, RelationToRelationOperator<R, O> r2rFactory) {
-            r2rs.add(new R2RContainer<R, O>(tvgName, r2rFactory));
+        public TaskBuilder<I, R, O> addR2R(String tvgName, RelationToRelationOperator<R, O> r2r) {
+            r2rs.add(new R2RContainer<R, O>(tvgName, r2r));
             return this;
         }
 
-        public TaskBuilder<I, R, O> addR2S(String sinkURI, RelationToStreamOperator<O> r2sFactory) {
-            r2ss.add(new R2SContainer<O>(sinkURI, r2sFactory));
+        public TaskBuilder<I, R, O> addR2S(String sinkURI, RelationToStreamOperator<O> r2s) {
+            r2ss.add(new R2SContainer<O>(sinkURI, r2s));
             return this;
         }
 
