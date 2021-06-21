@@ -7,7 +7,7 @@ import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRe
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.sds.SDS;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.yasper.querying.SelectInstResponse;
 
 import java.util.Arrays;
@@ -26,10 +26,10 @@ public class ContinuousQueryExecutionImpl<I, E1, E2> extends ContinuousQueryExec
     private final RelationToRelationOperator<E1, E2> r2r;
     private final SDS<E1> sds;
     private final ContinuousQuery query;
-    private final WebDataStream<E2> outstream;
+    private final DataStream<E2> outstream;
     private List<StreamToRelationOp<I, E1>> s2rs;
 
-    public ContinuousQueryExecutionImpl(SDS sds, ContinuousQuery query, WebDataStream<E2> outstream, RelationToRelationOperator<E1, E2> r2r, RelationToStreamOperator<E2> r2s, StreamToRelationOp<I, E1>... s2rs) {
+    public ContinuousQueryExecutionImpl(SDS sds, ContinuousQuery query, DataStream<E2> outstream, RelationToRelationOperator<E1, E2> r2r, RelationToStreamOperator<E2> r2s, StreamToRelationOp<I, E1>... s2rs) {
         super(sds, query);
         this.s2rs = Arrays.asList(s2rs);
         this.query = query;
@@ -40,7 +40,7 @@ public class ContinuousQueryExecutionImpl<I, E1, E2> extends ContinuousQueryExec
     }
 
     @Override
-    public WebDataStream<E2> outstream() {
+    public DataStream<E2> outstream() {
         return outstream;
     }
 

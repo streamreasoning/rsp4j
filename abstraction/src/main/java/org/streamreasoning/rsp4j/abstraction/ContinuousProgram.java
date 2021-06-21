@@ -12,9 +12,8 @@ import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.yasper.ContinuousQueryExecutionObserver;
-import org.streamreasoning.rsp4j.yasper.querying.SelectInstResponse;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,8 +23,8 @@ import java.util.stream.Stream;
 public class ContinuousProgram<I, R, O> extends ContinuousQueryExecutionObserver<I, R, O> {
 
   private List<Task<I, R, O>> tasks;
-  private WebDataStream<I> inputStream;
-  private WebDataStream<O> outputStream;
+  private DataStream<I> inputStream;
+  private DataStream<O> outputStream;
   private SDS<R> sds;
 
   public ContinuousProgram(ContinuousProgramBuilder builder) {
@@ -104,7 +103,7 @@ public class ContinuousProgram<I, R, O> extends ContinuousQueryExecutionObserver
     return Optional.ofNullable(aggregation);
   }
   @Override
-  public WebDataStream<O> outstream() {
+  public DataStream<O> outstream() {
     return outputStream;
   }
 
@@ -151,20 +150,20 @@ public class ContinuousProgram<I, R, O> extends ContinuousQueryExecutionObserver
 
   public static class ContinuousProgramBuilder<I, R, O> {
     private List<Task<I, R, O>> tasks;
-    private WebDataStream<I> inputStream;
-    private WebDataStream<O> outputStream;
+    private DataStream<I> inputStream;
+    private DataStream<O> outputStream;
     private SDS<I> sds;
 
     public ContinuousProgramBuilder() {
       tasks = new ArrayList<>();
     }
 
-    public ContinuousProgramBuilder<I, R, O> in(WebDataStream<I> stream) {
+    public ContinuousProgramBuilder<I, R, O> in(DataStream<I> stream) {
       this.inputStream = stream;
       return this;
     }
 
-    public ContinuousProgramBuilder<I, R, O> out(WebDataStream<O> stream) {
+    public ContinuousProgramBuilder<I, R, O> out(DataStream<O> stream) {
       this.outputStream = stream;
       return this;
     }

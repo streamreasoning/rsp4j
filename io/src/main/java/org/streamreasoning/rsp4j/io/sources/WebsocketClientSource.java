@@ -6,7 +6,7 @@ import lombok.extern.log4j.Log4j;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Consumer;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.io.utils.websockets.WebSocketInputHandler;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingStrategy;
 
@@ -22,7 +22,7 @@ import java.util.List;
  * @param <T>  output type of the sink
  */
 @Log4j
-public class WebsocketClientSource<T> implements WebDataStream<T> {
+public class WebsocketClientSource<T> implements DataStream<T> {
 
     private ParsingStrategy<T> parsingStrategy;
     protected List<Consumer<T>> consumers = new ArrayList<>();
@@ -78,7 +78,6 @@ public class WebsocketClientSource<T> implements WebDataStream<T> {
 
     }
 
-    @Override
     public String uri() {
         return stream_uri;
     }

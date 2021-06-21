@@ -1,23 +1,18 @@
 package org.streamreasoning.rsp4j.yasper.querying.syntax;
 
-import org.antlr.v4.runtime.tree.TerminalNode;
 import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.api.IRI;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLBaseVisitor;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLParser;
-import org.streamreasoning.rsp4j.api.stream.web.WebStream;
-import org.streamreasoning.rsp4j.api.stream.web.WebStreamImpl;
-import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
+import org.streamreasoning.rsp4j.io.DataStreamImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TermImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
-import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.WindowNodeImpl;
 
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -135,11 +130,11 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
 
   public ContinuousQuery<Graph, Binding, Graph> generateQuery() {
 
-    WebStream stream = null;
+    DataStream<Graph> stream = null;
     WindowNode win= null;
     Optional<Map.Entry<String, WindowNode>> window = windowMap.entrySet().stream().findFirst();
     if(window.isPresent()){
-      stream = new WebStreamImpl(window.get().getKey());
+      stream = new DataStreamImpl(window.get().getKey());
       win = window.get().getValue();
 
     }

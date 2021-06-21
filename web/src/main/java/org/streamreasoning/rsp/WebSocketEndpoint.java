@@ -4,9 +4,9 @@ import org.apache.commons.rdf.api.*;
 import org.streamreasoning.rsp.enums.Format;
 import org.streamreasoning.rsp.enums.License;
 import org.streamreasoning.rsp4j.api.RDFUtils;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.api.stream.web.WebStream;
-
+import org.streamreasoning.rsp4j.io.DataStreamImpl;
 
 import static spark.Spark.*;
 
@@ -26,9 +26,11 @@ public class WebSocketEndpoint<E> implements WebStreamEndpoint<E> {
     }
 
     @Override
-    public WebDataStream<E> deploy() {
+    public DataStream<E> deploy() {
         ignite();
-        return new WebDataStreamImpl<E>(path, wsh);
+        DataStreamImpl<E> eDataStream = new DataStreamImpl<E>(path);
+        eDataStream.addConsumer(wsh);
+        return eDataStream;
     }
 
     @Override

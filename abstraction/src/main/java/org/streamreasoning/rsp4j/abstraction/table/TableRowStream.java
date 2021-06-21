@@ -1,12 +1,12 @@
 package org.streamreasoning.rsp4j.abstraction.table;
 
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Consumer;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TableRowStream implements WebDataStream<TableRow> {
+public class TableRowStream implements DataStream<TableRow> {
     protected String stream_uri;
     protected List<Consumer<TableRow>> consumers = new ArrayList<>();
 
@@ -26,7 +26,6 @@ public class TableRowStream implements WebDataStream<TableRow> {
         consumers.forEach(graphConsumer -> graphConsumer.notify(e, ts));
     }
 
-    @Override
     public String uri() {
         return stream_uri;
     }

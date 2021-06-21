@@ -8,7 +8,7 @@ import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.engine.config.EngineConfiguration;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.yasper.engines.Yasper;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TermImpl;
@@ -53,7 +53,7 @@ public class YasperExample {
 
         ContinuousQueryExecution<Graph, Graph, Binding> cqe = sr.register(q);
 
-        WebDataStream<Binding> outstream = cqe.outstream();
+        DataStream<Binding> outstream = cqe.outstream();
 //        outstream.addConsumer(new InstResponseSysOutFormatter("TTL", true));
         cqe.outstream().addConsumer((arg, ts) -> System.out.println(arg));
 

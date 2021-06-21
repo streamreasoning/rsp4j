@@ -1,7 +1,7 @@
 package org.streamreasoning.rsp;
 
 import org.apache.commons.rdf.api.Graph;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.api.stream.web.WebStream;
 
 import java.util.ArrayList;
@@ -23,10 +23,10 @@ public class MultiEndpoint<E> implements WebStreamEndpoint<E> {
     }
 
     @Override
-    public WebDataStream<E> deploy() {
+    public DataStream<E> deploy() {
         wses.forEach(wse -> wse.deploy());
         //TODO to create the multi endpoint we need a way to pipe different streams;
-        return new WebDataStreamImpl<E>("", null);
+        return new DataStreamImpl<E>("", null);
     }
 
     @Override

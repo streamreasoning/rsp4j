@@ -9,7 +9,7 @@ import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.secret.content.Content;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 
 import java.util.List;
 
@@ -44,5 +44,5 @@ public interface StreamToRelationOp<I, O> extends Consumer<I> {
 
     StreamToRelationOp<I, O> link(ContinuousQueryExecution<I, O, ?> context);
 
-    TimeVarying<O> apply(WebDataStream<I> s);
+    TimeVarying<O> apply(DataStream<I> s);
 }

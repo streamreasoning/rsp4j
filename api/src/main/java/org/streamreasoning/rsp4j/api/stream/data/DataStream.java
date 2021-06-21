@@ -1,6 +1,5 @@
 package org.streamreasoning.rsp4j.api.stream.data;
 
-import org.streamreasoning.rsp4j.api.stream.web.WebStream;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Consumer;
 
 /**
@@ -8,7 +7,7 @@ import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Consumer;
  */
 
 //TODO wrap schema for RDFUtils stream?
-public interface WebDataStream<E> extends WebStream {
+public interface DataStream<E> {
 
     void addConsumer(Consumer<E> windowAssigner);
 

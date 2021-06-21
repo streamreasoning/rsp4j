@@ -5,7 +5,7 @@ import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.sds.SDS;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 
 import java.util.stream.Stream;
 
@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 public interface ContinuousQueryExecution<I, E1, O> {
 
-    WebDataStream<O> outstream();
+    DataStream<O> outstream();
 
     ContinuousQuery query();
 

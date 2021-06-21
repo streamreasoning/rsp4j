@@ -7,10 +7,8 @@ import org.apache.commons.rdf.api.Triple;
 import org.junit.Test;
 import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegistry;
 import org.streamreasoning.rsp4j.abstraction.functions.CountFunction;
-import org.streamreasoning.rsp4j.abstraction.table.TableResponse;
 import org.streamreasoning.rsp4j.abstraction.table.TableRow;
 import org.streamreasoning.rsp4j.abstraction.table.TableRowStream;
-import org.streamreasoning.rsp4j.abstraction.table.TableRowsSysOutFormatter;
 import org.streamreasoning.rsp4j.abstraction.triplepattern.ContinuousTriplePatternQuery;
 import org.streamreasoning.rsp4j.abstraction.triplepattern.TriplePatternR2R;
 import org.streamreasoning.rsp4j.abstraction.utils.DummyConsumer;
@@ -18,18 +16,17 @@ import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
-import org.streamreasoning.rsp4j.api.operators.s2r.StreamToRelationOperatorFactory;
-import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Consumer;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
 import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
+import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
-import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLTimeWindowOperatorFactory;
+import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
 import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
 
 import java.util.ArrayList;
@@ -40,7 +37,7 @@ import static org.junit.Assert.assertEquals;
 public class CPTriplePatternTest {
 
     @Test
-    public  void simpleTPAbstractionTest(){
+    public void simpleTPAbstractionTest() {
         //ENGINE DEFINITION
         Report report = new ReportImpl();
         report.add(new OnWindowClose());
@@ -62,29 +59,28 @@ public class CPTriplePatternTest {
 
 
         //WINDOW DECLARATION
-        StreamToRelationOperatorFactory<Graph, Graph> windowOperatorFactory = new CSPARQLTimeWindowOperatorFactory( TimeFactory.getInstance(), tick, report, report_grain);
 
-        StreamToRelationOp<Graph, Graph> build = windowOperatorFactory.build(2000, 2000, scope);
+        StreamToRelationOp<Graph, Graph> build = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, TimeFactory.getInstance(), tick, report, report_grain, new GraphContentFactory());
         build.time().setAppTime(0);
 
         //SDS
         SDS<Graph> sds = new SDSImpl();
         //R2R
-        ContinuousTriplePatternQuery q = new ContinuousTriplePatternQuery("q1","stream1","?green rdf:type <http://color#Green>");
+        ContinuousTriplePatternQuery q = new ContinuousTriplePatternQuery("q1", "stream1", "?green rdf:type <http://color#Green>");
 
-        RelationToRelationOperator<TableRow,TableRow> r2r = new TriplePatternR2R(sds, q);
+        RelationToRelationOperator<TableRow, TableRow> r2r = new TriplePatternR2R(sds, q);
 
 
         // REGISTER FUNCTION
-        AggregationFunctionRegistry.getInstance().addFunction("COUNT",new CountFunction());
+        AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
 
-        Task<Graph,TableRow,TableRow> t =
-        new Task.TaskBuilder()
-            .addS2R("stream1", build, "w1")
-            .addR2R("w1", r2r)
-            .addR2S("out", new Rstream<TableRow>())
-            .build();
-        ContinuousProgram<Graph,Graph,Triple> cp = new ContinuousProgram.ContinuousProgramBuilder()
+        Task<Graph, TableRow, TableRow> t =
+                new Task.TaskBuilder()
+                        .addS2R("stream1", build, "w1")
+                        .addR2R("w1", r2r)
+                        .addR2S("out", new Rstream<TableRow>())
+                        .build();
+        ContinuousProgram<Graph, Graph, Triple> cp = new ContinuousProgram.ContinuousProgramBuilder()
                 .in(stream)
                 .setSDS(sds)
                 .addTask(t)
@@ -96,19 +92,18 @@ public class CPTriplePatternTest {
 
 
         //RUNTIME DATA
-        populateStream(stream,build.time().getAppTime());
+        populateStream(stream, build.time().getAppTime());
 
 
-
-        assertEquals(2,dummyConsumer.getSize());
+        assertEquals(2, dummyConsumer.getSize());
         List<TableRow> expected = new ArrayList<>();
-        expected.add(new TableRow("green","<S1>"));
-        expected.add(new TableRow("green","<S4>"));
-        assertEquals(expected,dummyConsumer.getReceived());
+        expected.add(new TableRow("green", "<S1>"));
+        expected.add(new TableRow("green", "<S4>"));
+        assertEquals(expected, dummyConsumer.getReceived());
     }
 
     @Test
-    public  void simpleTPAbstractionAggregationTest(){
+    public void simpleTPAbstractionAggregationTest() {
         //ENGINE DEFINITION
         Report report = new ReportImpl();
         report.add(new OnWindowClose());
@@ -130,31 +125,29 @@ public class CPTriplePatternTest {
 
 
         //WINDOW DECLARATION
-        StreamToRelationOperatorFactory<Graph, Graph> windowOperatorFactory = new CSPARQLTimeWindowOperatorFactory( TimeFactory.getInstance(), tick, report, report_grain);
-
-        StreamToRelationOp<Graph, Graph> build = windowOperatorFactory.build(2000, 2000, scope);
+        StreamToRelationOp<Graph, Graph> build = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, TimeFactory.getInstance(), tick, report, report_grain, new GraphContentFactory());
 
 
         //SDS
         SDS<Graph> sds = new SDSImpl();
         //R2R
-        ContinuousTriplePatternQuery q = new ContinuousTriplePatternQuery("q1","stream1","?green rdf:type <http://color#Green>");
+        ContinuousTriplePatternQuery q = new ContinuousTriplePatternQuery("q1", "stream1", "?green rdf:type <http://color#Green>");
 
-        RelationToRelationOperator<TableRow,TableRow> r2r = new TriplePatternR2R(sds, q);
+        RelationToRelationOperator<TableRow, TableRow> r2r = new TriplePatternR2R(sds, q);
 
 
         // REGISTER FUNCTION
-        AggregationFunctionRegistry.getInstance().addFunction("COUNT",new CountFunction());
+        AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
 
-        Task<Graph,Graph,Triple> t =
+        Task<Graph, Graph, Triple> t =
                 new Task.TaskBuilder()
                         .addS2R("stream1", build, "w1")
                         .addR2R("w1", r2r)
                         .addR2S("out", new Rstream<TableRow>())
                         // comment this one out so you can see it works witouth aggregation as well
-                        .aggregate("gw","COUNT","green", "count")
+                        .aggregate("gw", "COUNT", "green", "count")
                         .build();
-        ContinuousProgram<Graph,Graph,Triple> cp = new ContinuousProgram.ContinuousProgramBuilder()
+        ContinuousProgram<Graph, Graph, Triple> cp = new ContinuousProgram.ContinuousProgramBuilder()
                 .in(stream)
                 .setSDS(sds)
                 .addTask(t)
@@ -164,55 +157,51 @@ public class CPTriplePatternTest {
         DummyConsumer<TableRow> dummyConsumer = new DummyConsumer<>();
         outStream.addConsumer(dummyConsumer);
 
-        populateStream(stream,build.time().getAppTime());
+        populateStream(stream, build.time().getAppTime());
 
 
-
-
-
-
-        assertEquals(3,dummyConsumer.getSize());
+        assertEquals(3, dummyConsumer.getSize());
         List<TableRow> expected = new ArrayList<>();
-        expected.add(new TableRow("count","0"));
-        expected.add(new TableRow("count","1"));
-        expected.add(new TableRow("count","1"));
-        assertEquals(expected,dummyConsumer.getReceived());
+        expected.add(new TableRow("count", "0"));
+        expected.add(new TableRow("count", "1"));
+        expected.add(new TableRow("count", "1"));
+        assertEquals(expected, dummyConsumer.getReceived());
     }
-    private void populateStream(WebDataStream<Graph> stream,long startTime){
+
+    private void populateStream(DataStream<Graph> stream, long startTime) {
         //RUNTIME DATA
 
         RDF instance = RDFUtils.getInstance();
         Graph graph = instance.createGraph();
         IRI p = instance.createIRI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
         graph.add(instance.createTriple(instance.createIRI("S1"), p, instance.createIRI("http://color#Green")));
-        stream.put(graph, 1000+startTime);
+        stream.put(graph, 1000 + startTime);
 
         graph = instance.createGraph();
         graph.add(instance.createTriple(instance.createIRI("S2"), p, instance.createIRI("http://color#Blue")));
-        stream.put(graph, 1999+startTime);
+        stream.put(graph, 1999 + startTime);
 
 
         //cp.eval(1999l);
         graph = instance.createGraph();
         graph.add(instance.createTriple(instance.createIRI("S3"), p, instance.createIRI("http://color#Red")));
-        stream.put(graph, 2001+startTime);
-
+        stream.put(graph, 2001 + startTime);
 
 
         graph = instance.createGraph();
 
         graph.add(instance.createTriple(instance.createIRI("S4"), p, instance.createIRI("http://color#Green")));
-        stream.put(graph, 3000+startTime);
+        stream.put(graph, 3000 + startTime);
 
 
         graph = instance.createGraph();
         graph.add(instance.createTriple(instance.createIRI("S5"), p, instance.createIRI("http://color#Blue")));
-        stream.put(graph, 5000+startTime);
+        stream.put(graph, 5000 + startTime);
 
 
         graph = instance.createGraph();
         graph.add(instance.createTriple(instance.createIRI("S6"), p, instance.createIRI("http://color#Red")));
-        stream.put(graph, 5000+startTime);
-        stream.put(graph, 6000+startTime);
+        stream.put(graph, 5000 + startTime);
+        stream.put(graph, 6000 + startTime);
     }
 }

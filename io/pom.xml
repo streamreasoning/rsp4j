@@ -48,13 +48,6 @@
             <groupId>org.streamreasoning.rsp4j</groupId>
             <artifactId>api</artifactId>
             <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.streamreasoning.rsp4j</groupId>
-            <artifactId>api</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
         </dependency>
 
         <!--<dependency>
@@ -68,6 +61,6 @@
             <version>1.7.25</version>
         </dependency>-->
 
-</dependencies>
+    </dependencies>
 
 </project>

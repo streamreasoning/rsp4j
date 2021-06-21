@@ -1,22 +1,21 @@
 package org.streamreasoning.rsp4j.yasper.querying.operators.windowing;
 
-import org.streamreasoning.rsp4j.api.RDFUtils;
+import lombok.extern.log4j.Log4j;
+import org.apache.commons.rdf.api.IRI;
+import org.streamreasoning.rsp4j.api.enums.ReportGrain;
+import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.exceptions.OutOfOrderElementException;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.ObservableStreamToRelationOp;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.Window;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.WindowImpl;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
-import org.streamreasoning.rsp4j.api.secret.content.ContentFactory;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
-import org.streamreasoning.rsp4j.yasper.sds.TimeVaryingObject;
 import org.streamreasoning.rsp4j.api.secret.content.Content;
+import org.streamreasoning.rsp4j.api.secret.content.ContentFactory;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
-import org.streamreasoning.rsp4j.api.enums.ReportGrain;
-import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
-import lombok.extern.log4j.Log4j;
-import org.apache.commons.rdf.api.IRI;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
+import org.streamreasoning.rsp4j.yasper.sds.TimeVaryingObject;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -139,9 +138,9 @@ public class CSPARQLStreamToRelationOp<T1, T2> extends ObservableStreamToRelatio
     }
 
     @Override
-    public TimeVarying<T2> apply(WebDataStream<T1> s) {
+    public TimeVarying<T2> apply(DataStream<T1> s) {
         s.addConsumer(this);
-        return new TimeVaryingObject<>(this, RDFUtils.createIRI(s.uri()));
+        return new TimeVaryingObject(this, iri);
     }
 
 

@@ -46,4 +46,6 @@ public class CSPARQLTimeWindowOperatorFactory implements StreamToRelationOperato
     public StreamToRelationOp<Graph, Graph> build(long a, long b, long t0) {
         return new CSPARQLStreamToRelationOp(null, a, b, time, tick, report, grain, cf);
     }
+
+
 }

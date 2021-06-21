@@ -8,7 +8,6 @@ import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
-import org.streamreasoning.rsp4j.api.operators.s2r.StreamToRelationOperatorFactory;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
@@ -17,15 +16,16 @@ import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
 import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
+import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
-import org.streamreasoning.rsp4j.yasper.examples.WebStreamImpl;
+import org.streamreasoning.rsp4j.yasper.examples.StreamImpl;
 import org.streamreasoning.rsp4j.yasper.querying.formatter.InstResponseSysOutFormatter;
 import org.streamreasoning.rsp4j.yasper.querying.operators.DummyR2R;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TermImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
-import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLTimeWindowOperatorFactory;
+import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.WindowNodeImpl;
 import org.streamreasoning.rsp4j.yasper.querying.syntax.SimpleRSPQLQuery;
 import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
@@ -51,13 +51,12 @@ public class CPTest {
 
         //STREAM DECLARATION
         RDFStream stream = new RDFStream("stream1");
-        WebStreamImpl outStream = new WebStreamImpl("out");
+        StreamImpl outStream = new StreamImpl("out");
 
 
         //WINDOW DECLARATION
-        StreamToRelationOperatorFactory<Graph, Graph> windowOperatorFactory = new CSPARQLTimeWindowOperatorFactory(TimeFactory.getInstance(), tick, report, report_grain);
 
-        StreamToRelationOp<Graph, Graph> s2r = windowOperatorFactory.build(2000, 2000, scope);
+        StreamToRelationOp<Graph, Graph> s2r = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, TimeFactory.getInstance(), tick, report, report_grain, new GraphContentFactory());
 
         //SDS
         SDS<Graph> sds = new SDSImpl();
