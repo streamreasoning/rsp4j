@@ -8,11 +8,10 @@ import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRe
 import org.streamreasoning.rsp4j.api.secret.content.ContentFactory;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
-import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 
 public class CSPARQLTimeWindowOperatorFactory implements StreamToRelationOperatorFactory<Graph, Graph> {
 
-//    private final long a, b, t0;
+    //    private final long a, b, t0;
     private final Time time;
     private final Tick tick;
     private final Report report;
@@ -20,7 +19,7 @@ public class CSPARQLTimeWindowOperatorFactory implements StreamToRelationOperato
     //    private ContinuousQueryExecution<Graph, Graph, Triple> context;
     private ContentFactory<Graph, Graph> cf;
 
-    public CSPARQLTimeWindowOperatorFactory(Time time, Tick tick, Report report, ReportGrain grain) {
+    public CSPARQLTimeWindowOperatorFactory(Time time, Tick tick, Report report, ReportGrain grain,  ContentFactory<Graph, Graph> cf) {
 //        this.a = a;
 //        this.b = b;
 //        this.t0 = t0;
@@ -29,7 +28,7 @@ public class CSPARQLTimeWindowOperatorFactory implements StreamToRelationOperato
         this.report = report;
         this.grain = grain;
 //        this.context = context;
-        this.cf = new GraphContentFactory();
+        this.cf = cf;
     }
 
 //

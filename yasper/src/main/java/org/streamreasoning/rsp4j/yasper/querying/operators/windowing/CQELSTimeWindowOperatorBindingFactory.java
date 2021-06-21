@@ -8,9 +8,7 @@ import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRe
 import org.streamreasoning.rsp4j.api.secret.content.ContentFactory;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
-import org.streamreasoning.rsp4j.yasper.content.BindingContentFactory;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -26,7 +24,7 @@ public class CQELSTimeWindowOperatorBindingFactory implements StreamToRelationOp
     private final ContentFactory<Graph, Binding> cf;
 //    private ContinuousQueryExecution<Graph, Graph, Triple> context;
 
-    public CQELSTimeWindowOperatorBindingFactory(Time time, Tick tick, Report report, ReportGrain grain, VarOrTerm... spo) {
+    public CQELSTimeWindowOperatorBindingFactory(Time time, Tick tick, Report report, ReportGrain grain, ContentFactory<Graph, Binding> cf) {
 //        this.a = a;
 //        this.t0 = t0;
         this.time = time;
@@ -34,7 +32,7 @@ public class CQELSTimeWindowOperatorBindingFactory implements StreamToRelationOp
         this.report = report;
         this.grain = grain;
 //        this.context = context;
-        this.cf = new BindingContentFactory(spo[0], spo[1], spo[2]);
+        this.cf = cf;
     }
 
     //TODO consider a Params interface

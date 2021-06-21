@@ -1,8 +1,6 @@
 package org.streamreasoning.rsp4j.yasper.engines;
 
 import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.api.IRI;
-import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.engine.config.EngineConfiguration;
 import org.streamreasoning.rsp4j.api.engine.features.QueryRegistrationFeature;
 import org.streamreasoning.rsp4j.api.engine.features.StreamRegistrationFeature;
@@ -16,12 +14,14 @@ import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
+import org.streamreasoning.rsp4j.api.secret.content.ContentFactory;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
-import org.streamreasoning.rsp4j.api.stream.web.WebStream;
 import org.streamreasoning.rsp4j.yasper.ContinuousQueryExecutionImpl;
+import org.streamreasoning.rsp4j.yasper.content.BindingContentFactory;
+import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.streamreasoning.rsp4j.yasper.examples.StreamImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
@@ -29,9 +29,9 @@ import org.streamreasoning.rsp4j.yasper.querying.syntax.RSPQL;
 import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static org.streamreasoning.rsp4j.api.RDFUtils.createIRI;
 
 
 public class Yasper implements QueryRegistrationFeature<RSPQL>, StreamRegistrationFeature<RDFStream, RDFStream> {
@@ -41,6 +41,7 @@ public class Yasper implements QueryRegistrationFeature<RSPQL>, StreamRegistrati
     //    private final String windowOperatorFactory;
     private final String S2RFactory = "yasper.window_operator_factory";
     private final StreamToRelationOperatorFactory<Graph, Graph> wf;
+    private ContentFactory cf;
     private Report report;
     private Tick tick;
     protected EngineConfiguration rsp_config;
@@ -48,7 +49,7 @@ public class Yasper implements QueryRegistrationFeature<RSPQL>, StreamRegistrati
     protected Map<String, ContinuousQueryExecution> queryExecutions;
     protected Map<String, ContinuousQuery> registeredQueries;
     protected Map<String, List<QueryResultFormatter>> queryObservers;
-    protected Map<String, DataStream<Graph>> registeredStreams;
+    protected Set<DataStream<Graph>> registeredStreams;
     private ReportGrain report_grain;
 
 
@@ -59,25 +60,37 @@ public class Yasper implements QueryRegistrationFeature<RSPQL>, StreamRegistrati
         this.report_grain = rsp_config.getReportGrain();
         this.tick = rsp_config.getTick();
         this.t0 = rsp_config.gett0();
-//        this.windowOperatorFactory =
         this.assignedSDS = new HashMap<>();
         this.registeredQueries = new HashMap<>();
-        this.registeredStreams = new HashMap<>();
+        this.registeredStreams = new HashSet<>();
         this.queryObservers = new HashMap<>();
         this.queryExecutions = new HashMap<>();
 
+        switch (rsp_config.getContentFormat()) {
+            case BINDING:
+                cf = new BindingContentFactory();
+            case GRAPH:
+                cf = new GraphContentFactory();
+            default:
+                cf = new GraphContentFactory();
+        }
+
         Class<?> aClass = Class.forName(rsp_config.getString(S2RFactory));
+
+
         this.wf = (StreamToRelationOperatorFactory<Graph, Graph>) aClass
                 .getConstructor(
                         Time.class,
                         Tick.class,
                         Report.class,
-                        ReportGrain.class)
+                        ReportGrain.class,
+                        ContentFactory.class)
                 .newInstance(
                         TimeFactory.getInstance(),
                         tick,
                         report,
-                        report_grain);
+                        report_grain,
+                        cf);
 
     }
 
@@ -91,23 +104,21 @@ public class Yasper implements QueryRegistrationFeature<RSPQL>, StreamRegistrati
 
         ContinuousQueryExecution<Graph, Graph, Binding> cqe = new ContinuousQueryExecutionImpl<Graph, Graph, Binding>(sds, q, out, q.r2r(), q.r2s());
 
-        Map<? extends WindowNode, WebStream> windowMap = q.getWindowMap();
+        Map<? extends WindowNode, DataStream<Graph>> windowMap = q.getWindowMap();
 
-        windowMap.forEach((WindowNode wo, WebStream s) -> {
-            StreamToRelationOperatorFactory<Graph, Graph> w;
-            IRI iri = RDFUtils.createIRI(wo.iri());
-
-            StreamToRelationOp<Graph, Graph> build = wf.build(wo.getRange(), wo.getStep(), wo.getT0());
-
-            StreamToRelationOp<Graph, Graph> wop = build.link(cqe);
-
-            TimeVarying<Graph> tvg = wop.apply(registeredStreams.get(s.uri()));
-
-            if (wo.named()) {
+        windowMap.forEach((WindowNode wo, DataStream<Graph> s) -> {
+            if (registeredStreams.contains(s)) {
+                //TODO switch to parametric method WindowNode.params() for the simple ones
+                //TODO for the BGP aware windows, we need to extract bgp from R2R and push them to the window, therefore we need a way to visualize the r2r tree
+                StreamToRelationOp<Graph, Graph> build = wf.build(wo.getRange(), wo.getStep(), wo.getT0());
+                StreamToRelationOp<Graph, Graph> wop = build.link(cqe);
+                TimeVarying<Graph> tvg = wop.apply(s);
                 if (wo.named()) {
-                    sds.add(iri, tvg);
-                } else {
-                    sds.add(tvg);
+                    if (wo.named()) {
+                        sds.add(createIRI(wo.iri()), tvg);
+                    } else {
+                        sds.add(tvg);
+                    }
                 }
             }
         });
@@ -117,10 +128,9 @@ public class Yasper implements QueryRegistrationFeature<RSPQL>, StreamRegistrati
     }
 
 
-
     @Override
     public RDFStream register(RDFStream s) {
-        registeredStreams.put(s.uri(), s);
+        registeredStreams.add(s);
         return s;
     }
 }

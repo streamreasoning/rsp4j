@@ -41,5 +41,10 @@
             <artifactId>io</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.streamreasoning.rsp4j</groupId>
+            <artifactId>web</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 </project>

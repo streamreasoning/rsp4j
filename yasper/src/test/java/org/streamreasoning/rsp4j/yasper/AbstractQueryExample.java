@@ -1,21 +1,21 @@
 package org.streamreasoning.rsp4j.yasper;
 
-import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
-import org.streamreasoning.rsp4j.yasper.StreamViewImpl;
-import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
-import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
-import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLTimeWindowOperatorFactory;
+import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.operators.s2r.StreamToRelationOperatorFactory;
+import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
 import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
-import org.apache.commons.rdf.api.Graph;
+import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
+import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
+import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLTimeWindowOperatorFactory;
+import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
 
 public class AbstractQueryExample {
 
@@ -41,7 +41,7 @@ public class AbstractQueryExample {
         RDFStream stream = new RDFStream("s1");
 
         //WINDOW DECLARATION
-        StreamToRelationOperatorFactory<Graph, Graph> windowOperatorFactory = new CSPARQLTimeWindowOperatorFactory(TimeFactory.getInstance(), tick, report, report_grain);
+        StreamToRelationOperatorFactory<Graph, Graph> windowOperatorFactory = new CSPARQLTimeWindowOperatorFactory(TimeFactory.getInstance(), tick, report, report_grain, new GraphContentFactory());
 
         //ENGINE INTERNALS - HOW THE REPORTING POLICY, TICK AND REPORT GRAIN INFLUENCE THE RUNTIME
 

@@ -1,3 +1,5 @@
+package org.streamreasoning.rsp4j.yasper;
+
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.RDF;
 import org.apache.commons.rdf.jena.JenaRDF;

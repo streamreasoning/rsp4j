@@ -17,6 +17,21 @@ public class BindingContentFactory implements ContentFactory<Graph, Binding> {
 
     private VarOrTerm s, p, o;
 
+    public BindingContentFactory() {
+    }
+
+    public void setS(VarOrTerm s) {
+        this.s = s;
+    }
+
+    public void setP(VarOrTerm p) {
+        this.p = p;
+    }
+
+    public void setO(VarOrTerm o) {
+        this.o = o;
+    }
+
     @Override
     public Content<Graph, Binding> createEmpty() {
         return new EmptyContent<Graph, Binding>(new BindingImpl());

@@ -56,7 +56,9 @@ public class CQELSWindowAssignerTest {
 
         TimeImpl time = new TimeImpl(0);
 
-        CQELSTimeWindowOperatorBindingFactory factory = new CQELSTimeWindowOperatorBindingFactory(time, tick, report, report_grain, s, p, o);
+        ContentFactory<Graph, Binding> cf = new BindingContentFactory(s, p, o);
+
+        CQELSTimeWindowOperatorBindingFactory factory = new CQELSTimeWindowOperatorBindingFactory(time, tick, report, report_grain, cf);
 
         WindowParameter rangep = wrap(10000L);
 
@@ -107,8 +109,9 @@ public class CQELSWindowAssignerTest {
 
         TimeImpl time = new TimeImpl(0);
 
-        CQELSTimeWindowOperatorBindingFactory factory = new CQELSTimeWindowOperatorBindingFactory(time, tick, report, report_grain, s, p, o);
+        ContentFactory<Graph, Binding> cf = new BindingContentFactory(s, p, o);
 
+        CQELSTimeWindowOperatorBindingFactory factory = new CQELSTimeWindowOperatorBindingFactory(time, tick, report, report_grain, cf);
 
         CQELSTimeWindowOperatorBinding<Graph, Binding> op = (CQELSTimeWindowOperatorBinding<Graph, Binding>) factory.build(
                 RDFUtils.createIRI("iri"),

@@ -9,7 +9,7 @@ import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.syntax.CaseChangingCharStream;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLLexer;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLParser;
-import org.streamreasoning.rsp4j.api.stream.web.WebStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -34,9 +34,9 @@ public class QueryFactory {
                 "}");
         System.out.println("ISTREAM? " + c.isIstream());
         System.out.println("SELECT? " + c.isSelectType());
-        Map<WindowNode, WebStream> windowMap = c.getWindowMap();
+        Map<WindowNode, DataStream> windowMap = c.getWindowMap();
         windowMap.keySet().forEach(x -> {
-            System.out.println(x.iri() + " " + windowMap.get(x).uri());
+            System.out.println(x.iri() + " " + windowMap.get(x));
         });
         // Query pattern in WHERE clause not yet managed, depends what the internal BGP representation will be.
     }

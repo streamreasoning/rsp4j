@@ -33,7 +33,6 @@ public class BindingTest {
 
         TP TP = new TP(s, p, o);
 
-
         List<Binding> collect = TP.eval(sds.toStream()).collect(Collectors.toList());
 
         assertEquals(1, collect.size());
