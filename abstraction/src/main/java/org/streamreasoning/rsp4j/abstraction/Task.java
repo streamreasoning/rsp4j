@@ -3,21 +3,9 @@ package org.streamreasoning.rsp4j.abstraction;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.rdf.api.Graph;
-import org.streamreasoning.rsp4j.abstraction.table.TableRowStream;
-import org.streamreasoning.rsp4j.api.enums.ReportGrain;
-import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
-import org.streamreasoning.rsp4j.api.operators.s2r.StreamToRelationOperatorFactory;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
-import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
-import org.streamreasoning.rsp4j.api.secret.report.Report;
-import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
-import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
-import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
-import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
-import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLTimeWindowOperatorFactory;
 
 import java.util.*;
 

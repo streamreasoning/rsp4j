@@ -3,12 +3,10 @@ package org.streamreasoning.rsp4j.abstraction;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.RDF;
-import org.apache.commons.rdf.api.Triple;
 import org.junit.Test;
 import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegistry;
 import org.streamreasoning.rsp4j.abstraction.functions.CountFunction;
-import org.streamreasoning.rsp4j.abstraction.table.TableRow;
-import org.streamreasoning.rsp4j.abstraction.table.TableRowStream;
+import org.streamreasoning.rsp4j.abstraction.table.BindingStream;
 import org.streamreasoning.rsp4j.abstraction.triplepattern.ContinuousTriplePatternQuery;
 import org.streamreasoning.rsp4j.abstraction.triplepattern.TriplePatternR2R;
 import org.streamreasoning.rsp4j.abstraction.utils.DummyConsumer;
@@ -31,7 +29,6 @@ import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.BindingImpl;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TermImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
 import org.streamreasoning.rsp4j.yasper.querying.syntax.TPQueryFactory;
@@ -63,7 +60,7 @@ public class CPTriplePatternTest {
 
         //STREAM DECLARATION
         RDFStream stream = new RDFStream("stream1");
-        TableRowStream outStream = new TableRowStream("out");
+        BindingStream outStream = new BindingStream("out");
 
 
         //WINDOW DECLARATION
@@ -75,26 +72,26 @@ public class CPTriplePatternTest {
         //R2R
         ContinuousTriplePatternQuery q = new ContinuousTriplePatternQuery("q1", "stream1", "?green rdf:type <http://color#Green>");
 
-        RelationToRelationOperator<TableRow, TableRow> r2r = new TriplePatternR2R(sds, q);
+        RelationToRelationOperator<Binding, Binding> r2r = new TriplePatternR2R(sds, q);
 
 
         // REGISTER FUNCTION
         AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
 
-        Task<Graph, Graph,TableRow, TableRow> t =
+        Task<Graph, Graph,Binding, Binding> t =
                 new Task.TaskBuilder()
                         .addS2R("stream1", build, "w1")
                         .addR2R("w1", r2r)
-                        .addR2S("out", new Rstream<TableRow,TableRow>())
+                        .addR2S("out", new Rstream<Binding,Binding>())
                         .build();
-        ContinuousProgram<Graph, Graph, TableRow,TableRow> cp = new ContinuousProgram.ContinuousProgramBuilder()
+        ContinuousProgram<Graph, Graph, Binding,Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
                 .in(stream)
                 .setSDS(sds)
                 .addTask(t)
                 .out(outStream)
                 .build();
 
-        DummyConsumer<TableRow> dummyConsumer = new DummyConsumer<>();
+        DummyConsumer<Binding> dummyConsumer = new DummyConsumer<>();
         outStream.addConsumer(dummyConsumer);
 
 
@@ -103,9 +100,13 @@ public class CPTriplePatternTest {
 
 
         assertEquals(2, dummyConsumer.getSize());
-        List<TableRow> expected = new ArrayList<>();
-        expected.add(new TableRow("green", "<S1>"));
-        expected.add(new TableRow("green", "<S4>"));
+        List<Binding> expected = new ArrayList<>();
+        Binding b1 = new BindingImpl();
+        b1.add(new VarImpl("green"), RDFUtils.createIRI("S1"));
+        Binding b2 = new BindingImpl();
+        b2.add(new VarImpl("green"), RDFUtils.createIRI("S4"));
+        expected.add(b1);
+        expected.add(b2);
         assertEquals(expected, dummyConsumer.getReceived());
     }
 
@@ -128,7 +129,7 @@ public class CPTriplePatternTest {
 
         //STREAM DECLARATION
         RDFStream stream = new RDFStream("stream1");
-        TableRowStream outStream = new TableRowStream("out");
+        BindingStream outStream = new BindingStream("out");
 
 
         //WINDOW DECLARATION
@@ -140,38 +141,45 @@ public class CPTriplePatternTest {
         //R2R
         ContinuousTriplePatternQuery q = new ContinuousTriplePatternQuery("q1", "stream1", "?green rdf:type <http://color#Green>");
 
-        RelationToRelationOperator<TableRow, TableRow> r2r = new TriplePatternR2R(sds, q);
+        RelationToRelationOperator<Binding, Binding> r2r = new TriplePatternR2R(sds, q);
 
 
         // REGISTER FUNCTION
         AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
 
-        Task<Graph, Graph, TableRow,TableRow> t =
+        Task<Graph, Graph, Binding,Binding> t =
                 new Task.TaskBuilder()
                         .addS2R("stream1", build, "w1")
                         .addR2R("w1", r2r)
-                        .addR2S("out", new Rstream<TableRow,TableRow>())
+                        .addR2S("out", new Rstream<Binding,Binding>())
                         // comment this one out so you can see it works witouth aggregation as well
                         .aggregate("gw", "COUNT", "green", "count")
                         .build();
-        ContinuousProgram<Graph, Graph, TableRow, TableRow> cp = new ContinuousProgram.ContinuousProgramBuilder()
+        ContinuousProgram<Graph, Graph, Binding, Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
                 .in(stream)
                 .setSDS(sds)
                 .addTask(t)
                 .out(outStream)
                 .build();
 
-        DummyConsumer<TableRow> dummyConsumer = new DummyConsumer<>();
+        DummyConsumer<Binding> dummyConsumer = new DummyConsumer<>();
         outStream.addConsumer(dummyConsumer);
 
         populateStream(stream, TimeFactory.getInstance().getAppTime());
 
 
         assertEquals(3, dummyConsumer.getSize());
-        List<TableRow> expected = new ArrayList<>();
-        expected.add(new TableRow("count", "1"));
-        expected.add(new TableRow("count", "1"));
-        expected.add(new TableRow("count", "0"));
+
+        List<Binding> expected = new ArrayList<>();
+        Binding b1 = new BindingImpl();
+        b1.add(new VarImpl("count"), RDFUtils.createIRI("1"));
+        Binding b2 = new BindingImpl();
+        b2.add(new VarImpl("count"), RDFUtils.createIRI("1"));
+        Binding b3 = new BindingImpl();
+        b3.add(new VarImpl("count"), RDFUtils.createIRI("0"));
+        expected.add(b1);
+        expected.add(b2);
+        expected.add(b3);
         assertEquals(expected, dummyConsumer.getReceived());
     }
 

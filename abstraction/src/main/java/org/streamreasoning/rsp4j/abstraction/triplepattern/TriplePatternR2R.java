@@ -11,16 +11,17 @@ import org.apache.jena.sparql.algebra.Algebra;
 import org.apache.jena.sparql.algebra.Op;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.QueryIterator;
-import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.sse.SSE;
 import org.apache.jena.sparql.util.FmtUtils;
-import org.streamreasoning.rsp4j.abstraction.table.TableResponse;
-import org.streamreasoning.rsp4j.abstraction.table.TableRow;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
+import org.streamreasoning.rsp4j.api.querying.result.SolutionMappingBase;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.BindingImpl;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,7 +31,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class TriplePatternR2R implements RelationToRelationOperator<TableRow, TableRow> {
+public class TriplePatternR2R implements RelationToRelationOperator<Binding, Binding> {
     private final SDS sds;
     private final ContinuousTriplePatternQuery query;
     private final Dataset ds;
@@ -42,23 +43,24 @@ public class TriplePatternR2R implements RelationToRelationOperator<TableRow, Ta
     }
 
     @Override
-    public Stream<TableRow> eval(Stream<TableRow> sds) {
+    public Stream<Binding> eval(Stream<Binding> sds) {
         Model dataModel = convertToJenaModel();
 
         return evaluateQuery(dataModel, System.currentTimeMillis());
     }
 
     @Override
-    public TimeVarying<Collection<TableRow>> apply(SDS<TableRow> sds) {
+    public TimeVarying<Collection<Binding>> apply(SDS<Binding> sds) {
         return null;
     }
 
     @Override
-    public SolutionMapping<TableRow> createSolutionMapping(TableRow result) {
-        return new TableResponse(query.getID() + "/ans/" + System.currentTimeMillis(), System.currentTimeMillis(),result);
+    public SolutionMapping<Binding> createSolutionMapping(Binding result) {
+        return new SolutionMappingBase<>(result,System.currentTimeMillis());
+        //return new TableResponse(query.getID() + "/ans/" + System.currentTimeMillis(), System.currentTimeMillis(),result);
     }
 
-    public TimeVarying<Collection<TableRow>> apply() {
+    public TimeVarying<Collection<Binding>> apply() {
         //TODO
         return null;
     }
@@ -73,25 +75,24 @@ public class TriplePatternR2R implements RelationToRelationOperator<TableRow, Ta
         return dataModel;
     }
 
-    private Stream<TableRow> evaluateQuery(Model dataModel, long ts) {
+    private Stream<Binding> evaluateQuery(Model dataModel, long ts) {
         String queryString = String.format("(bgp (%s))", query.getTriplePattern());
         Op op = SSE.parseOp(queryString);
         QueryIterator qIter = Algebra.exec(op, dataModel);
         List<Var> vars = getVariableFromQuery().stream().map(v -> Var.alloc(v)).collect(Collectors.toList());
-        TableRow tableRow = new TableRow();
-        List<TableRow> table = new ArrayList<>();
+        Binding binding = new BindingImpl();
+        List<Binding> bindings = new ArrayList<>();
         getVariableFromQuery();
         for (; qIter.hasNext(); ) {
-            Binding b = qIter.nextBinding();
+            org.apache.jena.sparql.engine.binding.Binding b = qIter.nextBinding();
             for (Var v : vars) {
                 Node n = b.get(v);
-                tableRow.add(v.getVarName(), FmtUtils.stringForNode(n));
-//        table.add(new TableResponse(query.getID() + "/ans/" + ts, ts, tableRow));
-                table.add(tableRow);
+                binding.add(new VarImpl(v.getVarName()), RDFUtils.createIRI(RDFUtils.trimTags(FmtUtils.stringForNode(n))));
+                bindings.add(binding);
             }
         }
         qIter.close();
-        return table.stream();
+        return bindings.stream();
     }
 
     private List<String> getVariableFromQuery() {
