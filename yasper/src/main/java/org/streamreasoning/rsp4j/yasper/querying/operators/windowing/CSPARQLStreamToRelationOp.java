@@ -21,16 +21,16 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j
-public class CSPARQLStreamToRelationOp<T1, T2> extends ObservableStreamToRelationOp<T1, T2> {
+public class CSPARQLStreamToRelationOp<I, W> extends ObservableStreamToRelationOp<I, W> {
 
     private final long a, b;
 
-    private Map<Window, Content<T1, T2>> active_windows;
+    private Map<Window, Content<I, W>> active_windows;
     private Set<Window> to_evict;
     private long t0;
     private long toi;
 
-    public CSPARQLStreamToRelationOp(IRI iri, long a, long b, Time instance, Tick tick, Report report, ReportGrain grain, ContentFactory<T1, T2> cf) {
+    public CSPARQLStreamToRelationOp(IRI iri, long a, long b, Time instance, Tick tick, Report report, ReportGrain grain, ContentFactory<I, W> cf) {
         super(iri, instance, tick, report, grain, cf);
         this.a = a;
         this.b = b;
@@ -46,7 +46,7 @@ public class CSPARQLStreamToRelationOp<T1, T2> extends ObservableStreamToRelatio
     }
 
     @Override
-    public Content<T1, T2> content(long t_e) {
+    public Content<I, W> content(long t_e) {
         Optional<Window> max = active_windows.keySet().stream()
                 .filter(w -> w.getO() < t_e && w.getC() <= t_e)
                 .max(Comparator.comparingLong(Window::getC));
@@ -58,13 +58,13 @@ public class CSPARQLStreamToRelationOp<T1, T2> extends ObservableStreamToRelatio
     }
 
     @Override
-    public List<Content<T1, T2>> getContents(long t_e) {
+    public List<Content<I, W>> getContents(long t_e) {
         return active_windows.keySet().stream()
                 .filter(w -> w.getO() <= t_e && t_e < w.getC())
                 .map(active_windows::get).collect(Collectors.toList());
     }
 
-    public void windowing(T1 e, long timestamp) {
+    public void windowing(I e, long timestamp) {
 
         log.debug("Received element (" + e + "," + timestamp + ")");
         long t_e = timestamp;
@@ -125,27 +125,27 @@ public class CSPARQLStreamToRelationOp<T1, T2> extends ObservableStreamToRelatio
     }
 
 
-    public Content<T1, T2> compute(long t_e, Window w) {
-        Content<T1, T2> content = active_windows.containsKey(w) ? active_windows.get(w) : cf.createEmpty();
+    public Content<I, W> compute(long t_e, Window w) {
+        Content<I, W> content = active_windows.containsKey(w) ? active_windows.get(w) : cf.createEmpty();
         time.setAppTime(t_e);
         return setVisible(t_e, w, content);
     }
 
     @Override
-    public CSPARQLStreamToRelationOp<T1, T2> link(ContinuousQueryExecution<T1, T2, ?> context) {
+    public CSPARQLStreamToRelationOp<I, W> link(ContinuousQueryExecution<I, W,?, ?> context) {
         this.addObserver((Observer) context);
         return this;
     }
 
     @Override
-    public TimeVarying<T2> apply(DataStream<T1> s) {
+    public TimeVarying<W> apply(DataStream<I> s) {
         s.addConsumer(this);
         return new TimeVaryingObject(this, iri);
     }
 
 
     @Override
-    public TimeVarying<T2> get() {
+    public TimeVarying<W> get() {
         return new TimeVaryingObject<>(this, iri);
     }
 

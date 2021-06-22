@@ -8,14 +8,14 @@ import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-public interface RelationToRelationOperator<I, O> {
+public interface RelationToRelationOperator<W, R> {
 
     //TODO this should not be time-aware
-    Stream<O> eval(Stream<I> sds);
+    Stream<R> eval(Stream<W> sds);
 
-    TimeVarying<Collection<O>> apply(SDS<I> sds);
+    TimeVarying<Collection<R>> apply(SDS<W> sds);
 
-    SolutionMapping<O> createSolutionMapping(O result);
+    SolutionMapping<R> createSolutionMapping(R result);
 
 }
     

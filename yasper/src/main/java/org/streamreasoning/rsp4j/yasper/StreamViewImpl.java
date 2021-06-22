@@ -15,7 +15,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.stream.Stream;
 
-public class StreamViewImpl extends Observable implements ContinuousQueryExecution<Triple, Triple, Triple>, Observer {
+public class StreamViewImpl extends Observable implements ContinuousQueryExecution<Triple, Triple,Triple, Triple>, Observer {
 
     private Content content;
 
@@ -60,7 +60,7 @@ public class StreamViewImpl extends Observable implements ContinuousQueryExecuti
     }
 
     @Override
-    public RelationToStreamOperator<Triple> r2s() {
+    public RelationToStreamOperator<Triple,Triple> r2s() {
         return null;
     }
 

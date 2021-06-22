@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * TODO: This interface needs to be updated to contain setter and getters for all relevant query parts.
  */
-public interface ContinuousQuery<I, R, O> {//extends Task<I, Binding, O> {
+public interface ContinuousQuery<I, W, R, O> {//extends Task<I, Binding, O> {
 
     void addNamedWindow(String streamUri, WindowNode wo);
 
@@ -47,10 +47,10 @@ public interface ContinuousQuery<I, R, O> {//extends Task<I, Binding, O> {
 
     Time getTime();
 
-    RelationToRelationOperator<I, R> r2r();
+    RelationToRelationOperator<W, R> r2r();
 
-    StreamToRelationOp<I, I>[] s2r();
+    StreamToRelationOp<I, W>[] s2r();
 
-    RelationToStreamOperator<O> r2s();
+    RelationToStreamOperator<R,O> r2s();
 
 }

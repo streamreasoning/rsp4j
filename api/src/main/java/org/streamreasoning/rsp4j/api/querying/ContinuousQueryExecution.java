@@ -13,22 +13,22 @@ import java.util.stream.Stream;
  * Created by Riccardo on 12/08/16.
  */
 
-public interface ContinuousQueryExecution<I, E1, O> {
+public interface ContinuousQueryExecution<I, W, R, O> {
 
     DataStream<O> outstream();
 
     ContinuousQuery query();
 
-    SDS<E1> sds();
+    SDS<W> sds();
 
-    StreamToRelationOp<I, E1>[] s2rs();
+    StreamToRelationOp<I, W>[] s2rs();
 
-    RelationToRelationOperator<E1, O> r2r();
+    RelationToRelationOperator<W, R> r2r();
 
-    RelationToStreamOperator<O> r2s();
+    RelationToStreamOperator<R,O> r2s();
 
-    void add(StreamToRelationOp<I, E1> op);
+    void add(StreamToRelationOp<I, W> op);
 
-    Stream<SolutionMapping<O>> eval(Long now);
+    Stream<SolutionMapping<R>> eval(Long now);
 }
 

@@ -21,7 +21,7 @@ public class TriplePatternQueryTest {
     public void testAllVariables() throws InterruptedException {
 
 
-        ContinuousQuery<Graph, Binding, Graph> query = TPQueryFactory.parse("" +
+        ContinuousQuery<Graph, Graph,Binding, Binding> query = TPQueryFactory.parse("" +
                 "REGISTER ISTREAM <http://out/stream> AS " +
                 "SELECT * " +
                 "FROM NAMED WINDOW <window2> ON <stream2> [RANGE PT10S STEP PT5S] " +
@@ -42,7 +42,7 @@ public class TriplePatternQueryTest {
     @Test
     public void testAllTerms() throws InterruptedException {
 
-        ContinuousQuery<Graph, Binding, Graph> query = TPQueryFactory.parse("" +
+        ContinuousQuery<Graph, Graph,Binding, Binding> query = TPQueryFactory.parse("" +
                 "REGISTER ISTREAM <http://out/stream> AS " +
                 "SELECT * " +
                 "FROM NAMED WINDOW <window2> ON <stream2> [RANGE PT10S STEP PT5S] " +
@@ -62,7 +62,7 @@ public class TriplePatternQueryTest {
     @Test
     public void testSingleWindow() throws InterruptedException {
 
-        ContinuousQuery<Graph, Binding, Graph> query = TPQueryFactory.parse("" +
+        ContinuousQuery<Graph, Graph,Binding, Binding> query = TPQueryFactory.parse("" +
                 "REGISTER ISTREAM <http://out/stream> AS " +
                 "SELECT * " +
                 "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
@@ -83,7 +83,7 @@ public class TriplePatternQueryTest {
 
     @Test
     public void testOutputStream() {
-        ContinuousQuery<Graph, Binding, Graph> query = TPQueryFactory.parse("" +
+        ContinuousQuery<Graph, Graph,Binding, Binding> query = TPQueryFactory.parse("" +
                 "REGISTER ISTREAM <http://out/stream> AS " +
                 "SELECT * " +
                 "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
@@ -96,7 +96,7 @@ public class TriplePatternQueryTest {
 
     @Test
     public void testOutputStreamType() {
-        ContinuousQuery<Graph, Binding, Graph> query = TPQueryFactory.parse("" +
+        ContinuousQuery<Graph, Graph,Binding, Binding> query = TPQueryFactory.parse("" +
                 "REGISTER ISTREAM <http://out/stream> AS " +
                 "SELECT * " +
                 "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +

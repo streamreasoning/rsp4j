@@ -55,7 +55,7 @@ public class CQELSBindingExample {
 
         q.addNamedWindow("stream1", wn);
 
-        ContinuousQueryExecution<Graph, Graph, Binding> cqe = sr.register(q);
+        ContinuousQueryExecution<Graph, Graph, Binding,Binding> cqe = sr.register(q);
 
 //        cqe.outstream().addConsumer(new InstResponseSysOutFormatter("TTL", true));
         cqe.outstream().addConsumer((arg, ts) -> System.out.println(arg));

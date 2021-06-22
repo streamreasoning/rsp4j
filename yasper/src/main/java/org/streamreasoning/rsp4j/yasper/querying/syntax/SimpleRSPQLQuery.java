@@ -142,7 +142,7 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
     }
 
     @Override
-    public RelationToStreamOperator<O> r2s() {
+    public RelationToStreamOperator<Binding,O> r2s() {
         return new Rstream();
     }
 }
