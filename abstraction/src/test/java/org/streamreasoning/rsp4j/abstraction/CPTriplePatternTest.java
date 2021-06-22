@@ -69,7 +69,6 @@ public class CPTriplePatternTest {
         //WINDOW DECLARATION
 
         StreamToRelationOp<Graph, Graph> build = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, TimeFactory.getInstance(), tick, report, report_grain, new GraphContentFactory());
-        build.time().setAppTime(0);
 
         //SDS
         SDS<Graph> sds = new SDSImpl();
@@ -100,7 +99,7 @@ public class CPTriplePatternTest {
 
 
         //RUNTIME DATA
-        populateStream(stream, build.time().getAppTime());
+        populateStream(stream, TimeFactory.getInstance().getAppTime());
 
 
         assertEquals(2, dummyConsumer.getSize());
@@ -165,14 +164,14 @@ public class CPTriplePatternTest {
         DummyConsumer<TableRow> dummyConsumer = new DummyConsumer<>();
         outStream.addConsumer(dummyConsumer);
 
-        populateStream(stream, build.time().getAppTime());
+        populateStream(stream, TimeFactory.getInstance().getAppTime());
 
 
         assertEquals(3, dummyConsumer.getSize());
         List<TableRow> expected = new ArrayList<>();
+        expected.add(new TableRow("count", "1"));
+        expected.add(new TableRow("count", "1"));
         expected.add(new TableRow("count", "0"));
-        expected.add(new TableRow("count", "1"));
-        expected.add(new TableRow("count", "1"));
         assertEquals(expected, dummyConsumer.getReceived());
     }
 
@@ -209,7 +208,7 @@ public class CPTriplePatternTest {
 
         query.getOutputStream().addConsumer(dummyConsumer);
 
-        populateStream(stream,10000);
+        populateStream(stream,TimeFactory.getInstance().getAppTime());
 
 
 
@@ -264,6 +263,8 @@ public class CPTriplePatternTest {
         graph = instance.createGraph();
         graph.add(instance.createTriple(instance.createIRI("S6"), p, instance.createIRI("http://color#Red")));
         stream.put(graph, 5000 + startTime);
-        stream.put(graph, 6000 + startTime);
+        graph = instance.createGraph();
+        graph.add(instance.createTriple(instance.createIRI("S7"), p, instance.createIRI("http://color#Red")));
+        stream.put(graph, 6001 + startTime);
     }
 }
