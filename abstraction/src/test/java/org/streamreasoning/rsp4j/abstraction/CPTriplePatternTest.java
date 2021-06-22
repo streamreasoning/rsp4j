@@ -191,7 +191,7 @@ public class CPTriplePatternTest {
 
 
         ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
-                "REGISTER ISTREAM <http://out/stream> AS " +
+                "REGISTER RSTREAM <http://out/stream> AS " +
                 "SELECT * " +
                 "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT2S STEP PT2S] " +
                 "WHERE {" +

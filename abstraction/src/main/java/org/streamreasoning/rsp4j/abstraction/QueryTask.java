@@ -1,15 +1,10 @@
 package org.streamreasoning.rsp4j.abstraction;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
-import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
-import org.streamreasoning.rsp4j.api.operators.s2r.StreamToRelationOperatorFactory;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
@@ -17,11 +12,11 @@ import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
 import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
 import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
-import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
+import org.streamreasoning.rsp4j.yasper.querying.operators.Dstream;
+import org.streamreasoning.rsp4j.yasper.querying.operators.Istream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
-import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLTimeWindowOperatorFactory;
 
 public class QueryTask extends Task<Graph,Graph,Binding, Binding>{
 
@@ -59,11 +54,23 @@ public class QueryTask extends Task<Graph,Graph,Binding, Binding>{
             });
             // R2R DECLARATION
             this.addR2R(null,query.r2r()); //TODO restrict TVG
-            this.addR2S(query.getOutputStream().getName(),new Rstream<Binding,Binding>());
+            RelationToStreamOperator<Binding, Binding> r2s = getR2RFromQuery(query);
+            this.addR2S(query.getOutputStream().getName(),r2s);
 
             return this;
         }
 
+        private RelationToStreamOperator<Binding, Binding> getR2RFromQuery(ContinuousQuery<Graph, Graph, Binding, Binding> query) {
+            RelationToStreamOperator<Binding,Binding> r2s = null;
+            if(query.isIstream()){
+                r2s = Istream.get();
+            }else if(query.isDstream()){
+                r2s = Dstream.get();
+            }else{
+                r2s = Rstream.get();
+            }
+            return r2s;
+        }
 
 
     }
