@@ -1,6 +1,7 @@
 package org.streamreasoning.rsp4j.abstraction;
 
 import lombok.extern.log4j.Log4j;
+import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunction;
 import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegistry;
@@ -14,6 +15,7 @@ import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.yasper.ContinuousQueryExecutionObserver;
+import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,7 +34,11 @@ public class ContinuousProgram<I,W, R, O> extends ContinuousQueryExecutionObserv
     this.tasks = builder.tasks;
     this.inputStream = builder.inputStream;
     this.outputStream = builder.outputStream;
-    this.sds = builder.sds;
+    if (builder.sds != null) {
+      this.sds = builder.sds;
+    }else{
+      this.sds = (SDS<W>) new SDSImpl();
+    }
 
     linkStreamsToOperators();
   }
@@ -44,7 +50,7 @@ public class ContinuousProgram<I,W, R, O> extends ContinuousQueryExecutionObserv
         String streamURI = s2rContainer.getSourceURI();
         String tvgName = s2rContainer.getTvgName();
         IRI iri = RDFUtils.createIRI(streamURI);
-
+        Collection<TimeVarying<W>> vgs = sds.asTimeVaryingEs();
         if (inputStream != null) {
           TimeVarying<W> tvg = s2rContainer.<I, W>getS2rOperator().link(this).apply(inputStream);
 
@@ -60,6 +66,7 @@ public class ContinuousProgram<I,W, R, O> extends ContinuousQueryExecutionObserv
     }
   }
 
+
   @Override
   public void update(Observable o, Object arg) {
     Long now = (Long) arg;
@@ -67,7 +74,7 @@ public class ContinuousProgram<I,W, R, O> extends ContinuousQueryExecutionObserv
       Set<Task.R2SContainer<R,O>> r2ss = task.getR2Ss();
       for (Task.R2SContainer<R,O> r2s : r2ss) {
         if (task.getAggregations().isEmpty()) {
-          eval(now).peek(System.out::println).forEach(o1 -> outstream().put((O) r2s.getR2sOperator().eval(o1, now), now));
+          eval(now).forEach(o1 -> outstream().put((O) r2s.getR2sOperator().eval(o1, now), now));
         } else {
           handleAggregations(task,r2s,now);
         }

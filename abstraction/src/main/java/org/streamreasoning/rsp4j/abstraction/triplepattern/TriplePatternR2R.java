@@ -1,6 +1,7 @@
 package org.streamreasoning.rsp4j.abstraction.triplepattern;
 
 import org.apache.commons.rdf.api.Dataset;
+import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.RDF;
 import org.apache.commons.rdf.jena.JenaRDF;
@@ -31,26 +32,22 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class TriplePatternR2R implements RelationToRelationOperator<Binding, Binding> {
-    private final SDS sds;
+public class TriplePatternR2R implements RelationToRelationOperator<Graph, Binding> {
     private final ContinuousTriplePatternQuery query;
-    private final Dataset ds;
 
-    public TriplePatternR2R(SDS sds, ContinuousTriplePatternQuery query) {
-        this.sds = sds;
+    public TriplePatternR2R(ContinuousTriplePatternQuery query) {
         this.query = query;
-        this.ds = (Dataset) sds;
     }
 
     @Override
-    public Stream<Binding> eval(Stream<Binding> sds) {
-        Model dataModel = convertToJenaModel();
+    public Stream<Binding> eval(Stream<Graph> sds) {
+        Model dataModel = convertToJenaModel(sds);
 
         return evaluateQuery(dataModel, System.currentTimeMillis());
     }
 
     @Override
-    public TimeVarying<Collection<Binding>> apply(SDS<Binding> sds) {
+    public TimeVarying<Collection<Binding>> apply(SDS<Graph> sds) {
         return null;
     }
 
@@ -65,12 +62,15 @@ public class TriplePatternR2R implements RelationToRelationOperator<Binding, Bin
         return null;
     }
 
-    private Model convertToJenaModel() {
+    private Model convertToJenaModel(Stream<Graph> sds) {
         RDF instance = RDFUtils.getInstance();
         JenaRDF jena = new JenaRDF();
         String stream_uri = query.getStreamURI();
         IRI stream = instance.createIRI(stream_uri);
-        org.apache.jena.graph.Graph jenaGraph = jena.asJenaGraph(ds.getGraph(stream).get());
+
+        Graph materializedGraph = RDFUtils.createGraph();
+        sds.forEach( graph->{graph.stream().forEach(materializedGraph::add);});
+        org.apache.jena.graph.Graph jenaGraph = jena.asJenaGraph(materializedGraph);
         Model dataModel = ModelFactory.createModelForGraph(jenaGraph);
         return dataModel;
     }

@@ -33,7 +33,7 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
     private List<String> namedwindowsURIs = new ArrayList<>();
     private List<String> namedGraphURIs = new ArrayList<>();
 
-    private StreamOperator streamOperator;
+    private StreamOperator streamOperator = StreamOperator.NONE;
 
     public SimpleRSPQLQuery(String id, DataStream<Graph> stream, WindowNode win, VarOrTerm s, VarOrTerm p, VarOrTerm o) {
         this.id = id;
@@ -41,7 +41,10 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
         this.s = s;
         this.p = p;
         this.o = o;
-        windowMap.put(win, stream);
+        if(win!=null && stream != null){
+            windowMap.put(win, stream);
+        }
+
     }
 
     public SimpleRSPQLQuery(String id) {

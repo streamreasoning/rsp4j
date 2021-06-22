@@ -147,7 +147,9 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
     }
     SimpleRSPQLQuery<Binding> query = new SimpleRSPQLQuery<>("",stream,win,s,p,o);
     windowMap.entrySet().forEach(e -> query.addNamedWindow(e.getKey(),e.getValue()));
-    RSPQLExtractionHelper.setOutputStreamType(query,outputStreamType);
+    if (outputStreamType != null) {
+      RSPQLExtractionHelper.setOutputStreamType(query, outputStreamType);
+    }
     query.setOutputStream(outputStreamIRI);
     return query;
   }

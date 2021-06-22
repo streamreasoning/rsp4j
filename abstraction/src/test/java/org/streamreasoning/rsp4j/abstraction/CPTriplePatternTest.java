@@ -18,6 +18,7 @@ import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.sds.SDS;
+import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
@@ -41,19 +42,29 @@ import static org.junit.Assert.assertEquals;
 
 public class CPTriplePatternTest {
 
+  // ENGINE DEFINITION
+    private Report report;
+    private Tick tick ;
+    private ReportGrain report_grain;
+
+    private int scope = 0;
+    public CPTriplePatternTest() {
+        report = new ReportImpl();
+        report.add(new OnWindowClose());
+        //        report.add(new NonEmptyContent());
+        //        report.add(new OnContentChange());
+        //        report.add(new Periodic());
+
+        tick = Tick.TIME_DRIVEN;
+        report_grain = ReportGrain.SINGLE;
+    }
+
+
+
+
     @Test
     public void simpleTPAbstractionTest() {
-        //ENGINE DEFINITION
-        Report report = new ReportImpl();
-        report.add(new OnWindowClose());
-//        report.add(new NonEmptyContent());
-//        report.add(new OnContentChange());
-//        report.add(new Periodic());
 
-        Tick tick = Tick.TIME_DRIVEN;
-        ReportGrain report_grain = ReportGrain.SINGLE;
-
-        int scope = 0;
 
         //QUERY
 
@@ -67,12 +78,11 @@ public class CPTriplePatternTest {
 
         StreamToRelationOp<Graph, Graph> build = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, TimeFactory.getInstance(), tick, report, report_grain, new GraphContentFactory());
 
-        //SDS
-        SDS<Graph> sds = new SDSImpl();
+
         //R2R
         ContinuousTriplePatternQuery q = new ContinuousTriplePatternQuery("q1", "stream1", "?green rdf:type <http://color#Green>");
 
-        RelationToRelationOperator<Binding, Binding> r2r = new TriplePatternR2R(sds, q);
+        RelationToRelationOperator<Graph, Binding> r2r = new TriplePatternR2R(q);
 
 
         // REGISTER FUNCTION
@@ -86,7 +96,6 @@ public class CPTriplePatternTest {
                         .build();
         ContinuousProgram<Graph, Graph, Binding,Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
                 .in(stream)
-                .setSDS(sds)
                 .addTask(t)
                 .out(outStream)
                 .build();
@@ -112,20 +121,6 @@ public class CPTriplePatternTest {
 
     @Test
     public void simpleTPAbstractionAggregationTest() {
-        //ENGINE DEFINITION
-        Report report = new ReportImpl();
-        report.add(new OnWindowClose());
-//        report.add(new NonEmptyContent());
-//        report.add(new OnContentChange());
-//        report.add(new Periodic());
-
-        Tick tick = Tick.TIME_DRIVEN;
-        ReportGrain report_grain = ReportGrain.SINGLE;
-
-        int scope = 0;
-
-        //QUERY
-
 
         //STREAM DECLARATION
         RDFStream stream = new RDFStream("stream1");
@@ -135,13 +130,10 @@ public class CPTriplePatternTest {
         //WINDOW DECLARATION
         StreamToRelationOp<Graph, Graph> build = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, TimeFactory.getInstance(), tick, report, report_grain, new GraphContentFactory());
 
-
-        //SDS
-        SDS<Graph> sds = new SDSImpl();
         //R2R
         ContinuousTriplePatternQuery q = new ContinuousTriplePatternQuery("q1", "stream1", "?green rdf:type <http://color#Green>");
 
-        RelationToRelationOperator<Binding, Binding> r2r = new TriplePatternR2R(sds, q);
+        RelationToRelationOperator<Graph, Binding> r2r = new TriplePatternR2R( q);
 
 
         // REGISTER FUNCTION
@@ -157,7 +149,6 @@ public class CPTriplePatternTest {
                         .build();
         ContinuousProgram<Graph, Graph, Binding, Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
                 .in(stream)
-                .setSDS(sds)
                 .addTask(t)
                 .out(outStream)
                 .build();
@@ -200,14 +191,12 @@ public class CPTriplePatternTest {
 
 
         //SDS
-        SDS<Graph> sds = new SDSImpl();
         Task<Graph,Graph,Binding,Binding> t =
                 new QueryTask.QueryTaskBuilder()
                         .fromQuery(query)
                         .build();
         ContinuousProgram<Graph,Graph,Binding,Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
                 .in(stream)
-                .setSDS(sds)
                 .addTask(t)
                 .out(query.getOutputStream())
                 .build();
@@ -215,6 +204,124 @@ public class CPTriplePatternTest {
         DummyConsumer<Binding> dummyConsumer = new DummyConsumer<>();
 
         query.getOutputStream().addConsumer(dummyConsumer);
+
+        populateStream(stream,TimeFactory.getInstance().getAppTime());
+
+
+
+
+
+
+        assertEquals(2,dummyConsumer.getSize());
+        List<Binding> expected = new ArrayList<>();
+        Binding b1 = new BindingImpl();
+        b1.add(new VarImpl("green"), RDFUtils.createIRI("S1"));
+        Binding b2 = new BindingImpl();
+        b2.add(new VarImpl("green"), RDFUtils.createIRI("S4"));
+        expected.add(b1);
+        expected.add(b2);
+
+        assertEquals(expected,dummyConsumer.getReceived());
+
+    }
+
+    @Test
+    public void triplePatternQueryNoWindowTest(){
+
+        RDFStream stream = new RDFStream("http://test/stream");
+
+
+        ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
+                "REGISTER RSTREAM <http://out/stream> AS " +
+                "SELECT * " +
+                "WHERE {" +
+                "   ?green <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Green> ." +
+                "}");
+
+
+        //SDS
+        SDS<Graph> sds = new SDSImpl();
+        // Add S2R
+        StreamToRelationOp<Graph, Graph> r2r = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, TimeFactory.getInstance(), tick, report, report_grain, new GraphContentFactory());
+        TimeVarying<Graph> tvg =  r2r.apply(stream);
+        sds.add(tvg);
+
+
+        Task<Graph,Graph,Binding,Binding> t =
+                new QueryTask.QueryTaskBuilder()
+                        .fromQuery(query)
+                        .build();
+        ContinuousProgram<Graph,Graph,Binding,Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
+                .in(stream)
+                .addTask(t)
+                .setSDS(sds)
+                .out(query.getOutputStream())
+                .build();
+
+        r2r.link(cp); //TODO make sure the R2R is linked in the CP
+
+        DummyConsumer<Binding> dummyConsumer = new DummyConsumer<>();
+
+        query.getOutputStream().addConsumer(dummyConsumer);
+
+        populateStream(stream,TimeFactory.getInstance().getAppTime());
+
+
+
+
+
+
+        assertEquals(2,dummyConsumer.getSize());
+        List<Binding> expected = new ArrayList<>();
+        Binding b1 = new BindingImpl();
+        b1.add(new VarImpl("green"), RDFUtils.createIRI("S1"));
+        Binding b2 = new BindingImpl();
+        b2.add(new VarImpl("green"), RDFUtils.createIRI("S4"));
+        expected.add(b1);
+        expected.add(b2);
+
+        assertEquals(expected,dummyConsumer.getReceived());
+
+    }
+    @Test
+    public void triplePatternQueryNoWindowNoRegisterTest(){
+
+        RDFStream stream = new RDFStream("http://test/stream");
+        BindingStream outStream = new BindingStream("out");
+
+
+        ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
+                "SELECT * " +
+                "WHERE {" +
+                "   ?green <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Green> ." +
+                "}");
+
+
+        //SDS
+        SDS<Graph> sds = new SDSImpl();
+        // Add S2R
+        StreamToRelationOp<Graph, Graph> r2r = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, TimeFactory.getInstance(), tick, report, report_grain, new GraphContentFactory());
+        TimeVarying<Graph> tvg =  r2r.apply(stream);
+        sds.add(tvg);
+
+
+        Task<Graph,Graph,Binding,Binding> t =
+                new QueryTask.QueryTaskBuilder()
+                        .fromQuery(query)
+                        .addR2S("", Rstream.get())
+                        .build();
+        ContinuousProgram<Graph,Graph,Binding,Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
+                .in(stream)
+                .addTask(t)
+                .setSDS(sds)
+                .out(outStream)
+                .build();
+
+        r2r.link(cp); //TODO make sure the r2r is linked in the CP
+
+        DummyConsumer<Binding> dummyConsumer = new DummyConsumer<>();
+
+        outStream.addConsumer(dummyConsumer);
 
         populateStream(stream,TimeFactory.getInstance().getAppTime());
 
