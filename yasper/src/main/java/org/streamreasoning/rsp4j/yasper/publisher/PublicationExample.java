@@ -24,25 +24,24 @@ public class PublicationExample {
                 .name("Colour Stream")
                 .description("stream of colours")
                 .distribution(d.
-                        access("colours", false)
-                        .protocol(Protocol.WebSocket)
-                        .security(Security.SSL)
-                        .license(License.CC)
-                        .format(Format.JSONLD))
+                        access("colours", false) // defines if the distribution uri will be a fragment uri (need a proxy otherwise). (Can be used to change port)
+                        .protocol(Protocol.WebSocket)  // Determine what sink to choose
+                        .security(Security.SSL) // we need to include secure protocol
+                        .license(License.CC) //mostly for documentation
+                        .format(Format.STRING)) //relates with serialization strategy
                 .<String>build();
 
-//        WebStream serve = wse.serve();
 
         wse.describe().stream().forEach(System.err::println);
 
-        WebDataStream<String> serve = wse.<String>serve();
+        WebDataStream<String> stream = wse.<String>serve();
 
         new Thread(() -> {
             try {
                 Random r = new Random();
                 String[] colors = new String[]{"Red", "Yellow", "Blue"};
                 while (true) {
-                    serve.put(colors[r.nextInt(colors.length - 1)], System.currentTimeMillis());
+                    stream.put(colors[r.nextInt(colors.length - 1)], System.currentTimeMillis());
                     Thread.sleep(5 * 1000);
                 }
             } catch (InterruptedException e) {

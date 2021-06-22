@@ -2,9 +2,7 @@ package org.streamreasoning.rsp4j.yasper.publisher;
 
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
-import org.streamreasoning.rsp.Distribution;
-import org.streamreasoning.rsp.Publisher;
-import org.streamreasoning.rsp.WebStreamEndpoint;
+import org.streamreasoning.rsp.*;
 import org.streamreasoning.rsp.vocabulary.DCAT;
 import org.streamreasoning.rsp.vocabulary.VOCALS;
 import org.streamreasoning.rsp.vocabulary.VSD;
@@ -60,6 +58,7 @@ public class YPublisher implements Publisher {
 
     @Override
     public Publisher distribution(Distribution distribution) {
+        distribution.publisher(this);
         distributions.add(distribution);
         distribution.describe().stream().forEach(t -> graph.add(t));
         return this;
@@ -68,6 +67,14 @@ public class YPublisher implements Publisher {
     @Override
     public <E> WebStreamEndpoint<E> build() {
         return distributions.get(0).build(uri);
+    }
+
+    @Override
+    public WebDataStream<String> fetch(String s) {
+        //TODO read the rdf graph using jena/rdf4j
+        //TODO parse the graph to extract distribution, instantiate a distribution object
+        //TODO parse the graph to identify the parser
+        return new WebDataStreamSource<>(s, null, null, null);
     }
 
 }

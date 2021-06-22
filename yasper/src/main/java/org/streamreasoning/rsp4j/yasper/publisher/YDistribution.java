@@ -2,6 +2,7 @@ package org.streamreasoning.rsp4j.yasper.publisher;
 
 import org.apache.commons.rdf.api.*;
 import org.streamreasoning.rsp.Distribution;
+import org.streamreasoning.rsp.Publisher;
 import org.streamreasoning.rsp.WebSocketEndpoint;
 import org.streamreasoning.rsp.WebStreamEndpoint;
 import org.streamreasoning.rsp.enums.Format;
@@ -27,6 +28,7 @@ public class YDistribution implements Distribution {
     private Format format;
     final String base = "http://example.org";
     String uri;
+    private Publisher p;
 
     @Override
     public Graph describe() {
@@ -74,6 +76,11 @@ public class YDistribution implements Distribution {
 
     @Override
     public <E> WebStreamEndpoint<E> build(String path) {
-        return new WebSocketEndpoint<>(uri, path, license, format);
+        return new WebSocketEndpoint<>(uri, path, license, format, this, p);
+    }
+
+    @Override
+    public void publisher(Publisher p) {
+        this.p = p;
     }
 }
