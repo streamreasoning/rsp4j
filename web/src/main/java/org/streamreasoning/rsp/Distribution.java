@@ -23,4 +23,5 @@ public interface Distribution extends Describable {
 
     <E> WebStreamEndpoint<E> build(String path);
 
+    void publisher(Publisher p);
 }

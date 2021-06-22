@@ -16,4 +16,5 @@ public interface Publisher extends Describable {
 
     <E> WebStreamEndpoint<E> build();
 
+    WebDataStream<String> fetch(String s);
 }
