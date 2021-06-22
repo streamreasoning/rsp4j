@@ -3,6 +3,7 @@ package org.streamreasoning.rsp4j.yasper.querying.operators.r2r;
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
+import org.streamreasoning.rsp4j.api.querying.result.SolutionMappingBase;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 
@@ -75,7 +76,7 @@ public class TP implements RelationToRelationOperator<Graph, Binding> {
 
     @Override
     public SolutionMapping<Binding> createSolutionMapping(Binding result) {
-        throw new UnsupportedOperationException();
+        return new SolutionMappingBase<Binding>(result,System.currentTimeMillis());
     }
 
     @Override

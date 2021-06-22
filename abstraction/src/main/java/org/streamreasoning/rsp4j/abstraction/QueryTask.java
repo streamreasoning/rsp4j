@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.rdf.api.Graph;
+import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
@@ -15,7 +16,11 @@ import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
 import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
+import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
+import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
+import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
+import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLTimeWindowOperatorFactory;
 
 public class QueryTask extends Task<Graph,Graph,Binding, Binding>{
@@ -49,12 +54,12 @@ public class QueryTask extends Task<Graph,Graph,Binding, Binding>{
             //S2R DECLARATION
 
             query.getWindowMap().entrySet().stream().forEach(entry -> {
-                StreamToRelationOperatorFactory<Graph, Graph> windowOperatorFactory = new CSPARQLTimeWindowOperatorFactory( TimeFactory.getInstance(), tick, report, report_grain);
-
-                StreamToRelationOp<Graph, Graph> s2r = windowOperatorFactory.build(entry.getKey().getRange(), entry.getKey().getStep(), scope);
-                //this.addS2R(entry.getValue().uri(),  s2r,entry.getKey().iri());
+                StreamToRelationOp<Graph, Graph> s2r = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI(entry.getKey().iri()), entry.getKey().getRange(), entry.getKey().getStep(), TimeFactory.getInstance(), tick, report, report_grain, new GraphContentFactory());
+                this.addS2R(entry.getValue().getName(),  s2r,entry.getKey().iri());
             });
             // R2R DECLARATION
+            this.addR2R(null,query.r2r()); //TODO restrict TVG
+            this.addR2S(query.getOutputStream().getName(),new Rstream<Binding,Binding>());
 
             return this;
         }

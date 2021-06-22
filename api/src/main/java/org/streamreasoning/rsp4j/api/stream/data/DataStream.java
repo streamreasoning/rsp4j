@@ -13,4 +13,6 @@ public interface DataStream<E> {
 
     void put(E e, long ts);
 
+    String getName();
+
 }

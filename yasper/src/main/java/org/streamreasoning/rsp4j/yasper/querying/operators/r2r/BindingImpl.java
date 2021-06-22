@@ -4,6 +4,7 @@ import org.apache.commons.rdf.api.RDFTerm;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class BindingImpl implements Binding {
@@ -48,4 +49,14 @@ public class BindingImpl implements Binding {
     public String toString() {
         return internal.toString().replace("=", " -> ");
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BindingImpl binding = (BindingImpl) o;
+        return Objects.equals(internal, binding.internal);
+    }
+
+
 }

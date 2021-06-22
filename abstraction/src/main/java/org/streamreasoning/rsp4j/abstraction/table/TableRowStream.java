@@ -26,6 +26,11 @@ public class TableRowStream implements DataStream<TableRow> {
         consumers.forEach(graphConsumer -> graphConsumer.notify(e, ts));
     }
 
+    @Override
+    public String getName() {
+        return stream_uri;
+    }
+
     public String uri() {
         return stream_uri;
     }

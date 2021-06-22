@@ -30,6 +30,9 @@ import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.BindingImpl;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TermImpl;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
 import org.streamreasoning.rsp4j.yasper.querying.syntax.TPQueryFactory;
 import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
@@ -185,7 +188,7 @@ public class CPTriplePatternTest {
                 "SELECT * " +
                 "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT2S STEP PT2S] " +
                 "WHERE {" +
-                "   ?green rdf:type <http://color#Green> ." +
+                "   ?green <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Green> ." +
                 "}");
 
 
@@ -214,9 +217,14 @@ public class CPTriplePatternTest {
 
 
         assertEquals(2,dummyConsumer.getSize());
-        List<TableRow> expected = new ArrayList<>();
-        expected.add(new TableRow("green","<S1>"));
-        expected.add(new TableRow("green","<S4>"));
+        List<Binding> expected = new ArrayList<>();
+        Binding b1 = new BindingImpl();
+        b1.add(new VarImpl("green"), RDFUtils.createIRI("S1"));
+        Binding b2 = new BindingImpl();
+        b2.add(new VarImpl("green"), RDFUtils.createIRI("S4"));
+        expected.add(b1);
+        expected.add(b2);
+
         assertEquals(expected,dummyConsumer.getReceived());
 
     }
