@@ -11,6 +11,7 @@ import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.io.DataStreamImpl;
+import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TP;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
@@ -32,17 +33,18 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
     private List<String> namedwindowsURIs = new ArrayList<>();
     private List<String> namedGraphURIs = new ArrayList<>();
 
-    private StreamOperator streamOperator;
-    private RelationToStreamOperator<Binding, O> r2s;
+    private StreamOperator streamOperator = StreamOperator.NONE;
 
-    public SimpleRSPQLQuery(String id, DataStream<Graph> stream, WindowNode win, VarOrTerm s, VarOrTerm p, VarOrTerm o, RelationToStreamOperator<Binding, O> r2s) {
+    public SimpleRSPQLQuery(String id, DataStream<Graph> stream, WindowNode win, VarOrTerm s, VarOrTerm p, VarOrTerm o) {
         this.id = id;
         this.outputStream = new DataStreamImpl<O>(id);
         this.s = s;
         this.p = p;
         this.o = o;
-        windowMap.put(win, stream);
-        this.r2s = r2s;
+        if(win!=null && stream != null){
+            windowMap.put(win, stream);
+        }
+
     }
 
     public SimpleRSPQLQuery(String id) {
@@ -143,7 +145,7 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
     }
 
     @Override
-    public RelationToStreamOperator<Binding, O> r2s() {
-        return r2s;
+    public RelationToStreamOperator<Binding,O> r2s() {
+        return new Rstream();
     }
 }

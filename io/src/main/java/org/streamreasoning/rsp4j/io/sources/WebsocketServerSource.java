@@ -72,6 +72,11 @@ public class WebsocketServerSource<T> implements DataStream<T> {
 
     }
 
+    @Override
+    public String getName() {
+        return stream_uri;
+    }
+
     public String uri() {
         return this.stream_uri;
     }

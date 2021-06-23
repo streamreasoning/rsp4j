@@ -58,14 +58,5 @@ public class BindingImpl implements Binding {
         return Objects.equals(internal, binding.internal);
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return copy();
-    }
 
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(internal);
-    }
 }

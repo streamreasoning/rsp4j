@@ -26,6 +26,11 @@ public class StreamImpl<T> implements DataStream<T> {
         consumers.forEach(graphConsumer -> graphConsumer.notify(e, ts));
     }
 
+    @Override
+    public String getName() {
+        return stream_uri;
+    }
+
     public String uri() {
         return stream_uri;
     }
