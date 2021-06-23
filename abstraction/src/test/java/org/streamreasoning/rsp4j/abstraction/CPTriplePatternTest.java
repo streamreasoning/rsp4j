@@ -22,8 +22,10 @@ import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
+import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
 
+import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
@@ -76,7 +78,9 @@ public class CPTriplePatternTest {
 
         //WINDOW DECLARATION
 
-        StreamToRelationOp<Graph, Graph> build = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, TimeFactory.getInstance(), tick, report, report_grain, new GraphContentFactory());
+        Time instance = new TimeImpl(0);
+
+        StreamToRelationOp<Graph, Graph> build = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, instance, tick, report, report_grain, new GraphContentFactory());
 
 
         //R2R
@@ -105,7 +109,7 @@ public class CPTriplePatternTest {
 
 
         //RUNTIME DATA
-        populateStream(stream, TimeFactory.getInstance().getAppTime());
+        populateStream(stream, instance.getAppTime());
 
 
         assertEquals(2, dummyConsumer.getSize());

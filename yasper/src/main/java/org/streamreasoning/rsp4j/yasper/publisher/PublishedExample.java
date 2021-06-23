@@ -18,7 +18,6 @@ public class PublishedExample {
 
         Publisher publisher1 = stream.publisher();
 
-
     }
 
 

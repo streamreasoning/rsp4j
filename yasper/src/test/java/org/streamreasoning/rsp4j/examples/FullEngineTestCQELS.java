@@ -41,6 +41,7 @@ public class FullEngineTestCQELS {
 
         Yasper sr = new Yasper(ec);
 
+
         //STREAM DECLARATION
         RDFStream stream = new RDFStream("stream1");
 

@@ -15,7 +15,8 @@ import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
-import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
+import org.streamreasoning.rsp4j.api.secret.time.Time;
+import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
 import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.streamreasoning.rsp4j.yasper.examples.StreamImpl;
@@ -57,7 +58,8 @@ public class CPTest {
 
         //WINDOW DECLARATION
 
-        StreamToRelationOp<Graph, Graph> s2r = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, TimeFactory.getInstance(), tick, report, report_grain, new GraphContentFactory());
+        Time instance1 = new TimeImpl(0);
+        StreamToRelationOp<Graph, Graph> s2r = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, instance1, tick, report, report_grain, new GraphContentFactory());
 
         //SDS
         SDS<Graph> sds = new SDSImpl();

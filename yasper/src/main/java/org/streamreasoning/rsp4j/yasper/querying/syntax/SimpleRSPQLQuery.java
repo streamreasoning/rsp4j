@@ -23,6 +23,7 @@ import java.util.Map;
 
 public class SimpleRSPQLQuery<O> implements RSPQL<O> {
 
+    private RelationToStreamOperator<Binding, O> r2s;
     private String id;
 
     private DataStream<O> outputStream;
@@ -35,15 +36,16 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
 
     private StreamOperator streamOperator = StreamOperator.NONE;
 
-    public SimpleRSPQLQuery(String id, DataStream<Graph> stream, WindowNode win, VarOrTerm s, VarOrTerm p, VarOrTerm o) {
+    public SimpleRSPQLQuery(String id, DataStream<Graph> stream, WindowNode win, VarOrTerm s, VarOrTerm p, VarOrTerm o, RelationToStreamOperator<Binding, O> r2s) {
         this.id = id;
         this.outputStream = new DataStreamImpl<O>(id);
         this.s = s;
         this.p = p;
         this.o = o;
-        if(win!=null && stream != null){
+        if (win != null && stream != null) {
             windowMap.put(win, stream);
         }
+        this.r2s = r2s;
 
     }
 
@@ -145,7 +147,7 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
     }
 
     @Override
-    public RelationToStreamOperator<Binding,O> r2s() {
+    public RelationToStreamOperator<Binding, O> r2s() {
         return new Rstream();
     }
 }
