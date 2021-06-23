@@ -1,7 +1,6 @@
 package org.streamreasoning.rsp4j.debs2021.processing.solution;
 
 import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.RDF;
 import org.apache.commons.rdf.api.Triple;
 import org.streamreasoning.rsp4j.abstraction.ContinuousProgram;
@@ -22,6 +21,7 @@ import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.debs2021.utils.StreamGenerator;
 import org.streamreasoning.rsp4j.io.DataStreamImpl;
+import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.querying.formatter.InstResponseSysOutFormatter;
 import org.streamreasoning.rsp4j.yasper.querying.operators.DummyR2R;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
@@ -63,7 +63,7 @@ public class DEBS2021ProcessingSolution {
         WindowNode wn = new WindowNodeImpl("w1", 2, 2, 0);
 
         //WINDOW DECLARATION
-        StreamToRelationOperatorFactory<Graph, Graph> windowOperatorFactory = new CSPARQLTimeWindowOperatorFactory(TimeFactory.getInstance(), tick, report, report_grain);
+        StreamToRelationOperatorFactory<Graph, Graph> windowOperatorFactory = new CSPARQLTimeWindowOperatorFactory(TimeFactory.getInstance(), tick, report, report_grain, new GraphContentFactory());
 
         StreamToRelationOp<Graph, Graph> s2r = windowOperatorFactory.build(wn.getRange(), wn.getStep(), startTime);
 
@@ -72,18 +72,18 @@ public class DEBS2021ProcessingSolution {
         //R2R
 
 
+        Rstream<Triple, Triple> r2s = new Rstream<Triple, Triple>();
 
-
-        ContinuousQuery q = new SimpleRSPQLQuery("q1", inputStream, wn, s, pp, o);
+        ContinuousQuery q = new SimpleRSPQLQuery("q1", inputStream, wn, s, pp, o, r2s);
 
         RelationToRelationOperator<Graph, Triple> r2r = new DummyR2R(sds, q);
 
 
-        Task<Graph, Graph, Triple,Triple> t =
+        Task<Graph, Graph, Triple, Triple> t =
                 new Task.TaskBuilder()
                         .addS2R("stream1", s2r, "w1")
                         .addR2R("w1", r2r)
-                        .addR2S("out", new Rstream<Triple,Triple>())
+                        .addR2S("out", new Rstream<Triple, Triple>())
                         .build();
         ContinuousProgram<Graph, Graph, Triple, Triple> cp = new ContinuousProgram.ContinuousProgramBuilder()
                 .in(inputStream)
@@ -93,7 +93,6 @@ public class DEBS2021ProcessingSolution {
                 .build();
 
         outStream.addConsumer(new InstResponseSysOutFormatter("TTL", true));
-
 
 
         inputStream.addConsumer(new InstResponseSysOutFormatter<Graph>("TTL", true));

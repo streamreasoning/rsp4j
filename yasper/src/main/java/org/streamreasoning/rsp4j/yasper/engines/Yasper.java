@@ -95,14 +95,14 @@ public class Yasper implements QueryRegistrationFeature<RSPQL>, StreamRegistrati
     }
 
     @Override
-    public ContinuousQueryExecution<Graph, Graph, Binding,Binding> register(RSPQL q) {
+    public ContinuousQueryExecution<Graph, Graph, Binding, Binding> register(RSPQL q) {
 //        return new ContinuousQueryExecutionFactoryImpl(q, windowOperatorFactory, registeredStreams, report, report_grain, tick, t0).build();
 
         SDS<Graph> sds = new SDSImpl();
 
         DataStream<Binding> out = new StreamImpl<Binding>(q.getID());
 
-        ContinuousQueryExecution<Graph, Graph, Binding,Binding> cqe = new ContinuousQueryExecutionImpl<Graph, Graph, Binding,Binding>(sds, q, out, q.r2r(), q.r2s());
+        ContinuousQueryExecution<Graph, Graph, Binding, Binding> cqe = new ContinuousQueryExecutionImpl<Graph, Graph, Binding, Binding>(sds, q, out, q.r2r(), q.r2s());
 
         Map<? extends WindowNode, DataStream<Graph>> windowMap = q.getWindowMap();
 
@@ -124,7 +124,6 @@ public class Yasper implements QueryRegistrationFeature<RSPQL>, StreamRegistrati
         });
 
         return cqe;
-
     }
 
 

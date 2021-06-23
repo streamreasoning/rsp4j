@@ -3,7 +3,7 @@ package org.streamreasoning.rsp;
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.io.DataStreamImpl;
 
-public class WebDataStreamSource<E> extends towa<E> implements WebDataStream<E> {
+public class WebDataStreamSource<E> extends DataStreamImpl<E> implements WebDataStream<E> {
 
     private final Distribution d;
     private final Publisher p;
@@ -27,8 +27,8 @@ public class WebDataStreamSource<E> extends towa<E> implements WebDataStream<E> 
     }
 
     @Override
-    public Distribution distribution() {
-        return d;
+    public Distribution[] distribution() {
+        return new Distribution[]{d};
     }
 
     @Override

@@ -12,8 +12,8 @@ public class WebDataStreamSink<E> extends DataStreamImpl<E> implements WebDataSt
     public WebDataStreamSink(String stream_uri, Graph description, Distribution d, Publisher p) {
         super(stream_uri);
         this.description = description;
-        this.d=d;
-        this.p=p;
+        this.d = d;
+        this.p = p;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class WebDataStreamSink<E> extends DataStreamImpl<E> implements WebDataSt
     }
 
     @Override
-    public Distribution distribution() {
-        return d;
+    public Distribution[] distribution() {
+        return new Distribution[]{d};
     }
 }

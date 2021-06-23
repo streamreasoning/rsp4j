@@ -135,7 +135,7 @@ public class CQELSStreamToRelationOp<T1, T2> extends ObservableStreamToRelationO
     }
 
     @Override
-    public StreamToRelationOp<T1, T2> link(ContinuousQueryExecution context) {
+    public StreamToRelationOp<T1, T2> link(ContinuousQueryExecution<T1, T2, ?, ?> context) {
         this.addObserver((Observer) context);
         return this;
     }

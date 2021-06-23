@@ -83,4 +83,8 @@ public class YDistribution implements Distribution {
     public void publisher(Publisher p) {
         this.p = p;
     }
+
+    @Override
+    public void start() {
+    }
 }

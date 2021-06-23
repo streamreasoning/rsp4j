@@ -1,21 +1,22 @@
 package org.streamreasoning.rsp4j.yasper;
 
-import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
-import org.streamreasoning.rsp4j.api.sds.SDS;
-import org.streamreasoning.rsp4j.api.secret.content.Content;
-import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
+import org.apache.commons.rdf.api.Triple;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
-import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
+import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
+import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
+import org.streamreasoning.rsp4j.api.sds.SDS;
+import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
+import org.streamreasoning.rsp4j.api.secret.content.Content;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
-import org.apache.commons.rdf.api.Triple;
 
+import java.util.Collection;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.stream.Stream;
 
-public class StreamViewImpl extends Observable implements ContinuousQueryExecution<Triple, Triple,Triple, Triple>, Observer {
+public class StreamViewImpl extends Observable implements ContinuousQueryExecution<Triple, Triple, Triple, Triple>, Observer {
 
     private Content content;
 
@@ -35,6 +36,11 @@ public class StreamViewImpl extends Observable implements ContinuousQueryExecuti
 
     @Override
     public DataStream<Triple> outstream() {
+        return null;
+    }
+
+    @Override
+    public TimeVarying<Collection<Triple>> output() {
         return null;
     }
 
@@ -60,7 +66,7 @@ public class StreamViewImpl extends Observable implements ContinuousQueryExecuti
     }
 
     @Override
-    public RelationToStreamOperator<Triple,Triple> r2s() {
+    public RelationToStreamOperator<Triple, Triple> r2s() {
         return null;
     }
 
@@ -70,7 +76,7 @@ public class StreamViewImpl extends Observable implements ContinuousQueryExecuti
     }
 
     @Override
-    public Stream<SolutionMapping<Triple>> eval(Long now) {
+    public Stream<Triple> eval(Long now) {
         return null;
     }
 }

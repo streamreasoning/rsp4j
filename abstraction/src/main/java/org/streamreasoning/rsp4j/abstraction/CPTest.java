@@ -71,7 +71,9 @@ public class CPTest {
         WindowNode wn = new WindowNodeImpl("w1", 2, 2, 0);
 
 
-        ContinuousQuery q = new SimpleRSPQLQuery("q1", stream, wn, s, pp, o);
+        Rstream<Binding, Binding> r2s = new Rstream<Binding, Binding>();
+
+        ContinuousQuery q = new SimpleRSPQLQuery("q1", stream, wn, s, pp, o, r2s);
 
         RelationToRelationOperator<Graph, Triple> r2r = new DummyR2R(sds, q);
 

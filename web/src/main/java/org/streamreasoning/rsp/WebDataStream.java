@@ -7,6 +7,6 @@ public interface WebDataStream<E> extends DataStream<E>, WebStream {
 
     Publisher publisher();
 
-    Distribution distribution();
+    Distribution[] distribution();
 
 }

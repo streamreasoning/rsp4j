@@ -10,6 +10,7 @@ import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
 import org.streamreasoning.rsp4j.yasper.engines.Yasper;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
+import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TermImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarImpl;
@@ -50,12 +51,13 @@ public class CQELSBindingExample {
         WindowNode wn = new WindowNodeImpl("w1", 2, 2, 0);
 
 
-        RSPQL<Binding> q = new SimpleRSPQLQuery<Binding>("q1", stream, wn, s, pp, o);
+        Rstream<Binding, Binding> r2s = new Rstream<Binding, Binding>();
 
+        RSPQL<Binding> q = new SimpleRSPQLQuery<>("q1", stream, wn, s, pp, o, r2s);
 
         q.addNamedWindow("stream1", wn);
 
-        ContinuousQueryExecution<Graph, Graph, Binding,Binding> cqe = sr.register(q);
+        ContinuousQueryExecution<Graph, Graph, Binding, Binding> cqe = sr.register(q);
 
 //        cqe.outstream().addConsumer(new InstResponseSysOutFormatter("TTL", true));
         cqe.outstream().addConsumer((arg, ts) -> System.out.println(arg));

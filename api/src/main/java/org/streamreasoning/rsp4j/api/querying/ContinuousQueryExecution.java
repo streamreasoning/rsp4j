@@ -3,10 +3,11 @@ package org.streamreasoning.rsp4j.api.querying;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
-import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.sds.SDS;
+import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 
+import java.util.Collection;
 import java.util.stream.Stream;
 
 /**
@@ -17,6 +18,8 @@ public interface ContinuousQueryExecution<I, W, R, O> {
 
     DataStream<O> outstream();
 
+    TimeVarying<Collection<R>> output();
+
     ContinuousQuery query();
 
     SDS<W> sds();
@@ -25,10 +28,10 @@ public interface ContinuousQueryExecution<I, W, R, O> {
 
     RelationToRelationOperator<W, R> r2r();
 
-    RelationToStreamOperator<R,O> r2s();
+    RelationToStreamOperator<R, O> r2s();
 
     void add(StreamToRelationOp<I, W> op);
 
-    Stream<SolutionMapping<R>> eval(Long now);
+    Stream<R> eval(Long now);
 }
 
