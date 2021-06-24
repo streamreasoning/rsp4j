@@ -50,7 +50,7 @@ public class DCAT {
         return RDFUtils.getInstance().createTriple(s, pLICENSE, l.url());
     }
 
-    public static Triple access(IRI uri, String s) {
+    public static Triple access(BlankNodeOrIRI uri, String s) {
         return RDFUtils.getInstance().createTriple(uri, pACCESS, RDFUtils.createLiteral(s, XSD.tString));
 
     }

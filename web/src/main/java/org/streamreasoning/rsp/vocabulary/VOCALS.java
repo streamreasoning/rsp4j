@@ -1,5 +1,6 @@
 package org.streamreasoning.rsp.vocabulary;
 
+import org.apache.commons.rdf.api.BlankNodeOrIRI;
 import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.Triple;
 import org.streamreasoning.rsp.RDFManager;
@@ -32,11 +33,11 @@ public abstract class VOCALS {
         return RDFUtils.getInstance().createTriple(s, RDF.pTYPE, STREAM_);
     }
 
-    public static Triple endpoint(IRI s) {
+    public static Triple endpoint(BlankNodeOrIRI s) {
         return RDFUtils.getInstance().createTriple(s, RDF.pTYPE, STREAM_ENDPOINT);
     }
 
-    public static Triple endpoint(IRI s, IRI o) {
+    public static Triple endpoint(BlankNodeOrIRI s, BlankNodeOrIRI o) {
         return RDFUtils.getInstance().createTriple(s, VSD.pENDPOINT, o);
     }
 
@@ -44,4 +45,5 @@ public abstract class VOCALS {
         return RDFUtils.getInstance().createTriple(RDFUtils.createIRI(""), RDF.pTYPE, STREAM_DESCRIPTOR);
 
     }
+
 }

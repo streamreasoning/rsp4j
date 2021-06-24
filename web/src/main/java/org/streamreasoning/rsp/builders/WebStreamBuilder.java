@@ -82,7 +82,7 @@ public class WebStreamBuilder {
             @Override
             public SLD.WebDataStream<T> serve() {
                 DistributionBuilder distributionBuilder = distributionBuilders.get(0);
-                return distributionBuilder.<T>buildSink(uri.getIRIString(), graph, fragment).serve();
+                return distributionBuilder.<T>buildSink(graph).serve();
             }
 
             @Override

@@ -14,11 +14,13 @@ import org.streamreasoning.rsp.builders.DistributionBuilder;
 import org.streamreasoning.rsp.enums.Format;
 import org.streamreasoning.rsp.enums.License;
 import org.streamreasoning.rsp.vocabulary.DCAT;
-import org.streamreasoning.rsp.vocabulary.VSD;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingStrategy;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.streamreasoning.rsp.vocabulary.RDF.pTYPE;
 import static org.streamreasoning.rsp.vocabulary.VOCALS.STREAM_ENDPOINT;
@@ -26,19 +28,16 @@ import static org.streamreasoning.rsp.vocabulary.VSD.PUBLISHING_SERVICE;
 
 public class SLD {
 
-    static JenaRDF rdf = new JenaRDF();
+    public static JenaRDF rdf = new JenaRDF();
 
     public static Query publisherQuery = QueryFactory.create("SELECT * " +
                                                              "WHERE { " +
                                                              " ?endpoint " + pTYPE + " " + STREAM_ENDPOINT + ";" +
-                                                             "" + DCAT.pLICENSE + " ?license ; " +
                                                              "" + DCAT.pACCESS + " ?access ; " +
+                                                             "" + DCAT.pLICENSE + " ?license ; " +
                                                              "" + DCAT.pFORMAT + " ?format . } ");
 
     public static <T> WebDataStream<T> fetch(String s) {
-        //TODO read the rdf graph using jena/rdf4j
-        //TODO parse the graph to extract distribution, instantiate a distribution object
-        //TODO parse the graph to identify the parser
         Distribution<T>[] distributions = extractDistributions(fetchStreamDescriptor(s));
         return distributions[0].getWebStream();
     }
@@ -49,39 +48,32 @@ public class SLD {
 
     public static <E> Distribution<E>[] extractDistributions(Graph descriptor) {
 
-        DistributionBuilder d = new DistributionBuilder("");
+        List<DistributionBuilder> dbs = new ArrayList<>();
 
         JenaGraph g = (JenaGraph) descriptor;
         ResultSet resultSet = QueryExecutionFactory.create(publisherQuery, g.asJenaModel()).execSelect();
 
         while (resultSet.hasNext()) {
             Binding binding = resultSet.nextBinding();
-            d.access(binding.get(Var.alloc("access")).toString(false), false);
+            DistributionBuilder d = new DistributionBuilder("");
+            d.access(binding.get(Var.alloc("access")).toString(false));
             d.format(Format.valueOf(binding.get(Var.alloc("format")).toString(false)));
             String license1 = binding.get(Var.alloc("license")).getURI();
             Arrays.stream(License.values()).forEach(license -> {
-                if (license.url().equals(license1))
+                if (license.url().getIRIString().equals(license1))
                     d.license(license);
             });
-
+            d.publisher(extractPublisher(descriptor));
+            dbs.add(d);
         }
 
-//        d.publisher(extractPublisher(descriptor));
 
-
-//        access("wss://echo.websocket.org", false) // defines if the distribution uri will be a fragment uri (need a proxy otherwise). (Can be used to change port)
-//                .publisher(extractPublisher(descriptor))
-//                .protocol(Protocol.WebSocket)  // Determine what sink to choose
-//                .security(Security.SSL) // we need to include secure protocol
-//                .license(License.CC) //mostly for documentation
-//                .format(Format.STRING).
-
-        return new Distribution[]{d.<E>buildSource("colours", false)};
+        return dbs.stream().map(db -> db.buildSource(descriptor)).collect(Collectors.toList()).toArray(new SLD.Distribution[dbs.size()]);
     }
 
-    protected static Publisher extractPublisher(Graph descriptor) {
+    public static Publisher extractPublisher(Graph descriptor) {
 
-        Query publisherQuery = QueryFactory.create("SELECT ?s  WHERE {?publisher a " + PUBLISHING_SERVICE + " } ");
+        Query publisherQuery = QueryFactory.create("SELECT ?publisher  WHERE {?publisher a " + PUBLISHING_SERVICE + " } ");
         JenaGraph g = (JenaGraph) descriptor;
         ResultSet resultSet = QueryExecutionFactory.create(publisherQuery, g.asJenaModel()).execSelect();
 
@@ -94,20 +86,7 @@ public class SLD {
 
 
     public static SLD.Publisher publisher(String s) {
-
-        return new Publisher() {
-            @Override
-            public IRI uri() {
-                return rdf.createIRI(s);
-            }
-
-            @Override
-            public Graph describe() {
-                JenaGraph graph = rdf.createGraph();
-                graph.add(VSD.publisher(this.uri()));
-                return graph;
-            }
-        };
+        return new PublisherImpl(rdf.createIRI(s), rdf.createGraph());
     }
 
 

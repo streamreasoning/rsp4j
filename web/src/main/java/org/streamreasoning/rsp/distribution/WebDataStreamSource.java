@@ -6,6 +6,8 @@ import org.streamreasoning.rsp.SLD;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.io.DataStreamImpl;
 
+import java.util.Objects;
+
 public class WebDataStreamSource<E> extends DataStreamImpl<E> implements SLD.WebDataStream<E> {
 
     private final SLD.Distribution d;
@@ -39,5 +41,19 @@ public class WebDataStreamSource<E> extends DataStreamImpl<E> implements SLD.Web
     @Override
     public IRI uri() {
         return RDFUtils.createIRI(stream_uri);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        WebDataStreamSource<?> that = (WebDataStreamSource<?>) o;
+        return Objects.equals(d, that.d) && Objects.equals(p, that.p) ;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), d, p, description);
     }
 }

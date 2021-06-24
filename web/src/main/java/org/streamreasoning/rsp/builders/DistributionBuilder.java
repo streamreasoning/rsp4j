@@ -1,5 +1,6 @@
 package org.streamreasoning.rsp.builders;
 
+import org.apache.commons.rdf.api.BlankNodeOrIRI;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.streamreasoning.rsp.SLD;
@@ -31,6 +32,7 @@ public class DistributionBuilder {
     private String urlBody;
     private String id;
     private String access;
+    private BlankNodeOrIRI ep;
 
     public DistributionBuilder(String base) {
         this.base = base;
@@ -58,45 +60,45 @@ public class DistributionBuilder {
             access = id;
         } else this.access = this.base.replace("http://", "");
 
-        this.dgraph.add(VOCALS.endpoint(uri));
+        this.dgraph.add(VOCALS.endpoint(uri, this.ep = is.createBlankNode()));
+        this.dgraph.add(VOCALS.endpoint(this.ep));
 
         return this;
     }
 
     public DistributionBuilder protocol(Protocol protocol) {
         this.protocol = protocol;
-        dgraph.add(uri, DCAT.pPROTOCOL, is.createLiteral(protocol.name(), XSD.tString));
+        dgraph.add(ep, DCAT.pPROTOCOL, is.createLiteral(protocol.name(), XSD.tString));
         return this;
     }
 
     public DistributionBuilder security(Security security) {
         this.security = security;
-        dgraph.add(uri, DCAT.pSECUTIRTY, is.createLiteral(security.name(), XSD.tString));
+        dgraph.add(ep, DCAT.pSECUTIRTY, is.createLiteral(security.name(), XSD.tString));
         return this;
     }
 
     public DistributionBuilder license(License license) {
         this.license = license;
-        dgraph.add(DCAT.license(uri, license));
-
+        dgraph.add(DCAT.license(ep, license));
         return this;
     }
 
     public DistributionBuilder format(Format format) {
         this.format = format;
-        dgraph.add(DCAT.format(uri, format));
+        dgraph.add(DCAT.format(ep, format));
         return this;
     }
 
-    public <T> SLD.Distribution<T> buildSource(String path, boolean fragment) {
-        return new WebSocketDistribution<T>(uri, path, license, format, p, dgraph, false);
+    public <T> SLD.Distribution<T> buildSource(Graph sgraph) {
+        return new WebSocketDistribution<T>(this.ep, access, license, format, p, sgraph, true);
     }
 
-    public <T> SLD.Distribution<T> buildSink(String path, Graph sgraph, boolean fragment) {
+    public <T> SLD.Distribution<T> buildSink(Graph sgraph) {
         access = access.equals(id) ? access.replace(Protocol.HTTP.schema(), protocol.schema()) : protocol.schema() + access + "/access/" + id;
-        this.dgraph.add(DCAT.access(uri, access));
+        this.dgraph.add(DCAT.access(this.ep, access));
         this.dgraph.stream().forEach(sgraph::add);
-        return new WebSocketDistribution<T>(uri, id, license, format, p, sgraph);
+        return new WebSocketDistribution<T>(this.ep, id, license, format, p, sgraph);
     }
 
 

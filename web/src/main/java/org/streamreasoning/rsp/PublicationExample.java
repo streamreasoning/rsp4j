@@ -35,9 +35,6 @@ public class PublicationExample {
 
         SLD.WebDataStream<String> stream = ws.serve();
 
-//        WebsocketServerSink<String> stream = new WebsocketServerSink<String>(9000,"test",String::toString);
-//        stream.startSocket();
-
         new Thread(() -> {
             try {
                 Random r = new Random();
