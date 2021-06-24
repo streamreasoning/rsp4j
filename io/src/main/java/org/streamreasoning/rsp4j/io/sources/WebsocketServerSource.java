@@ -14,7 +14,7 @@ import java.util.List;
  * This class is wrapper around the WebStream providing WebSocket functionality.
  * It uses a ParsingStrategy to convert the received strings through the websocket channel to object of type T.
  *
- * @param <T>  output type of the sink
+ * @param <T> output type of the sink
  */
 
 public class WebsocketServerSource<T> implements DataStream<T> {
@@ -24,15 +24,16 @@ public class WebsocketServerSource<T> implements DataStream<T> {
     private final String wsPath;
     private final ParsingStrategy<T> parsingStrategy;
     private final Service ws;
-    protected List<Consumer<T>> consumers = new ArrayList<>();
     private final String stream_uri;
+    protected List<Consumer<T>> consumers = new ArrayList<>();
 
     /**
      * Creates a Websocket server that functions as a Source
-     * @param streamURI  the uri of the WebStream, this is only used for linking to the WebStream internally
-     * @param port  the port to open the websocket
-     * @param wsPath  the path to open the websocket (e.g. test which becomes ws://localhost:<port>/<path>)
-     * @param parsingStrategy  the parsing strategy that converts strings to objects of type T
+     *
+     * @param streamURI       the uri of the WebStream, this is only used for linking to the WebStream internally
+     * @param port            the port to open the websocket
+     * @param wsPath          the path to open the websocket (e.g. test which becomes ws://localhost:<port>/<path>)
+     * @param parsingStrategy the parsing strategy that converts strings to objects of type T
      */
     public WebsocketServerSource(String streamURI, int port, String wsPath, ParsingStrategy<T> parsingStrategy) {
         this.stream_uri = streamURI;
@@ -40,27 +41,29 @@ public class WebsocketServerSource<T> implements DataStream<T> {
         this.ws = Service.ignite()
                 .port(port);
 
-        this.socket = new WebSocketInputHandler(this,parsingStrategy);
+        this.socket = new WebSocketInputHandler(this, parsingStrategy);
         this.wsPath = wsPath;
-        ws.webSocket("/"+ wsPath, socket);
+        ws.webSocket("/" + wsPath, socket);
         ws.init();
 
     }
+
     /**
      * Creates a Websocket server that functions as a Source, it uses the wsURL as stream uri
      *
-     * @param port  the port to open the websocket
-     * @param wsPath  the path to open the websocket (e.g. test which becomes ws://localhost:<port>/<path>),
-     *                this is also used for creating the stream uri (i.e. ws://localhost:<port>/<path>)
-     * @param parsingStrategy  the parsing strategy that converts strings to objects of type T
+     * @param port            the port to open the websocket
+     * @param wsPath          the path to open the websocket (e.g. test which becomes ws://localhost:<port>/<path>),
+     *                        this is also used for creating the stream uri (i.e. ws://localhost:<port>/<path>)
+     * @param parsingStrategy the parsing strategy that converts strings to objects of type T
      */
     public WebsocketServerSource(int port, String wsPath, ParsingStrategy<T> parsingStrategy) {
-        this(wsPath,port, wsPath,parsingStrategy);
+        this(wsPath, port, wsPath, parsingStrategy);
     }
 
-    public void stopSocket(){
+    public void stopSocket() {
         this.ws.stop();
     }
+
     @Override
     public void addConsumer(Consumer<T> c) {
         consumers.add(c);

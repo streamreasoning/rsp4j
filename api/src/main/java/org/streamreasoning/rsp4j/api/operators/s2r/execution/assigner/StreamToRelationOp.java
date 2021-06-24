@@ -42,7 +42,7 @@ public interface StreamToRelationOp<I, W> extends Consumer<I> {
 
     Content<I, W> compute(long t_e, Window w);
 
-    StreamToRelationOp<I, W> link(ContinuousQueryExecution<I, W,?, ?> context);
+    StreamToRelationOp<I, W> link(ContinuousQueryExecution<I, W, ?, ?> context);
 
     TimeVarying<W> apply(DataStream<I> s);
 }

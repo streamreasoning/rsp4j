@@ -13,27 +13,23 @@ import java.util.List;
 
 public class WebStreamBuilder {
 
+    org.apache.commons.rdf.api.RDF is = RDFUtils.getInstance();
     private SLD.Publisher p;
-
-    public String base() {
-        return base;
-    }
-
     private String base;
     private IRI uri;
     private String name;
     private String description;
     private List<DistributionBuilder> distributionBuilders = new ArrayList<>();
     private Graph graph = RDFUtils.getInstance().createGraph();
-
-    org.apache.commons.rdf.api.RDF is = RDFUtils.getInstance();
     private String id;
     private boolean fragment;
-
-
     public WebStreamBuilder(String p) {
         this.base = p;
 
+    }
+
+    public String base() {
+        return base;
     }
 
     public WebStreamBuilder publisher(SLD.Publisher p) {

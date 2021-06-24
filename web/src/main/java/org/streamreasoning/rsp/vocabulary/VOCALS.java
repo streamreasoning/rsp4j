@@ -12,11 +12,6 @@ public abstract class VOCALS {
     private static final String uri = "http://w3id.org/rsp/vocals#";
 
     public static final IRI RDF_SSTREAM = resource("RDFStream");
-
-    private static IRI resource(String rdfStream) {
-        return RDFManager.resource(uri, rdfStream);
-    }
-
     public static final IRI STREAM_ = resource("Stream");
     public static final IRI STREAM_DESCRIPTOR = resource("StreamDescriptor");
     public static final IRI STREAM_DISTRIBUTION = resource("StreamDistribution");
@@ -28,6 +23,9 @@ public abstract class VOCALS {
     public static final IRI HAS_ENDPOINT = resource("hasEndpoint");
     public static final IRI HAS_PARTITION = resource("hasPartition");
 
+    private static IRI resource(String rdfStream) {
+        return RDFManager.resource(uri, rdfStream);
+    }
 
     public static Triple stream(IRI s) {
         return RDFUtils.getInstance().createTriple(s, RDF.pTYPE, STREAM_);

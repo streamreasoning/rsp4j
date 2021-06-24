@@ -5,11 +5,9 @@ import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
-import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLParser;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -40,9 +38,9 @@ public interface ContinuousQuery<I, W, R, O> {//extends Task<I, Binding, O> {
 
     boolean isConstructType();
 
-    void setOutputStream(String uri);
-
     DataStream<O> getOutputStream();
+
+    void setOutputStream(String uri);
 
     String getID();
 
@@ -54,7 +52,7 @@ public interface ContinuousQuery<I, W, R, O> {//extends Task<I, Binding, O> {
 
     StreamToRelationOp<I, W>[] s2r();
 
-    RelationToStreamOperator<R,O> r2s();
+    RelationToStreamOperator<R, O> r2s();
 
     List<Aggregation> getAggregations();
 }

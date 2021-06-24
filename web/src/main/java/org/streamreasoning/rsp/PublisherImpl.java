@@ -31,7 +31,7 @@ public class PublisherImpl implements SLD.Publisher {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PublisherImpl publisher = (PublisherImpl) o;
-        return Objects.equals(iri, publisher.iri) ;
+        return Objects.equals(iri, publisher.iri);
     }
 
     @Override

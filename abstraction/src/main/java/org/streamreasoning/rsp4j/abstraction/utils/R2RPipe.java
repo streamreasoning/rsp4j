@@ -8,17 +8,18 @@ import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-public class R2RPipe<W,R> implements RelationToRelationOperator<W,R> {
+public class R2RPipe<W, R> implements RelationToRelationOperator<W, R> {
 
     private RelationToRelationOperator[] r2rs;
 
-    public R2RPipe(RelationToRelationOperator... r2rs){
+    public R2RPipe(RelationToRelationOperator... r2rs) {
         this.r2rs = r2rs;
     }
+
     @Override
     public Stream<R> eval(Stream<W> sds) {
         Stream tvg = sds;
-        for(RelationToRelationOperator r2r : r2rs){
+        for (RelationToRelationOperator r2r : r2rs) {
             tvg = r2r.eval(tvg);
         }
         return tvg;

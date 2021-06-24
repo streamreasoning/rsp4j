@@ -1,6 +1,5 @@
 package org.streamreasoning.rsp4j.abstraction.triplepattern;
 
-import org.apache.commons.rdf.api.Dataset;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.RDF;
@@ -53,7 +52,7 @@ public class TriplePatternR2R implements RelationToRelationOperator<Graph, Bindi
 
     @Override
     public SolutionMapping<Binding> createSolutionMapping(Binding result) {
-        return new SolutionMappingBase<>(result,System.currentTimeMillis());
+        return new SolutionMappingBase<>(result, System.currentTimeMillis());
         //return new TableResponse(query.getID() + "/ans/" + System.currentTimeMillis(), System.currentTimeMillis(),result);
     }
 
@@ -69,7 +68,7 @@ public class TriplePatternR2R implements RelationToRelationOperator<Graph, Bindi
         IRI stream = instance.createIRI(stream_uri);
 
         Graph materializedGraph = RDFUtils.createGraph();
-        sds.forEach( graph->{graph.stream().forEach(materializedGraph::add);});
+        sds.forEach(graph -> {graph.stream().forEach(materializedGraph::add);});
         org.apache.jena.graph.Graph jenaGraph = jena.asJenaGraph(materializedGraph);
         Model dataModel = ModelFactory.createModelForGraph(jenaGraph);
         return dataModel;

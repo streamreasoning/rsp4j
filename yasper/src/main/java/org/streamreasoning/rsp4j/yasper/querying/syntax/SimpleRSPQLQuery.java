@@ -112,13 +112,13 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
     }
 
     @Override
-    public void setOutputStream(String uri) {
-        this.outputStream = new DataStreamImpl<>(uri);
+    public DataStream<O> getOutputStream() {
+        return outputStream;
     }
 
     @Override
-    public DataStream<O> getOutputStream() {
-        return outputStream;
+    public void setOutputStream(String uri) {
+        this.outputStream = new DataStreamImpl<>(uri);
     }
 
     @Override

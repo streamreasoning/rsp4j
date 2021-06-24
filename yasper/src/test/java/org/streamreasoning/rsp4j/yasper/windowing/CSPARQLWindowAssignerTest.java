@@ -1,9 +1,8 @@
 package org.streamreasoning.rsp4j.yasper.windowing;
 
-import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
-import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
-import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
-import org.streamreasoning.rsp4j.yasper.StreamViewImpl;
+import org.apache.commons.rdf.api.Graph;
+import org.apache.commons.rdf.api.Triple;
+import org.junit.Test;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
@@ -14,9 +13,10 @@ import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
 import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
-import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.api.Triple;
-import org.junit.Test;
+import org.streamreasoning.rsp4j.yasper.StreamViewImpl;
+import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
+import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
+import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
 
 import static junit.framework.TestCase.assertTrue;
 

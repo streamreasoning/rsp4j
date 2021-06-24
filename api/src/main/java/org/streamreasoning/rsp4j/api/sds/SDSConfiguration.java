@@ -1,9 +1,9 @@
 package org.streamreasoning.rsp4j.api.sds;
 
-import org.streamreasoning.rsp4j.api.engine.config.ConfigurationUtils;
-import org.streamreasoning.rsp4j.api.enums.Maintenance;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.streamreasoning.rsp4j.api.engine.config.ConfigurationUtils;
+import org.streamreasoning.rsp4j.api.enums.Maintenance;
 
 import java.net.URL;
 
@@ -17,6 +17,10 @@ public class SDSConfiguration extends PropertiesConfiguration {
         super(fileName);
     }
 
+    public static SDSConfiguration getDefault() throws ConfigurationException {
+        URL resource = SDSConfiguration.class.getResource("/default.properties");
+        return new SDSConfiguration(resource.getPath());
+    }
 
     public boolean hasTboxLocation() {
         return this.containsKey(ConfigurationUtils.TBOX_LOCATION);
@@ -49,10 +53,5 @@ public class SDSConfiguration extends PropertiesConfiguration {
 
     public boolean isRecursionEnables() {
         return this.getBoolean(ConfigurationUtils.QUERY_RECURSION);
-    }
-
-    public static SDSConfiguration getDefault() throws ConfigurationException {
-        URL resource = SDSConfiguration.class.getResource("/default.properties");
-        return new SDSConfiguration(resource.getPath());
     }
 }

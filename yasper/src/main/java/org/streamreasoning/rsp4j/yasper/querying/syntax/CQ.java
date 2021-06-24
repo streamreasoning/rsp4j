@@ -9,7 +9,6 @@ import org.streamreasoning.rsp4j.api.querying.Aggregation;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -72,13 +71,13 @@ public class CQ<O> implements RSPQL<O> {
     }
 
     @Override
-    public void setOutputStream(String uri) {
-
+    public DataStream<O> getOutputStream() {
+        return null;
     }
 
     @Override
-    public DataStream<O> getOutputStream() {
-        return null;
+    public void setOutputStream(String uri) {
+
     }
 
     @Override

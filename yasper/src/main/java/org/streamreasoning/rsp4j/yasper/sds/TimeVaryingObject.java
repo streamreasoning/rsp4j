@@ -1,11 +1,9 @@
 package org.streamreasoning.rsp4j.yasper.sds;
 
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.rdf.api.IRI;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.api.IRI;
 
 @RequiredArgsConstructor
 public class TimeVaryingObject<E> implements TimeVarying<E> {

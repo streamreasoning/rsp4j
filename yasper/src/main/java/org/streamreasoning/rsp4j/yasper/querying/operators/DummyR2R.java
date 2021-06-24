@@ -39,6 +39,6 @@ public class DummyR2R implements RelationToRelationOperator<Graph, Triple> {
 
     @Override
     public SolutionMapping<Triple> createSolutionMapping(Triple result) {
-        return new SelectInstResponse<Triple>(query.getID() + "/ans/" + System.currentTimeMillis(), System.currentTimeMillis(),result);
+        return new SelectInstResponse<Triple>(query.getID() + "/ans/" + System.currentTimeMillis(), System.currentTimeMillis(), result);
     }
 }

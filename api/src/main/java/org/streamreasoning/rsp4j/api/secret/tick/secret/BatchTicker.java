@@ -1,10 +1,10 @@
 package org.streamreasoning.rsp4j.api.secret.tick.secret;
 
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.Window;
 import org.streamreasoning.rsp4j.api.secret.tick.Ticker;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 /**
  * The Tick dimension in our model defines the condition which drives an SPE
@@ -21,9 +21,8 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class BatchTicker implements Ticker {
 
-    private int curr = 0;
     protected final StreamToRelationOp<?, ?> wa;
-
+    private int curr = 0;
     @Setter
     private int batch;
 

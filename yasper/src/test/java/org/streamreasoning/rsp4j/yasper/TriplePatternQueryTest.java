@@ -22,13 +22,13 @@ public class TriplePatternQueryTest {
     public void testAllVariables() throws InterruptedException {
 
 
-        ContinuousQuery<Graph, Graph,Binding, Binding> query = TPQueryFactory.parse("" +
-                "REGISTER ISTREAM <http://out/stream> AS " +
-                "SELECT * " +
-                "FROM NAMED WINDOW <window2> ON <stream2> [RANGE PT10S STEP PT5S] " +
-                "WHERE {" +
-                "   ?s ?p ?o ." +
-                "}");
+        ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
+                                                                                     "REGISTER ISTREAM <http://out/stream> AS " +
+                                                                                     "SELECT * " +
+                                                                                     "FROM NAMED WINDOW <window2> ON <stream2> [RANGE PT10S STEP PT5S] " +
+                                                                                     "WHERE {" +
+                                                                                     "   ?s ?p ?o ." +
+                                                                                     "}");
 
 
         VarOrTerm s = new VarImpl("s");
@@ -43,13 +43,13 @@ public class TriplePatternQueryTest {
     @Test
     public void testAllTerms() throws InterruptedException {
 
-        ContinuousQuery<Graph, Graph,Binding, Binding> query = TPQueryFactory.parse("" +
-                "REGISTER ISTREAM <http://out/stream> AS " +
-                "SELECT * " +
-                "FROM NAMED WINDOW <window2> ON <stream2> [RANGE PT10S STEP PT5S] " +
-                "WHERE {" +
-                "   <http://test/s> <http://test/p> <http://test/o> ." +
-                "}");
+        ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
+                                                                                     "REGISTER ISTREAM <http://out/stream> AS " +
+                                                                                     "SELECT * " +
+                                                                                     "FROM NAMED WINDOW <window2> ON <stream2> [RANGE PT10S STEP PT5S] " +
+                                                                                     "WHERE {" +
+                                                                                     "   <http://test/s> <http://test/p> <http://test/o> ." +
+                                                                                     "}");
 
         VarOrTerm s = new TermImpl(RDFUtils.createIRI("http://test/s"));
         VarOrTerm p = new TermImpl(RDFUtils.createIRI("http://test/p"));
@@ -63,13 +63,13 @@ public class TriplePatternQueryTest {
     @Test
     public void testSingleWindow() throws InterruptedException {
 
-        ContinuousQuery<Graph, Graph,Binding, Binding> query = TPQueryFactory.parse("" +
-                "REGISTER ISTREAM <http://out/stream> AS " +
-                "SELECT * " +
-                "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
-                "WHERE {" +
-                "   <http://test/s> <http://test/p> <http://test/o> ." +
-                "}");
+        ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
+                                                                                     "REGISTER ISTREAM <http://out/stream> AS " +
+                                                                                     "SELECT * " +
+                                                                                     "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
+                                                                                     "WHERE {" +
+                                                                                     "   <http://test/s> <http://test/p> <http://test/o> ." +
+                                                                                     "}");
 
         assertEquals(1, query.getWindowMap().size());
 
@@ -84,48 +84,48 @@ public class TriplePatternQueryTest {
 
     @Test
     public void testOutputStream() {
-        ContinuousQuery<Graph, Graph,Binding, Binding> query = TPQueryFactory.parse("" +
-                "REGISTER ISTREAM <http://out/stream> AS " +
-                "SELECT * " +
-                "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
-                "WHERE {" +
-                "   <http://test/s> <http://test/p> <http://test/o> ." +
-                "}");
+        ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
+                                                                                     "REGISTER ISTREAM <http://out/stream> AS " +
+                                                                                     "SELECT * " +
+                                                                                     "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
+                                                                                     "WHERE {" +
+                                                                                     "   <http://test/s> <http://test/p> <http://test/o> ." +
+                                                                                     "}");
 
         assertEquals(new DataStreamImpl<>("http://out/stream"), query.getOutputStream());
     }
 
     @Test
     public void testOutputStreamType() {
-        ContinuousQuery<Graph, Graph,Binding, Binding> query = TPQueryFactory.parse("" +
-                "REGISTER ISTREAM <http://out/stream> AS " +
-                "SELECT * " +
-                "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
-                "WHERE {" +
-                "   <http://test/s> <http://test/p> <http://test/o> ." +
-                "}");
+        ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
+                                                                                     "REGISTER ISTREAM <http://out/stream> AS " +
+                                                                                     "SELECT * " +
+                                                                                     "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
+                                                                                     "WHERE {" +
+                                                                                     "   <http://test/s> <http://test/p> <http://test/o> ." +
+                                                                                     "}");
 
         assertEquals(true, query.isIstream());
         assertEquals(false, query.isDstream());
         assertEquals(false, query.isRstream());
         query = TPQueryFactory.parse("" +
-                "REGISTER DSTREAM <http://out/stream> AS " +
-                "SELECT * " +
-                "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
-                "WHERE {" +
-                "   <http://test/s> <http://test/p> <http://test/o> ." +
-                "}");
+                                     "REGISTER DSTREAM <http://out/stream> AS " +
+                                     "SELECT * " +
+                                     "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
+                                     "WHERE {" +
+                                     "   <http://test/s> <http://test/p> <http://test/o> ." +
+                                     "}");
 
         assertEquals(false, query.isIstream());
         assertEquals(true, query.isDstream());
         assertEquals(false, query.isRstream());
         query = TPQueryFactory.parse("" +
-                "REGISTER RSTREAM <http://out/stream> AS " +
-                "SELECT * " +
-                "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
-                "WHERE {" +
-                "   <http://test/s> <http://test/p> <http://test/o> ." +
-                "}");
+                                     "REGISTER RSTREAM <http://out/stream> AS " +
+                                     "SELECT * " +
+                                     "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
+                                     "WHERE {" +
+                                     "   <http://test/s> <http://test/p> <http://test/o> ." +
+                                     "}");
 
         assertEquals(false, query.isIstream());
         assertEquals(false, query.isDstream());
@@ -133,17 +133,17 @@ public class TriplePatternQueryTest {
     }
 
     @Test
-    public void testAggregation(){
-        ContinuousQuery<Graph, Graph,Binding, Binding> query = TPQueryFactory.parse("" +
-                "REGISTER ISTREAM <http://out/stream> AS " +
-                "SELECT (Count(?s) AS ?count)" +
-                "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
-                "WHERE {" +
-                "   ?s <http://test/p> <http://test/o> ." +
-                "}");
-        assertEquals(1,query.getAggregations().size());
-        Aggregation expected = new Aggregation(null,"?s","?count","Count");
-        assertEquals(expected,query.getAggregations().get(0));
+    public void testAggregation() {
+        ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
+                                                                                     "REGISTER ISTREAM <http://out/stream> AS " +
+                                                                                     "SELECT (Count(?s) AS ?count)" +
+                                                                                     "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
+                                                                                     "WHERE {" +
+                                                                                     "   ?s <http://test/p> <http://test/o> ." +
+                                                                                     "}");
+        assertEquals(1, query.getAggregations().size());
+        Aggregation expected = new Aggregation(null, "?s", "?count", "Count");
+        assertEquals(expected, query.getAggregations().get(0));
     }
 
 

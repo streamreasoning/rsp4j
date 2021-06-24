@@ -11,6 +11,7 @@ import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
 public class BindingContentFactory implements ContentFactory<Graph, Binding> {
 
     Time time;
+    private VarOrTerm s, p, o;
 
     public BindingContentFactory(Time time, VarOrTerm s, VarOrTerm p, VarOrTerm o) {
         this.s = s;
@@ -18,8 +19,6 @@ public class BindingContentFactory implements ContentFactory<Graph, Binding> {
         this.o = o;
         this.time = time;
     }
-
-    private VarOrTerm s, p, o;
 
     public BindingContentFactory(Time time) {
         this.time = time;

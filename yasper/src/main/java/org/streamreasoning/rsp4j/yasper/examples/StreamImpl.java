@@ -9,12 +9,11 @@ import java.util.List;
 public class StreamImpl<T> implements DataStream<T> {
 
     protected String stream_uri;
+    protected List<Consumer<T>> consumers = new ArrayList<>();
 
     public StreamImpl(String stream_uri) {
         this.stream_uri = stream_uri;
     }
-
-    protected List<Consumer<T>> consumers = new ArrayList<>();
 
     @Override
     public void addConsumer(Consumer<T> c) {

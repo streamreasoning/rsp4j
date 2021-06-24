@@ -25,13 +25,13 @@ public class QueryFactory {
      */
     public static void main(String[] args) {
         ContinuousQuery c = QueryFactory.parse("" +
-                "REGISTER ISTREAM <http://out/stream> AS " +
-                "SELECT * " +
-                "FROM NAMED WINDOW <window1> ON <stream1> [RANGE PT10S STEP PT5S] " +
-                "FROM NAMED WINDOW <window2> ON <stream2> [RANGE PT10S STEP PT5S] " +
-                "WHERE {" +
-                "   ?a ?b ?c ." +
-                "}");
+                                               "REGISTER ISTREAM <http://out/stream> AS " +
+                                               "SELECT * " +
+                                               "FROM NAMED WINDOW <window1> ON <stream1> [RANGE PT10S STEP PT5S] " +
+                                               "FROM NAMED WINDOW <window2> ON <stream2> [RANGE PT10S STEP PT5S] " +
+                                               "WHERE {" +
+                                               "   ?a ?b ?c ." +
+                                               "}");
         System.out.println("ISTREAM? " + c.isIstream());
         System.out.println("SELECT? " + c.isSelectType());
         Map<WindowNode, DataStream> windowMap = c.getWindowMap();

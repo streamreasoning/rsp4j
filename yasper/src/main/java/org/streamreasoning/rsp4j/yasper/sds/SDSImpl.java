@@ -17,12 +17,12 @@
  */
 package org.streamreasoning.rsp4j.yasper.sds;
 
-import org.streamreasoning.rsp4j.api.RDFUtils;
-import org.streamreasoning.rsp4j.api.sds.SDS;
-import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import lombok.AllArgsConstructor;
 import org.apache.commons.rdf.api.*;
 import org.apache.commons.rdf.simple.DatasetGraphView;
+import org.streamreasoning.rsp4j.api.RDFUtils;
+import org.streamreasoning.rsp4j.api.sds.SDS;
+import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -70,7 +70,7 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
         // Check if any of the object references changed during the mapping, to
         // avoid creating a new Quad object if possible
         if (newGraph == quad.getGraphName().orElse(null) && newSubject == quad.getSubject()
-                && newPredicate == quad.getPredicate() && newObject == quad.getObject()) {
+            && newPredicate == quad.getPredicate() && newObject == quad.getObject()) {
             quads.add(quad);
         } else {
             // Make a new Quad with our mapped instances

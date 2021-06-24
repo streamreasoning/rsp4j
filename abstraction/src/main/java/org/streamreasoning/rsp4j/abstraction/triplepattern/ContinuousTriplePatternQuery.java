@@ -1,30 +1,26 @@
 package org.streamreasoning.rsp4j.abstraction.triplepattern;
 
 
-import org.streamreasoning.rsp4j.api.querying.Aggregation;
 import org.streamreasoning.rsp4j.yasper.querying.syntax.SimpleRSPQLQuery;
-
-import java.util.Collection;
-import java.util.Collections;
 
 
 public class ContinuousTriplePatternQuery extends SimpleRSPQLQuery {
-  private String triplePattern;
-  private String stream_uri;
+    private String triplePattern;
+    private String stream_uri;
 
-  public ContinuousTriplePatternQuery(String id, String stream_uri,String triplePattern) {
-    super(id);
-    this.triplePattern = triplePattern;
-    this.stream_uri = stream_uri;
-  }
+    public ContinuousTriplePatternQuery(String id, String stream_uri, String triplePattern) {
+        super(id);
+        this.triplePattern = triplePattern;
+        this.stream_uri = stream_uri;
+    }
 
-  public String getTriplePattern(){
-    return triplePattern;
-  }
+    public String getTriplePattern() {
+        return triplePattern;
+    }
 
-  public String getStreamURI(){
-    return stream_uri;
-  }
+    public String getStreamURI() {
+        return stream_uri;
+    }
 
 
 }

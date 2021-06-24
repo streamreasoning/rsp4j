@@ -11,4 +11,4 @@ public enum ContentFormat {
         this.name = single;
     }
 
-    }
+}

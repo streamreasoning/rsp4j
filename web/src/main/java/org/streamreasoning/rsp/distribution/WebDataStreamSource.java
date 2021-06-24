@@ -49,7 +49,7 @@ public class WebDataStreamSource<E> extends DataStreamImpl<E> implements SLD.Web
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         WebDataStreamSource<?> that = (WebDataStreamSource<?>) o;
-        return Objects.equals(d, that.d) && Objects.equals(p, that.p) ;
+        return Objects.equals(d, that.d) && Objects.equals(p, that.p);
     }
 
     @Override

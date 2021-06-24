@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class RSPQLExtractionHelper {
 
-    public static Map.Entry<String, WindowNode> extractNamedWindowClause(RSPQLParser.NamedWindowClauseContext ctx){
+    public static Map.Entry<String, WindowNode> extractNamedWindowClause(RSPQLParser.NamedWindowClauseContext ctx) {
 
         String windowUri = RDFUtils.trimTags(ctx.windowUri().getText());
         String streamUri = RDFUtils.trimTags(ctx.streamUri().getText());
@@ -29,7 +29,7 @@ public class RSPQLExtractionHelper {
         return new AbstractMap.SimpleEntry<>(streamUri, wn);
     }
 
-    public static String extractOutputStream(RSPQLParser.OutputStreamContext ctx){
+    public static String extractOutputStream(RSPQLParser.OutputStreamContext ctx) {
         RSPQLParser.SourceSelectorContext sourceSelectorContext = ctx.sourceSelector();
         RSPQLParser.IriContext iri1 = sourceSelectorContext.iri();
         TerminalNode iriref = iri1.IRIREF();
@@ -37,7 +37,8 @@ public class RSPQLExtractionHelper {
         String text = iriref.getText();
         return RDFUtils.trimTags(text);
     }
-    public static void setOutputStreamType(ContinuousQuery query,String outputStreamType){
+
+    public static void setOutputStreamType(ContinuousQuery query, String outputStreamType) {
         switch (outputStreamType) {
             case "ISTREAM":
                 query.setIstream();

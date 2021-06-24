@@ -132,7 +132,7 @@ public class CSPARQLStreamToRelationOp<I, W> extends ObservableStreamToRelationO
     }
 
     @Override
-    public CSPARQLStreamToRelationOp<I, W> link(ContinuousQueryExecution<I, W,?, ?> context) {
+    public CSPARQLStreamToRelationOp<I, W> link(ContinuousQueryExecution<I, W, ?, ?> context) {
         this.addObserver((Observer) context);
         return this;
     }

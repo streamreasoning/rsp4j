@@ -19,7 +19,7 @@ public class TP implements RelationToRelationOperator<Graph, Binding> {
     private final VarOrTerm s;
     private final VarOrTerm p;
     private final VarOrTerm o;
-
+    private List<Binding> solutions = new ArrayList<>();
 
     public TP(VarOrTerm s, VarOrTerm p, VarOrTerm o) {
         this.s = s;
@@ -49,8 +49,6 @@ public class TP implements RelationToRelationOperator<Graph, Binding> {
                 }).filter(Objects::nonNull);
     }
 
-    private List<Binding> solutions = new ArrayList<>();
-
     @Override
     public TimeVarying<Collection<Binding>> apply(SDS<Graph> sds) {
         //TODO this should return an SDS
@@ -76,15 +74,15 @@ public class TP implements RelationToRelationOperator<Graph, Binding> {
 
     @Override
     public SolutionMapping<Binding> createSolutionMapping(Binding result) {
-        return new SolutionMappingBase<Binding>(result,System.currentTimeMillis());
+        return new SolutionMappingBase<Binding>(result, System.currentTimeMillis());
     }
 
     @Override
     public boolean equals(Object o) {
-        if(o==this){
+        if (o == this) {
             return true;
         }
-        if(!(o instanceof TP)){
+        if (!(o instanceof TP)) {
             return false;
         }
         TP tp = (TP) o;

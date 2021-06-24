@@ -14,12 +14,11 @@ import java.util.Objects;
  */
 public class DataStreamImpl<T> implements DataStream<T> {
     protected List<Consumer<T>> consumers = new ArrayList<>();
+    protected String stream_uri;
 
     public DataStreamImpl(String stream_uri) {
         this.stream_uri = stream_uri;
     }
-
-    protected String stream_uri;
 
     @Override
     public void addConsumer(Consumer<T> c) {

@@ -37,6 +37,18 @@ public class EngineConfiguration extends PropertiesConfiguration {
         return getDefault();
     }
 
+    public static EngineConfiguration loadConfig(String path) throws ConfigurationException {
+        URL resource = EngineConfiguration.class.getResource(path);
+        if (config == null) {
+            config = new EngineConfiguration(resource.getPath());
+        }
+        return config;
+    }
+
+    public static EngineConfiguration getDefault() throws ConfigurationException {
+        return loadConfig("/default.properties");
+    }
+
     public Report report() {
         Report report = new ReportImpl();
         if (this.onContentChange())
@@ -88,18 +100,6 @@ public class EngineConfiguration extends PropertiesConfiguration {
 
     public boolean partialWindowsEnabled() {
         return this.getBoolean(ConfigurationUtils.PARTIAL_WINDOW, true);
-    }
-
-    public static EngineConfiguration loadConfig(String path) throws ConfigurationException {
-        URL resource = EngineConfiguration.class.getResource(path);
-        if (config == null) {
-            config = new EngineConfiguration(resource.getPath());
-        }
-        return config;
-    }
-
-    public static EngineConfiguration getDefault() throws ConfigurationException {
-        return loadConfig("/default.properties");
     }
 
     public String getBaseURI() {

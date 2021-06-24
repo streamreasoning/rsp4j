@@ -43,15 +43,15 @@ public class Yasper implements QueryRegistrationFeature<RSPQL>, StreamRegistrati
     private final StreamToRelationOperatorFactory<Graph, Graph> wf;
 
     private final Time time;
-    private ContentFactory cf;
-    private Report report;
-    private Tick tick;
     protected EngineConfiguration rsp_config;
     protected Map<String, SDS> assignedSDS;
     protected Map<String, ContinuousQueryExecution> queryExecutions;
     protected Map<String, ContinuousQuery> registeredQueries;
     protected Map<String, List<QueryResultFormatter>> queryObservers;
     protected Set<DataStream<Graph>> registeredStreams;
+    private ContentFactory cf;
+    private Report report;
+    private Tick tick;
     private ReportGrain report_grain;
 
 

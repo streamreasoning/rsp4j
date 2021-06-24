@@ -12,15 +12,6 @@ import org.streamreasoning.rsp4j.api.RDFUtils;
 public class DCAT {
 
     private static final String uri = "http://www.w3.org/ns/dcat#";
-
-    private static IRI resource(String rdfStream) {
-        return RDFManager.resource(uri, rdfStream);
-    }
-
-
-    public static IRI pACCESS = resource("access");
-    public static IRI pSECUTIRTY = resource("security");
-    public static IRI pPROTOCOL = resource("protocol");
     public static final IRI pNAME = resource("name");
     public static final IRI pTITLE = resource("title");
     public static final IRI pPUBLISHER = resource("publisher");
@@ -28,7 +19,13 @@ public class DCAT {
     public static final IRI pLICENSE = resource("license");
     public static final IRI pFORMAT = resource("format");
     public static final IRI pDATASET = resource("dataset");
+    public static IRI pACCESS = resource("access");
+    public static IRI pSECUTIRTY = resource("security");
+    public static IRI pPROTOCOL = resource("protocol");
 
+    private static IRI resource(String rdfStream) {
+        return RDFManager.resource(uri, rdfStream);
+    }
 
     public static Triple format(BlankNodeOrIRI s, Format o) {
         return RDFUtils.getInstance().createTriple(s, pFORMAT, RDFUtils.createLiteral(o.name(), XSD.tString));

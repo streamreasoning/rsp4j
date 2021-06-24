@@ -18,9 +18,9 @@ import java.util.List;
 public class WebsocketServerSink<T> extends AbstractWebsocketSink<T> {
 
     private final int port;
+    protected List<Consumer<T>> consumers = new ArrayList<>();
     private WebSocketOutputHandler socket;
     private String wsPath;
-    protected List<Consumer<T>> consumers = new ArrayList<>();
     private Service ws;
 
 

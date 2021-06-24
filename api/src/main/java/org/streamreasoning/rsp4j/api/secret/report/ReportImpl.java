@@ -1,9 +1,9 @@
 package org.streamreasoning.rsp4j.api.secret.report;
 
 
+import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.Window;
 import org.streamreasoning.rsp4j.api.secret.content.Content;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.ReportingStrategy;
-import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.Window;
 
 import java.util.ArrayList;
 import java.util.List;

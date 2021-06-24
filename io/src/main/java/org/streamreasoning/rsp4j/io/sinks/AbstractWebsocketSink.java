@@ -22,7 +22,8 @@ public abstract class AbstractWebsocketSink<T> extends DataStreamImpl<T> {
         consumers.remove(c);
 
     }
-    public StringSerializationStrategy<T> getSerializationStrategy(){
+
+    public StringSerializationStrategy<T> getSerializationStrategy() {
         return serializationStrategy;
     }
 }

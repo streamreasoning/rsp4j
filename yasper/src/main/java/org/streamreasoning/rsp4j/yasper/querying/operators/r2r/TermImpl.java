@@ -12,7 +12,8 @@ public class TermImpl implements VarOrTerm {
     public TermImpl(RDFTerm term) {
         this.term = term;
     }
-    public TermImpl(String term){
+
+    public TermImpl(String term) {
         this(RDFUtils.createIRI(term));
     }
 

@@ -10,9 +10,9 @@ import java.util.Objects;
 import java.util.Set;
 
 public class ContentGraph implements Content<Graph, Graph> {
+    Time instance;
     private Set<Graph> elements;
     private long last_timestamp_changed;
-    Time instance;
 
     public ContentGraph(Time instance) {
         this.instance = instance;

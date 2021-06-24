@@ -19,27 +19,28 @@ public class TPQueryFactory {
 
     /**
      * Demonstrate the use of the query factory.
+     *
      * @param args
      */
-    public static void main(String[] args){
+    public static void main(String[] args) {
         ContinuousQuery c = TPQueryFactory.parse("" +
-                "REGISTER ISTREAM <http://out/stream> AS " +
-                "SELECT * " +
-                "FROM NAMED WINDOW <window1> ON <stream1> [RANGE PT10S STEP PT5S] " +
-                "FROM NAMED WINDOW <window2> ON <stream2> [RANGE PT10S STEP PT5S] " +
-                "WHERE {" +
-                "   ?s <http://testprop> ?o ." +
-                "}");
+                                                 "REGISTER ISTREAM <http://out/stream> AS " +
+                                                 "SELECT * " +
+                                                 "FROM NAMED WINDOW <window1> ON <stream1> [RANGE PT10S STEP PT5S] " +
+                                                 "FROM NAMED WINDOW <window2> ON <stream2> [RANGE PT10S STEP PT5S] " +
+                                                 "WHERE {" +
+                                                 "   ?s <http://testprop> ?o ." +
+                                                 "}");
 
 
     }
 
-    public static ContinuousQuery<Graph, Graph,Binding, Binding> parse(String queryString){
+    public static ContinuousQuery<Graph, Graph, Binding, Binding> parse(String queryString) {
         InputStream inputStream = new ByteArrayInputStream(queryString.getBytes());
         return parse(inputStream);
     }
 
-    public static ContinuousQuery<Graph, Graph,Binding, Binding> parse(InputStream inputStream) {
+    public static ContinuousQuery<Graph, Graph, Binding, Binding> parse(InputStream inputStream) {
         try {
             // Ignore case for keywords
             CaseChangingCharStream charStream = new CaseChangingCharStream(CharStreams.fromStream(inputStream), true);
@@ -52,7 +53,7 @@ public class TPQueryFactory {
             visitor.visit(tree);
             ContinuousQuery<Graph, Graph, Binding, Binding> query = visitor.generateQuery();
             return query;
-        } catch(IOException e) {
+        } catch (IOException e) {
             System.err.println(e.getMessage());
             return null;
         }

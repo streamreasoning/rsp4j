@@ -8,11 +8,11 @@ import org.streamreasoning.rsp4j.io.utils.RDFBase;
 
 import java.io.StringWriter;
 
-public class JenaRDFSerializationStrategy implements StringSerializationStrategy<Graph>{
+public class JenaRDFSerializationStrategy implements StringSerializationStrategy<Graph> {
 
     private final RDFBase base;
 
-    public JenaRDFSerializationStrategy(RDFBase base){
+    public JenaRDFSerializationStrategy(RDFBase base) {
         this.base = base;
     }
 
@@ -25,6 +25,7 @@ public class JenaRDFSerializationStrategy implements StringSerializationStrategy
         //convert Jena Model to String
         return modelToString(dataModel);
     }
+
     private String modelToString(Model m) {
         String syntax = base.name();
         StringWriter out = new StringWriter();

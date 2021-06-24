@@ -1,11 +1,11 @@
 package org.streamreasoning.rsp4j.yasper.querying.operators.windowing;
 
-import org.streamreasoning.rsp4j.api.RDFUtils;
-import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowType;
-import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.rdf.api.IRI;
+import org.streamreasoning.rsp4j.api.RDFUtils;
+import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
+import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowType;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;

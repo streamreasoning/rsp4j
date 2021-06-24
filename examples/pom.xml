@@ -38,7 +38,7 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-rdf-jena</artifactId>
             <version>0.5.0</version>
-           <exclusions>
+            <exclusions>
                 <exclusion>
                     <groupId>com.github.jsonld-java</groupId>
                     <artifactId>jsonld-java</artifactId>

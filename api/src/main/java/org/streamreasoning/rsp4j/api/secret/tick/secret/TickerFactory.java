@@ -1,8 +1,8 @@
 package org.streamreasoning.rsp4j.api.secret.tick.secret;
 
-import org.streamreasoning.rsp4j.api.secret.tick.Ticker;
-import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.enums.Tick;
+import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
+import org.streamreasoning.rsp4j.api.secret.tick.Ticker;
 
 public class TickerFactory {
 

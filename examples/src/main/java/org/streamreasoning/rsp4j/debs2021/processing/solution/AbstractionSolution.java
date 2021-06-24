@@ -30,7 +30,7 @@ public class AbstractionSolution {
 
 
         //define output stream
-         BindingStream outStream = new BindingStream("out");
+        BindingStream outStream = new BindingStream("out");
 
         // Engine properties
         Report report = new ReportImpl();
@@ -57,19 +57,19 @@ public class AbstractionSolution {
         // REGISTER FUNCTION
         AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
 
-        Task<Graph, Graph,Binding, Binding> t =
+        Task<Graph, Graph, Binding, Binding> t =
                 new Task.TaskBuilder()
                         .addS2R("stream1", build, "w1")
                         .addR2R("w1", r2r)
-                        .addR2S("out", new Rstream<Binding,Binding>())
+                        .addR2S("out", new Rstream<Binding, Binding>())
                         .build();
-        ContinuousProgram<Graph, Graph, Binding,Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
+        ContinuousProgram<Graph, Graph, Binding, Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
                 .in(inputStream)
                 .addTask(t)
                 .out(outStream)
                 .build();
 
-        outStream.addConsumer((el,ts) -> System.out.println(el + " @ " + ts));
+        outStream.addConsumer((el, ts) -> System.out.println(el + " @ " + ts));
         generator.startStreaming();
         Thread.sleep(20_000);
         generator.stopStreaming();

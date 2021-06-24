@@ -1,16 +1,12 @@
 package org.streamreasoning.rsp4j.yasper.querying.syntax;
 
-import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
+import org.apache.commons.lang.NotImplementedException;
+import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
+import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLBaseVisitor;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLParser;
-import org.streamreasoning.rsp4j.api.RDFUtils;
-import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.WindowNodeImpl;
-import org.antlr.v4.runtime.tree.TerminalNode;
-import org.apache.commons.lang.NotImplementedException;
 
-import java.time.Duration;
-import java.util.AbstractMap;
 import java.util.Map;
 
 /**
@@ -32,7 +28,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
      * @return
      */
     public Object visitOutputStreamType(RSPQLParser.OutputStreamTypeContext ctx) {
-        RSPQLExtractionHelper.setOutputStreamType(query,ctx.getText());
+        RSPQLExtractionHelper.setOutputStreamType(query, ctx.getText());
 
         return null;
     }
@@ -59,7 +55,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
      */
     public Object visitNamedWindowClause(RSPQLParser.NamedWindowClauseContext ctx) {
 
-        Map.Entry<String,WindowNode> streamWindowPair = RSPQLExtractionHelper.extractNamedWindowClause(ctx);
+        Map.Entry<String, WindowNode> streamWindowPair = RSPQLExtractionHelper.extractNamedWindowClause(ctx);
         query.addNamedWindow(streamWindowPair.getKey(), streamWindowPair.getValue());
 
         return null;
@@ -382,7 +378,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
      * @return
      */
     public Object visitTriplesBlock(RSPQLParser.TriplesBlockContext ctx) {
-    System.out.println(ctx);
+        System.out.println(ctx);
         //ElementPathBlock el = (ElementPathBlock) ctx.triplesSameSubjectPath().accept(this);
         //if(ctx.triplesBlock() != null){
         //    ElementPathBlock elb = (ElementPathBlock) ctx.triplesBlock().accept(this);
@@ -867,7 +863,6 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
     public Object visitBuiltInCall(RSPQLParser.BuiltInCallContext ctx) {
         throw new UnsupportedOperationException();
     }
-
 
 
 }

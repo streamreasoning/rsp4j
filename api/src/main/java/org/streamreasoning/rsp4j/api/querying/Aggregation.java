@@ -39,18 +39,18 @@ public class Aggregation {
         if (o == null || getClass() != o.getClass()) return false;
         Aggregation that = (Aggregation) o;
         return Objects.equals(tvg, that.tvg) &&
-                Objects.equals(inputVariable, that.inputVariable) &&
-                Objects.equals(outputVariable, that.outputVariable) &&
-                Objects.equals(functionName, that.functionName);
+               Objects.equals(inputVariable, that.inputVariable) &&
+               Objects.equals(outputVariable, that.outputVariable) &&
+               Objects.equals(functionName, that.functionName);
     }
 
     @Override
     public String toString() {
         return "Aggregation{" +
-                "tvg='" + tvg + '\'' +
-                ", inputVariable='" + inputVariable + '\'' +
-                ", outputVariable='" + outputVariable + '\'' +
-                ", functionName='" + functionName + '\'' +
-                '}';
+               "tvg='" + tvg + '\'' +
+               ", inputVariable='" + inputVariable + '\'' +
+               ", outputVariable='" + outputVariable + '\'' +
+               ", functionName='" + functionName + '\'' +
+               '}';
     }
 }

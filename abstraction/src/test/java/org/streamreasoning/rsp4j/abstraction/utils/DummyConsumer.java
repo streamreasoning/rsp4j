@@ -15,9 +15,10 @@ public class DummyConsumer<O> implements Consumer<O> {
     }
 
     public int getSize() {
-       return received.size();
+        return received.size();
     }
-    public List<O> getReceived(){
+
+    public List<O> getReceived() {
         return received;
     }
 }

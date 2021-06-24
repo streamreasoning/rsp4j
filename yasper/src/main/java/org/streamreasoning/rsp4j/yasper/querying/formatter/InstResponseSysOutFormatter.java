@@ -1,7 +1,6 @@
 package org.streamreasoning.rsp4j.yasper.querying.formatter;
 
 import org.streamreasoning.rsp4j.api.format.QueryResultFormatter;
-import org.apache.commons.rdf.api.Triple;
 
 /**
  * Created by riccardo on 03/07/2017.

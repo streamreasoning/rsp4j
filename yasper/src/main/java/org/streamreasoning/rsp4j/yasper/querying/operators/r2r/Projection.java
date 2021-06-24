@@ -14,11 +14,11 @@ import java.util.stream.Stream;
 
 public class Projection implements RelationToRelationOperator<Binding, Binding>, Function<Binding, Binding> {
 
-    private Stream<Binding> tvb;
     private final boolean star;
     private final Var[] vars;
     private final Function<Binding, Binding> f;
     private final Collection<Binding> solutions;
+    private Stream<Binding> tvb;
 
 
     public Projection(Stream<Binding> tvb, Var... vars) {

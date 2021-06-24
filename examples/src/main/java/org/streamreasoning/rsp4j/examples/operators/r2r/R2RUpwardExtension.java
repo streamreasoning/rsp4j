@@ -1,25 +1,25 @@
 package org.streamreasoning.rsp4j.examples.operators.r2r;
 
 
-import org.apache.commons.rdf.api.*;
+import org.apache.commons.rdf.api.Graph;
+import org.apache.commons.rdf.api.IRI;
+import org.apache.commons.rdf.api.RDF;
+import org.apache.commons.rdf.api.Triple;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
-import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
-import org.streamreasoning.rsp4j.yasper.querying.SelectInstResponse;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class R2RUpwardExtension implements RelationToRelationOperator<Graph,Graph> {
+public class R2RUpwardExtension implements RelationToRelationOperator<Graph, Graph> {
 
 
+    private final IRI RDFTYPE = RDFUtils.createIRI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
     private Map<String, Set<String>> extensions;
-
-    private final IRI RDFTYPE= RDFUtils.createIRI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
 
     public R2RUpwardExtension() {
         this.extensions = new HashMap<String, Set<String>>();
@@ -74,31 +74,31 @@ public class R2RUpwardExtension implements RelationToRelationOperator<Graph,Grap
 
         Set<Graph> sol = new HashSet<Graph>();
         // iterate over the triples in the SDS
-        for(Graph g : sds.collect(Collectors.toList())){
+        for (Graph g : sds.collect(Collectors.toList())) {
             Graph upwardGraph = RDFUtils.createGraph();
-        for (Triple t : g.stream().collect(Collectors.toList())) {
-            // check if triple is a type assertion
-            if (t.getPredicate().equals(instance.createIRI("a")) || t.getPredicate().equals(RDFTYPE)) {
-                //reasoning step
-                String type = t.getObject().toString();
-                type = type.substring(1, type.length() - 1);
-                if (this.extensions.containsKey(type)) {
-                    // extract the parent concepts
-                    for (String parents : this.extensions.get(type)) {
-                        // create a new triple (the materialization)
-                        Triple reasoningResult = instance.createTriple(t.getSubject(), RDFTYPE, instance.createIRI(parents));
-                        // add the materialization to the solution set
+            for (Triple t : g.stream().collect(Collectors.toList())) {
+                // check if triple is a type assertion
+                if (t.getPredicate().equals(instance.createIRI("a")) || t.getPredicate().equals(RDFTYPE)) {
+                    //reasoning step
+                    String type = t.getObject().toString();
+                    type = type.substring(1, type.length() - 1);
+                    if (this.extensions.containsKey(type)) {
+                        // extract the parent concepts
+                        for (String parents : this.extensions.get(type)) {
+                            // create a new triple (the materialization)
+                            Triple reasoningResult = instance.createTriple(t.getSubject(), RDFTYPE, instance.createIRI(parents));
+                            // add the materialization to the solution set
 //                       sol.add(new SelectInstResponse(query.getID() + "/ans/" + ts, ts, reasoningResult));s
-                        upwardGraph.add(reasoningResult);
+                            upwardGraph.add(reasoningResult);
+                        }
                     }
-                }
 
-            }else{
-                upwardGraph.add(t);
+                } else {
+                    upwardGraph.add(t);
+                }
+                //add the triple
+                sol.add(upwardGraph);
             }
-            //add the triple
-            sol.add(upwardGraph);
-        }
         }
 
         return sol.stream();

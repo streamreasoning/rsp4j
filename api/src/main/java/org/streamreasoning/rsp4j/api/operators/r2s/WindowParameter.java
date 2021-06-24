@@ -2,10 +2,6 @@ package org.streamreasoning.rsp4j.api.operators.r2s;
 
 public interface WindowParameter {
 
-    Object get();
-
-    Class<?> type();
-
     static WindowParameter wrap(Object o) {
         return new WindowParameter() {
             @Override
@@ -19,5 +15,9 @@ public interface WindowParameter {
             }
         };
     }
+
+    Object get();
+
+    Class<?> type();
 
 }

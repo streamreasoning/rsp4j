@@ -3,11 +3,7 @@ package org.streamreasoning.rsp4j.yasper;
 import org.apache.commons.rdf.api.RDF;
 import org.junit.Test;
 import org.streamreasoning.rsp4j.api.RDFUtils;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TP;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TermImpl;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarImpl;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
 import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
 
 import java.util.List;

@@ -19,7 +19,7 @@ public class CSPARQLTimeWindowOperatorFactory implements StreamToRelationOperato
     //    private ContinuousQueryExecution<Graph, Graph, Triple> context;
     private ContentFactory<Graph, Graph> cf;
 
-    public CSPARQLTimeWindowOperatorFactory(Time time, Tick tick, Report report, ReportGrain grain,  ContentFactory<Graph, Graph> cf) {
+    public CSPARQLTimeWindowOperatorFactory(Time time, Tick tick, Report report, ReportGrain grain, ContentFactory<Graph, Graph> cf) {
 //        this.a = a;
 //        this.b = b;
 //        this.t0 = t0;

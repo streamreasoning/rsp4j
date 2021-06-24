@@ -9,9 +9,10 @@ import java.util.List;
  **/
 public class TimeImpl implements Time {
 
-    private Long app_time = 0L;
     public final long tc0;
     List<Long> et = new ArrayList<>();
+    private Long app_time = 0L;
+    ET timeInstants = new ET();
 
     public TimeImpl(long tc0) {
         this.tc0 = tc0;
@@ -35,11 +36,11 @@ public class TimeImpl implements Time {
 
     @Override
     public ET getEvaluationTimeInstants() {
-        return TimeFactory.getEvaluationTimeInstants();
+        return timeInstants;
     }
 
     @Override
     public void addEvaluationTimeInstants(TimeInstant et) {
-        TimeFactory.getEvaluationTimeInstants().add(et);
+        timeInstants.add(et);
     }
 }

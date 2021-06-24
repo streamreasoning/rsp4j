@@ -1,10 +1,10 @@
 package org.streamreasoning.rsp4j.yasper;
 
+import lombok.AllArgsConstructor;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
 import org.streamreasoning.rsp4j.api.sds.SDS;
-import lombok.AllArgsConstructor;
 
 import java.util.Observable;
 import java.util.Observer;

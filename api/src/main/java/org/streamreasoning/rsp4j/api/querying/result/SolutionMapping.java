@@ -1,7 +1,5 @@
 package org.streamreasoning.rsp4j.api.querying.result;
 
-import org.apache.commons.rdf.api.Triple;
-
 import java.util.function.Function;
 
 public interface SolutionMapping<I> {
