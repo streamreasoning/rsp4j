@@ -67,7 +67,7 @@ public class StreamGenerator {
   private void generateDataAndAddToStream(DataStream<Graph> stream, long ts){
     RDF instance = RDFUtils.getInstance();
     Graph graph = instance.createGraph();
-    IRI p = instance.createIRI(PREFIX+"hasColor");
+    IRI p = instance.createIRI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
 
     graph.add(instance.createTriple(instance.createIRI(PREFIX+"S"+streamIndexCounter.incrementAndGet()), p, instance.createIRI(PREFIX+selectRandomColor())));
     stream.put(graph,ts);
