@@ -8,7 +8,7 @@ import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 
-public class SLDTest extends TestCase {
+public class SLDTest  {
 
 
     public static void main(String[] args) {
