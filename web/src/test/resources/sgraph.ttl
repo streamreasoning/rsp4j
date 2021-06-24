@@ -13,4 +13,4 @@
                                         a  <http://w3id.org/rsp/vocals#StreamEndpoint> ;
                                            <http://www.w3.org/ns/dcat#format>  "STRING" ;
                                            <http://www.w3.org/ns/dcat#protocol> "WebSocket" ;
-                                           <http://www.w3.org/ns/dcat#security> "SSL"  ] .
+                                           <http://www.w3.org/ns/dcat#security> "SSL"  ] . 
