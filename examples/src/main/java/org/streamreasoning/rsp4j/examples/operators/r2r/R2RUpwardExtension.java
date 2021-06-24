@@ -1,10 +1,7 @@
 package org.streamreasoning.rsp4j.examples.operators.r2r;
 
 
-import org.apache.commons.rdf.api.Dataset;
-import org.apache.commons.rdf.api.Quad;
-import org.apache.commons.rdf.api.RDF;
-import org.apache.commons.rdf.api.Triple;
+import org.apache.commons.rdf.api.*;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
@@ -14,28 +11,24 @@ import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.yasper.querying.SelectInstResponse;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class R2RUpwardExtension implements RelationToRelationOperator<Triple,Triple> {
+public class R2RUpwardExtension implements RelationToRelationOperator<Graph,Graph> {
 
-    private final SDS sds;
-    private final ContinuousQuery query;
-    private final Dataset ds;
+
     private Map<String, Set<String>> extensions;
 
+    private final IRI RDFTYPE= RDFUtils.createIRI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
 
-    public R2RUpwardExtension(SDS sds, ContinuousQuery query) {
-        this.sds = sds;
-        this.query = query;
-        this.ds = (Dataset) sds;
+    public R2RUpwardExtension() {
         this.extensions = new HashMap<String, Set<String>>();
-        Map<String, List<String>> schema = new HashMap<>();
-        schema.put("O2", Arrays.asList("O1", "O4"));
-        schema.put("O3", Arrays.asList("O2", "O5"));
-        schema.put("O5", Arrays.asList("O6"));
-        this.addSchema(schema);
-        System.out.println(this.extensions);
 
+    }
+
+    public R2RUpwardExtension(Map<String, List<String>> schema) {
+        this();
+        addSchema(schema);
     }
 
     public void addSchema(Map<String, List<String>> schema) {
@@ -76,14 +69,16 @@ public class R2RUpwardExtension implements RelationToRelationOperator<Triple,Tri
     }
 
     @Override
-    public Stream<Triple> eval(Stream<Triple> sds) {
+    public Stream<Graph> eval(Stream<Graph> sds) {
         RDF instance = RDFUtils.getInstance();
-        Set<Triple> sol = new HashSet<Triple>();
+
+        Set<Graph> sol = new HashSet<Graph>();
         // iterate over the triples in the SDS
-        for (Quad q : ds.iterate()) {
-            Triple t = q.asTriple();
+        for(Graph g : sds.collect(Collectors.toList())){
+            Graph upwardGraph = RDFUtils.createGraph();
+        for (Triple t : g.stream().collect(Collectors.toList())) {
             // check if triple is a type assertion
-            if (t.getPredicate().equals(instance.createIRI("a"))) {
+            if (t.getPredicate().equals(instance.createIRI("a")) || t.getPredicate().equals(RDFTYPE)) {
                 //reasoning step
                 String type = t.getObject().toString();
                 type = type.substring(1, type.length() - 1);
@@ -91,17 +86,19 @@ public class R2RUpwardExtension implements RelationToRelationOperator<Triple,Tri
                     // extract the parent concepts
                     for (String parents : this.extensions.get(type)) {
                         // create a new triple (the materialization)
-                        Triple reasoningResult = instance.createTriple(t.getSubject(), instance.createIRI("a"), instance.createIRI(parents));
+                        Triple reasoningResult = instance.createTriple(t.getSubject(), RDFTYPE, instance.createIRI(parents));
                         // add the materialization to the solution set
 //                       sol.add(new SelectInstResponse(query.getID() + "/ans/" + ts, ts, reasoningResult));s
-                        sol.add(reasoningResult);
+                        upwardGraph.add(reasoningResult);
                     }
                 }
 
+            }else{
+                upwardGraph.add(t);
             }
             //add the triple
-//            sol.add(new SelectInstResponse(query.getID() + "/ans/" + ts, ts, t));
-            sol.add(t);
+            sol.add(upwardGraph);
+        }
         }
 
         return sol.stream();
@@ -109,12 +106,12 @@ public class R2RUpwardExtension implements RelationToRelationOperator<Triple,Tri
     }
 
     @Override
-    public TimeVarying<Collection<Triple>> apply(SDS<Triple> sds) {
+    public TimeVarying<Collection<Graph>> apply(SDS<Graph> sds) {
         return null;
     }
 
     @Override
-    public SolutionMapping<Triple> createSolutionMapping(Triple result) {
-        return new SelectInstResponse<Triple>(query.getID() + "/ans/" + System.currentTimeMillis(), System.currentTimeMillis(),result);
+    public SolutionMapping<Graph> createSolutionMapping(Graph result) {
+        return null;
     }
 }
