@@ -2,7 +2,7 @@ package org.streamreasoning.rsp.builders;
 
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp.SLD;
-import org.streamreasoning.rsp.WebSocketDistribution;
+import org.streamreasoning.rsp.distribution.WebSocketDistribution;
 import org.streamreasoning.rsp.enums.Format;
 import org.streamreasoning.rsp.enums.License;
 import org.streamreasoning.rsp.enums.Protocol;

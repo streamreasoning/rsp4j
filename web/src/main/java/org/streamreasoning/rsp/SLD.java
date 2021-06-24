@@ -4,6 +4,7 @@ import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.RDF;
 import org.streamreasoning.rsp.builders.DistributionBuilder;
+import org.streamreasoning.rsp.distribution.WebDataStreamSource;
 import org.streamreasoning.rsp.enums.Format;
 import org.streamreasoning.rsp.enums.License;
 import org.streamreasoning.rsp.enums.Protocol;
@@ -35,13 +36,16 @@ public class SLD {
 
 
     protected static <E> Distribution<E>[] extractDistributions(Graph descriptor) {
+
+
+
         return new Distribution[]{new DistributionBuilder().
                 access("wss://echo.websocket.org", false) // defines if the distribution uri will be a fragment uri (need a proxy otherwise). (Can be used to change port)
                 .publisher(extractPublisher(descriptor))
                 .protocol(Protocol.WebSocket)  // Determine what sink to choose
                 .security(Security.SSL) // we need to include secure protocol
                 .license(License.CC) //mostly for documentation
-                .format(Format.STRING).<E>build("", false)};
+                .format(Format.STRING).<E>build("colours", false)};
     }
 
     protected static Publisher extractPublisher(Graph descriptor) {

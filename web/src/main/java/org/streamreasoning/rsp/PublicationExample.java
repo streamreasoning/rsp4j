@@ -13,7 +13,7 @@ public class PublicationExample {
 
     public static void main(String[] args) throws InterruptedException {
 
-        WebStreamBuilder webStreamBuilder = new WebStreamBuilder(SLD.publisher("http://example.org/"));
+        WebStreamBuilder webStreamBuilder = new WebStreamBuilder(SLD.publisher("http://example.org/"), "http://localhost:4567");
 
         DistributionBuilder d = new DistributionBuilder();
 

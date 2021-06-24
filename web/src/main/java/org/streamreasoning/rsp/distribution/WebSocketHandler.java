@@ -1,4 +1,4 @@
-package org.streamreasoning.rsp;
+package org.streamreasoning.rsp.distribution;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;

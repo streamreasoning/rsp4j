@@ -1,7 +1,8 @@
-package org.streamreasoning.rsp;
+package org.streamreasoning.rsp.distribution;
 
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.*;
+import org.streamreasoning.rsp.SLD;
 import org.streamreasoning.rsp.enums.Format;
 import org.streamreasoning.rsp.enums.License;
 import org.streamreasoning.rsp4j.api.RDFUtils;

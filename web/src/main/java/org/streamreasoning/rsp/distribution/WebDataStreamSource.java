@@ -1,7 +1,8 @@
-package org.streamreasoning.rsp;
+package org.streamreasoning.rsp.distribution;
 
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
+import org.streamreasoning.rsp.SLD;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.io.DataStreamImpl;
 

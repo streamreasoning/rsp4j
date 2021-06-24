@@ -18,15 +18,16 @@ public class WebStreamBuilder {
 
     private final SLD.Publisher p;
     String base, uri, name, description;
-    List<DistributionBuilder> distributions = new ArrayList<>();
+    List<DistributionBuilder> distributionBuilders = new ArrayList<>();
     Graph graph = RDFUtils.getInstance().createGraph();
 
     org.apache.commons.rdf.api.RDF is = RDFUtils.getInstance();
+    private String id;
 
 
-    public WebStreamBuilder(SLD.Publisher base) {
-        this.p = base;
-        this.base = p.uri().getIRIString();
+    public WebStreamBuilder(SLD.Publisher p, String base) {
+        this.base = base;
+        this.p = p;
         graph.add(is.createTriple(p.uri(), pTYPE, VSD.PUBLISHING_SERVICE));
     }
 
@@ -36,7 +37,8 @@ public class WebStreamBuilder {
 
 
     public WebStreamBuilder stream(String id, boolean fragment) {
-        this.uri = (fragment) ? this.base + id : id;
+        this.uri = (fragment) ? this.base + "/" + id : id;
+        this.id = id;
         this.graph.add(is.createIRI(uri), pTYPE, VOCALS.STREAM_DESCRIPTOR);
         return this;
     }
@@ -53,14 +55,15 @@ public class WebStreamBuilder {
         return this;
     }
 
-    public WebStreamBuilder distribution(DistributionBuilder distribution) {
-        distributions.add(distribution);
-        distribution.describe().stream().forEach(t -> graph.add(t));
+    public WebStreamBuilder distribution(DistributionBuilder db) {
+        db.publisher(p);
+        distributionBuilders.add(db);
+        db.describe().stream().forEach(t -> graph.add(t));
         return this;
     }
 
     public <T> SLD.Distribution<T>[] build() {
-        return distributions.stream().map(distributionBuilder -> distributionBuilder.build(uri, true)).collect(Collectors.toList()).toArray(new SLD.Distribution[distributions.size()]);
+        return distributionBuilders.stream().map(distributionBuilder -> distributionBuilder.build(id, true)).collect(Collectors.toList()).toArray(new SLD.Distribution[distributionBuilders.size()]);
     }
 
 }
