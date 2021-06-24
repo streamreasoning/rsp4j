@@ -7,6 +7,7 @@ import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
+import org.streamreasoning.rsp4j.api.querying.Aggregation;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
@@ -16,10 +17,7 @@ import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TP;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SimpleRSPQLQuery<O> implements RSPQL<O> {
 
@@ -33,7 +31,7 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
     private List<String> graphURIs = new ArrayList<>();
     private List<String> namedwindowsURIs = new ArrayList<>();
     private List<String> namedGraphURIs = new ArrayList<>();
-
+    private List<Aggregation> aggregations = new ArrayList<>();
     private StreamOperator streamOperator = StreamOperator.NONE;
 
     public SimpleRSPQLQuery(String id, DataStream<Graph> stream, WindowNode win, VarOrTerm s, VarOrTerm p, VarOrTerm o, RelationToStreamOperator<Binding, O> r2s) {
@@ -149,5 +147,10 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
     @Override
     public RelationToStreamOperator<Binding, O> r2s() {
         return new Rstream();
+    }
+
+    @Override
+    public List<Aggregation> getAggregations() {
+        return aggregations;
     }
 }

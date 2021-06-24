@@ -4,6 +4,7 @@ import org.apache.commons.rdf.api.Graph;
 import org.junit.Test;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
+import org.streamreasoning.rsp4j.api.querying.Aggregation;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.io.DataStreamImpl;
@@ -129,6 +130,20 @@ public class TriplePatternQueryTest {
         assertEquals(false, query.isIstream());
         assertEquals(false, query.isDstream());
         assertEquals(true, query.isRstream());
+    }
+
+    @Test
+    public void testAggregation(){
+        ContinuousQuery<Graph, Graph,Binding, Binding> query = TPQueryFactory.parse("" +
+                "REGISTER ISTREAM <http://out/stream> AS " +
+                "SELECT (Count(?s) AS ?count)" +
+                "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
+                "WHERE {" +
+                "   ?s <http://test/p> <http://test/o> ." +
+                "}");
+        assertEquals(1,query.getAggregations().size());
+        Aggregation expected = new Aggregation(null,"?s","?count","Count");
+        assertEquals(expected,query.getAggregations().get(0));
     }
 
 

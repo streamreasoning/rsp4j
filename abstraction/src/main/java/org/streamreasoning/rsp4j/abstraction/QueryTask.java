@@ -1,6 +1,8 @@
 package org.streamreasoning.rsp4j.abstraction;
 
 import org.apache.commons.rdf.api.Graph;
+import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegistry;
+import org.streamreasoning.rsp4j.abstraction.functions.CountFunction;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
@@ -63,6 +65,10 @@ public class QueryTask extends Task<Graph, Graph, Binding, Binding> {
       if (r2s != null) {
         this.addR2S(query.getOutputStream().getName(), r2s);
       }
+      //Add aggregations
+      query.getAggregations().forEach(a -> aggregate(a.getTvg(),a.getFunctionName(),a.getInputVariable(),a.getOutputVariable()));
+      //Add standard aggregations
+      AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
       return this;
     }
 

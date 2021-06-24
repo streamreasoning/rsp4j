@@ -346,6 +346,57 @@ public class CPTriplePatternTest {
         assertEquals(expected,dummyConsumer.getReceived());
 
     }
+    @Test
+    public void triplePatternAggregationQueryTest(){
+
+        RDFStream stream = new RDFStream("http://test/stream");
+
+
+        ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
+                "REGISTER RSTREAM <http://out/stream> AS " +
+                "SELECT (Count(?green) AS ?count) " +
+                "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT2S STEP PT2S] " +
+                "WHERE {" +
+                "   ?green <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Green> ." +
+                "}");
+
+
+        //SDS
+        Task<Graph,Graph,Binding,Binding> t =
+                new QueryTask.QueryTaskBuilder()
+                        .fromQuery(query)
+                        .build();
+        ContinuousProgram<Graph,Graph,Binding,Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
+                .in(stream)
+                .addTask(t)
+                .out(query.getOutputStream())
+                .build();
+
+        DummyConsumer<Binding> dummyConsumer = new DummyConsumer<>();
+
+        query.getOutputStream().addConsumer(dummyConsumer);
+
+        populateStream(stream,TimeFactory.getInstance().getAppTime());
+
+
+
+
+
+
+        List<Binding> expected = new ArrayList<>();
+        Binding b1 = new BindingImpl();
+        b1.add(new VarImpl("count"), RDFUtils.createIRI("1"));
+        Binding b2 = new BindingImpl();
+        b2.add(new VarImpl("count"), RDFUtils.createIRI("1"));
+        Binding b3 = new BindingImpl();
+        b3.add(new VarImpl("count"), RDFUtils.createIRI("0"));
+        expected.add(b1);
+        expected.add(b2);
+        expected.add(b3);
+        assertEquals(expected, dummyConsumer.getReceived());
+
+    }
+
 
     private void populateStream(DataStream<Graph> stream, long startTime) {
 

@@ -1,8 +1,11 @@
 package org.streamreasoning.rsp4j.abstraction.triplepattern;
 
 
+import org.streamreasoning.rsp4j.api.querying.Aggregation;
 import org.streamreasoning.rsp4j.yasper.querying.syntax.SimpleRSPQLQuery;
 
+import java.util.Collection;
+import java.util.Collections;
 
 
 public class ContinuousTriplePatternQuery extends SimpleRSPQLQuery {
@@ -22,4 +25,6 @@ public class ContinuousTriplePatternQuery extends SimpleRSPQLQuery {
   public String getStreamURI(){
     return stream_uri;
   }
+
+
 }

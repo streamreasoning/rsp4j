@@ -78,7 +78,7 @@ public class Task<I, W, R, O> {
         }
 
         public TaskBuilder<I, W , R, O> aggregate(String tvgName, String functionName, String inputVariable, String outputVariable) {
-            aggregations.add(new AggregationContainer(tvgName, functionName, inputVariable, outputVariable));
+            aggregations.add(new AggregationContainer(tvgName, functionName.toUpperCase(), inputVariable, outputVariable));
             return this;
         }
 

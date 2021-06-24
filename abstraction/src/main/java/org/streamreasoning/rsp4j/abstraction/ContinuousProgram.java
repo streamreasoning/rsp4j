@@ -97,9 +97,9 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
 
         Optional<R> r = aggregationFunction
                 .map(af -> af.evaluate(inputVariable, outputVariable, collection));
-
-        log.error("Function " + aggregationContainer.getFunctionName() + " not found in Registry!");
-
+        if (!r.isPresent()) {
+            log.error("Function " + aggregationContainer.getFunctionName() + " not found in Registry!");
+        }
         return r;
     }
 
