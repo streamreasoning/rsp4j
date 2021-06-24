@@ -2,19 +2,14 @@ package org.streamreasoning.rsp4j.debs2021.processing.solution;
 
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.abstraction.ContinuousProgram;
-import org.streamreasoning.rsp4j.abstraction.QueryTask;
 import org.streamreasoning.rsp4j.abstraction.Task;
 import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegistry;
 import org.streamreasoning.rsp4j.abstraction.functions.CountFunction;
 import org.streamreasoning.rsp4j.abstraction.table.BindingStream;
-import org.streamreasoning.rsp4j.abstraction.triplepattern.ContinuousTriplePatternQuery;
-import org.streamreasoning.rsp4j.abstraction.triplepattern.TriplePatternR2R;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
-import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
-import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
@@ -26,7 +21,6 @@ import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
-import org.streamreasoning.rsp4j.yasper.querying.syntax.TPQueryFactory;
 
 public class AbstractionSolution {
 
@@ -50,7 +44,7 @@ public class AbstractionSolution {
         Time instance = new TimeImpl(0);
 
         // WINDOW DECLARATION
-        StreamToRelationOp<Graph, Graph> build = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, instance, tick, report, report_grain, new GraphContentFactory());
+        StreamToRelationOp<Graph, Graph> build = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, instance, tick, report, report_grain, new GraphContentFactory(instance));
 
 
         //R2R

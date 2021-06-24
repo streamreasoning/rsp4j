@@ -17,6 +17,7 @@ import org.streamreasoning.rsp4j.api.secret.content.ContentFactory;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnContentChange;
+import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
 import org.streamreasoning.rsp4j.yasper.StreamViewImpl;
 import org.streamreasoning.rsp4j.yasper.content.BindingContentFactory;
@@ -40,6 +41,8 @@ public class CQELSWindowAssignerTest {
     @Test
     public void genericConstruct() throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException {
 
+        Time time = new TimeImpl(0);
+
         Report report = new ReportImpl();
 
         VarOrTerm s = new VarImpl("s");
@@ -47,16 +50,14 @@ public class CQELSWindowAssignerTest {
         VarOrTerm o = new VarImpl("o");
 
 
-        ContentFactory<Graph, Binding> gcf = new BindingContentFactory(s, p, o);
+        ContentFactory<Graph, Binding> gcf = new BindingContentFactory(time, s, p, o);
 
         report.add(new OnContentChange());
 
         Tick tick = Tick.TUPLE_DRIVEN;
         ReportGrain report_grain = ReportGrain.SINGLE;
 
-        TimeImpl time = new TimeImpl(0);
-
-        ContentFactory<Graph, Binding> cf = new BindingContentFactory(s, p, o);
+        ContentFactory<Graph, Binding> cf = new BindingContentFactory(time, s, p, o);
 
         CQELSTimeWindowOperatorBindingFactory factory = new CQELSTimeWindowOperatorBindingFactory(time, tick, report, report_grain, cf);
 
@@ -100,16 +101,17 @@ public class CQELSWindowAssignerTest {
         VarOrTerm o = new VarImpl("o");
 
 
-        ContentFactory<Graph, Binding> gcf = new BindingContentFactory(s, p, o);
+        TimeImpl time = new TimeImpl(0);
+
+        ContentFactory<Graph, Binding> gcf = new BindingContentFactory(time, s, p, o);
 
         report.add(new OnContentChange());
 
         Tick tick = Tick.TUPLE_DRIVEN;
         ReportGrain report_grain = ReportGrain.SINGLE;
 
-        TimeImpl time = new TimeImpl(0);
 
-        ContentFactory<Graph, Binding> cf = new BindingContentFactory(s, p, o);
+        ContentFactory<Graph, Binding> cf = new BindingContentFactory(time, s, p, o);
 
         CQELSTimeWindowOperatorBindingFactory factory = new CQELSTimeWindowOperatorBindingFactory(time, tick, report, report_grain, cf);
 
@@ -164,7 +166,7 @@ public class CQELSWindowAssignerTest {
 
         TimeImpl time = new TimeImpl(0);
 
-        StreamToRelationOp<Graph, Graph> wa = new CQELSStreamToRelationOp(RDFUtils.createIRI("w1"), 3000, time, tick, report, report_grain, new GraphContentFactory());
+        StreamToRelationOp<Graph, Graph> wa = new CQELSStreamToRelationOp(RDFUtils.createIRI("w1"), 3000, time, tick, report, report_grain, new GraphContentFactory(time));
 
         Tester tester = new Tester();
 

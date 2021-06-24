@@ -8,6 +8,7 @@ import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.engine.config.EngineConfiguration;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
+import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.yasper.engines.Yasper;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
@@ -34,6 +35,7 @@ public class CQELSBindingExample {
         EngineConfiguration ec = EngineConfiguration.loadConfig("/cqelsbinding.properties");
 
         Yasper sr = new Yasper(ec);
+        Time time = sr.time();
 
         //STREAM DECLARATION
         RDFStream stream = new RDFStream("stream1");
@@ -53,7 +55,7 @@ public class CQELSBindingExample {
 
         Rstream<Binding, Binding> r2s = new Rstream<Binding, Binding>();
 
-        RSPQL<Binding> q = new SimpleRSPQLQuery<>("q1", stream, wn, s, pp, o, r2s);
+        RSPQL<Binding> q = new SimpleRSPQLQuery<>("q1", stream, time, wn, s, pp, o, r2s);
 
         q.addNamedWindow("stream1", wn);
 

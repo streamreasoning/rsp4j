@@ -11,7 +11,8 @@ import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
-import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
+import org.streamreasoning.rsp4j.api.secret.time.Time;
+import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
 import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLTimeWindowOperatorFactory;
@@ -41,7 +42,8 @@ public class AbstractQueryExample {
         RDFStream stream = new RDFStream("s1");
 
         //WINDOW DECLARATION
-        StreamToRelationOperatorFactory<Graph, Graph> windowOperatorFactory = new CSPARQLTimeWindowOperatorFactory(TimeFactory.getInstance(), tick, report, report_grain, new GraphContentFactory());
+        Time instance = new TimeImpl(0);
+        StreamToRelationOperatorFactory<Graph, Graph> windowOperatorFactory = new CSPARQLTimeWindowOperatorFactory(instance, tick, report, report_grain, new GraphContentFactory(instance));
 
         //ENGINE INTERNALS - HOW THE REPORTING POLICY, TICK AND REPORT GRAIN INFLUENCE THE RUNTIME
 

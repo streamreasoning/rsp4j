@@ -36,7 +36,7 @@ public class CSPARQLWindowAssignerTest {
         //WINDOW DECLARATION
         TimeImpl time = new TimeImpl(0);
 
-        StreamToRelationOp<Graph, Graph> windowStreamToRelationOp = new CSPARQLStreamToRelationOp(RDFUtils.createIRI("w1"), 2000, 2000, time, tick, report, report_grain, new GraphContentFactory());
+        StreamToRelationOp<Graph, Graph> windowStreamToRelationOp = new CSPARQLStreamToRelationOp(RDFUtils.createIRI("w1"), 2000, 2000, time, tick, report, report_grain, new GraphContentFactory(time));
 
         //ENGINE INTERNALS - HOW THE REPORTING POLICY, TICK AND REPORT GRAIN INFLUENCE THE RUNTIME
 

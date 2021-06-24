@@ -9,7 +9,6 @@ import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRe
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
 import org.streamreasoning.rsp4j.api.querying.Aggregation;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
-import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.io.DataStreamImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
@@ -17,7 +16,10 @@ import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TP;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SimpleRSPQLQuery<O> implements RSPQL<O> {
 
@@ -33,8 +35,9 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
     private List<String> namedGraphURIs = new ArrayList<>();
     private List<Aggregation> aggregations = new ArrayList<>();
     private StreamOperator streamOperator = StreamOperator.NONE;
+    private Time time;
 
-    public SimpleRSPQLQuery(String id, DataStream<Graph> stream, WindowNode win, VarOrTerm s, VarOrTerm p, VarOrTerm o, RelationToStreamOperator<Binding, O> r2s) {
+    public SimpleRSPQLQuery(String id, DataStream<Graph> stream, Time time, WindowNode win, VarOrTerm s, VarOrTerm p, VarOrTerm o, RelationToStreamOperator<Binding, O> r2s) {
         this.id = id;
         this.outputStream = new DataStreamImpl<O>(id);
         this.s = s;
@@ -44,6 +47,7 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
             windowMap.put(win, stream);
         }
         this.r2s = r2s;
+        this.time = time;
 
     }
 
@@ -131,7 +135,7 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
 
     @Override
     public Time getTime() {
-        return TimeFactory.getInstance();
+        return this.time;
     }
 
     @Override

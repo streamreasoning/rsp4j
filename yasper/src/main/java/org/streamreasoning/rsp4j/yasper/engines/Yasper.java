@@ -17,7 +17,7 @@ import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.secret.content.ContentFactory;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
-import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
+import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.yasper.ContinuousQueryExecutionImpl;
 import org.streamreasoning.rsp4j.yasper.content.BindingContentFactory;
@@ -41,6 +41,8 @@ public class Yasper implements QueryRegistrationFeature<RSPQL>, StreamRegistrati
     //    private final String windowOperatorFactory;
     private final String S2RFactory = "yasper.window_operator_factory";
     private final StreamToRelationOperatorFactory<Graph, Graph> wf;
+
+    private final Time time;
     private ContentFactory cf;
     private Report report;
     private Tick tick;
@@ -65,18 +67,19 @@ public class Yasper implements QueryRegistrationFeature<RSPQL>, StreamRegistrati
         this.registeredStreams = new HashSet<>();
         this.queryObservers = new HashMap<>();
         this.queryExecutions = new HashMap<>();
+        this.time = new TimeImpl(0);
+
 
         switch (rsp_config.getContentFormat()) {
             case BINDING:
-                cf = new BindingContentFactory();
+                cf = new BindingContentFactory(time);
             case GRAPH:
-                cf = new GraphContentFactory();
+                cf = new GraphContentFactory(time);
             default:
-                cf = new GraphContentFactory();
+                cf = new GraphContentFactory(time);
         }
 
         Class<?> aClass = Class.forName(rsp_config.getString(S2RFactory));
-
 
         this.wf = (StreamToRelationOperatorFactory<Graph, Graph>) aClass
                 .getConstructor(
@@ -86,7 +89,7 @@ public class Yasper implements QueryRegistrationFeature<RSPQL>, StreamRegistrati
                         ReportGrain.class,
                         ContentFactory.class)
                 .newInstance(
-                        TimeFactory.getInstance(),
+                        time,
                         tick,
                         report,
                         report_grain,
@@ -126,6 +129,9 @@ public class Yasper implements QueryRegistrationFeature<RSPQL>, StreamRegistrati
         return cqe;
     }
 
+    public Time time() {
+        return time;
+    }
 
     @Override
     public RDFStream register(RDFStream s) {

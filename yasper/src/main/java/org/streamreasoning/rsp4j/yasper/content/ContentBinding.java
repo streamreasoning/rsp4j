@@ -3,12 +3,15 @@ package org.streamreasoning.rsp4j.yasper.content;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.RDFTerm;
 import org.streamreasoning.rsp4j.api.secret.content.Content;
+import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.BindingImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Var;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ContentBinding implements Content<Graph, Binding> {
@@ -16,11 +19,13 @@ public class ContentBinding implements Content<Graph, Binding> {
     private Set<Binding> elements = new HashSet<>();
     private long last_timestamp_changed;
     private VarOrTerm s, p, o;
+    private Time time;
 
-    public ContentBinding(VarOrTerm s, VarOrTerm p, VarOrTerm o) {
+    public ContentBinding(Time time, VarOrTerm s, VarOrTerm p, VarOrTerm o) {
         this.s = s;
         this.p = p;
         this.o = o;
+        this.time = time;
     }
 
 

@@ -7,6 +7,8 @@ import org.streamreasoning.rsp4j.api.querying.Aggregation;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLBaseVisitor;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLParser;
+import org.streamreasoning.rsp4j.api.secret.time.Time;
+import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.io.DataStreamImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
@@ -25,11 +27,13 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
     private String outputStreamIRI;
     private Map<String, WindowNode> windowMap;
     private String outputStreamType;
-
+    private Time time;
     private List<Aggregation> aggregations;
+
     public TPVisitorImpl() {
         windowMap = new HashMap<>();
         aggregations = new ArrayList<>();
+        this.time = new TimeImpl(0);
     }
 
     @Override
@@ -144,7 +148,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
         }
 
         Rstream<Binding, Binding> rstream = new Rstream<>();
-        SimpleRSPQLQuery<Binding> query = new SimpleRSPQLQuery<>("", stream, win, s, p, o, rstream);
+        SimpleRSPQLQuery<Binding> query = new SimpleRSPQLQuery<>("", stream, time, win, s, p, o, rstream);
         windowMap.entrySet().forEach(e -> query.addNamedWindow(e.getKey(), e.getValue()));
         if (outputStreamType != null) {
             RSPQLExtractionHelper.setOutputStreamType(query, outputStreamType);
@@ -181,18 +185,20 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
 
     @Override
     public CQ visitSelectQuery(RSPQLParser.SelectQueryContext ctx) {
-        for(RSPQLParser.ResultVarContext  r:ctx.selectClause().resultVar()){
+        for (RSPQLParser.ResultVarContext r : ctx.selectClause().resultVar()) {
             String var = r.var().getText();
             String exp = r.expression().getText();
-            aggregations.add(new Aggregation(null,getVarName(exp),var,getFunctionName(exp)));
+            aggregations.add(new Aggregation(null, getVarName(exp), var, getFunctionName(exp)));
         }
         return super.visitSelectQuery(ctx);
     }
-    private String getFunctionName(String expression){
-        return expression.substring(0,expression.indexOf('('));
+
+    private String getFunctionName(String expression) {
+        return expression.substring(0, expression.indexOf('('));
     }
-    private String getVarName(String expression){
-        return expression.substring(expression.indexOf('?'),expression.indexOf(')'));
+
+    private String getVarName(String expression) {
+        return expression.substring(expression.indexOf('?'), expression.indexOf(')'));
     }
 
     /**

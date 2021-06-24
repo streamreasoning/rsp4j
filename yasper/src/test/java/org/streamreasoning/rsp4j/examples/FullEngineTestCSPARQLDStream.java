@@ -4,11 +4,10 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.RDF;
-import org.junit.Before;
-import org.junit.Test;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.engine.config.EngineConfiguration;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
+import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.yasper.engines.Yasper;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Dstream;
@@ -29,17 +28,16 @@ public class FullEngineTestCSPARQLDStream {
     static RDF instance;
     private long current_timestamp;
 
-    @Before
     public void setUp() {
         instance = RDFUtils.getInstance();
     }
 
-    @Test
     public void csparql() throws ConfigurationException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         EngineConfiguration ec = EngineConfiguration.loadConfig("/csparql.properties");
 
         Yasper sr = new Yasper(ec);
+        Time time = sr.time();
 
         //STREAM DECLARATION
         RDFStream stream = new RDFStream("stream1");
@@ -56,7 +54,7 @@ public class FullEngineTestCSPARQLDStream {
         Dstream<Binding, Binding> r2s = new Dstream<Binding, Binding>(1);
         Istream<Binding, Binding> r2s1 = new Istream<Binding, Binding>(1);
 
-        RSPQL<Binding> q = new SimpleRSPQLQuery<>("q1", stream, new WindowNodeImpl("w1", 2, 2, 0), s, pp, o, r2s1);
+        RSPQL<Binding> q = new SimpleRSPQLQuery<>("q1", stream, time, new WindowNodeImpl("w1", 2, 2, 0), s, pp, o, r2s1);
 
 
         ContinuousQueryExecution<Graph, Graph, Binding, Binding> cqe = sr.register(q);
@@ -143,6 +141,7 @@ public class FullEngineTestCSPARQLDStream {
         graph = instance.createGraph();
         graph.add(instance.createTriple(instance.createIRI("S7"), p, instance.createIRI("O7")));
         stream.put(graph, 7000);
+        java.lang.System.exit(0);
 
 
         //stream.put(new it.polimi.deib.rsp.test.examples.windowing.RDFStreamDecl.Elem(3000, graph));

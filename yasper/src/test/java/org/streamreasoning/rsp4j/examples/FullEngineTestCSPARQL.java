@@ -5,11 +5,11 @@ import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.RDF;
 import org.junit.Before;
-import org.junit.Test;
 import org.streamreasoning.rsp4j.TestConsumer;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.engine.config.EngineConfiguration;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
+import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.yasper.engines.Yasper;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
@@ -19,7 +19,10 @@ import org.streamreasoning.rsp4j.yasper.querying.syntax.RSPQL;
 import org.streamreasoning.rsp4j.yasper.querying.syntax.SimpleRSPQLQuery;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Riccardo on 03/08/16.
@@ -27,24 +30,23 @@ import java.util.*;
 public class FullEngineTestCSPARQL {
 
     static RDF instance;
-    private long current_timestamp;
 
     @Before
     public void setUp() {
         instance = RDFUtils.getInstance();
     }
 
-    @Test
     public void csparql() throws ConfigurationException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         EngineConfiguration ec = EngineConfiguration.loadConfig("/csparql.properties");
 
-        Yasper sr = new Yasper(ec);
+        Yasper csparql = new Yasper(ec);
+        Time time = csparql.time();
 
         //STREAM DECLARATION
         RDFStream stream = new RDFStream("stream1");
 
-        sr.register(stream);
+        csparql.register(stream);
 
         //_____
         IRI p = instance.createIRI("p");
@@ -55,10 +57,10 @@ public class FullEngineTestCSPARQL {
 
         Rstream<Binding, Binding> r2s = new Rstream<Binding, Binding>();
 
-        RSPQL<Binding> q = new SimpleRSPQLQuery<>("q1", stream, new WindowNodeImpl("w1", 2, 2, 0), s, pp, o, r2s);
+        RSPQL<Binding> q = new SimpleRSPQLQuery<>("q1", stream, time, new WindowNodeImpl("w1", 2, 2, 0), s, pp, o, r2s);
 
 
-        ContinuousQueryExecution<Graph, Graph, Binding, Binding> cqe = sr.register(q);
+        ContinuousQueryExecution<Graph, Graph, Binding, Binding> cqe = csparql.register(q);
 
         Map<Long, Set<Binding>> results = new HashMap<>();
 

@@ -3,7 +3,7 @@ package org.streamreasoning.rsp4j.yasper.content;
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.secret.content.Content;
-import org.streamreasoning.rsp4j.api.secret.time.TimeFactory;
+import org.streamreasoning.rsp4j.api.secret.time.Time;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -12,8 +12,10 @@ import java.util.Set;
 public class ContentGraph implements Content<Graph, Graph> {
     private Set<Graph> elements;
     private long last_timestamp_changed;
+    Time instance;
 
-    public ContentGraph() {
+    public ContentGraph(Time instance) {
+        this.instance = instance;
         this.elements = new HashSet<>();
     }
 
@@ -25,7 +27,8 @@ public class ContentGraph implements Content<Graph, Graph> {
     @Override
     public void add(Graph e) {
         elements.add(e);
-        this.last_timestamp_changed = TimeFactory.getInstance().getAppTime();
+
+        this.last_timestamp_changed = instance.getAppTime();
     }
 
     @Override
@@ -57,7 +60,7 @@ public class ContentGraph implements Content<Graph, Graph> {
         if (o == null || getClass() != o.getClass()) return false;
         ContentGraph that = (ContentGraph) o;
         return last_timestamp_changed == that.last_timestamp_changed &&
-                Objects.equals(elements, that.elements);
+               Objects.equals(elements, that.elements);
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.streamreasoning.rsp4j.TestConsumer;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.engine.config.EngineConfiguration;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
+import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.yasper.engines.Yasper;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
@@ -40,6 +41,7 @@ public class FullEngineTestCQELS2 {
         EngineConfiguration ec = EngineConfiguration.loadConfig("/cqelsbinding.properties");
 
         Yasper sr = new Yasper(ec);
+        Time time = sr.time();
 
         //STREAM DECLARATION
         RDFStream stream = new RDFStream("stream1");
@@ -54,7 +56,7 @@ public class FullEngineTestCQELS2 {
 
         Rstream<Binding, Binding> r2s = new Rstream<Binding, Binding>();
 
-        RSPQL<Binding> q = new SimpleRSPQLQuery<>("q1", stream, new WindowNodeImpl("w1", 2, 2, 0), s, pp, o, r2s);
+        RSPQL<Binding> q = new SimpleRSPQLQuery<>("q1", stream, time, new WindowNodeImpl("w1", 2, 2, 0), s, pp, o, r2s);
 
         ContinuousQueryExecution<Graph, Graph, Binding, Binding> cqe = sr.register(q);
 
@@ -191,8 +193,6 @@ public class FullEngineTestCQELS2 {
         stream.put(graph, current_timestamp);
 
         //stream.put(new it.polimi.deib.rsp.test.examples.windowing.RDFStreamDecl.Elem(3000, graph));
-
     }
-
 
 }

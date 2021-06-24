@@ -45,8 +45,9 @@ public class CPTest {
 
         Tick tick = Tick.TIME_DRIVEN;
         ReportGrain report_grain = ReportGrain.SINGLE;
-
         int scope = 0;
+        Time time = new TimeImpl(scope);
+
 
         //QUERY
 
@@ -58,8 +59,7 @@ public class CPTest {
 
         //WINDOW DECLARATION
 
-        Time instance1 = new TimeImpl(0);
-        StreamToRelationOp<Graph, Graph> s2r = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, instance1, tick, report, report_grain, new GraphContentFactory());
+        StreamToRelationOp<Graph, Graph> s2r = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, time, tick, report, report_grain, new GraphContentFactory(time));
 
         //SDS
         SDS<Graph> sds = new SDSImpl();
@@ -75,7 +75,7 @@ public class CPTest {
 
         Rstream<Binding, Binding> r2s = new Rstream<Binding, Binding>();
 
-        ContinuousQuery q = new SimpleRSPQLQuery("q1", stream, wn, s, pp, o, r2s);
+        ContinuousQuery q = new SimpleRSPQLQuery("q1", stream, time, wn, s, pp, o, r2s);
 
         RelationToRelationOperator<Graph, Triple> r2r = new DummyR2R(sds, q);
 
@@ -84,7 +84,7 @@ public class CPTest {
                 new Task.TaskBuilder()
                         .addS2R("stream1", s2r, "w1")
                         .addR2R("w1", r2r)
-                        .addR2S("out", new Rstream<Triple,Triple>())
+                        .addR2S("out", new Rstream<Triple, Triple>())
                         .build();
         ContinuousProgram<Graph, Graph, Triple, Triple> cp = new ContinuousProgram.ContinuousProgramBuilder()
                 .in(stream)

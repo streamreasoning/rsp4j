@@ -7,6 +7,7 @@ public class EmptyContent<I, O> implements Content<I, O> {
     long ts = System.currentTimeMillis();
     private O o;
 
+
     public EmptyContent(O o) {
         this.o = o;
     }
