@@ -1,9 +1,7 @@
-package org.streamreasoning.rsp4j.yasper.publisher;
+package org.streamreasoning.rsp;
 
-import org.streamreasoning.rsp.Distribution;
-import org.streamreasoning.rsp.Publisher;
-import org.streamreasoning.rsp.WebDataStream;
-import org.streamreasoning.rsp.WebStreamEndpoint;
+import org.streamreasoning.rsp.builders.DistributionBuilder;
+import org.streamreasoning.rsp.builders.WebStreamBuilder;
 import org.streamreasoning.rsp.enums.Format;
 import org.streamreasoning.rsp.enums.License;
 import org.streamreasoning.rsp.enums.Protocol;
@@ -15,11 +13,11 @@ public class PublicationExample {
 
     public static void main(String[] args) throws InterruptedException {
 
-        Publisher publisher = new YPublisher("http://example.org/");
+        WebStreamBuilder webStreamBuilder = new WebStreamBuilder(SLD.publisher("http://example.org/"));
 
-        Distribution d = new YDistribution();
+        DistributionBuilder d = new DistributionBuilder();
 
-        WebStreamEndpoint<String> wse = publisher
+        SLD.Distribution<String>[] wse = webStreamBuilder
                 .stream("colours", true)
                 .name("Colour Stream")
                 .description("stream of colours")
@@ -31,10 +29,9 @@ public class PublicationExample {
                         .format(Format.STRING)) //relates with serialization strategy
                 .<String>build();
 
+        wse[0].describe().stream().forEach(System.err::println);
 
-        wse.describe().stream().forEach(System.err::println);
-
-        WebDataStream<String> stream = wse.<String>serve();
+        SLD.WebDataStream<String> stream = wse[0].serve();
 
         new Thread(() -> {
             try {

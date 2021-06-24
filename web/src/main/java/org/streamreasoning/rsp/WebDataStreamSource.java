@@ -1,15 +1,17 @@
 package org.streamreasoning.rsp;
 
 import org.apache.commons.rdf.api.Graph;
+import org.apache.commons.rdf.api.IRI;
+import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.io.DataStreamImpl;
 
-public class WebDataStreamSource<E> extends DataStreamImpl<E> implements WebDataStream<E> {
+public class WebDataStreamSource<E> extends DataStreamImpl<E> implements SLD.WebDataStream<E> {
 
-    private final Distribution d;
-    private final Publisher p;
+    private final SLD.Distribution d;
+    private final SLD.Publisher p;
     private Graph description;
 
-    public WebDataStreamSource(String stream_uri, Graph description, Distribution d, Publisher p) {
+    public WebDataStreamSource(String stream_uri, Graph description, SLD.Distribution<E> d, SLD.Publisher p) {
         super(stream_uri);
         this.description = description;
         this.d = d;
@@ -22,17 +24,18 @@ public class WebDataStreamSource<E> extends DataStreamImpl<E> implements WebData
     }
 
     @Override
-    public Publisher publisher() {
+    public SLD.Publisher publisher() {
         return p;
     }
 
     @Override
-    public Distribution[] distribution() {
-        return new Distribution[]{d};
+    public SLD.Distribution[] distribution() {
+        return new SLD.Distribution[]{d};
     }
 
+
     @Override
-    public void put(E e, long ts) {
-        throw new UnsupportedOperationException("You don't have the rights to write on such stream");
+    public IRI uri() {
+        return RDFUtils.createIRI(stream_uri);
     }
 }

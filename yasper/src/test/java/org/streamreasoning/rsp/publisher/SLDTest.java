@@ -1,4 +1,4 @@
-package org.streamreasoning.rsp4j.yasper.publisher;
+package org.streamreasoning.rsp.publisher;
 
 import junit.framework.TestCase;
 import org.apache.commons.rdf.jena.JenaRDF;

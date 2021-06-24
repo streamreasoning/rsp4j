@@ -39,10 +39,6 @@ public class DataStreamImpl<T> implements DataStream<T> {
         return stream_uri;
     }
 
-    public String uri() {
-        return this.stream_uri;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
