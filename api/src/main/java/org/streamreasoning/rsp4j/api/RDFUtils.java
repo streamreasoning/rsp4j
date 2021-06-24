@@ -73,5 +73,7 @@ public class RDFUtils {
     }
 
 
-
+    public static String trimVar(String inputVariable) {
+        return inputVariable.startsWith("?") ? trimFirst(inputVariable): inputVariable;
+    }
 }

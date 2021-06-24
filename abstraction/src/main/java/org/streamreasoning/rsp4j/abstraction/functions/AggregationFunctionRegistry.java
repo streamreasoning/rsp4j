@@ -21,11 +21,11 @@ public final class AggregationFunctionRegistry {
     }
 
     public void addFunction(String functionName, AggregationFunction function) {
-        nameToFunctionHolder.put(functionName, function);
+        nameToFunctionHolder.put(functionName.toUpperCase(), function);
     }
 
     public <T> Optional<AggregationFunction<T>> getFunction(String functionName) {
-        AggregationFunction<T> aggregationFunction = (AggregationFunction<T>) nameToFunctionHolder.get(functionName);
+        AggregationFunction<T> aggregationFunction = (AggregationFunction<T>) nameToFunctionHolder.get(functionName.toUpperCase());
         return Optional.ofNullable(aggregationFunction);
     }
 }
