@@ -1,7 +1,9 @@
 package org.streamreasoning.rsp.vocabulary;
 
 import org.apache.commons.rdf.api.IRI;
+import org.apache.commons.rdf.api.Triple;
 import org.streamreasoning.rsp.RDFManager;
+import org.streamreasoning.rsp4j.api.RDFUtils;
 
 public class VSD {
 
@@ -33,7 +35,7 @@ public class VSD {
 
 
     public final static IRI HAS_SERVICE = resource("hasService");
-    public final static IRI ENDPOINT = resource("endpoint");
+    public final static IRI pENDPOINT = resource("endpoint");
     public final static IRI METHOD = resource("method");
     public final static IRI BASE = resource("base");
     public final static IRI PARAMS = resource("params");
@@ -61,5 +63,11 @@ public class VSD {
     private static IRI resource(String rdfStream) {
         return RDFManager.resource(uri, rdfStream);
     }
+
+
+    public static Triple publisher(IRI s) {
+        return RDFUtils.getInstance().createTriple(s, RDF.pTYPE, PUBLISHING_SERVICE);
+    }
+
 
 }

@@ -1,6 +1,7 @@
 package org.streamreasoning.rsp.builders;
 
 import org.apache.commons.rdf.api.Graph;
+import org.apache.commons.rdf.api.IRI;
 import org.streamreasoning.rsp.SLD;
 import org.streamreasoning.rsp.distribution.WebSocketDistribution;
 import org.streamreasoning.rsp.enums.Format;
@@ -12,67 +13,90 @@ import org.streamreasoning.rsp.vocabulary.VOCALS;
 import org.streamreasoning.rsp.vocabulary.XSD;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 
-import static org.streamreasoning.rsp.vocabulary.RDF.pTYPE;
+import static org.streamreasoning.rsp4j.api.RDFUtils.createIRI;
 
 public class DistributionBuilder {
 
-    org.apache.commons.rdf.api.RDF is = RDFUtils.getInstance();
+    private org.apache.commons.rdf.api.RDF is = RDFUtils.getInstance();
 
-    Graph graph = is.createGraph();
+    private Graph dgraph = is.createGraph();
 
     private License license;
     private Security security;
     private Protocol protocol;
     private Format format;
-    final String base = "http://example.org";
-    String uri;
+    private String base;
+    private IRI uri;
     private SLD.Publisher p;
+    private String urlBody;
+    private String id;
+    private String access;
+
+    public DistributionBuilder(String base) {
+        this.base = base;
+    }
 
     public Graph describe() {
-        return graph;
+        return dgraph;
     }
 
     public DistributionBuilder publisher(SLD.Publisher p) {
         this.p = p;
+        this.base = p.uri().getIRIString();
         return this;
     }
 
+    public DistributionBuilder access(String id) {
+        return access(id, false);
+    }
+
     public DistributionBuilder access(String id, boolean fragment) {
-        this.uri = (fragment) ? this.base + "/" + id : id;
-        this.graph.add(is.createIRI(uri), pTYPE, VOCALS.STREAM_);
+        this.id = id;
+        this.uri = createIRI((fragment) ? this.base + "/" + id : id);
+
+        if (!fragment) {
+            access = id;
+        } else this.access = this.base.replace("http://", "");
+
+        this.dgraph.add(VOCALS.endpoint(uri));
+
         return this;
     }
 
     public DistributionBuilder protocol(Protocol protocol) {
         this.protocol = protocol;
-        graph.add(is.createTriple(is.createIRI(base), DCAT.pDESCRIPTION, is.createLiteral(protocol.name(), XSD.tString)));
-
+        dgraph.add(uri, DCAT.pPROTOCOL, is.createLiteral(protocol.name(), XSD.tString));
         return this;
     }
 
     public DistributionBuilder security(Security security) {
         this.security = security;
-        graph.add(is.createTriple(is.createIRI(base), DCAT.pDESCRIPTION, is.createLiteral(security.name(), XSD.tString)));
-
+        dgraph.add(uri, DCAT.pSECUTIRTY, is.createLiteral(security.name(), XSD.tString));
         return this;
     }
 
     public DistributionBuilder license(License license) {
         this.license = license;
-        graph.add(is.createTriple(is.createIRI(base), DCAT.pDESCRIPTION, is.createLiteral(license.name(), XSD.tString)));
+        dgraph.add(DCAT.license(uri, license));
 
         return this;
     }
 
     public DistributionBuilder format(Format format) {
         this.format = format;
-        graph.add(is.createTriple(is.createIRI(base), DCAT.pDESCRIPTION, is.createLiteral(format.name(), XSD.tString)));
-
+        dgraph.add(DCAT.format(uri, format));
         return this;
     }
 
-    public <T> SLD.Distribution<T> build(String path, boolean sink) {
-        return sink ? new WebSocketDistribution<T>(uri, path, license, format, p) : new WebSocketDistribution<T>(uri, path, license, format, p, !sink);
+    public <T> SLD.Distribution<T> buildSource(String path, boolean fragment) {
+        return new WebSocketDistribution<T>(uri, path, license, format, p, dgraph, false);
+    }
+
+    public <T> SLD.Distribution<T> buildSink(String path, Graph sgraph, boolean fragment) {
+        access = access.equals(id) ? access.replace(Protocol.HTTP.schema(), protocol.schema()) : protocol.schema() + access + "/access/" + id;
+        this.dgraph.add(DCAT.access(uri, access));
+        this.dgraph.stream().forEach(sgraph::add);
+        return new WebSocketDistribution<T>(uri, id, license, format, p, sgraph);
     }
 
 

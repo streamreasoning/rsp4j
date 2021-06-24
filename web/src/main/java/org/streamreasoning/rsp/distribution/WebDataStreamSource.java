@@ -29,6 +29,7 @@ public class WebDataStreamSource<E> extends DataStreamImpl<E> implements SLD.Web
         return p;
     }
 
+
     @Override
     public SLD.Distribution[] distribution() {
         return new SLD.Distribution[]{d};

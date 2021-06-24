@@ -1,57 +1,67 @@
 package org.streamreasoning.rsp.builders;
 
 import org.apache.commons.rdf.api.Graph;
+import org.apache.commons.rdf.api.IRI;
+import org.apache.commons.rdf.api.Triple;
 import org.streamreasoning.rsp.SLD;
 import org.streamreasoning.rsp.vocabulary.DCAT;
 import org.streamreasoning.rsp.vocabulary.VOCALS;
-import org.streamreasoning.rsp.vocabulary.VSD;
-import org.streamreasoning.rsp.vocabulary.XSD;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.streamreasoning.rsp.vocabulary.RDF.pTYPE;
 
 public class WebStreamBuilder {
 
-    private final SLD.Publisher p;
-    String base, uri, name, description;
-    List<DistributionBuilder> distributionBuilders = new ArrayList<>();
-    Graph graph = RDFUtils.getInstance().createGraph();
+    private SLD.Publisher p;
+
+    public String base() {
+        return base;
+    }
+
+    private String base;
+    private IRI uri;
+    private String name;
+    private String description;
+    private List<DistributionBuilder> distributionBuilders = new ArrayList<>();
+    private Graph graph = RDFUtils.getInstance().createGraph();
 
     org.apache.commons.rdf.api.RDF is = RDFUtils.getInstance();
     private String id;
+    private boolean fragment;
 
 
-    public WebStreamBuilder(SLD.Publisher p, String base) {
-        this.base = base;
+    public WebStreamBuilder(String p) {
+        this.base = p;
+
+    }
+
+    public WebStreamBuilder publisher(SLD.Publisher p) {
         this.p = p;
-        graph.add(is.createTriple(p.uri(), pTYPE, VSD.PUBLISHING_SERVICE));
+        p.describe().stream().forEach(graph::add);
+        return this;
     }
-
-    public Graph describe() {
-        return graph;
-    }
-
 
     public WebStreamBuilder stream(String id, boolean fragment) {
-        this.uri = (fragment) ? this.base + "/" + id : id;
+        this.fragment = fragment;
+        this.uri = is.createIRI((fragment) ? this.base + "/" + id : id);
         this.id = id;
-        this.graph.add(is.createIRI(uri), pTYPE, VOCALS.STREAM_DESCRIPTOR);
+        Triple descriptor = VOCALS.descriptor();
+        this.graph.add(descriptor);
+        this.graph.add(VOCALS.stream(uri));
+        this.graph.add(DCAT.dataset(descriptor.getSubject(), uri));
         return this;
     }
 
     public WebStreamBuilder name(String name) {
         this.name = name;
-        graph.add(is.createTriple(is.createIRI(base), DCAT.pNAME, is.createLiteral(name, XSD.tString)));
+        graph.add(DCAT.name(uri, name));
         return this;
     }
 
     public WebStreamBuilder description(String description) {
         this.description = description;
-        graph.add(is.createTriple(is.createIRI(base), DCAT.pDESCRIPTION, is.createLiteral(description, XSD.tString)));
+        graph.add(DCAT.description(uri, name));
         return this;
     }
 
@@ -62,8 +72,33 @@ public class WebStreamBuilder {
         return this;
     }
 
-    public <T> SLD.Distribution<T>[] build() {
-        return distributionBuilders.stream().map(distributionBuilder -> distributionBuilder.build(id, true)).collect(Collectors.toList()).toArray(new SLD.Distribution[distributionBuilders.size()]);
+    public <T> SLD.WebStream<T> build() {
+        return new SLD.WebStream<T>() {
+            @Override
+            public SLD.Publisher publisher() {
+                return p;
+            }
+
+            @Override
+            public SLD.WebDataStream<T> serve() {
+                DistributionBuilder distributionBuilder = distributionBuilders.get(0);
+                return distributionBuilder.<T>buildSink(uri.getIRIString(), graph, fragment).serve();
+            }
+
+            @Override
+            public Graph describe() {
+                return graph;
+            }
+
+            @Override
+            public IRI uri() {
+                return uri;
+            }
+        };
     }
 
+
+    public DistributionBuilder newDistribution() {
+        return new DistributionBuilder(base);
+    }
 }
