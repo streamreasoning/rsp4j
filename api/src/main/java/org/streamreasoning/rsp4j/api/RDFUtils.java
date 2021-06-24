@@ -76,4 +76,8 @@ public class RDFUtils {
     public static String trimVar(String inputVariable) {
         return inputVariable.startsWith("?") ? trimFirst(inputVariable): inputVariable;
     }
+
+    public static Triple createTriple(BlankNodeOrIRI subject, IRI predicate, RDFTerm object) {
+        return getInstance().createTriple(subject , predicate, object);
+    }
 }

@@ -1,6 +1,7 @@
 package org.streamreasoning.rsp4j.yasper.querying.operators.r2r;
 
 import org.apache.commons.rdf.api.RDFTerm;
+import org.streamreasoning.rsp4j.api.RDFUtils;
 
 import java.util.Objects;
 
@@ -10,6 +11,9 @@ public class TermImpl implements VarOrTerm {
 
     public TermImpl(RDFTerm term) {
         this.term = term;
+    }
+    public TermImpl(String term){
+        this(RDFUtils.createIRI(term));
     }
 
     @Override
