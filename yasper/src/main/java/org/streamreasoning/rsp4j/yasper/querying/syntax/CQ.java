@@ -5,9 +5,13 @@ import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
+import org.streamreasoning.rsp4j.api.querying.Aggregation;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public class CQ<O> implements RSPQL<O> {
@@ -106,5 +110,10 @@ public class CQ<O> implements RSPQL<O> {
     @Override
     public RelationToStreamOperator r2s() {
         return null;
+    }
+
+    @Override
+    public List<Aggregation> getAggregations() {
+        return Collections.emptyList();
     }
 }
