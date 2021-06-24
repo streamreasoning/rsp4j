@@ -1,0 +1,24 @@
+<test>      a       <http://w3id.org/rsp/vocals#StreamDescriptor> ;
+        <http://www.w3.org/ns/dcat#dataset>
+                <http://localhost:4567/colours> .
+
+<http://localhost:4567>
+    a       <http://w3id.org/rsp/vocals-sd#PublishingService> .
+
+<http://localhost:4567/colours>
+    a       <http://w3id.org/rsp/vocals#Stream> ;
+    <http://w3id.org/rsp/vocals-sd#endpoint>
+            [ a       <http://w3id.org/rsp/vocals#StreamEndpoint> ;
+              <http://www.w3.org/ns/dcat#format>
+                      "STRING" ;
+              <http://www.w3.org/ns/dcat#protocol>
+                      "WebSocket" ;
+              <http://www.w3.org/ns/dcat#security>
+                      "SSL"
+            ] ;
+    <http://www.w3.org/ns/dcat#access>
+            "ws://localhost:4567/access/colours" ;
+    <http://www.w3.org/ns/dcat#description>
+            "Colour Stream" ;
+    <http://www.w3.org/ns/dcat#name>
+            "Colour Stream" .
