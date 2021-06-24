@@ -46,7 +46,7 @@ public class FileTest {
             System.err.println(x);
         }
     }
-    @Test
+   //@Test
     public void testFileSource() throws InterruptedException {
         // define lines of file
         String line1 = "<http://test/subject1> <http://test/property1> <http://test/object1>.";
@@ -89,7 +89,7 @@ public class FileTest {
         deleteFile(path);
     }
 
-    @Test
+  //  @Test
     public void fileSinkTest(){
         // define expected lines of file
         String line1 = "<http://test/subject1> <http://test/property1> <http://test/object1> .";
