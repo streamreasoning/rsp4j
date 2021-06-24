@@ -9,6 +9,7 @@ import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Consumer;
 import org.streamreasoning.rsp4j.io.sources.WebsocketClientSource;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingStrategy;
+import org.streamreasoning.rsp4j.io.utils.websockets.WebSocketOutputHandler;
 
 import static spark.Spark.*;
 
@@ -52,7 +53,8 @@ public class WebSocketDistribution<E> implements SLD.Distribution<E> {
         if (!source) {
             //if the uri is a fragment, we can spawn two different services
             //use abstract class to distinguish
-            webSocket("/access/" + access, this.wsh = new WebSocketHandler<>());
+            this.wsh = new WebSocketHandler<>();
+            webSocket("/access/" + access,this.wsh );
             get(path, (request, response) -> graph.toString());
             init();
             //TODO actually, we need to pass the subset that interests the stream
@@ -60,6 +62,14 @@ public class WebSocketDistribution<E> implements SLD.Distribution<E> {
             return ds;
         }
         throw new UnsupportedOperationException("Read-Only Distribution");
+    }
+
+    @Override
+    public SLD.WebDataStream<E> getWebStream() {
+        if(ds==null){
+            serve();
+        }
+        return ds;
     }
 
 

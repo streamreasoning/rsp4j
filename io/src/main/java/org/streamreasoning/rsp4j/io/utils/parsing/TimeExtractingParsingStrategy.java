@@ -13,14 +13,19 @@ public class TimeExtractingParsingStrategy<T> implements ParsingStrategy<T>{
         this.parsingStrategy = parsingStrategy;
     }
     @Override
-    public ParsingResult<T> parse(String parseString) {
+    public ParsingResult<T> parseAndAddTime(String parseString) {
         // split the string and extract time stamp and object
         String[] split = parseString.split(this.delimiter);
         long timeStamp = Long.parseLong(split[this.timeIndex].trim());
         int objectIndex = Math.abs(timeIndex - 1);
         String parseObjString = split[objectIndex];
-        ParsingResult<T> parseResult = parsingStrategy.parse(parseObjString);
+        ParsingResult<T> parseResult = parsingStrategy.parseAndAddTime(parseObjString);
         parseResult.setTimeStamp(timeStamp);
         return parseResult;
+    }
+
+    @Override
+    public T parse(String parseString) {
+        return parsingStrategy.parse(parseString);
     }
 }

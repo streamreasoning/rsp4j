@@ -45,7 +45,7 @@ public class FileSource<T> extends DataStreamImpl<T> {
       while ((line = br.readLine()) != null) {
 
         // parse the input
-        ParsingResult<T> parsingResult = parsingStrategy.parse(line);
+        ParsingResult<T> parsingResult = parsingStrategy.parseAndAddTime(line);
         // send to cosumers
         this.put(parsingResult.getResult(), parsingResult.getTimeStamp());
         try {

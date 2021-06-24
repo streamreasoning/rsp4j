@@ -69,7 +69,7 @@ public class HTTPPullSource<T> extends DataStreamImpl<T> {
                     String result = "";
                     try (BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.defaultCharset()))) {
                         result = br.lines().collect(Collectors.joining(System.lineSeparator()));
-                        ParsingResult<T> parsingResult = parsingStrategy.parse(result);
+                        ParsingResult<T> parsingResult = parsingStrategy.parseAndAddTime(result);
                         this.put(parsingResult.getResult(), parsingResult.getTimeStamp());
                     }
                     Thread.sleep(this.timeOut);

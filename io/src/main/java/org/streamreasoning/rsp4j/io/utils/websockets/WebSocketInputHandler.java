@@ -33,7 +33,7 @@ public class WebSocketInputHandler<T> {
     @OnWebSocketMessage
     public void message(Session session, String message) throws IOException {
         log.debug("Received " + message);
-        ParsingResult<T> parsed = parsingStrategy.parse(message);
+        ParsingResult<T> parsed = parsingStrategy.parseAndAddTime(message);
         stream.put(parsed.getResult(), parsed.getTimeStamp());
     }
 

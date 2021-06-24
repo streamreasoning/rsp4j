@@ -36,7 +36,7 @@ public class ParsingStrategyTest {
     }
     public static void parseAndCompare(String message, RDFBase base){
         ParsingStrategy<Graph> jenaRDFParser = new JenaRDFParsingStrategy(base);
-        ParsingResult<Graph> parsedResult = jenaRDFParser.parse(message);
+        ParsingResult<Graph> parsedResult = jenaRDFParser.parseAndAddTime(message);
         Graph parsedGraph = parsedResult.getResult();
         Graph graph = createGraph();
         compareGraph(graph,parsedGraph);
@@ -101,7 +101,7 @@ public class ParsingStrategyTest {
         String message = "12345, <http://test/subject> <http://test/property> <http://test/object>.";
         ParsingStrategy<Graph> jenaRDFParser = new JenaRDFParsingStrategy(base);
         TimeExtractingParsingStrategy<Graph> timeExtractor = new TimeExtractingParsingStrategy<>(0,",",jenaRDFParser);
-        ParsingResult<Graph> parsedResult = timeExtractor.parse(message);
+        ParsingResult<Graph> parsedResult = timeExtractor.parseAndAddTime(message);
         Graph parsedGraph = parsedResult.getResult();
         Graph graph = createGraph();
         compareGraph(graph,parsedGraph);
@@ -109,7 +109,7 @@ public class ParsingStrategyTest {
         // now check with time at index 1
         message = "<http://test/subject> <http://test/property> <http://test/object>., 12345";
         timeExtractor = new TimeExtractingParsingStrategy<>(1,",",jenaRDFParser);
-        parsedResult = timeExtractor.parse(message);
+        parsedResult = timeExtractor.parseAndAddTime(message);
         parsedGraph = parsedResult.getResult();
         compareGraph(graph,parsedGraph);
         assertEquals(12345l,parsedResult.getTimeStamp());

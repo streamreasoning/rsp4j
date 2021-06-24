@@ -29,7 +29,7 @@ public class WebSocketTest {
         return graph;
     }
 
-
+    //@Test
     public void testWebSocketClientSource() throws InterruptedException{
         /* creating a websocket server sink */
         // first we create a serialization strategy to convert the Graph objects back to strings (to send them over the ws channel)
@@ -65,7 +65,7 @@ public class WebSocketTest {
         // shutdown Websockets
         websocketSink.stopSocket();
     }
-
+    //@Test
     public void testWebSocketServerSource() throws InterruptedException{
         /* creating a websocket server source */
         // first we define a parsing strategy to convert strings to Graph object

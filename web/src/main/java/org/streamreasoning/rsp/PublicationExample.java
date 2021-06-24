@@ -1,11 +1,14 @@
 package org.streamreasoning.rsp;
 
+import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp.builders.DistributionBuilder;
 import org.streamreasoning.rsp.builders.WebStreamBuilder;
 import org.streamreasoning.rsp.enums.Format;
 import org.streamreasoning.rsp.enums.License;
 import org.streamreasoning.rsp.enums.Protocol;
 import org.streamreasoning.rsp.enums.Security;
+import org.streamreasoning.rsp4j.io.sinks.WebsocketServerSink;
+import org.streamreasoning.rsp4j.io.sources.WebsocketClientSource;
 
 import java.util.Random;
 
@@ -33,6 +36,9 @@ public class PublicationExample {
 
         SLD.WebDataStream<String> stream = wse[0].serve();
 
+//        WebsocketServerSink<String> stream = new WebsocketServerSink<String>(9000,"test",String::toString);
+//        stream.startSocket();
+
         new Thread(() -> {
             try {
                 Random r = new Random();
@@ -45,6 +51,7 @@ public class PublicationExample {
                 e.printStackTrace();
             }
         }).start();
+
     }
 
 

@@ -20,7 +20,7 @@ public class JenaRDFParsingStrategy implements ParsingStrategy<Graph>{
     }
 
     @Override
-    public ParsingResult<Graph> parse(String parseString) {
+    public Graph parse(String parseString) {
         log.debug("Received for parsing: " + parseString);
         Model dataModel = ModelFactory.createDefaultModel();
         try {
@@ -28,7 +28,7 @@ public class JenaRDFParsingStrategy implements ParsingStrategy<Graph>{
             dataModel.read(targetStream, null, base.name());
             JenaRDF jena = new JenaRDF();
             Graph g1 = jena.asGraph(dataModel);
-            return new ParsingResult<Graph>(g1);
+            return g1;
         }catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

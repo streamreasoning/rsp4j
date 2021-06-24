@@ -5,6 +5,7 @@ package org.streamreasoning.rsp4j.io.utils.parsing;
  * A strategy for parsing strings to internal used objects, such as RDF Graphs or Triples.
  * @param <T>  The result type of the parsing procedure
  */
+@FunctionalInterface
 public interface ParsingStrategy<T> {
 
     /**
@@ -13,5 +14,10 @@ public interface ParsingStrategy<T> {
      * @param parseString  the string that needs parsing
      * @return  the parsed object
      */
-    public ParsingResult<T> parse(String parseString);
+    default ParsingResult<T> parseAndAddTime(String parseString){
+        T parsed = parse(parseString);
+        return new ParsingResult<T>(parsed);
+    }
+    public T parse(String parseString);
+
 }

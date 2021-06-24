@@ -5,6 +5,7 @@ package org.streamreasoning.rsp4j.io.utils.serialization;
  *
  * @param <T>  type of object that needs serialization.
  */
+@FunctionalInterface
 public interface StringSerializationStrategy<T> {
 
     /**

@@ -27,7 +27,8 @@ public class SLD {
         Graph description = fetchStreamDescriptor(s);
         Distribution<T>[] distributions = extractDistributions(description);
         Publisher publishers = extractPublisher(description);
-        return new WebDataStreamSource<T>(s, description, distributions[0], publishers);
+        return distributions[0].getWebStream();
+        //return new WebDataStreamSource<T>(s, description, distributions[0], publishers);
     }
 
     protected static Graph fetchStreamDescriptor(String uri) {
@@ -74,6 +75,8 @@ public class SLD {
         void start(ParsingStrategy<T> ps);
 
         WebDataStream<T> serve();
+
+        WebDataStream<T> getWebStream();
     }
 
     public interface WebDataStream<E> extends DataStream<E>, Describable, Named {
