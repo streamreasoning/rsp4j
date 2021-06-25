@@ -1,10 +1,11 @@
-package org.streamreasoning.rsp;
+package org.streamreasoning.rsp4j.examples.publication;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.streamreasoning.rsp.SLD;
 
 import java.io.IOException;
 

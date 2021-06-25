@@ -4,6 +4,7 @@ import org.apache.commons.rdf.api.BlankNodeOrIRI;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.streamreasoning.rsp.SLD;
+import org.streamreasoning.rsp.distribution.HTTPDistribution;
 import org.streamreasoning.rsp.distribution.WebSocketDistribution;
 import org.streamreasoning.rsp.enums.Format;
 import org.streamreasoning.rsp.enums.License;
@@ -13,6 +14,8 @@ import org.streamreasoning.rsp.vocabulary.DCAT;
 import org.streamreasoning.rsp.vocabulary.VOCALS;
 import org.streamreasoning.rsp.vocabulary.XSD;
 import org.streamreasoning.rsp4j.api.RDFUtils;
+
+import java.time.Duration;
 
 import static org.streamreasoning.rsp4j.api.RDFUtils.createIRI;
 
@@ -91,14 +94,33 @@ public class DistributionBuilder {
     }
 
     public <T> SLD.Distribution<T> buildSource(Graph sgraph) {
-        return new WebSocketDistribution<T>(this.ep, access, license, format, p, sgraph, true);
+        switch (protocol) {
+            case HTTP:
+                return new HTTPDistribution<>(this.ep, access, license, format, p, sgraph, true, Duration.ofMillis(10000));
+            case WebSocket:
+            default:
+                return new WebSocketDistribution<T>(this.ep, access, license, format, p, sgraph, true);
+
+
+        }
     }
 
     public <T> SLD.Distribution<T> buildSink(Graph sgraph) {
+
+        SLD.Distribution<T> d;
+        switch (protocol) {
+            case HTTP:
+                d = new HTTPDistribution<>(this.ep, id, license, format, p, sgraph, 10);
+                break;
+            case WebSocket:
+            default:
+                d = new WebSocketDistribution<T>(this.ep, id, license, format, p, sgraph);
+        }
         access = access.equals(id) ? access.replace(Protocol.HTTP.schema(), protocol.schema()) : protocol.schema() + access + "/access/" + id;
         this.dgraph.add(DCAT.access(this.ep, access));
         this.dgraph.stream().forEach(sgraph::add);
-        return new WebSocketDistribution<T>(this.ep, id, license, format, p, sgraph);
+
+        return d;
     }
 
 

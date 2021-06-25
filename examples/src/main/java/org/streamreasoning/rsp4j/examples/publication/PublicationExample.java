@@ -1,5 +1,6 @@
-package org.streamreasoning.rsp;
+package org.streamreasoning.rsp4j.examples.publication;
 
+import org.streamreasoning.rsp.SLD;
 import org.streamreasoning.rsp.builders.DistributionBuilder;
 import org.streamreasoning.rsp.builders.WebStreamBuilder;
 import org.streamreasoning.rsp.enums.Format;

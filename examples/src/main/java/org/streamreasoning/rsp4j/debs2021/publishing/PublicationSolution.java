@@ -1,5 +1,6 @@
-package org.streamreasoning.rsp;
+package org.streamreasoning.rsp4j.debs2021.publishing;
 
+import org.streamreasoning.rsp.SLD;
 import org.streamreasoning.rsp.builders.DistributionBuilder;
 import org.streamreasoning.rsp.builders.WebStreamBuilder;
 import org.streamreasoning.rsp.enums.Format;
@@ -8,7 +9,7 @@ import org.streamreasoning.rsp.enums.Protocol;
 
 import java.util.Random;
 
-public class PublicationExample {
+public class PublicationSolution {
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -19,11 +20,11 @@ public class PublicationExample {
         DistributionBuilder d = new DistributionBuilder(base);
 
         SLD.WebStream<String> ws = wsb
-                .stream("colours", true)
-                .name("Colour Stream")
-                .description("stream of colours")
+                .stream("Riccardos", true)
+                .name("Riccardo Stream") //TODO name the stream
+                .description("stream of riccardos") //Add a small description
                 .publisher(publisher)
-                .distribution(d.access("colours", true) // defines if the distribution uri will be a fragment uri (need a proxy otherwise). (Can be used to change port)
+                .distribution(d.access("riccardo", true) // defines if the distribution uri will be a fragment uri (need a proxy otherwise). (Can be used to change port)
                         .protocol(Protocol.HTTP)  // Determine what sink to choose
                         .license(License.CC) //mostly for documentation
                         .format(Format.STRING)) //relates with serialization strategy
@@ -31,10 +32,12 @@ public class PublicationExample {
 
         SLD.WebDataStream<String> stream = ws.serve();
 
+        System.out.println(ws.describe());
+
         new Thread(() -> {
             try {
                 Random r = new Random();
-                String[] colors = new String[]{"Red", "Yellow", "Blue"};
+                String[] colors = new String[]{"Richi", "Richie", "Ricky"};
                 while (true) {
                     stream.put(colors[r.nextInt(colors.length - 1)], System.currentTimeMillis());
                     Thread.sleep(5 * 1000);
@@ -44,6 +47,7 @@ public class PublicationExample {
             }
         }).start();
 
+        //TODO submit your Sgraph to http://
     }
 
 

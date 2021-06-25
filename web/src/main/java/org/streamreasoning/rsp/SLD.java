@@ -13,6 +13,7 @@ import org.apache.jena.sparql.engine.binding.Binding;
 import org.streamreasoning.rsp.builders.DistributionBuilder;
 import org.streamreasoning.rsp.enums.Format;
 import org.streamreasoning.rsp.enums.License;
+import org.streamreasoning.rsp.enums.Protocol;
 import org.streamreasoning.rsp.vocabulary.DCAT;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingStrategy;
@@ -34,6 +35,7 @@ public class SLD {
                                                              "WHERE { " +
                                                              " ?endpoint " + pTYPE + " " + STREAM_ENDPOINT + ";" +
                                                              "" + DCAT.pACCESS + " ?access ; " +
+                                                             "" + DCAT.pPROTOCOL + " ?protocol ; " +
                                                              "" + DCAT.pLICENSE + " ?license ; " +
                                                              "" + DCAT.pFORMAT + " ?format . } ");
 
@@ -57,6 +59,7 @@ public class SLD {
             Binding binding = resultSet.nextBinding();
             DistributionBuilder d = new DistributionBuilder("");
             d.access(binding.get(Var.alloc("access")).toString(false));
+            d.protocol(Protocol.valueOf(binding.get(Var.alloc("protocol")).toString(false)));
             d.format(Format.valueOf(binding.get(Var.alloc("format")).toString(false)));
             String license1 = binding.get(Var.alloc("license")).getURI();
             Arrays.stream(License.values()).forEach(license -> {
@@ -94,7 +97,7 @@ public class SLD {
 
         IRI uri();
 
-        void start(ParsingStrategy<T> ps);
+        WebDataStream<T> start(ParsingStrategy<T> ps);
 
         WebDataStream<T> serve();
 

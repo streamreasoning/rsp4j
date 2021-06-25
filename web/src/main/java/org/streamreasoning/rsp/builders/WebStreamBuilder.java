@@ -23,6 +23,7 @@ public class WebStreamBuilder {
     private Graph graph = RDFUtils.getInstance().createGraph();
     private String id;
     private boolean fragment;
+
     public WebStreamBuilder(String p) {
         this.base = p;
 
@@ -93,8 +94,4 @@ public class WebStreamBuilder {
         };
     }
 
-
-    public DistributionBuilder newDistribution() {
-        return new DistributionBuilder(base);
-    }
 }
