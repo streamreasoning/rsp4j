@@ -93,9 +93,9 @@ public class R2RUpwardExtension implements RelationToRelationOperator<Graph, Gra
                         }
                     }
 
-                } else {
-                    upwardGraph.add(t);
                 }
+                upwardGraph.add(t);
+
                 //add the triple
                 sol.add(upwardGraph);
             }
