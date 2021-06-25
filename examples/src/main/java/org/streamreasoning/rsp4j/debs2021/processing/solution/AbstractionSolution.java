@@ -22,6 +22,9 @@ import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
 
+/***
+ * In this exercises, we will learn how to build an RSP engine by defining the different operators.
+ */
 public class AbstractionSolution {
 
     public static void main(String[] args) throws InterruptedException {
@@ -44,7 +47,7 @@ public class AbstractionSolution {
         Time instance = new TimeImpl(0);
 
         // WINDOW DECLARATION
-        StreamToRelationOp<Graph, Graph> build = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, instance, tick, report, report_grain, new GraphContentFactory(instance));
+        StreamToRelationOp<Graph, Graph> build = new CSPARQLStreamToRelationOp<>(RDFUtils.createIRI("w1"), 2000, 2000, instance, tick, report, report_grain, new GraphContentFactory(instance));
 
 
         //R2R

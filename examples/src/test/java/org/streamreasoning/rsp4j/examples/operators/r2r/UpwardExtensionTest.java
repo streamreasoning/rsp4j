@@ -36,6 +36,7 @@ public class UpwardExtensionTest {
 
 
         Graph expected = RDFUtils.createGraph();
+        expected.add(RDFUtils.createTriple(RDFUtils.createIRI("S1"), p, RDFUtils.createIRI("O2")));
         expected.add(RDFUtils.createTriple(RDFUtils.createIRI("S1"), p, RDFUtils.createIRI("O3")));
         expected.add(RDFUtils.createTriple(RDFUtils.createIRI("S1"), RDFUtils.createIRI("P1"), RDFUtils.createIRI("O2")));
 
