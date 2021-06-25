@@ -5,7 +5,6 @@ import org.streamreasoning.rsp.builders.WebStreamBuilder;
 import org.streamreasoning.rsp.enums.Format;
 import org.streamreasoning.rsp.enums.License;
 import org.streamreasoning.rsp.enums.Protocol;
-import org.streamreasoning.rsp.enums.Security;
 
 import java.util.Random;
 
@@ -26,12 +25,11 @@ public class PublicationExample {
                 .publisher(publisher)
                 .distribution(d.access("colours", true) // defines if the distribution uri will be a fragment uri (need a proxy otherwise). (Can be used to change port)
                         .protocol(Protocol.WebSocket)  // Determine what sink to choose
-                        .security(Security.SSL) // we need to include secure protocol
                         .license(License.CC) //mostly for documentation
                         .format(Format.STRING)) //relates with serialization strategy
                 .<String>build();
 
-        ws.describe().stream().forEach(System.err::println);
+//        ws.describe().stream().forEach(System.err::println);
 
         SLD.WebDataStream<String> stream = ws.serve();
 

@@ -3,11 +3,10 @@ package org.streamreasoning.rsp.vocabulary;
 import org.apache.commons.rdf.api.BlankNodeOrIRI;
 import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.Triple;
-import org.streamreasoning.rsp.RDFManager;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 
 
-public abstract class VOCALS {
+public abstract class VOCALS extends Vocabulary {
 
     private static final String uri = "http://w3id.org/rsp/vocals#";
 
@@ -24,23 +23,23 @@ public abstract class VOCALS {
     public static final IRI HAS_PARTITION = resource("hasPartition");
 
     private static IRI resource(String rdfStream) {
-        return RDFManager.resource(uri, rdfStream);
+        return Vocabulary.resource(uri, rdfStream);
     }
 
     public static Triple stream(IRI s) {
-        return RDFUtils.getInstance().createTriple(s, RDF.pTYPE, STREAM_);
+        return triple(s, RDF.pTYPE, STREAM_);
     }
 
     public static Triple endpoint(BlankNodeOrIRI s) {
-        return RDFUtils.getInstance().createTriple(s, RDF.pTYPE, STREAM_ENDPOINT);
+        return triple(s, RDF.pTYPE, STREAM_ENDPOINT);
     }
 
     public static Triple endpoint(BlankNodeOrIRI s, BlankNodeOrIRI o) {
-        return RDFUtils.getInstance().createTriple(s, VSD.pENDPOINT, o);
+        return triple(s, VSD.pENDPOINT, o);
     }
 
     public static Triple descriptor() {
-        return RDFUtils.getInstance().createTriple(RDFUtils.createIRI(""), RDF.pTYPE, STREAM_DESCRIPTOR);
+        return triple(RDFUtils.createIRI(""), RDF.pTYPE, STREAM_DESCRIPTOR);
 
     }
 

@@ -1,9 +1,8 @@
 package org.streamreasoning.rsp.vocabulary;
 
 import org.apache.commons.rdf.api.IRI;
-import org.streamreasoning.rsp.RDFManager;
 
-public class VPROV {
+public class VPROV extends Vocabulary {
 
     private static final String uri = "http://w3id.org/rsp/vocals-prov#";
 
@@ -39,7 +38,7 @@ public class VPROV {
     public static final IRI STEP = resource("step");
 
     private static IRI resource(String rdfStream) {
-        return RDFManager.resource(uri, rdfStream);
+        return Vocabulary.resource(uri, rdfStream);
     }
 
 }
