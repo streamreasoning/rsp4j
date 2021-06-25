@@ -47,8 +47,7 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
       for (Task.S2RContainer<I, W> s2rContainer : s2rs) {
         String streamURI = s2rContainer.getSourceURI();
         String tvgName = s2rContainer.getTvgName();
-        IRI iri = RDFUtils.createIRI(streamURI);
-        Collection<TimeVarying<W>> vgs = sds.asTimeVaryingEs();
+        IRI iri = RDFUtils.createIRI(tvgName);
         if (inputStream != null) {
           TimeVarying<W> tvg = s2rContainer.<I, W>getS2rOperator().link(this).apply(inputStream);
 
@@ -148,16 +147,25 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
 
   public Stream<R> eval(Long now) {
     sds.materialize(now);
+    Stream<R> result = Stream.empty();
     Task<I, W, R, O> iroTask = tasks.get(0);
+
     if (!iroTask.getR2Rs().isEmpty()) {
+      Map<String, W> tvgMap = sds.asTimeVaryingEs().stream().collect(Collectors.toMap(TimeVarying::iri, TimeVarying::get));
       RelationToRelationOperator<W, R> r2rOperator = iroTask.getR2Rs().get(0).getR2rOperator();
-      Stream<R> eval = r2rOperator.eval(sds.toStream());
-      // TODO this is conflcting
-      return eval;
+      String tvgTaskName = iroTask.getR2Rs().get(0).getTvgName();
+      if(tvgMap.containsKey(tvgTaskName)){
+        Stream<W> tvgStream = Stream.of(tvgMap.get(tvgTaskName));
+        result = r2rOperator.eval(tvgStream);
+      }else if(tvgTaskName==null && tvgMap.keySet().isEmpty()){
+        // no windows defined
+        result =  r2rOperator.eval(sds.toStream());
+      }
     } else {
       log.error("No R2R operator defined!");
-      return Stream.empty();
+
     }
+    return result;
   }
 
   public static class ContinuousProgramBuilder<I, W, R, O> {

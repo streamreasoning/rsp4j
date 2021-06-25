@@ -29,7 +29,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
     private String outputStreamType;
     private Time time;
     private List<Aggregation> aggregations;
-
+    private String windowIRI = null;
     public TPVisitorImpl() {
         windowMap = new HashMap<>();
         aggregations = new ArrayList<>();
@@ -48,6 +48,13 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
     public CQ visitTriplesBlock(RSPQLParser.TriplesBlockContext ctx) {
 
         return super.visitTriplesBlock(ctx);
+    }
+
+    @Override
+    public CQ visitWindowGraphPattern(RSPQLParser.WindowGraphPatternContext ctx) {
+        windowIRI=RDFUtils.trimTags(ctx.varOrIri().iri().getText());
+
+        return super.visitWindowGraphPattern(ctx);
     }
 
     @Override
@@ -148,7 +155,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
         }
 
         Rstream<Binding, Binding> rstream = new Rstream<>();
-        SimpleRSPQLQuery<Binding> query = new SimpleRSPQLQuery<>("", stream, time, win, s, p, o, rstream);
+        SimpleRSPQLQuery<Binding> query = new SimpleRSPQLQuery<>(windowIRI, stream, time, win, s, p, o, rstream);
         windowMap.entrySet().forEach(e -> query.addNamedWindow(e.getKey(), e.getValue()));
         if (outputStreamType != null) {
             RSPQLExtractionHelper.setOutputStreamType(query, outputStreamType);

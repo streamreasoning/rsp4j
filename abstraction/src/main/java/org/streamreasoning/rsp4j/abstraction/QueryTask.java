@@ -62,7 +62,7 @@ public class QueryTask extends Task<Graph, Graph, Binding, Binding> {
                                 this.addS2R(entry.getValue().getName(), s2r, entry.getKey().iri());
                             });
             // R2R DECLARATION
-            this.addR2R(null, query.r2r()); // TODO restrict TVG
+            this.addR2R(query.getID(), query.r2r()); // TODO restrict TVG
             RelationToStreamOperator<Binding, Binding> r2s = getR2RFromQuery(query);
             if (r2s != null) {
                 this.addR2S(query.getOutputStream().getName(), r2s);

@@ -209,7 +209,7 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
 
     @Override
     public Collection<TimeVarying<Graph>> asTimeVaryingEs() {
-        return defs;
+        return tvgs.values();
     }
 
     @Override

@@ -175,6 +175,50 @@ public class CPTriplePatternTest {
         expected.add(b3);
         assertEquals(expected, dummyConsumer.getReceived());
     }
+    @Test
+    public void wrongWindowAggregationTest() {
+
+        //STREAM DECLARATION
+        RDFStream stream = new RDFStream("stream1");
+        BindingStream outStream = new BindingStream("out");
+
+
+        //WINDOW DECLARATION
+        Time instance = new TimeImpl(0);
+
+        StreamToRelationOp<Graph, Graph> build = new CSPARQLStreamToRelationOp<Graph, Graph>(RDFUtils.createIRI("w1"), 2000, 2000, instance, tick, report, report_grain, new GraphContentFactory(instance));
+
+        //R2R
+        ContinuousTriplePatternQuery q = new ContinuousTriplePatternQuery("q1", "stream1", "?green rdf:type <http://color#Green>");
+
+        RelationToRelationOperator<Graph, Binding> r2r = new TriplePatternR2R(q);
+
+
+
+
+        Task<Graph, Graph, Binding, Binding> t =
+                new Task.TaskBuilder()
+                        .addS2R("stream1", build, "w1")
+                        .addR2R("wrongWindow", r2r)
+                        .addR2S("out", new Rstream<Binding, Binding>())
+
+                        .build();
+        ContinuousProgram<Graph, Graph, Binding, Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
+                .in(stream)
+                .addTask(t)
+                .out(outStream)
+                .build();
+
+        DummyConsumer<Binding> dummyConsumer = new DummyConsumer<>();
+        outStream.addConsumer(dummyConsumer);
+
+        populateStream(stream, instance.getAppTime());
+
+
+        assertEquals(0, dummyConsumer.getSize());
+
+
+    }
 
 
     @Test
@@ -190,7 +234,7 @@ public class CPTriplePatternTest {
                                                                                      "SELECT * " +
                                                                                      "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT2S STEP PT2S] " +
                                                                                      "WHERE {" +
-                                                                                     "   ?green <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Green> ." +
+                                                                                     "  WINDOW <http://test/window> {?green <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Green> .}" +
                                                                                      "}");
 
 
@@ -223,6 +267,46 @@ public class CPTriplePatternTest {
         expected.add(b2);
 
         assertEquals(expected, dummyConsumer.getReceived());
+
+    }
+    @Test
+    public void wrongWindowQueryTest() {
+
+        Time instance = new TimeImpl(0);
+
+        RDFStream stream = new RDFStream("http://test/stream");
+
+
+        ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
+                "REGISTER RSTREAM <http://out/stream> AS " +
+                "SELECT * " +
+                "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT2S STEP PT2S] " +
+                "WHERE {" +
+                "  WINDOW <http://test/wrongwindow> {?green <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Green> .}" +
+                "}");
+
+
+        //SDS
+        Task<Graph, Graph, Binding, Binding> t =
+                new QueryTask.QueryTaskBuilder()
+                        .fromQuery(query)
+                        .build();
+        ContinuousProgram<Graph, Graph, Binding, Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
+                .in(stream)
+                .addTask(t)
+                .out(query.getOutputStream())
+                .build();
+
+        DummyConsumer<Binding> dummyConsumer = new DummyConsumer<>();
+
+        query.getOutputStream().addConsumer(dummyConsumer);
+
+
+        populateStream(stream, instance.getAppTime());
+
+
+        assertEquals(0, dummyConsumer.getSize());
+
 
     }
 
@@ -352,7 +436,7 @@ public class CPTriplePatternTest {
                                                                                      "SELECT (Count(?green) AS ?count) " +
                                                                                      "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT2S STEP PT2S] " +
                                                                                      "WHERE {" +
-                                                                                     "   ?green <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Green> ." +
+                                                                                     "   WINDOW <http://test/window> {?green <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Green> .}" +
                                                                                      "}");
 
 
