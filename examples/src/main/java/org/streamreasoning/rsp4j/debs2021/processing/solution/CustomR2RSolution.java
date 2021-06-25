@@ -20,6 +20,7 @@ import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.debs2021.utils.StreamGenerator;
 import org.streamreasoning.rsp4j.examples.operators.r2r.R2RUpwardExtension;
+import org.streamreasoning.rsp4j.examples.operators.r2r.UpwardExtension;
 import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
@@ -71,7 +72,11 @@ public class CustomR2RSolution {
     schema.put("http://test/Warm", Arrays.asList("http://test/Green", "http://test/Orange","http://test/Yellow","http://test/Red","http://test/White"));
     schema.put("http://test/Cool", Arrays.asList("http://test/Green", "http://test/Blue","http://test/Violet","http://test/Red","http://test/Black","http://test/Grey"));
 
-    RelationToRelationOperator<Graph,Graph> upwardExtensionR2R = new R2RUpwardExtension(schema);
+    UpwardExtension upwardExtension = new UpwardExtension(schema);
+    System.out.println(upwardExtension.getUpwardExtension("http://test/Yellow")); // [http://test/Warm]
+    System.out.println(upwardExtension.getUpwardExtension("http://test/Green"));  // [http://test/Cool, http://test/Warm]
+
+    RelationToRelationOperator<Graph,Graph> upwardExtensionR2R = new R2RUpwardExtension(upwardExtension);
     TP tp = new TP(s, p, o);
     R2RPipe<Graph,Binding> r2r = new R2RPipe<>(upwardExtensionR2R,tp);
     // REGISTER FUNCTION
