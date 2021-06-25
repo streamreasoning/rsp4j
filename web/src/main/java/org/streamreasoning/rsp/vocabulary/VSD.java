@@ -2,10 +2,8 @@ package org.streamreasoning.rsp.vocabulary;
 
 import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.Triple;
-import org.streamreasoning.rsp.RDFManager;
-import org.streamreasoning.rsp4j.api.RDFUtils;
 
-public class VSD {
+public class VSD extends Vocabulary {
 
     private static String uri = "http://w3id.org/rsp/vocals-sd#";
 
@@ -61,12 +59,12 @@ public class VSD {
     public final static IRI STARTED_AT = resource("startedAt");
 
     private static IRI resource(String rdfStream) {
-        return RDFManager.resource(uri, rdfStream);
+        return Vocabulary.resource(uri, rdfStream);
     }
 
 
     public static Triple publisher(IRI s) {
-        return RDFUtils.getInstance().createTriple(s, RDF.pTYPE, PUBLISHING_SERVICE);
+        return triple(s, RDF.pTYPE, PUBLISHING_SERVICE);
     }
 
 
