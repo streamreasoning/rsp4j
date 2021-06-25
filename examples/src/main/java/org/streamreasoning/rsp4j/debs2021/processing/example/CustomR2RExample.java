@@ -71,9 +71,10 @@ public class CustomR2RExample {
     VarOrTerm o = new VarImpl("type");
     TP tp = new TP(s, p, o);
 
-
+    // Define a filter that filters out all the greens
     SimpleR2RFilter<Binding> filter = new SimpleR2RFilter<>(binding -> binding.value(o).equals(RDFUtils.createIRI("http://test/Green")));
 
+    // Create a pipe of two r2r operators, TP and filter
     R2RPipe<Graph,Binding> r2r = new R2RPipe<>(tp,filter);
 
     Task<Graph, Graph, Binding, Binding> t =

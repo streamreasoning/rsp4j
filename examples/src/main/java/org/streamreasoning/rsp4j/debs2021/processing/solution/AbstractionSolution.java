@@ -58,12 +58,16 @@ public class AbstractionSolution {
         VarOrTerm o = new TermImpl("http://test/Green");
         TP r2r = new TP(s, p, o);
 
+        // REGISTER FUNCTION
+        AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
+
         // Create the RSP4J Task and Continuous Program
         Task<Graph, Graph, Binding, Binding> t =
                 new Task.TaskBuilder()
                         .addS2R("stream1", build, "w1")
                         .addR2R("w1", r2r)
                         .addR2S("out", new Rstream<Binding, Binding>())
+                        .aggregate("w1","COUNT","green","count")
                         .build();
         ContinuousProgram<Graph, Graph, Binding, Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
                 .in(inputStream)

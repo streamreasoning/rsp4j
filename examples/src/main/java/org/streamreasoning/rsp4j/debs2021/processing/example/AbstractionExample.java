@@ -65,12 +65,16 @@ public class AbstractionExample {
     VarOrTerm o = new VarImpl("o");
     TP r2r = new TP(s, p, o);
 
-    // Create the RSP4J Task and Continuous Program
+    // REGISTER FUNCTION
+    AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
+
+    // Create the RSP4J Task and Continuous Program that counts the number of s variables
     Task<Graph, Graph, Binding, Binding> t =
         new Task.TaskBuilder()
             .addS2R("stream1", build, "w1")
             .addR2R("w1", r2r)
             .addR2S("out", new Rstream<Binding, Binding>())
+            .aggregate("w1","COUNT","s","count")
             .build();
     ContinuousProgram<Graph, Graph, Binding, Binding> cp =
         new ContinuousProgram.ContinuousProgramBuilder()

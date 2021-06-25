@@ -3,6 +3,8 @@ package org.streamreasoning.rsp4j.debs2021.processing.assignment;
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.abstraction.ContinuousProgram;
 import org.streamreasoning.rsp4j.abstraction.Task;
+import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegistry;
+import org.streamreasoning.rsp4j.abstraction.functions.CountFunction;
 import org.streamreasoning.rsp4j.abstraction.table.BindingStream;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
@@ -61,6 +63,9 @@ public class AbstractionAssignment {
     // TODO define a R2R operator that extracts all green colors.
     RelationToRelationOperator<Graph, Binding> r2r = null; // <- Add your R2R operator here
     // Hint variables can be defined using VarImpl while terms can be defined using TermImpl
+
+    // REGISTER FUNCTION
+    AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
 
     // TODO add the created R2R to the RSP4J Task and Continuous Program
     Task<Graph, Graph, Binding, Binding> t =

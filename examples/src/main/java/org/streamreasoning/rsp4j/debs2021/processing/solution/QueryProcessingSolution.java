@@ -25,7 +25,7 @@ public class QueryProcessingSolution {
         TPQueryFactory.parse(
             ""
                 + "REGISTER RSTREAM <http://out/stream> AS "
-                + "SELECT * "
+                + "SELECT (COUNT(?green) AS ?count) "
                 + "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT2S STEP PT2S] "
                 + "WHERE {"
                 + "   WINDOW <http://test/window> { ?green <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://test/Green> .}"

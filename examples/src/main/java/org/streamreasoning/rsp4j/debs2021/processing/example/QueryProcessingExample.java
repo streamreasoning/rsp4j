@@ -20,12 +20,12 @@ public class QueryProcessingExample {
     StreamGenerator generator = new StreamGenerator();
     DataStream<Graph> inputStream = generator.getStream("http://test/stream");
 
-    // Define the query consisting of variables only (?s ?o ?p) with a window of 1s range and 1s step
+    // Define the query consisting of variables only (?s ?o ?p) with a window of 1s range and 1s step and count the number of ?s
     ContinuousQuery<Graph, Graph, Binding, Binding> query =
         TPQueryFactory.parse(
             ""
                 + "REGISTER RSTREAM <http://out/stream> AS "
-                + "SELECT * "
+                + "SELECT (COUNT(?s) AS ?count) "
                 + "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT1S STEP PT1S] "
                 + "WHERE {"
                 + "   WINDOW <http://test/window> { ?s ?p ?o .}"

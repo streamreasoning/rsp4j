@@ -20,7 +20,7 @@ public class QueryProcessingAssignment {
     StreamGenerator generator = new StreamGenerator();
     DataStream<Graph> inputStream = generator.getStream("http://test/stream");
 
-    // TODO Define a query that extracts all green colors with a window of 2s range and 2s step .
+    // TODO Define a query that extracts all green colors with a window of 2s range and 2s step and count the number of greens.
     ContinuousQuery<Graph, Graph, Binding, Binding> query =
         TPQueryFactory.parse(
             "" //<- Add your query here
