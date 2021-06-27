@@ -21,7 +21,7 @@ public class PublicationExample {
 
         SLD.WebStream<String> ws = wsb
                 .stream("colours", true)
-                .name("Colour Stream")
+                .title("Colour Stream")
                 .description("stream of colours")
                 .publisher(publisher)
                 .distribution(d.access("colours", true) // defines if the distribution uri will be a fragment uri (need a proxy otherwise). (Can be used to change port)

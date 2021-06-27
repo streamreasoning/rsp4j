@@ -50,7 +50,7 @@ public class WebStreamBuilder {
         return this;
     }
 
-    public WebStreamBuilder name(String name) {
+    public WebStreamBuilder title(String name) {
         this.name = name;
         graph.add(DCAT.name(uri, name));
         return this;

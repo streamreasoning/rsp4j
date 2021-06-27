@@ -21,7 +21,7 @@ public class PublicationSolution {
 
         SLD.WebStream<String> ws = wsb
                 .stream("Riccardos", true)
-                .name("Riccardo Stream") //TODO name the stream
+                .title("Riccardo Stream") //TODO name the stream
                 .description("stream of riccardos") //Add a small description
                 .publisher(publisher)
                 .distribution(d.access("riccardo", true) // defines if the distribution uri will be a fragment uri (need a proxy otherwise). (Can be used to change port)
