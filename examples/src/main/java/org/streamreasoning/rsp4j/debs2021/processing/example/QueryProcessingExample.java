@@ -26,7 +26,7 @@ public class QueryProcessingExample {
             ""
                 + "REGISTER RSTREAM <http://out/stream> AS "
                 + "SELECT (COUNT(?s) AS ?count) "
-                + "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT1S STEP PT1S] "
+                + "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT1S] "
                 + "WHERE {"
                 + "   WINDOW <http://test/window> { ?s ?p ?o .}"
                 + "}");

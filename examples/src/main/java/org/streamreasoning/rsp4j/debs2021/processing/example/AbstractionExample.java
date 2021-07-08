@@ -48,7 +48,7 @@ public class AbstractionExample {
 
     // Window (S2R) declaration incl. window name, window range (1s), window step (1s), start time
     // (instance) etc.
-    StreamToRelationOp<Graph, Graph> build =
+    StreamToRelationOp<Graph, Graph> s2r =
         new CSPARQLStreamToRelationOp<>(
             RDFUtils.createIRI("w1"),
             1000,
@@ -71,7 +71,7 @@ public class AbstractionExample {
     // Create the RSP4J Task and Continuous Program that counts the number of s variables
     Task<Graph, Graph, Binding, Binding> t =
         new Task.TaskBuilder()
-            .addS2R("stream1", build, "w1")
+            .addS2R("stream1", s2r, "w1")
             .addR2R("w1", r2r)
             .addR2S("out", new Rstream<Binding, Binding>())
             .aggregate("w1","COUNT","s","count")

@@ -13,6 +13,8 @@ import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
+import org.streamreasoning.rsp4j.api.secret.report.strategies.NonEmptyContent;
+import org.streamreasoning.rsp4j.api.secret.report.strategies.OnContentChange;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
@@ -28,61 +30,68 @@ import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStre
  */
 public class AbstractionSolution {
 
-    public static void main(String[] args) throws InterruptedException {
-        // Setup the stream generator
-        StreamGenerator generator = new StreamGenerator();
-        DataStream<Graph> inputStream = generator.getStream("http://test/stream");
+  public static void main(String[] args) throws InterruptedException {
+    // Setup the stream generator
+    StreamGenerator generator = new StreamGenerator();
+    DataStream<Graph> inputStream = generator.getStream("http://test/stream");
 
+    // Define output stream
+    BindingStream outStream = new BindingStream("out");
 
-        // Define output stream
-        BindingStream outStream = new BindingStream("out");
+    // Engine properties
+    Report report = new ReportImpl();
+    report.add(new OnWindowClose());
+    //      report.add(new NonEmptyContent());
+    //        report.add(new OnContentChange());
+    //        report.add(new Periodic());
 
-        // Engine properties
-        Report report = new ReportImpl();
-        report.add(new OnWindowClose());
-        //        report.add(new NonEmptyContent());
-        //        report.add(new OnContentChange());
-        //        report.add(new Periodic());
+    Tick tick = Tick.TIME_DRIVEN;
+    ReportGrain report_grain = ReportGrain.SINGLE;
+    Time instance = new TimeImpl(0);
 
-        Tick tick = Tick.TIME_DRIVEN;
-        ReportGrain report_grain = ReportGrain.SINGLE;
-        Time instance = new TimeImpl(0);
+    // Window (S2R) declaration
+    StreamToRelationOp<Graph, Graph> build =
+        new CSPARQLStreamToRelationOp<>(
+            RDFUtils.createIRI("w1"),
+            2000,
+            2000,
+            instance,
+            tick,
+            report,
+            report_grain,
+            new GraphContentFactory(instance));
 
-        // Window (S2R) declaration
-        StreamToRelationOp<Graph, Graph> build = new CSPARQLStreamToRelationOp<>(RDFUtils.createIRI("w1"), 2000, 2000, instance, tick, report, report_grain, new GraphContentFactory(instance));
+    // TODO define a R2R operator that extracts all green colors.
+    VarOrTerm s = new VarImpl("green");
+    VarOrTerm p = new TermImpl("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+    VarOrTerm o = new TermImpl("http://test/Green");
+    TP r2r = new TP(s, p, o);
 
+    // REGISTER FUNCTION
+    AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
 
-        // TODO define a R2R operator that extracts all green colors.
-        VarOrTerm s = new VarImpl("green");
-        VarOrTerm p = new TermImpl("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-        VarOrTerm o = new TermImpl("http://test/Green");
-        TP r2r = new TP(s, p, o);
+    // Create the RSP4J Task and Continuous Program
+    Task<Graph, Graph, Binding, Binding> t =
+        new Task.TaskBuilder()
+            .addS2R("stream1", build, "w1")
+            .addR2R("w1", r2r)
+            .addR2S("out", new Rstream<Binding, Binding>())
+            .aggregate("w1", "COUNT", "green", "count")
+            .build();
+    ContinuousProgram<Graph, Graph, Binding, Binding> cp =
+        new ContinuousProgram.ContinuousProgramBuilder()
+            .in(inputStream)
+            .addTask(t)
+            .out(outStream)
+            .build();
+    // Add the Consumer to the stream
+    outStream.addConsumer((el, ts) -> System.out.println(el + " @ " + ts));
 
-        // REGISTER FUNCTION
-        AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
+    // Start streaming
+    generator.startStreaming();
 
-        // Create the RSP4J Task and Continuous Program
-        Task<Graph, Graph, Binding, Binding> t =
-                new Task.TaskBuilder()
-                        .addS2R("stream1", build, "w1")
-                        .addR2R("w1", r2r)
-                        .addR2S("out", new Rstream<Binding, Binding>())
-                        .aggregate("w1","COUNT","green","count")
-                        .build();
-        ContinuousProgram<Graph, Graph, Binding, Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
-                .in(inputStream)
-                .addTask(t)
-                .out(outStream)
-                .build();
-        // Add the Consumer to the stream
-        outStream.addConsumer((el, ts) -> System.out.println(el + " @ " + ts));
-
-        // Start streaming
-        generator.startStreaming();
-
-        // Stop streaming after 20s
-        Thread.sleep(20_000);
-        generator.stopStreaming();
-    }
-
+    // Stop streaming after 20s
+    Thread.sleep(20_000);
+    generator.stopStreaming();
+  }
 }

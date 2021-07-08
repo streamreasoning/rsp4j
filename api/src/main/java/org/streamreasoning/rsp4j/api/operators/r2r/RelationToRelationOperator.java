@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 
 public interface RelationToRelationOperator<W, R> {
 
-    //TODO this should not be time-aware
     Stream<R> eval(Stream<W> sds);
 
     TimeVarying<Collection<R>> apply(SDS<W> sds);
