@@ -3,14 +3,11 @@ package org.streamreasoning.rsp4j.api.operators.s2r.execution.instance;
 
 public class WindowImpl implements Window {
 
-    protected long c, o;
-    protected boolean closed;
-
+    private long c, o;
 
     public WindowImpl(long o, long c) {
         this.o = o;
         this.c = c;
-        this.closed = true;
     }
 
     public long getC() {
@@ -19,11 +16,6 @@ public class WindowImpl implements Window {
 
     public long getO() {
         return o;
-    }
-
-    @Override
-    public boolean isClosed() {
-        return closed;
     }
 
     @Override
