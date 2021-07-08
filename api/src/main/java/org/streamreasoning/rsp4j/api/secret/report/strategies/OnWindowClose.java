@@ -11,7 +11,7 @@ public class OnWindowClose implements ReportingStrategy {
 
     @Override
     public boolean match(Window w, Content c, long tapp, long tsys) {
-        return w.getC() < tapp;
+        return w.getC() < tapp && w.isClosed();
     }
 
 }
