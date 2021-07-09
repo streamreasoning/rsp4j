@@ -125,17 +125,24 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
     }
 
     private void extractSinglePropertyObjectPair(RSPQLParser.PropertyListPathNotEmptyContext po) {
-        RSPQLParser.PropertyListPathContext pCandidate = po.propertyListPath(0);
-        if (pCandidate != null) {
+        for (RSPQLParser.PropertyListPathContext pCandidate : po.propertyListPath()) {
+          if (pCandidate != null) {
             extractProperty(pCandidate);
-            RSPQLParser.ObjectPathContext object = pCandidate.objectListPath().objectPath(0);
-            if (object != null) {
-                extractObject(object);
+            for(RSPQLParser.ObjectPathContext object : pCandidate.objectListPath().objectPath()){
+                if (object != null) {
+                  extractObject(object);
+                }
             }
+          }
         }
     }
 
     private void extractProperty(RSPQLParser.PropertyListPathContext propCandidate) {
+        if(triples.peek().p != null){
+            VarOrTerm s = triples.peek().s;
+            triples.push(new TripleHolder());
+            triples.peek().s=s;
+        }
         if (propCandidate.verbPath() != null) {
             triples.peek().p = createTerm(propCandidate.verbPath().getText());
         } else {
@@ -156,6 +163,13 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
     }
 
     private void extractObject(RSPQLParser.ObjectPathContext object) {
+        if(triples.peek().o != null){
+            VarOrTerm s = triples.peek().s;
+            VarOrTerm p = triples.peek().p;
+            triples.push(new TripleHolder());
+            triples.peek().s=s;
+            triples.peek().p=p;
+        }
         if (object.graphNodePath().varOrTerm().var() != null) {
             triples.peek().o = createVar(object.graphNodePath().varOrTerm().var().getText());
         } else {
