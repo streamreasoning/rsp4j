@@ -17,6 +17,7 @@ public interface Binding extends Differentiable<Binding, Binding>, Cloneable {
         Set<Var> res = this.variables();
         Binding r = new BindingImpl();
         res.forEach(v -> r.add(v, this.value(v)));
+        b.variables().forEach(v -> r.add(v, b.value(v)));
         return r;
     }
 

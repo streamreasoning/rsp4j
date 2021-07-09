@@ -56,6 +56,9 @@ public class RDFUtils {
     public static RDFTerm createLiteral(String lexicalForm, String s) {
         return getInstance().createLiteral(lexicalForm, s);
     }
+    public static RDFTerm createLiteral(String lexicalForm) {
+        return getInstance().createLiteral(lexicalForm);
+    }
 
     public static String trimTags(String s) {
         return s.replaceAll("^<(.*)>$", "$1");
@@ -81,4 +84,6 @@ public class RDFUtils {
     public static Triple createTriple(BlankNodeOrIRI subject, IRI predicate, RDFTerm object) {
         return getInstance().createTriple(subject, predicate, object);
     }
+
+
 }
