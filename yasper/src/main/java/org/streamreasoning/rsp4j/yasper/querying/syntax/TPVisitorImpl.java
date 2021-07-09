@@ -21,19 +21,19 @@ import java.util.*;
 
 public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
 
-    private VarOrTerm s;
-    private VarOrTerm p;
-    private VarOrTerm o;
+
     private String outputStreamIRI;
     private Map<String, WindowNode> windowMap;
     private String outputStreamType;
     private Time time;
     private List<Aggregation> aggregations;
     private String windowIRI = null;
+    Stack<TripleHolder> triples;
     public TPVisitorImpl() {
         windowMap = new HashMap<>();
         aggregations = new ArrayList<>();
         this.time = new TimeImpl(0);
+        triples = new Stack<TripleHolder>();
     }
 
     @Override
@@ -45,9 +45,29 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
     }
 
     @Override
+    public CQ visitGroupGraphPattern(RSPQLParser.GroupGraphPatternContext ctx) {
+        return super.visitGroupGraphPattern(ctx);
+    }
+
+    @Override
+    public CQ visitGroupGraphPatternSub(RSPQLParser.GroupGraphPatternSubContext ctx) {
+        return super.visitGroupGraphPatternSub(ctx);
+    }
+
+    @Override
     public CQ visitTriplesBlock(RSPQLParser.TriplesBlockContext ctx) {
 
         return super.visitTriplesBlock(ctx);
+    }
+
+    @Override
+    public CQ visitGraphPatternNotTriples(RSPQLParser.GraphPatternNotTriplesContext ctx) {
+        return super.visitGraphPatternNotTriples(ctx);
+    }
+
+    @Override
+    public CQ visitGraphGraphPattern(RSPQLParser.GraphGraphPatternContext ctx) {
+        return super.visitGraphGraphPattern(ctx);
     }
 
     @Override
@@ -87,6 +107,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
 
     @Override
     public CQ visitTriplesSameSubjectPath(RSPQLParser.TriplesSameSubjectPathContext ctx) {
+        triples.push(new TripleHolder());
         extractSubject(ctx.s);
         extractSinglePropertyObjectPair(ctx.ps);
 
@@ -97,9 +118,9 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
         RSPQLParser.VarContext var = varOrTerm.var();
         RSPQLParser.GraphTermContext term = varOrTerm.graphTerm();
         if (var != null) {
-            s = createVar(var.getText());
+            triples.peek().s = createVar(var.getText());
         } else {
-            s = createTerm(term.getText());
+            triples.peek().s = createTerm(term.getText());
         }
     }
 
@@ -116,9 +137,9 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
 
     private void extractProperty(RSPQLParser.PropertyListPathContext propCandidate) {
         if (propCandidate.verbPath() != null) {
-            p = createTerm(propCandidate.verbPath().getText());
+            triples.peek().p = createTerm(propCandidate.verbPath().getText());
         } else {
-            p = createVar(propCandidate.verbSimple().getText());
+            triples.peek().p = createVar(propCandidate.verbSimple().getText());
         }
     }
 
@@ -136,9 +157,9 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
 
     private void extractObject(RSPQLParser.ObjectPathContext object) {
         if (object.graphNodePath().varOrTerm().var() != null) {
-            o = createVar(object.graphNodePath().varOrTerm().var().getText());
+            triples.peek().o = createVar(object.graphNodePath().varOrTerm().var().getText());
         } else {
-            o = createTerm(object.graphNodePath().varOrTerm().graphTerm().getText());
+            triples.peek().o = createTerm(object.graphNodePath().varOrTerm().graphTerm().getText());
         }
     }
 
@@ -155,7 +176,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
         }
 
         Rstream<Binding, Binding> rstream = new Rstream<>();
-        SimpleRSPQLQuery<Binding> query = new SimpleRSPQLQuery<>(windowIRI, stream, time, win, s, p, o, rstream);
+        SimpleRSPQLQuery<Binding> query = new SimpleRSPQLQuery<>(windowIRI, stream, time, win, new ArrayList(triples), rstream);
         windowMap.entrySet().forEach(e -> query.addNamedWindow(e.getKey(), e.getValue()));
         if (outputStreamType != null) {
             RSPQLExtractionHelper.setOutputStreamType(query, outputStreamType);

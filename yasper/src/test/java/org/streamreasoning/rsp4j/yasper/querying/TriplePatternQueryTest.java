@@ -1,4 +1,4 @@
-package org.streamreasoning.rsp4j.yasper;
+package org.streamreasoning.rsp4j.yasper.querying;
 
 import org.apache.commons.rdf.api.Graph;
 import org.junit.Test;

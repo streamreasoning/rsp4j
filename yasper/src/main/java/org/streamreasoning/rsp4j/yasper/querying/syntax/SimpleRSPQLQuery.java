@@ -12,6 +12,7 @@ import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.io.DataStreamImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.BGP;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TP;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
@@ -27,7 +28,7 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
     private String id;
 
     private DataStream<O> outputStream;
-    private VarOrTerm s, p, o;
+    private List<TripleHolder> triples;
 
     private Map<WindowNode, DataStream<Graph>> windowMap = new HashMap<>();
     private List<String> graphURIs = new ArrayList<>();
@@ -40,9 +41,9 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
     public SimpleRSPQLQuery(String id, DataStream<Graph> stream, Time time, WindowNode win, VarOrTerm s, VarOrTerm p, VarOrTerm o, RelationToStreamOperator<Binding, O> r2s) {
         this.id = id;
         this.outputStream = new DataStreamImpl<O>(id);
-        this.s = s;
-        this.p = p;
-        this.o = o;
+        this.triples = new ArrayList<>();
+        TripleHolder triple = new TripleHolder(s,p,o);
+        triples.add(triple);
         if (win != null && stream != null) {
             windowMap.put(win, stream);
         }
@@ -50,7 +51,18 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
         this.time = time;
 
     }
+    public SimpleRSPQLQuery(String id, DataStream<Graph> stream, Time time, WindowNode win, List<TripleHolder> triplePatterns, RelationToStreamOperator<Binding, O> r2s) {
+        this.id = id;
+        this.outputStream = new DataStreamImpl<O>(id);
+        this.triples = triplePatterns;
 
+        if (win != null && stream != null) {
+            windowMap.put(win, stream);
+        }
+        this.r2s = r2s;
+        this.time = time;
+
+    }
     public SimpleRSPQLQuery(String id) {
         this.id = id;
     }
@@ -140,9 +152,22 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
 
     @Override
     public RelationToRelationOperator<Graph, Binding> r2r() {
-        return new TP(s, p, o);
-    }
+        if(triples.size()==1){
+            TripleHolder triple = triples.get(0);
+            return new TP(triple.s, triple.p, triple.o);
+        }else{
+            return createBGP();
+        }
 
+    }
+    private BGP createBGP(){
+        TripleHolder triple = triples.get(0);
+        BGP bgp = BGP.createFrom(new TP(triple.s,triple.p,triple.o));
+        for(int i = 1; i < triples.size(); i++){
+            bgp.join(new TP(triples.get(i).s,triples.get(i).p,triples.get(i).o));
+        }
+        return bgp.create();
+    }
     @Override
     public StreamToRelationOp<Graph, Graph>[] s2r() {
         return new StreamToRelationOp[0];

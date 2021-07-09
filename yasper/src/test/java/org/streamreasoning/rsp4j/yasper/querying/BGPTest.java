@@ -1,4 +1,4 @@
-package org.streamreasoning.rsp4j.abstraction.utils;
+package org.streamreasoning.rsp4j.yasper.querying;
 
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
@@ -17,6 +17,29 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class BGPTest {
+    @Test
+    public void testSingleTP(){
+        VarOrTerm s1 = new VarImpl("color");
+        VarOrTerm p1 = new TermImpl("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+        VarOrTerm o1 = new VarImpl("type");
+        TP tp1 = new TP(s1,p1,o1);
+
+        BGP bgp = BGP.createFrom(tp1)
+                .create();
+
+        //create a graph
+        Stream<Graph> g = Stream.of(createGraph());
+
+        Stream<Binding> bindings = bgp.eval(g);
+
+        Binding expected = new BindingImpl();
+        expected.add(new VarImpl("color"), RDFUtils.createIRI("S1"));
+
+        expected.add(new VarImpl("type"), RDFUtils.createIRI("http://color#Green"));
+
+        assertEquals(createSet(expected),bindings.collect(Collectors.toSet()));
+
+    }
 
     @Test
     public void testSingleJoin(){

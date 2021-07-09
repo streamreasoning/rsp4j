@@ -1,13 +1,10 @@
-package org.streamreasoning.rsp4j.abstraction.utils;
+package org.streamreasoning.rsp4j.yasper.querying.operators.r2r;
 
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TP;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Var;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -81,5 +78,18 @@ public class BGP implements RelationToRelationOperator<Graph, Binding> {
 
     public BGP create() {
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BGP bgp = (BGP) o;
+        return Objects.equals(tps, bgp.tps);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tps);
     }
 }

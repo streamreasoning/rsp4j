@@ -15,6 +15,10 @@ import java.util.Map;
 
 public class CQ<O> implements RSPQL<O> {
 
+    public CQ(){
+
+    }
+
     @Override
     public void addNamedWindow(String streamUri, WindowNode wo) {
 
