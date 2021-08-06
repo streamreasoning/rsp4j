@@ -44,4 +44,9 @@ public class TermImpl implements VarOrTerm {
         TermImpl compTerm = (TermImpl) o;
         return Objects.equals(this.term, compTerm.term);
     }
+
+    @Override
+    public String toString() {
+        return term.toString();
+    }
 }

@@ -80,8 +80,8 @@ public class CPTest {
         RelationToRelationOperator<Graph, Triple> r2r = new DummyR2R(sds, q);
 
 
-        Task<Graph, Graph, Triple, Triple> t =
-                new Task.TaskBuilder()
+        TaskAbstractionImpl<Graph, Graph, Triple, Triple> t =
+                new TaskAbstractionImpl.TaskBuilder()
                         .addS2R("stream1", s2r, "w1")
                         .addR2R("w1", r2r)
                         .addR2S("out", new Rstream<Triple, Triple>())

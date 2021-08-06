@@ -2,6 +2,9 @@ package org.streamreasoning.rsp4j.abstraction;
 
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.IRI;
+import org.streamreasoning.rsp4j.abstraction.containers.AggregationContainer;
+import org.streamreasoning.rsp4j.abstraction.containers.R2SContainer;
+import org.streamreasoning.rsp4j.abstraction.containers.S2RContainer;
 import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunction;
 import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegistry;
 import org.streamreasoning.rsp4j.api.RDFUtils;
@@ -43,8 +46,8 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
 
   private void linkStreamsToOperators() {
     for (Task<I, W, R, O> task : tasks) {
-      Set<Task.S2RContainer<I, W>> s2rs = task.<I, W>getS2Rs();
-      for (Task.S2RContainer<I, W> s2rContainer : s2rs) {
+      Set<S2RContainer<I, W>> s2rs = task.getS2Rs();
+      for (S2RContainer<I, W> s2rContainer : s2rs) {
         String streamURI = s2rContainer.getSourceURI();
         String tvgName = s2rContainer.getTvgName();
         IRI iri = RDFUtils.createIRI(tvgName);
@@ -67,8 +70,8 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
   public void update(Observable o, Object arg) {
     Long now = (Long) arg;
     for (Task<I, W, R, O> task : tasks) {
-      Set<Task.R2SContainer<R, O>> r2ss = task.getR2Ss();
-      for (Task.R2SContainer<R, O> r2s : r2ss) {
+      Set<R2SContainer<R, O>> r2ss = task.getR2Ss();
+      for (R2SContainer<R, O> r2s : r2ss) {
         if (task.getAggregations().isEmpty()) {
           eval(now)
               .forEach(o1 -> outstream().put((O) r2s.getR2sOperator().transform(o1, now), now));
@@ -80,9 +83,9 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
   }
 
   private void handleAggregations(
-      Task<I, W, R, O> task, Task.R2SContainer<R, O> r2s, long timestamp) {
+          Task<I, W, R, O> task, R2SContainer<R, O> r2s, long timestamp) {
     Set<R> collection = eval(timestamp).collect(Collectors.toSet());
-    for (Task.AggregationContainer<R> aggregationContainer : task.getAggregations()) {
+    for (AggregationContainer<R> aggregationContainer : task.getAggregations()) {
       Optional<R> aggregation = evaluateAggregation(collection, aggregationContainer);
       aggregation.ifPresent(
           r -> outputStream.put(r2s.getR2sOperator().transform(r, timestamp), timestamp));
@@ -90,7 +93,7 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
   }
 
   private Optional<R> evaluateAggregation(
-      Collection<R> collection, Task.AggregationContainer<R> aggregationContainer) {
+      Collection<R> collection, AggregationContainer<R> aggregationContainer) {
     AggregationFunctionRegistry functionRegistry = AggregationFunctionRegistry.getInstance();
     Optional<AggregationFunction<R>> aggregationFunction =
         functionRegistry.getFunction(aggregationContainer.getFunctionName());
@@ -169,7 +172,7 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
   }
 
   public static class ContinuousProgramBuilder<I, W, R, O> {
-    private List<Task<I, W, R, O>> tasks;
+    private List<TaskAbstractionImpl<I, W, R, O>> tasks;
     private DataStream<I> inputStream;
     private DataStream<O> outputStream;
     private SDS<I> sds;
@@ -188,7 +191,7 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
       return this;
     }
 
-    public ContinuousProgramBuilder<I, W, R, O> addTask(Task<I, W, R, O> task) {
+    public ContinuousProgramBuilder<I, W, R, O> addTask(TaskAbstractionImpl<I, W, R, O> task) {
       tasks.add(task);
       return this;
     }

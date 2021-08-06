@@ -88,8 +88,8 @@ public class CPTriplePatternTest {
         // REGISTER FUNCTION
         AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
 
-        Task<Graph, Graph, Binding, Binding> t =
-                new Task.TaskBuilder()
+        TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
+                new TaskAbstractionImpl.TaskBuilder()
                         .addS2R("stream1", build, "w1")
                         .addR2R("w1", r2r)
                         .addR2S("out", new Rstream<Binding, Binding>())
@@ -141,8 +141,8 @@ public class CPTriplePatternTest {
         // REGISTER FUNCTION
         AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
 
-        Task<Graph, Graph, Binding, Binding> t =
-                new Task.TaskBuilder()
+        TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
+                new TaskAbstractionImpl.TaskBuilder()
                         .addS2R("stream1", build, "w1")
                         .addR2R("w1", r2r)
                         .addR2S("out", new Rstream<Binding, Binding>())
@@ -196,8 +196,8 @@ public class CPTriplePatternTest {
 
 
 
-        Task<Graph, Graph, Binding, Binding> t =
-                new Task.TaskBuilder()
+        TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
+                new TaskAbstractionImpl.TaskBuilder()
                         .addS2R("stream1", build, "w1")
                         .addR2R("wrongWindow", r2r)
                         .addR2S("out", new Rstream<Binding, Binding>())
@@ -239,8 +239,8 @@ public class CPTriplePatternTest {
 
 
         //SDS
-        Task<Graph, Graph, Binding, Binding> t =
-                new QueryTask.QueryTaskBuilder()
+        TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
+                new QueryTaskAbstractionImpl.QueryTaskBuilder()
                         .fromQuery(query)
                         .build();
         ContinuousProgram<Graph, Graph, Binding, Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
@@ -287,8 +287,8 @@ public class CPTriplePatternTest {
 
 
         //SDS
-        Task<Graph, Graph, Binding, Binding> t =
-                new QueryTask.QueryTaskBuilder()
+        TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
+                new QueryTaskAbstractionImpl.QueryTaskBuilder()
                         .fromQuery(query)
                         .build();
         ContinuousProgram<Graph, Graph, Binding, Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
@@ -334,8 +334,8 @@ public class CPTriplePatternTest {
         sds.add(tvg);
 
 
-        Task<Graph, Graph, Binding, Binding> t =
-                new QueryTask.QueryTaskBuilder()
+        TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
+                new QueryTaskAbstractionImpl.QueryTaskBuilder()
                         .fromQuery(query)
                         .build();
         ContinuousProgram<Graph, Graph, Binding, Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
@@ -391,8 +391,8 @@ public class CPTriplePatternTest {
         sds.add(tvg);
 
 
-        Task<Graph, Graph, Binding, Binding> t =
-                new QueryTask.QueryTaskBuilder()
+        TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
+                new QueryTaskAbstractionImpl.QueryTaskBuilder()
                         .fromQuery(query)
                         .addR2S("", Rstream.get())
                         .build();
@@ -441,8 +441,8 @@ public class CPTriplePatternTest {
 
 
         //SDS
-        Task<Graph, Graph, Binding, Binding> t =
-                new QueryTask.QueryTaskBuilder()
+        TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
+                new QueryTaskAbstractionImpl.QueryTaskBuilder()
                         .fromQuery(query)
                         .build();
         ContinuousProgram<Graph, Graph, Binding, Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()

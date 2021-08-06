@@ -21,9 +21,9 @@ import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
 
-public class QueryTask extends Task<Graph, Graph, Binding, Binding> {
+public class QueryTaskAbstractionImpl extends TaskAbstractionImpl<Graph, Graph, Binding, Binding> {
 
-    public QueryTask(TaskBuilder<Graph, Graph, Binding, Binding> builder) {
+    public QueryTaskAbstractionImpl(TaskBuilder<Graph, Graph, Binding, Binding> builder) {
         super(builder);
     }
 
