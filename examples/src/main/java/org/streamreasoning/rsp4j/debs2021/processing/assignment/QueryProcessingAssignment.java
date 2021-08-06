@@ -2,8 +2,8 @@ package org.streamreasoning.rsp4j.debs2021.processing.assignment;
 
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.abstraction.ContinuousProgram;
-import org.streamreasoning.rsp4j.abstraction.QueryTask;
-import org.streamreasoning.rsp4j.abstraction.Task;
+import org.streamreasoning.rsp4j.abstraction.QueryTaskAbstractionImpl;
+import org.streamreasoning.rsp4j.abstraction.TaskAbstractionImpl;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.debs2021.utils.StreamGenerator;
@@ -27,8 +27,8 @@ public class QueryProcessingAssignment {
                 );
 
     // Create the RSP4J Task and Continuous Program
-    Task<Graph, Graph, Binding, Binding> t =
-        new QueryTask.QueryTaskBuilder().fromQuery(query).build();
+    TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
+        new QueryTaskAbstractionImpl.QueryTaskBuilder().fromQuery(query).build();
     ContinuousProgram<Graph, Graph, Binding, Binding> cp =
         new ContinuousProgram.ContinuousProgramBuilder()
             .in(inputStream)

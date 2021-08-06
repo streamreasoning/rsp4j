@@ -2,19 +2,16 @@ package org.streamreasoning.rsp4j.debs2021.processing.solution;
 
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.abstraction.ContinuousProgram;
-import org.streamreasoning.rsp4j.abstraction.Task;
+import org.streamreasoning.rsp4j.abstraction.TaskAbstractionImpl;
 import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegistry;
 import org.streamreasoning.rsp4j.abstraction.functions.CountFunction;
 import org.streamreasoning.rsp4j.abstraction.table.BindingStream;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
-import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
-import org.streamreasoning.rsp4j.api.secret.report.strategies.NonEmptyContent;
-import org.streamreasoning.rsp4j.api.secret.report.strategies.OnContentChange;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
@@ -71,8 +68,8 @@ public class AbstractionSolution {
     AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
 
     // Create the RSP4J Task and Continuous Program
-    Task<Graph, Graph, Binding, Binding> t =
-        new Task.TaskBuilder()
+    TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
+        new TaskAbstractionImpl.TaskBuilder()
             .addS2R("stream1", build, "w1")
             .addR2R("w1", r2r)
             .addR2S("out", new Rstream<Binding, Binding>())

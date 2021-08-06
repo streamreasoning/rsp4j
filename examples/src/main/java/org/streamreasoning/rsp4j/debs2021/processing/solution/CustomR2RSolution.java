@@ -2,7 +2,7 @@ package org.streamreasoning.rsp4j.debs2021.processing.solution;
 
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.abstraction.ContinuousProgram;
-import org.streamreasoning.rsp4j.abstraction.Task;
+import org.streamreasoning.rsp4j.abstraction.TaskAbstractionImpl;
 import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegistry;
 import org.streamreasoning.rsp4j.abstraction.functions.CountFunction;
 import org.streamreasoning.rsp4j.abstraction.table.BindingStream;
@@ -82,8 +82,8 @@ public class CustomR2RSolution {
     // REGISTER FUNCTION
     AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
 
-    Task<Graph, Graph, Binding, Binding> t =
-        new Task.TaskBuilder()
+    TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
+        new TaskAbstractionImpl.TaskBuilder()
             .addS2R("stream1", build, "w1")
             .addR2R("w1", r2r)
             .addR2S("out", new Rstream<Binding, Binding>())
