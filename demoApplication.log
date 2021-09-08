@@ -1,0 +1,660 @@
+[main] DEBUG Jena  - Jena initialization
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorFile
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: ClassLoaderLocator
+[main] DEBUG org.apache.jena.util.LocationMapper  - Failed to find configuration: file:location-mapping.rdf;file:location-mapping.n3;file:location-mapping.ttl;file:etc/location-mapping.rdf;file:etc/location-mapping.n3;file:etc/location-mapping.ttl
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorFile
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorURL
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: ClassLoaderLocator
+[main] DEBUG org.apache.jena.riot.system.stream.JenaIOEnvironment  - Failed to find configuration: location-mapping.ttl;location-mapping.rdf;location-mapping.n3;etc/location-mapping.rdf;etc/location-mapping.n3;etc/location-mapping.ttl
+[main] DEBUG org.apache.jena.info  - System architecture: 64 bit
+[main] DEBUG org.apache.jena.riot.system.stream.StreamManager  - Not mapped: https://raw.githubusercontent.com/riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl
+[main] DEBUG org.apache.jena.riot.web.HttpOp  - [1] GET https://raw.githubusercontent.com/riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl
+[main] DEBUG org.apache.http.client.protocol.RequestAddCookies  - CookieSpec selected: default
+[main] DEBUG org.apache.http.client.protocol.RequestAuthCache  - Auth cache not set in the context
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection request: [route: {s}->https://raw.githubusercontent.com:443][total kept alive: 0; route allocated: 0 of 5; total allocated: 0 of 10]
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection leased: [id: 0][route: {s}->https://raw.githubusercontent.com:443][total kept alive: 0; route allocated: 1 of 5; total allocated: 1 of 10]
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Opening connection {s}->https://raw.githubusercontent.com:443
+[main] DEBUG org.apache.http.impl.conn.DefaultHttpClientConnectionOperator  - Connecting to raw.githubusercontent.com/185.199.111.133:443
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Connecting socket to raw.githubusercontent.com/185.199.111.133:443 with timeout 0
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Enabled protocols: [TLSv1.3, TLSv1.2, TLSv1.1, TLSv1]
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Enabled cipher suites:[TLS_AES_256_GCM_SHA384, TLS_AES_128_GCM_SHA256, TLS_CHACHA20_POLY1305_SHA256, TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256, TLS_DHE_DSS_WITH_AES_256_GCM_SHA384, TLS_DHE_RSA_WITH_AES_128_GCM_SHA256, TLS_DHE_DSS_WITH_AES_128_GCM_SHA256, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TLS_DHE_DSS_WITH_AES_256_CBC_SHA256, TLS_DHE_RSA_WITH_AES_128_CBC_SHA256, TLS_DHE_DSS_WITH_AES_128_CBC_SHA256, TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384, TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256, TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_128_GCM_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_AES_128_CBC_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA, TLS_EMPTY_RENEGOTIATION_INFO_SCSV]
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Starting handshake
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Secure session established
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  negotiated protocol: TLSv1.3
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  negotiated cipher suite: TLS_AES_256_GCM_SHA384
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  peer principal: CN=www.github.com, O="GitHub, Inc.", L=San Francisco, ST=California, C=US
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  peer alternative names: [www.github.com, *.github.com, github.com, *.github.io, github.io, *.githubusercontent.com, githubusercontent.com]
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  issuer principal: CN=DigiCert SHA2 High Assurance Server CA, OU=www.digicert.com, O=DigiCert Inc, C=US
+[main] DEBUG org.apache.http.impl.conn.DefaultHttpClientConnectionOperator  - Connection established 172.17.37.31:53403<->185.199.111.133:443
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Executing request GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Target auth state: UNCHALLENGED
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Proxy auth state: UNCHALLENGED
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Accept: text/turtle,application/n-triples;q=0.9,application/rdf+xml;q=0.7,application/trig,application/n-quads;q=0.9,text/x-nquads;q=0.8,application/x-trig;q=0.7,application/ld+json;q=0.6,*/*;q=0.5
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> User-Agent: Apache-Jena-ARQ/3.5.0
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Host: raw.githubusercontent.com
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Connection: Keep-Alive
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Accept-Encoding: gzip,deflate
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Accept: text/turtle,application/n-triples;q=0.9,application/rdf+xml;q=0.7,application/trig,application/n-quads;q=0.9,text/x-nquads;q=0.8,application/x-trig;q=0.7,application/ld+json;q=0.6,*/*;q=0.5[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "User-Agent: Apache-Jena-ARQ/3.5.0[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Host: raw.githubusercontent.com[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Connection: Keep-Alive[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Accept-Encoding: gzip,deflate[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "HTTP/1.1 200 OK[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Connection: keep-alive[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Length: 572[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Cache-Control: max-age=300[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Type: text/plain; charset=utf-8[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "ETag: W/"735ebad9858c9c0392e6a36283170566e78e25509eb1df7586d91ae47cc7f335"[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Strict-Transport-Security: max-age=31536000[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Content-Type-Options: nosniff[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Frame-Options: deny[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-XSS-Protection: 1; mode=block[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-GitHub-Request-Id: 3FF6:25F0:6F93D3:74EECF:60D1F9CE[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Encoding: gzip[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Accept-Ranges: bytes[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Date: Tue, 22 Jun 2021 14:58:37 GMT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Via: 1.1 varnish[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Served-By: cache-hhn4041-HHN[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Cache: HIT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Cache-Hits: 1[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Timer: S1624373917.225398,VS0,VE1[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Vary: Authorization,Accept-Encoding[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Access-Control-Allow-Origin: *[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Fastly-Request-ID: 243c9de2b59ec685b243d4082eb3cb3b88672da7[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Expires: Tue, 22 Jun 2021 15:03:37 GMT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Source-Age: 207[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "[\r][\n]"
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << HTTP/1.1 200 OK
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Connection: keep-alive
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Length: 572
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Cache-Control: max-age=300
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Type: text/plain; charset=utf-8
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << ETag: W/"735ebad9858c9c0392e6a36283170566e78e25509eb1df7586d91ae47cc7f335"
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Strict-Transport-Security: max-age=31536000
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Content-Type-Options: nosniff
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Frame-Options: deny
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-XSS-Protection: 1; mode=block
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-GitHub-Request-Id: 3FF6:25F0:6F93D3:74EECF:60D1F9CE
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Encoding: gzip
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Accept-Ranges: bytes
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Date: Tue, 22 Jun 2021 14:58:37 GMT
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Via: 1.1 varnish
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Served-By: cache-hhn4041-HHN
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Cache: HIT
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Cache-Hits: 1
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Timer: S1624373917.225398,VS0,VE1
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Vary: Authorization,Accept-Encoding
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Access-Control-Allow-Origin: *
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Fastly-Request-ID: 243c9de2b59ec685b243d4082eb3cb3b88672da7
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Expires: Tue, 22 Jun 2021 15:03:37 GMT
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Source-Age: 207
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Connection can be kept alive indefinitely
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "[0x1f][0x8b][0x8][0x0][0x0][0x0][0x0][0x0][0x0][0x3][0xcd][0x95]]o[0x9b]0[0x14][0x86][0xaf][0x17])[0xff][0x1]u[0xd7]`B[0xf7][0xd1]dS[0xd4][0xa8][0x8d]r[0xb1]F[0x9a][0x6][0xaa]vU[0xc9][0xc1]&x[0x2][0x1b][0xd9][0xe]$[0xfb][0xf5][0xb5][\r][0xf9]0[0x1f]U[0xdb][0x9b]-W[0x8e][0xfd]>[0xe7][0xbc][0xe7]p[0xc][0xb7][0x5][0xc7][0x9][0xd9];3[0xe7]{*e!f[0x0]TU[0xe5]m[0x11][0xce][0xa4][0xc7][0xf8][0x16][0x8][0xc9]1[0xcc]?[0xce][0x1d]o<[0xba]m[0xc4]([0x86][0xb2][0x1][0x1a]}um[0xc4]T[0x0]}f[0xab]Y[0x95][0xf5][0x8a][0x3][0xdf][0xf][0x80][0xff][0x15][0xa8]s[0x1b][0xe0]([0xe9][0x5]&[0xd3][0xe9][0x14](&[0x8]\%q[0xc5][0x81]J[0xb8]w[0xa9][0xb0][0xe9]}[0xde][0x9f][0xee][0xf7][0xfa]AG[0xb8][0x1][0x14][0xe6]X[0x14]0[0xc6]6&[0xd0][0x90][0xcb][0x89]f[0xc3]8[0xc5]9[0xec][0x18][0x15]C[0x90][0xf][0x14]gl[0xf6][0x80]%[0x8b]av[0x89]^[0x13]d@.[\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "P[0x1f][0xb6][0x80][0x82][0xb3][0xf2]E[0xbd][0xab][0x15]-[0xc8]*[0xa9][0x7][0x11][0xe8][0x95][0xcf]5[0xfa]e[0x90][0x8d][0xab][0x15][0xc0]b$[0xc9][0xf1]P[0xf][0xbe][0x0]}j[0xe7]Hx>8;[0x9][0xe3]9[0x94][0xc2]N[0xd0][0xaa][0xdc][0x2][0xce]5[0x8f]GGE[0xa6]kK[0x99][0x90][0xc0][0xc][0xf1][0xdc][0x81][0xa6][0x11]wP[0xc2][0x8c]mC[0xcc]K[0x12]c[0xe7][0xdb]x[0xf4][0xc1][0x94][0x8b][0xd4][0xbe][0xc0][0xf2][0x94]@[0xff][0xaf][0xc7]_[0x5][0xff][0x83][0xe3][0xfa][0x16][0x98][0x8d]2[0x0][0x19][0x14]rW([\r][0xf6][0xe4]^[0xc5][0xb6]S[0xbf][0x8d][0x85][0xc7]1[0x8][0xcd][0x15][0xd3][0x96][0x9c][0xe6]g[0x9c]I"3[0xec]\[0xad][0xee][0x97][0xf][0x91]{[0xbf][0x88][0x16]N-[0xbc]zz[0xd2][0xc3][0xaa].&[0xa1][0xdb][0xe]U[0xec]6[0x19][0x11])[0xe6]V[0xcb][0xda][0xa6][0xe6][0x1d][0xe]a[0x11]sRH[0xc2]h[0x93][0xd3]yM[0xce][0xa6][0x84][0x8a]P[0xc4][0xaa][0xe8]P[0xe0][0xe3][0x8e][0xea]5Q[0x8b]h[0x97]+?/0![0xf9][0xab][0x8a][0xfc][0x19]M>[0xaf][0x9b]$h[0xc7][0xa1][0xb1][0xd1]ER([0x16]I[0x92][0xed]0[0x95][0xce][0xcc][0x98]\[0xfd]X[0xdd][0x85][0x8f][0xdd][0xe][0xe][0x2][0xcb]R[0xad][0xdf][0x86][0xac][0xd5]R[0xf9]9C[0xe6][0xa1]_[0x84]k[0xb6][0x87][0x1e][0xe8]9[0xf0][0x92][0xa2][0x82][0x91][0x1]/[0xa7][0xc3][0x8b][0xf0][0xaa][0xbc][0xf7][0x6][0xbf][0xec]L_[0xe8][0xa6][0xaa][0xf7][0x86]o7[0xa5]/[0xc5]@}[0xad]\[0xa7][0xfd]cN3[0x8f][0x99][0xba][0xa5]T[0xe0][0xf3]g)VZIJ[0x1c][0xb3]<gT[0x98][0xab][0xd5][0x88][0x4][0xd8][0x1c]\[0x1a][0x83]O[0x9e][0xf][0xe6]v[0x98][0xfa][0x95]R[0xbf]u[0x94][0x93]Vo[0xff][o[0x83][0xdd][0xfd][0xc7][0xfe][0x9e][0x1]O[0xd4][0x8c][0x3]/[0x8][0x0][0x0]"
+[main] ERROR org.apache.jena.riot  - [line: 1, col: 1 ] Content is not allowed in prolog.
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection [id: 0][route: {s}->https://raw.githubusercontent.com:443] can be kept alive indefinitely
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection released: [id: 0][route: {s}->https://raw.githubusercontent.com:443][total kept alive: 1; route allocated: 1 of 5; total allocated: 1 of 10]
+[main] DEBUG Jena  - Jena initialization
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorFile
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: ClassLoaderLocator
+[main] DEBUG org.apache.jena.util.LocationMapper  - Failed to find configuration: file:location-mapping.rdf;file:location-mapping.n3;file:location-mapping.ttl;file:etc/location-mapping.rdf;file:etc/location-mapping.n3;file:etc/location-mapping.ttl
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorFile
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorURL
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: ClassLoaderLocator
+[main] DEBUG org.apache.jena.riot.system.stream.JenaIOEnvironment  - Failed to find configuration: location-mapping.ttl;location-mapping.rdf;location-mapping.n3;etc/location-mapping.rdf;etc/location-mapping.n3;etc/location-mapping.ttl
+[main] DEBUG org.apache.jena.info  - System architecture: 64 bit
+[main] DEBUG org.apache.jena.riot.system.stream.StreamManager  - Not mapped: https://raw.githubusercontent.com/riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl
+[main] DEBUG org.apache.jena.riot.web.HttpOp  - [1] GET https://raw.githubusercontent.com/riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl
+[main] DEBUG org.apache.http.client.protocol.RequestAddCookies  - CookieSpec selected: default
+[main] DEBUG org.apache.http.client.protocol.RequestAuthCache  - Auth cache not set in the context
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection request: [route: {s}->https://raw.githubusercontent.com:443][total kept alive: 0; route allocated: 0 of 5; total allocated: 0 of 10]
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection leased: [id: 0][route: {s}->https://raw.githubusercontent.com:443][total kept alive: 0; route allocated: 1 of 5; total allocated: 1 of 10]
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Opening connection {s}->https://raw.githubusercontent.com:443
+[main] DEBUG org.apache.http.impl.conn.DefaultHttpClientConnectionOperator  - Connecting to raw.githubusercontent.com/185.199.110.133:443
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Connecting socket to raw.githubusercontent.com/185.199.110.133:443 with timeout 0
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Enabled protocols: [TLSv1.3, TLSv1.2, TLSv1.1, TLSv1]
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Enabled cipher suites:[TLS_AES_256_GCM_SHA384, TLS_AES_128_GCM_SHA256, TLS_CHACHA20_POLY1305_SHA256, TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256, TLS_DHE_DSS_WITH_AES_256_GCM_SHA384, TLS_DHE_RSA_WITH_AES_128_GCM_SHA256, TLS_DHE_DSS_WITH_AES_128_GCM_SHA256, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TLS_DHE_DSS_WITH_AES_256_CBC_SHA256, TLS_DHE_RSA_WITH_AES_128_CBC_SHA256, TLS_DHE_DSS_WITH_AES_128_CBC_SHA256, TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384, TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256, TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_128_GCM_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_AES_128_CBC_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA, TLS_EMPTY_RENEGOTIATION_INFO_SCSV]
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Starting handshake
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Secure session established
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  negotiated protocol: TLSv1.3
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  negotiated cipher suite: TLS_AES_256_GCM_SHA384
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  peer principal: CN=www.github.com, O="GitHub, Inc.", L=San Francisco, ST=California, C=US
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  peer alternative names: [www.github.com, *.github.com, github.com, *.github.io, github.io, *.githubusercontent.com, githubusercontent.com]
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  issuer principal: CN=DigiCert SHA2 High Assurance Server CA, OU=www.digicert.com, O=DigiCert Inc, C=US
+[main] DEBUG org.apache.http.impl.conn.DefaultHttpClientConnectionOperator  - Connection established 172.17.37.31:53425<->185.199.110.133:443
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Executing request GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Target auth state: UNCHALLENGED
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Proxy auth state: UNCHALLENGED
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Accept: text/turtle,application/n-triples;q=0.9,application/rdf+xml;q=0.7,application/trig,application/n-quads;q=0.9,text/x-nquads;q=0.8,application/x-trig;q=0.7,application/ld+json;q=0.6,*/*;q=0.5
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> User-Agent: Apache-Jena-ARQ/3.5.0
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Host: raw.githubusercontent.com
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Connection: Keep-Alive
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Accept-Encoding: gzip,deflate
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Accept: text/turtle,application/n-triples;q=0.9,application/rdf+xml;q=0.7,application/trig,application/n-quads;q=0.9,text/x-nquads;q=0.8,application/x-trig;q=0.7,application/ld+json;q=0.6,*/*;q=0.5[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "User-Agent: Apache-Jena-ARQ/3.5.0[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Host: raw.githubusercontent.com[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Connection: Keep-Alive[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Accept-Encoding: gzip,deflate[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "HTTP/1.1 200 OK[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Connection: keep-alive[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Length: 572[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Cache-Control: max-age=300[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Type: text/plain; charset=utf-8[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "ETag: W/"735ebad9858c9c0392e6a36283170566e78e25509eb1df7586d91ae47cc7f335"[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Strict-Transport-Security: max-age=31536000[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Content-Type-Options: nosniff[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Frame-Options: deny[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-XSS-Protection: 1; mode=block[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-GitHub-Request-Id: 3FF6:25F0:6F93D3:74EECF:60D1F9CE[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Encoding: gzip[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Accept-Ranges: bytes[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Date: Tue, 22 Jun 2021 14:59:19 GMT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Via: 1.1 varnish[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Served-By: cache-hhn4034-HHN[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Cache: HIT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Cache-Hits: 1[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Timer: S1624373960.964593,VS0,VE1[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Vary: Authorization,Accept-Encoding[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Access-Control-Allow-Origin: *[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Fastly-Request-ID: 94215c45a7d6642250dd008263d0f62bb0accd15[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Expires: Tue, 22 Jun 2021 15:04:19 GMT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Source-Age: 249[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "[\r][\n]"
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << HTTP/1.1 200 OK
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Connection: keep-alive
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Length: 572
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Cache-Control: max-age=300
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Type: text/plain; charset=utf-8
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << ETag: W/"735ebad9858c9c0392e6a36283170566e78e25509eb1df7586d91ae47cc7f335"
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Strict-Transport-Security: max-age=31536000
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Content-Type-Options: nosniff
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Frame-Options: deny
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-XSS-Protection: 1; mode=block
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-GitHub-Request-Id: 3FF6:25F0:6F93D3:74EECF:60D1F9CE
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Encoding: gzip
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Accept-Ranges: bytes
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Date: Tue, 22 Jun 2021 14:59:19 GMT
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Via: 1.1 varnish
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Served-By: cache-hhn4034-HHN
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Cache: HIT
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Cache-Hits: 1
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Timer: S1624373960.964593,VS0,VE1
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Vary: Authorization,Accept-Encoding
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Access-Control-Allow-Origin: *
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Fastly-Request-ID: 94215c45a7d6642250dd008263d0f62bb0accd15
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Expires: Tue, 22 Jun 2021 15:04:19 GMT
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Source-Age: 249
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Connection can be kept alive indefinitely
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "[0x1f][0x8b][0x8][0x0][0x0][0x0][0x0][0x0][0x0][0x3][0xcd][0x95]]o[0x9b]0[0x14][0x86][0xaf][0x17])[0xff][0x1]u[0xd7]`B[0xf7][0xd1]dS[0xd4][0xa8][0x8d]r[0xb1]F[0x9a][0x6][0xaa]vU[0xc9][0xc1]&x[0x2][0x1b][0xd9][0xe]$[0xfb][0xf5][0xb5][\r][0xf9]0[0x1f]U[0xdb][0x9b]-W[0x8e][0xfd]>[0xe7][0xbc][0xe7]p[0xc][0xb7][0x5][0xc7][0x9][0xd9];3[0xe7]{*e!f[0x0]TU[0xe5]m[0x11][0xce][0xa4][0xc7][0xf8][0x16][0x8][0xc9]1[0xcc]?[0xce][0x1d]o<[0xba]m[0xc4]([0x86][0xb2][0x1][0x1a]}um[0xc4]T[0x0]}f[0xab]Y[0x95][0xf5][0x8a][0x3][0xdf][0xf][0x80][0xff][0x15][0xa8]s[0x1b][0xe0]([0xe9][0x5]&[0xd3][0xe9][0x14](&[0x8]\%q[0xc5][0x81]J[0xb8]w[0xa9][0xb0][0xe9]}[0xde][0x9f][0xee][0xf7][0xfa]AG[0xb8][0x1][0x14][0xe6]X[0x14]0[0xc6]6&[0xd0][0x90][0xcb][0x89]f[0xc3]8[0xc5]9[0xec][0x18][0x15]C[0x90][0xf][0x14]gl[0xf6][0x80]%[0x8b]av[0x89]^[0x13]d@.[\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "P[0x1f][0xb6][0x80][0x82][0xb3][0xf2]E[0xbd][0xab][0x15]-[0xc8]*[0xa9][0x7][0x11][0xe8][0x95][0xcf]5[0xfa]e[0x90][0x8d][0xab][0x15][0xc0]b$[0xc9][0xf1]P[0xf][0xbe][0x0]}j[0xe7]Hx>8;[0x9][0xe3]9[0x94][0xc2]N[0xd0][0xaa][0xdc][0x2][0xce]5[0x8f]GGE[0xa6]kK[0x99][0x90][0xc0][0xc][0xf1][0xdc][0x81][0xa6][0x11]wP[0xc2][0x8c]mC[0xcc]K[0x12]c[0xe7][0xdb]x[0xf4][0xc1][0x94][0x8b][0xd4][0xbe][0xc0][0xf2][0x94]@[0xff][0xaf][0xc7]_[0x5][0xff][0x83][0xe3][0xfa][0x16][0x98][0x8d]2[0x0][0x19][0x14]rW([\r][0xf6][0xe4]^[0xc5][0xb6]S[0xbf][0x8d][0x85][0xc7]1[0x8][0xcd][0x15][0xd3][0x96][0x9c][0xe6]g[0x9c]I"3[0xec]\[0xad][0xee][0x97][0xf][0x91]{[0xbf][0x88][0x16]N-[0xbc]zz[0xd2][0xc3][0xaa].&[0xa1][0xdb][0xe]U[0xec]6[0x19][0x11])[0xe6]V[0xcb][0xda][0xa6][0xe6][0x1d][0xe]a[0x11]sRH[0xc2]h[0x93][0xd3]yM[0xce][0xa6][0x84][0x8a]P[0xc4][0xaa][0xe8]P[0xe0][0xe3][0x8e][0xea]5Q[0x8b]h[0x97]+?/0![0xf9][0xab][0x8a][0xfc][0x19]M>[0xaf][0x9b]$h[0xc7][0xa1][0xb1][0xd1]ER([0x16]I[0x92][0xed]0[0x95][0xce][0xcc][0x98]\[0xfd]X[0xdd][0x85][0x8f][0xdd][0xe][0xe][0x2][0xcb]R[0xad][0xdf][0x86][0xac][0xd5]R[0xf9]9C[0xe6][0xa1]_[0x84]k[0xb6][0x87][0x1e][0xe8]9[0xf0][0x92][0xa2][0x82][0x91][0x1]/[0xa7][0xc3][0x8b][0xf0][0xaa][0xbc][0xf7][0x6][0xbf][0xec]L_[0xe8][0xa6][0xaa][0xf7][0x86]o7[0xa5]/[0xc5]@}[0xad]\[0xa7][0xfd]cN3[0x8f][0x99][0xba][0xa5]T[0xe0][0xf3]g)VZIJ[0x1c][0xb3]<gT[0x98][0xab][0xd5][0x88][0x4][0xd8][0x1c]\[0x1a][0x83]O[0x9e][0xf][0xe6]v[0x98][0xfa][0x95]R[0xbf]u[0x94][0x93]Vo[0xff][o[0x83][0xdd][0xfd][0xc7][0xfe][0x9e][0x1]O[0xd4][0x8c][0x3]/[0x8][0x0][0x0]"
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection [id: 0][route: {s}->https://raw.githubusercontent.com:443] can be kept alive indefinitely
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection released: [id: 0][route: {s}->https://raw.githubusercontent.com:443][total kept alive: 1; route allocated: 1 of 5; total allocated: 1 of 10]
+[main] DEBUG Jena  - Jena initialization
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorFile
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: ClassLoaderLocator
+[main] DEBUG org.apache.jena.util.LocationMapper  - Failed to find configuration: file:location-mapping.rdf;file:location-mapping.n3;file:location-mapping.ttl;file:etc/location-mapping.rdf;file:etc/location-mapping.n3;file:etc/location-mapping.ttl
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorFile
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorURL
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: ClassLoaderLocator
+[main] DEBUG org.apache.jena.riot.system.stream.JenaIOEnvironment  - Failed to find configuration: location-mapping.ttl;location-mapping.rdf;location-mapping.n3;etc/location-mapping.rdf;etc/location-mapping.n3;etc/location-mapping.ttl
+[main] DEBUG org.apache.jena.info  - System architecture: 64 bit
+[main] DEBUG org.apache.jena.riot.system.stream.StreamManager  - Not mapped: https://raw.githubusercontent.com/riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl
+[main] DEBUG org.apache.jena.riot.web.HttpOp  - [1] GET https://raw.githubusercontent.com/riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl
+[main] DEBUG org.apache.http.client.protocol.RequestAddCookies  - CookieSpec selected: default
+[main] DEBUG org.apache.http.client.protocol.RequestAuthCache  - Auth cache not set in the context
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection request: [route: {s}->https://raw.githubusercontent.com:443][total kept alive: 0; route allocated: 0 of 5; total allocated: 0 of 10]
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection leased: [id: 0][route: {s}->https://raw.githubusercontent.com:443][total kept alive: 0; route allocated: 1 of 5; total allocated: 1 of 10]
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Opening connection {s}->https://raw.githubusercontent.com:443
+[main] DEBUG org.apache.http.impl.conn.DefaultHttpClientConnectionOperator  - Connecting to raw.githubusercontent.com/185.199.111.133:443
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Connecting socket to raw.githubusercontent.com/185.199.111.133:443 with timeout 0
+[main] DEBUG Jena  - Jena initialization
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorFile
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: ClassLoaderLocator
+[main] DEBUG org.apache.jena.util.LocationMapper  - Failed to find configuration: file:location-mapping.rdf;file:location-mapping.n3;file:location-mapping.ttl;file:etc/location-mapping.rdf;file:etc/location-mapping.n3;file:etc/location-mapping.ttl
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorFile
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorURL
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: ClassLoaderLocator
+[main] DEBUG org.apache.jena.riot.system.stream.JenaIOEnvironment  - Failed to find configuration: location-mapping.ttl;location-mapping.rdf;location-mapping.n3;etc/location-mapping.rdf;etc/location-mapping.n3;etc/location-mapping.ttl
+[main] DEBUG org.apache.jena.info  - System architecture: 64 bit
+[main] DEBUG org.apache.jena.riot.system.stream.StreamManager  - Not mapped: https://raw.githubusercontent.com/riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl
+[main] DEBUG org.apache.jena.riot.web.HttpOp  - [1] GET https://raw.githubusercontent.com/riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl
+[main] DEBUG org.apache.http.client.protocol.RequestAddCookies  - CookieSpec selected: default
+[main] DEBUG org.apache.http.client.protocol.RequestAuthCache  - Auth cache not set in the context
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection request: [route: {s}->https://raw.githubusercontent.com:443][total kept alive: 0; route allocated: 0 of 5; total allocated: 0 of 10]
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection leased: [id: 0][route: {s}->https://raw.githubusercontent.com:443][total kept alive: 0; route allocated: 1 of 5; total allocated: 1 of 10]
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Opening connection {s}->https://raw.githubusercontent.com:443
+[main] DEBUG org.apache.http.impl.conn.DefaultHttpClientConnectionOperator  - Connecting to raw.githubusercontent.com/185.199.108.133:443
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Connecting socket to raw.githubusercontent.com/185.199.108.133:443 with timeout 0
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Enabled protocols: [TLSv1.3, TLSv1.2, TLSv1.1, TLSv1]
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Enabled cipher suites:[TLS_AES_256_GCM_SHA384, TLS_AES_128_GCM_SHA256, TLS_CHACHA20_POLY1305_SHA256, TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256, TLS_DHE_DSS_WITH_AES_256_GCM_SHA384, TLS_DHE_RSA_WITH_AES_128_GCM_SHA256, TLS_DHE_DSS_WITH_AES_128_GCM_SHA256, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TLS_DHE_DSS_WITH_AES_256_CBC_SHA256, TLS_DHE_RSA_WITH_AES_128_CBC_SHA256, TLS_DHE_DSS_WITH_AES_128_CBC_SHA256, TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384, TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256, TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_128_GCM_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_AES_128_CBC_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA, TLS_EMPTY_RENEGOTIATION_INFO_SCSV]
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Starting handshake
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Secure session established
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  negotiated protocol: TLSv1.3
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  negotiated cipher suite: TLS_AES_256_GCM_SHA384
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  peer principal: CN=www.github.com, O="GitHub, Inc.", L=San Francisco, ST=California, C=US
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  peer alternative names: [www.github.com, *.github.com, github.com, *.github.io, github.io, *.githubusercontent.com, githubusercontent.com]
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  issuer principal: CN=DigiCert SHA2 High Assurance Server CA, OU=www.digicert.com, O=DigiCert Inc, C=US
+[main] DEBUG org.apache.http.impl.conn.DefaultHttpClientConnectionOperator  - Connection established 172.17.37.31:53440<->185.199.108.133:443
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Executing request GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Target auth state: UNCHALLENGED
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Proxy auth state: UNCHALLENGED
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Accept: text/turtle,application/n-triples;q=0.9,application/rdf+xml;q=0.7,application/trig,application/n-quads;q=0.9,text/x-nquads;q=0.8,application/x-trig;q=0.7,application/ld+json;q=0.6,*/*;q=0.5
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> User-Agent: Apache-Jena-ARQ/3.5.0
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Host: raw.githubusercontent.com
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Connection: Keep-Alive
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Accept-Encoding: gzip,deflate
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Accept: text/turtle,application/n-triples;q=0.9,application/rdf+xml;q=0.7,application/trig,application/n-quads;q=0.9,text/x-nquads;q=0.8,application/x-trig;q=0.7,application/ld+json;q=0.6,*/*;q=0.5[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "User-Agent: Apache-Jena-ARQ/3.5.0[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Host: raw.githubusercontent.com[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Connection: Keep-Alive[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Accept-Encoding: gzip,deflate[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "HTTP/1.1 200 OK[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Connection: keep-alive[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Length: 572[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Cache-Control: max-age=300[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Type: text/plain; charset=utf-8[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "ETag: W/"735ebad9858c9c0392e6a36283170566e78e25509eb1df7586d91ae47cc7f335"[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Strict-Transport-Security: max-age=31536000[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Content-Type-Options: nosniff[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Frame-Options: deny[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-XSS-Protection: 1; mode=block[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-GitHub-Request-Id: 3FF6:25F0:6F93D3:74EECF:60D1F9CE[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Encoding: gzip[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Accept-Ranges: bytes[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Date: Tue, 22 Jun 2021 14:59:48 GMT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Via: 1.1 varnish[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Served-By: cache-hhn4083-HHN[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Cache: HIT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Cache-Hits: 1[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Timer: S1624373988.033265,VS0,VE1[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Vary: Authorization,Accept-Encoding[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Access-Control-Allow-Origin: *[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Fastly-Request-ID: 2ed3a62c71119a077e32320740c8aa2d85554e3b[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Expires: Tue, 22 Jun 2021 15:04:48 GMT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Source-Age: 278[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "[\r][\n]"
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << HTTP/1.1 200 OK
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Connection: keep-alive
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Length: 572
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Cache-Control: max-age=300
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Type: text/plain; charset=utf-8
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << ETag: W/"735ebad9858c9c0392e6a36283170566e78e25509eb1df7586d91ae47cc7f335"
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Strict-Transport-Security: max-age=31536000
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Content-Type-Options: nosniff
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Frame-Options: deny
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-XSS-Protection: 1; mode=block
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-GitHub-Request-Id: 3FF6:25F0:6F93D3:74EECF:60D1F9CE
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Encoding: gzip
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Accept-Ranges: bytes
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Date: Tue, 22 Jun 2021 14:59:48 GMT
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Via: 1.1 varnish
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Served-By: cache-hhn4083-HHN
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Cache: HIT
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Cache-Hits: 1
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Timer: S1624373988.033265,VS0,VE1
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Vary: Authorization,Accept-Encoding
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Access-Control-Allow-Origin: *
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Fastly-Request-ID: 2ed3a62c71119a077e32320740c8aa2d85554e3b
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Expires: Tue, 22 Jun 2021 15:04:48 GMT
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Source-Age: 278
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Connection can be kept alive indefinitely
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "[0x1f][0x8b][0x8][0x0][0x0][0x0][0x0][0x0][0x0][0x3][0xcd][0x95]]o[0x9b]0[0x14][0x86][0xaf][0x17])[0xff][0x1]u[0xd7]`B[0xf7][0xd1]dS[0xd4][0xa8][0x8d]r[0xb1]F[0x9a][0x6][0xaa]vU[0xc9][0xc1]&x[0x2][0x1b][0xd9][0xe]$[0xfb][0xf5][0xb5][\r][0xf9]0[0x1f]U[0xdb][0x9b]-W[0x8e][0xfd]>[0xe7][0xbc][0xe7]p[0xc][0xb7][0x5][0xc7][0x9][0xd9];3[0xe7]{*e!f[0x0]TU[0xe5]m[0x11][0xce][0xa4][0xc7][0xf8][0x16][0x8][0xc9]1[0xcc]?[0xce][0x1d]o<[0xba]m[0xc4]([0x86][0xb2][0x1][0x1a]}um[0xc4]T[0x0]}f[0xab]Y[0x95][0xf5][0x8a][0x3][0xdf][0xf][0x80][0xff][0x15][0xa8]s[0x1b][0xe0]([0xe9][0x5]&[0xd3][0xe9][0x14](&[0x8]\%q[0xc5][0x81]J[0xb8]w[0xa9][0xb0][0xe9]}[0xde][0x9f][0xee][0xf7][0xfa]AG[0xb8][0x1][0x14][0xe6]X[0x14]0[0xc6]6&[0xd0][0x90][0xcb][0x89]f[0xc3]8[0xc5]9[0xec][0x18][0x15]C[0x90][0xf][0x14]gl[0xf6][0x80]%[0x8b]av[0x89]^[0x13]d@.[\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "P[0x1f][0xb6][0x80][0x82][0xb3][0xf2]E[0xbd][0xab][0x15]-[0xc8]*[0xa9][0x7][0x11][0xe8][0x95][0xcf]5[0xfa]e[0x90][0x8d][0xab][0x15][0xc0]b$[0xc9][0xf1]P[0xf][0xbe][0x0]}j[0xe7]Hx>8;[0x9][0xe3]9[0x94][0xc2]N[0xd0][0xaa][0xdc][0x2][0xce]5[0x8f]GGE[0xa6]kK[0x99][0x90][0xc0][0xc][0xf1][0xdc][0x81][0xa6][0x11]wP[0xc2][0x8c]mC[0xcc]K[0x12]c[0xe7][0xdb]x[0xf4][0xc1][0x94][0x8b][0xd4][0xbe][0xc0][0xf2][0x94]@[0xff][0xaf][0xc7]_[0x5][0xff][0x83][0xe3][0xfa][0x16][0x98][0x8d]2[0x0][0x19][0x14]rW([\r][0xf6][0xe4]^[0xc5][0xb6]S[0xbf][0x8d][0x85][0xc7]1[0x8][0xcd][0x15][0xd3][0x96][0x9c][0xe6]g[0x9c]I"3[0xec]\[0xad][0xee][0x97][0xf][0x91]{[0xbf][0x88][0x16]N-[0xbc]zz[0xd2][0xc3][0xaa].&[0xa1][0xdb][0xe]U[0xec]6[0x19][0x11])[0xe6]V[0xcb][0xda][0xa6][0xe6][0x1d][0xe]a[0x11]sRH[0xc2]h[0x93][0xd3]yM[0xce][0xa6][0x84][0x8a]P[0xc4][0xaa][0xe8]P[0xe0][0xe3][0x8e][0xea]5Q[0x8b]h[0x97]+?/0![0xf9][0xab][0x8a][0xfc][0x19]M>[0xaf][0x9b]$h[0xc7][0xa1][0xb1][0xd1]ER([0x16]I[0x92][0xed]0[0x95][0xce][0xcc][0x98]\[0xfd]X[0xdd][0x85][0x8f][0xdd][0xe][0xe][0x2][0xcb]R[0xad][0xdf][0x86][0xac][0xd5]R[0xf9]9C[0xe6][0xa1]_[0x84]k[0xb6][0x87][0x1e][0xe8]9[0xf0][0x92][0xa2][0x82][0x91][0x1]/[0xa7][0xc3][0x8b][0xf0][0xaa][0xbc][0xf7][0x6][0xbf][0xec]L_[0xe8][0xa6][0xaa][0xf7][0x86]o7[0xa5]/[0xc5]@}[0xad]\[0xa7][0xfd]cN3[0x8f][0x99][0xba][0xa5]T[0xe0][0xf3]g)VZIJ[0x1c][0xb3]<gT[0x98][0xab][0xd5][0x88][0x4][0xd8][0x1c]\[0x1a][0x83]O[0x9e][0xf][0xe6]v[0x98][0xfa][0x95]R[0xbf]u[0x94][0x93]Vo[0xff][o[0x83][0xdd][0xfd][0xc7][0xfe][0x9e][0x1]O[0xd4][0x8c][0x3]/[0x8][0x0][0x0]"
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection [id: 0][route: {s}->https://raw.githubusercontent.com:443] can be kept alive indefinitely
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection released: [id: 0][route: {s}->https://raw.githubusercontent.com:443][total kept alive: 1; route allocated: 1 of 5; total allocated: 1 of 10]
+[main] DEBUG org.apache.jena.riot.system.stream.StreamManager  - Not mapped: https://raw.githubusercontent.com/riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl
+[main] DEBUG org.apache.jena.riot.web.HttpOp  - [2] GET https://raw.githubusercontent.com/riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl
+[main] DEBUG org.apache.http.client.protocol.RequestAddCookies  - CookieSpec selected: default
+[main] DEBUG org.apache.http.client.protocol.RequestAuthCache  - Auth cache not set in the context
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection request: [route: {s}->https://raw.githubusercontent.com:443][total kept alive: 1; route allocated: 1 of 5; total allocated: 1 of 10]
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "[read] I/O error: Read timed out"
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection leased: [id: 0][route: {s}->https://raw.githubusercontent.com:443][total kept alive: 0; route allocated: 1 of 5; total allocated: 1 of 10]
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Executing request GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Target auth state: UNCHALLENGED
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Proxy auth state: UNCHALLENGED
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Accept: text/turtle,application/n-triples;q=0.9,application/rdf+xml;q=0.7,application/trig,application/n-quads;q=0.9,text/x-nquads;q=0.8,application/x-trig;q=0.7,application/ld+json;q=0.6,*/*;q=0.5
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> User-Agent: Apache-Jena-ARQ/3.5.0
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Host: raw.githubusercontent.com
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Connection: Keep-Alive
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Accept-Encoding: gzip,deflate
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Accept: text/turtle,application/n-triples;q=0.9,application/rdf+xml;q=0.7,application/trig,application/n-quads;q=0.9,text/x-nquads;q=0.8,application/x-trig;q=0.7,application/ld+json;q=0.6,*/*;q=0.5[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "User-Agent: Apache-Jena-ARQ/3.5.0[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Host: raw.githubusercontent.com[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Connection: Keep-Alive[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Accept-Encoding: gzip,deflate[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "HTTP/1.1 200 OK[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Connection: keep-alive[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Length: 572[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Cache-Control: max-age=300[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Type: text/plain; charset=utf-8[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "ETag: W/"735ebad9858c9c0392e6a36283170566e78e25509eb1df7586d91ae47cc7f335"[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Strict-Transport-Security: max-age=31536000[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Content-Type-Options: nosniff[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Frame-Options: deny[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-XSS-Protection: 1; mode=block[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-GitHub-Request-Id: 3FF6:25F0:6F93D3:74EECF:60D1F9CE[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Encoding: gzip[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Accept-Ranges: bytes[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Date: Tue, 22 Jun 2021 15:00:01 GMT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Via: 1.1 varnish[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Served-By: cache-hhn4083-HHN[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Cache: HIT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Cache-Hits: 2[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Timer: S1624374002.621016,VS0,VE0[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Vary: Authorization,Accept-Encoding[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Access-Control-Allow-Origin: *[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Fastly-Request-ID: 3ee098d2beb1a11947579592297b1f49c03ec8f5[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Expires: Tue, 22 Jun 2021 15:05:01 GMT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Source-Age: 292[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "[\r][\n]"
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << HTTP/1.1 200 OK
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Connection: keep-alive
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Length: 572
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Cache-Control: max-age=300
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Type: text/plain; charset=utf-8
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << ETag: W/"735ebad9858c9c0392e6a36283170566e78e25509eb1df7586d91ae47cc7f335"
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Strict-Transport-Security: max-age=31536000
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Content-Type-Options: nosniff
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Frame-Options: deny
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-XSS-Protection: 1; mode=block
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-GitHub-Request-Id: 3FF6:25F0:6F93D3:74EECF:60D1F9CE
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Encoding: gzip
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Accept-Ranges: bytes
+[main] DEBUG Jena  - Jena initialization
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorFile
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: ClassLoaderLocator
+[main] DEBUG org.apache.jena.util.LocationMapper  - Failed to find configuration: file:location-mapping.rdf;file:location-mapping.n3;file:location-mapping.ttl;file:etc/location-mapping.rdf;file:etc/location-mapping.n3;file:etc/location-mapping.ttl
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorFile
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorURL
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: ClassLoaderLocator
+[main] DEBUG org.apache.jena.riot.system.stream.JenaIOEnvironment  - Failed to find configuration: location-mapping.ttl;location-mapping.rdf;location-mapping.n3;etc/location-mapping.rdf;etc/location-mapping.n3;etc/location-mapping.ttl
+[main] DEBUG org.apache.jena.info  - System architecture: 64 bit
+[main] DEBUG org.apache.jena.riot.system.stream.StreamManager  - Not mapped: https://raw.githubusercontent.com/riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl
+[main] DEBUG org.apache.jena.riot.web.HttpOp  - [1] GET https://raw.githubusercontent.com/riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl
+[main] DEBUG org.apache.http.client.protocol.RequestAddCookies  - CookieSpec selected: default
+[main] DEBUG org.apache.http.client.protocol.RequestAuthCache  - Auth cache not set in the context
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection request: [route: {s}->https://raw.githubusercontent.com:443][total kept alive: 0; route allocated: 0 of 5; total allocated: 0 of 10]
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection leased: [id: 0][route: {s}->https://raw.githubusercontent.com:443][total kept alive: 0; route allocated: 1 of 5; total allocated: 1 of 10]
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Opening connection {s}->https://raw.githubusercontent.com:443
+[main] DEBUG org.apache.http.impl.conn.DefaultHttpClientConnectionOperator  - Connecting to raw.githubusercontent.com/185.199.110.133:443
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Connecting socket to raw.githubusercontent.com/185.199.110.133:443 with timeout 0
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Enabled protocols: [TLSv1.3, TLSv1.2, TLSv1.1, TLSv1]
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Enabled cipher suites:[TLS_AES_256_GCM_SHA384, TLS_AES_128_GCM_SHA256, TLS_CHACHA20_POLY1305_SHA256, TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256, TLS_DHE_DSS_WITH_AES_256_GCM_SHA384, TLS_DHE_RSA_WITH_AES_128_GCM_SHA256, TLS_DHE_DSS_WITH_AES_128_GCM_SHA256, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TLS_DHE_DSS_WITH_AES_256_CBC_SHA256, TLS_DHE_RSA_WITH_AES_128_CBC_SHA256, TLS_DHE_DSS_WITH_AES_128_CBC_SHA256, TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384, TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256, TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_128_GCM_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_AES_128_CBC_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA, TLS_EMPTY_RENEGOTIATION_INFO_SCSV]
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Starting handshake
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Secure session established
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  negotiated protocol: TLSv1.3
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  negotiated cipher suite: TLS_AES_256_GCM_SHA384
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  peer principal: CN=www.github.com, O="GitHub, Inc.", L=San Francisco, ST=California, C=US
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  peer alternative names: [www.github.com, *.github.com, github.com, *.github.io, github.io, *.githubusercontent.com, githubusercontent.com]
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  issuer principal: CN=DigiCert SHA2 High Assurance Server CA, OU=www.digicert.com, O=DigiCert Inc, C=US
+[main] DEBUG org.apache.http.impl.conn.DefaultHttpClientConnectionOperator  - Connection established 172.17.37.31:54742<->185.199.110.133:443
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Executing request GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Target auth state: UNCHALLENGED
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Proxy auth state: UNCHALLENGED
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Accept: text/turtle,application/n-triples;q=0.9,application/rdf+xml;q=0.7,application/trig,application/n-quads;q=0.9,text/x-nquads;q=0.8,application/x-trig;q=0.7,application/ld+json;q=0.6,*/*;q=0.5
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> User-Agent: Apache-Jena-ARQ/3.5.0
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Host: raw.githubusercontent.com
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Connection: Keep-Alive
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Accept-Encoding: gzip,deflate
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Accept: text/turtle,application/n-triples;q=0.9,application/rdf+xml;q=0.7,application/trig,application/n-quads;q=0.9,text/x-nquads;q=0.8,application/x-trig;q=0.7,application/ld+json;q=0.6,*/*;q=0.5[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "User-Agent: Apache-Jena-ARQ/3.5.0[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Host: raw.githubusercontent.com[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Connection: Keep-Alive[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Accept-Encoding: gzip,deflate[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "HTTP/1.1 200 OK[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Connection: keep-alive[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Length: 572[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Cache-Control: max-age=300[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Type: text/plain; charset=utf-8[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "ETag: W/"735ebad9858c9c0392e6a36283170566e78e25509eb1df7586d91ae47cc7f335"[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Strict-Transport-Security: max-age=31536000[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Content-Type-Options: nosniff[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Frame-Options: deny[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-XSS-Protection: 1; mode=block[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-GitHub-Request-Id: 7596:E724:81498E:8821EE:60D307B6[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Encoding: gzip[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Accept-Ranges: bytes[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Date: Wed, 23 Jun 2021 10:06:46 GMT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Via: 1.1 varnish[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Served-By: cache-hhn4024-HHN[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Cache: MISS[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Cache-Hits: 0[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Timer: S1624442806.363584,VS0,VE176[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Vary: Authorization,Accept-Encoding[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Access-Control-Allow-Origin: *[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Fastly-Request-ID: d766f2b00ec207650c2799500ee1a4df80ca7a03[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Expires: Wed, 23 Jun 2021 10:11:46 GMT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Source-Age: 0[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "[\r][\n]"
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << HTTP/1.1 200 OK
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Connection: keep-alive
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Length: 572
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Cache-Control: max-age=300
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Type: text/plain; charset=utf-8
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << ETag: W/"735ebad9858c9c0392e6a36283170566e78e25509eb1df7586d91ae47cc7f335"
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Strict-Transport-Security: max-age=31536000
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Content-Type-Options: nosniff
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Frame-Options: deny
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-XSS-Protection: 1; mode=block
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-GitHub-Request-Id: 7596:E724:81498E:8821EE:60D307B6
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Encoding: gzip
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Accept-Ranges: bytes
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Date: Wed, 23 Jun 2021 10:06:46 GMT
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Via: 1.1 varnish
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Served-By: cache-hhn4024-HHN
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Cache: MISS
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Cache-Hits: 0
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Timer: S1624442806.363584,VS0,VE176
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Vary: Authorization,Accept-Encoding
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Access-Control-Allow-Origin: *
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Fastly-Request-ID: d766f2b00ec207650c2799500ee1a4df80ca7a03
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Expires: Wed, 23 Jun 2021 10:11:46 GMT
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Source-Age: 0
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Connection can be kept alive indefinitely
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "[0x1f][0x8b][0x8][0x0][0x0][0x0][0x0][0x0][0x0][0x3][0xcd][0x95]]o[0x9b]0[0x14][0x86][0xaf][0x17])[0xff][0x1]u[0xd7]`B[0xf7][0xd1]dS[0xd4][0xa8][0x8d]r[0xb1]F[0x9a][0x6][0xaa]vU[0xc9][0xc1]&x[0x2][0x1b][0xd9][0xe]$[0xfb][0xf5][0xb5][\r][0xf9]0[0x1f]U[0xdb][0x9b]-W[0x8e][0xfd]>[0xe7][0xbc][0xe7]p[0xc][0xb7][0x5][0xc7][0x9][0xd9];3[0xe7]{*e!f[0x0]TU[0xe5]m[0x11][0xce][0xa4][0xc7][0xf8][0x16][0x8][0xc9]1[0xcc]?[0xce][0x1d]o<[0xba]m[0xc4]([0x86][0xb2][0x1][0x1a]}um[0xc4]T[0x0]}f[0xab]Y[0x95][0xf5][0x8a][0x3][0xdf][0xf][0x80][0xff][0x15][0xa8]s[0x1b][0xe0]([0xe9][0x5]&[0xd3][0xe9][0x14](&[0x8]\%q[0xc5][0x81]J[0xb8]w[0xa9][0xb0][0xe9]}[0xde][0x9f][0xee][0xf7][0xfa]AG[0xb8][0x1][0x14][0xe6]X[0x14]0[0xc6]6&[0xd0][0x90][0xcb][0x89]f[0xc3]8[0xc5]9[0xec][0x18][0x15]C[0x90][0xf][0x14]gl[0xf6][0x80]%[0x8b]av[0x89]^[0x13]d@.[\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "P[0x1f][0xb6][0x80][0x82][0xb3][0xf2]E[0xbd][0xab][0x15]-[0xc8]*[0xa9][0x7][0x11][0xe8][0x95][0xcf]5[0xfa]e[0x90][0x8d][0xab][0x15][0xc0]b$[0xc9][0xf1]P[0xf][0xbe][0x0]}j[0xe7]Hx>8;[0x9][0xe3]9[0x94][0xc2]N[0xd0][0xaa][0xdc][0x2][0xce]5[0x8f]GGE[0xa6]kK[0x99][0x90][0xc0][0xc][0xf1][0xdc][0x81][0xa6][0x11]wP[0xc2][0x8c]mC[0xcc]K[0x12]c[0xe7][0xdb]x[0xf4][0xc1][0x94][0x8b][0xd4][0xbe][0xc0][0xf2][0x94]@[0xff][0xaf][0xc7]_[0x5][0xff][0x83][0xe3][0xfa][0x16][0x98][0x8d]2[0x0][0x19][0x14]rW([\r][0xf6][0xe4]^[0xc5][0xb6]S[0xbf][0x8d][0x85][0xc7]1[0x8][0xcd][0x15][0xd3][0x96][0x9c][0xe6]g[0x9c]I"3[0xec]\[0xad][0xee][0x97][0xf][0x91]{[0xbf][0x88][0x16]N-[0xbc]zz[0xd2][0xc3][0xaa].&[0xa1][0xdb][0xe]U[0xec]6[0x19][0x11])[0xe6]V[0xcb][0xda][0xa6][0xe6][0x1d][0xe]a[0x11]sRH[0xc2]h[0x93][0xd3]yM[0xce][0xa6][0x84][0x8a]P[0xc4][0xaa][0xe8]P[0xe0][0xe3][0x8e][0xea]5Q[0x8b]h[0x97]+?/0![0xf9][0xab][0x8a][0xfc][0x19]M>[0xaf][0x9b]$h[0xc7][0xa1][0xb1][0xd1]ER([0x16]I[0x92][0xed]0[0x95][0xce][0xcc][0x98]\[0xfd]X[0xdd][0x85][0x8f][0xdd][0xe][0xe][0x2][0xcb]R[0xad][0xdf][0x86][0xac][0xd5]R[0xf9]9C[0xe6][0xa1]_[0x84]k[0xb6][0x87][0x1e][0xe8]9[0xf0][0x92][0xa2][0x82][0x91][0x1]/[0xa7][0xc3][0x8b][0xf0][0xaa][0xbc][0xf7][0x6][0xbf][0xec]L_[0xe8][0xa6][0xaa][0xf7][0x86]o7[0xa5]/[0xc5]@}[0xad]\[0xa7][0xfd]cN3[0x8f][0x99][0xba][0xa5]T[0xe0][0xf3]g)VZIJ[0x1c][0xb3]<gT[0x98][0xab][0xd5][0x88][0x4][0xd8][0x1c]\[0x1a][0x83]O[0x9e][0xf][0xe6]v[0x98][0xfa][0x95]R[0xbf]u[0x94][0x93]Vo[0xff][o[0x83][0xdd][0xfd][0xc7][0xfe][0x9e][0x1]O[0xd4][0x8c][0x3]/[0x8][0x0][0x0]"
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection [id: 0][route: {s}->https://raw.githubusercontent.com:443] can be kept alive indefinitely
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection released: [id: 0][route: {s}->https://raw.githubusercontent.com:443][total kept alive: 1; route allocated: 1 of 5; total allocated: 1 of 10]
+[main] DEBUG org.apache.jena.riot.system.stream.StreamManager  - Not mapped: https://raw.githubusercontent.com/riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl
+[main] DEBUG org.apache.jena.riot.web.HttpOp  - [2] GET https://raw.githubusercontent.com/riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl
+[main] DEBUG org.apache.http.client.protocol.RequestAddCookies  - CookieSpec selected: default
+[main] DEBUG org.apache.http.client.protocol.RequestAuthCache  - Auth cache not set in the context
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection request: [route: {s}->https://raw.githubusercontent.com:443][total kept alive: 1; route allocated: 1 of 5; total allocated: 1 of 10]
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection leased: [id: 0][route: {s}->https://raw.githubusercontent.com:443][total kept alive: 0; route allocated: 1 of 5; total allocated: 1 of 10]
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Executing request GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Target auth state: UNCHALLENGED
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Proxy auth state: UNCHALLENGED
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Accept: text/turtle,application/n-triples;q=0.9,application/rdf+xml;q=0.7,application/trig,application/n-quads;q=0.9,text/x-nquads;q=0.8,application/x-trig;q=0.7,application/ld+json;q=0.6,*/*;q=0.5
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> User-Agent: Apache-Jena-ARQ/3.5.0
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Host: raw.githubusercontent.com
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Connection: Keep-Alive
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Accept-Encoding: gzip,deflate
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Accept: text/turtle,application/n-triples;q=0.9,application/rdf+xml;q=0.7,application/trig,application/n-quads;q=0.9,text/x-nquads;q=0.8,application/x-trig;q=0.7,application/ld+json;q=0.6,*/*;q=0.5[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "User-Agent: Apache-Jena-ARQ/3.5.0[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Host: raw.githubusercontent.com[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Connection: Keep-Alive[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Accept-Encoding: gzip,deflate[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "HTTP/1.1 200 OK[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Connection: keep-alive[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Length: 572[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Cache-Control: max-age=300[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Type: text/plain; charset=utf-8[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "ETag: W/"735ebad9858c9c0392e6a36283170566e78e25509eb1df7586d91ae47cc7f335"[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Strict-Transport-Security: max-age=31536000[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Content-Type-Options: nosniff[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Frame-Options: deny[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-XSS-Protection: 1; mode=block[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-GitHub-Request-Id: 7596:E724:81498E:8821EE:60D307B6[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Encoding: gzip[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Accept-Ranges: bytes[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Date: Wed, 23 Jun 2021 10:06:46 GMT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Via: 1.1 varnish[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Served-By: cache-hhn4024-HHN[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Cache: HIT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Cache-Hits: 1[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Timer: S1624442807.631148,VS0,VE0[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Vary: Authorization,Accept-Encoding[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Access-Control-Allow-Origin: *[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Fastly-Request-ID: 6117ed99f767be6a461b445dcdff92b88253b392[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Expires: Wed, 23 Jun 2021 10:11:46 GMT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Source-Age: 0[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "[\r][\n]"
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << HTTP/1.1 200 OK
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Connection: keep-alive
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Length: 572
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Cache-Control: max-age=300
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Type: text/plain; charset=utf-8
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << ETag: W/"735ebad9858c9c0392e6a36283170566e78e25509eb1df7586d91ae47cc7f335"
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Strict-Transport-Security: max-age=31536000
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Content-Type-Options: nosniff
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Frame-Options: deny
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-XSS-Protection: 1; mode=block
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-GitHub-Request-Id: 7596:E724:81498E:8821EE:60D307B6
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Encoding: gzip
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Accept-Ranges: bytes
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Date: Wed, 23 Jun 2021 10:06:46 GMT
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Via: 1.1 varnish
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Served-By: cache-hhn4024-HHN
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Cache: HIT
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Cache-Hits: 1
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Timer: S1624442807.631148,VS0,VE0
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Vary: Authorization,Accept-Encoding
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Access-Control-Allow-Origin: *
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Fastly-Request-ID: 6117ed99f767be6a461b445dcdff92b88253b392
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Expires: Wed, 23 Jun 2021 10:11:46 GMT
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Source-Age: 0
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Connection can be kept alive indefinitely
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "[0x1f][0x8b][0x8][0x0][0x0][0x0][0x0][0x0][0x0][0x3][0xcd][0x95]]o[0x9b]0[0x14][0x86][0xaf][0x17])[0xff][0x1]u[0xd7]`B[0xf7][0xd1]dS[0xd4][0xa8][0x8d]r[0xb1]F[0x9a][0x6][0xaa]vU[0xc9][0xc1]&x[0x2][0x1b][0xd9][0xe]$[0xfb][0xf5][0xb5][\r][0xf9]0[0x1f]U[0xdb][0x9b]-W[0x8e][0xfd]>[0xe7][0xbc][0xe7]p[0xc][0xb7][0x5][0xc7][0x9][0xd9];3[0xe7]{*e!f[0x0]TU[0xe5]m[0x11][0xce][0xa4][0xc7][0xf8][0x16][0x8][0xc9]1[0xcc]?[0xce][0x1d]o<[0xba]m[0xc4]([0x86][0xb2][0x1][0x1a]}um[0xc4]T[0x0]}f[0xab]Y[0x95][0xf5][0x8a][0x3][0xdf][0xf][0x80][0xff][0x15][0xa8]s[0x1b][0xe0]([0xe9][0x5]&[0xd3][0xe9][0x14](&[0x8]\%q[0xc5][0x81]J[0xb8]w[0xa9][0xb0][0xe9]}[0xde][0x9f][0xee][0xf7][0xfa]AG[0xb8][0x1][0x14][0xe6]X[0x14]0[0xc6]6&[0xd0][0x90][0xcb][0x89]f[0xc3]8[0xc5]9[0xec][0x18][0x15]C[0x90][0xf][0x14]gl[0xf6][0x80]%[0x8b]av[0x89]^[0x13]d@.[\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "P[0x1f][0xb6][0x80][0x82][0xb3][0xf2]E[0xbd][0xab][0x15]-[0xc8]*[0xa9][0x7][0x11][0xe8][0x95][0xcf]5[0xfa]e[0x90][0x8d][0xab][0x15][0xc0]b$[0xc9][0xf1]P[0xf][0xbe][0x0]}j[0xe7]Hx>8;[0x9][0xe3]9[0x94][0xc2]N[0xd0][0xaa][0xdc][0x2][0xce]5[0x8f]GGE[0xa6]kK[0x99][0x90][0xc0][0xc][0xf1][0xdc][0x81][0xa6][0x11]wP[0xc2][0x8c]mC[0xcc]K[0x12]c[0xe7][0xdb]x[0xf4][0xc1][0x94][0x8b][0xd4][0xbe][0xc0][0xf2][0x94]@[0xff][0xaf][0xc7]_[0x5][0xff][0x83][0xe3][0xfa][0x16][0x98][0x8d]2[0x0][0x19][0x14]rW([\r][0xf6][0xe4]^[0xc5][0xb6]S[0xbf][0x8d][0x85][0xc7]1[0x8][0xcd][0x15][0xd3][0x96][0x9c][0xe6]g[0x9c]I"3[0xec]\[0xad][0xee][0x97][0xf][0x91]{[0xbf][0x88][0x16]N-[0xbc]zz[0xd2][0xc3][0xaa].&[0xa1][0xdb][0xe]U[0xec]6[0x19][0x11])[0xe6]V[0xcb][0xda][0xa6][0xe6][0x1d][0xe]a[0x11]sRH[0xc2]h[0x93][0xd3]yM[0xce][0xa6][0x84][0x8a]P[0xc4][0xaa][0xe8]P[0xe0][0xe3][0x8e][0xea]5Q[0x8b]h[0x97]+?/0![0xf9][0xab][0x8a][0xfc][0x19]M>[0xaf][0x9b]$h[0xc7][0xa1][0xb1][0xd1]ER([0x16]I[0x92][0xed]0[0x95][0xce][0xcc][0x98]\[0xfd]X[0xdd][0x85][0x8f][0xdd][0xe][0xe][0x2][0xcb]R[0xad][0xdf][0x86][0xac][0xd5]R[0xf9]9C[0xe6][0xa1]_[0x84]k[0xb6][0x87][0x1e][0xe8]9[0xf0][0x92][0xa2][0x82][0x91][0x1]/[0xa7][0xc3][0x8b][0xf0][0xaa][0xbc][0xf7][0x6][0xbf][0xec]L_[0xe8][0xa6][0xaa][0xf7][0x86]o7[0xa5]/[0xc5]@}[0xad]\[0xa7][0xfd]cN3[0x8f][0x99][0xba][0xa5]T[0xe0][0xf3]g)VZIJ[0x1c][0xb3]<gT[0x98][0xab][0xd5][0x88][0x4][0xd8][0x1c]\[0x1a][0x83]O[0x9e][0xf][0xe6]v[0x98][0xfa][0x95]R[0xbf]u[0x94][0x93]Vo[0xff][o[0x83][0xdd][0xfd][0xc7][0xfe][0x9e][0x1]O[0xd4][0x8c][0x3]/[0x8][0x0][0x0]"
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection [id: 0][route: {s}->https://raw.githubusercontent.com:443] can be kept alive indefinitely
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection released: [id: 0][route: {s}->https://raw.githubusercontent.com:443][total kept alive: 1; route allocated: 1 of 5; total allocated: 1 of 10]
+[main] DEBUG Jena  - Jena initialization
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorFile
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: ClassLoaderLocator
+[main] DEBUG org.apache.jena.util.LocationMapper  - Failed to find configuration: file:location-mapping.rdf;file:location-mapping.n3;file:location-mapping.ttl;file:etc/location-mapping.rdf;file:etc/location-mapping.n3;file:etc/location-mapping.ttl
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorFile
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: LocatorURL
+[main] DEBUG org.apache.jena.util.FileManager  - Add location: ClassLoaderLocator
+[main] DEBUG org.apache.jena.riot.system.stream.JenaIOEnvironment  - Failed to find configuration: location-mapping.ttl;location-mapping.rdf;location-mapping.n3;etc/location-mapping.rdf;etc/location-mapping.n3;etc/location-mapping.ttl
+[main] DEBUG org.apache.jena.info  - System architecture: 64 bit
+[main] DEBUG org.apache.jena.riot.system.stream.StreamManager  - Not mapped: https://raw.githubusercontent.com/riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl
+[main] DEBUG org.apache.jena.riot.web.HttpOp  - [1] GET https://raw.githubusercontent.com/riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl
+[main] DEBUG org.apache.http.client.protocol.RequestAddCookies  - CookieSpec selected: default
+[main] DEBUG org.apache.http.client.protocol.RequestAuthCache  - Auth cache not set in the context
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection request: [route: {s}->https://raw.githubusercontent.com:443][total kept alive: 0; route allocated: 0 of 5; total allocated: 0 of 10]
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection leased: [id: 0][route: {s}->https://raw.githubusercontent.com:443][total kept alive: 0; route allocated: 1 of 5; total allocated: 1 of 10]
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Opening connection {s}->https://raw.githubusercontent.com:443
+[main] DEBUG org.apache.http.impl.conn.DefaultHttpClientConnectionOperator  - Connecting to raw.githubusercontent.com/185.199.110.133:443
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Connecting socket to raw.githubusercontent.com/185.199.110.133:443 with timeout 0
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Enabled protocols: [TLSv1.3, TLSv1.2, TLSv1.1, TLSv1]
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Enabled cipher suites:[TLS_AES_256_GCM_SHA384, TLS_AES_128_GCM_SHA256, TLS_CHACHA20_POLY1305_SHA256, TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256, TLS_DHE_DSS_WITH_AES_256_GCM_SHA384, TLS_DHE_RSA_WITH_AES_128_GCM_SHA256, TLS_DHE_DSS_WITH_AES_128_GCM_SHA256, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TLS_DHE_DSS_WITH_AES_256_CBC_SHA256, TLS_DHE_RSA_WITH_AES_128_CBC_SHA256, TLS_DHE_DSS_WITH_AES_128_CBC_SHA256, TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384, TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256, TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_128_GCM_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_AES_128_CBC_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA, TLS_EMPTY_RENEGOTIATION_INFO_SCSV]
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Starting handshake
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  - Secure session established
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  negotiated protocol: TLSv1.3
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  negotiated cipher suite: TLS_AES_256_GCM_SHA384
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  peer principal: CN=www.github.com, O="GitHub, Inc.", L=San Francisco, ST=California, C=US
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  peer alternative names: [www.github.com, *.github.com, github.com, *.github.io, github.io, *.githubusercontent.com, githubusercontent.com]
+[main] DEBUG org.apache.http.conn.ssl.SSLConnectionSocketFactory  -  issuer principal: CN=DigiCert SHA2 High Assurance Server CA, OU=www.digicert.com, O=DigiCert Inc, C=US
+[main] DEBUG org.apache.http.impl.conn.DefaultHttpClientConnectionOperator  - Connection established 172.17.37.31:54767<->185.199.110.133:443
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Executing request GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Target auth state: UNCHALLENGED
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Proxy auth state: UNCHALLENGED
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Accept: text/turtle,application/n-triples;q=0.9,application/rdf+xml;q=0.7,application/trig,application/n-quads;q=0.9,text/x-nquads;q=0.8,application/x-trig;q=0.7,application/ld+json;q=0.6,*/*;q=0.5
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> User-Agent: Apache-Jena-ARQ/3.5.0
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Host: raw.githubusercontent.com
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Connection: Keep-Alive
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 >> Accept-Encoding: gzip,deflate
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "GET /riccardotommasini/webstreams/site/src/main/resources/streams/sgraphs/gdelt.ttl HTTP/1.1[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Accept: text/turtle,application/n-triples;q=0.9,application/rdf+xml;q=0.7,application/trig,application/n-quads;q=0.9,text/x-nquads;q=0.8,application/x-trig;q=0.7,application/ld+json;q=0.6,*/*;q=0.5[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "User-Agent: Apache-Jena-ARQ/3.5.0[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Host: raw.githubusercontent.com[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Connection: Keep-Alive[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "Accept-Encoding: gzip,deflate[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 >> "[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "HTTP/1.1 200 OK[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Connection: keep-alive[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Length: 572[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Cache-Control: max-age=300[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Type: text/plain; charset=utf-8[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "ETag: W/"735ebad9858c9c0392e6a36283170566e78e25509eb1df7586d91ae47cc7f335"[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Strict-Transport-Security: max-age=31536000[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Content-Type-Options: nosniff[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Frame-Options: deny[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-XSS-Protection: 1; mode=block[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-GitHub-Request-Id: 7596:E724:81498E:8821EE:60D307B6[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Content-Encoding: gzip[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Accept-Ranges: bytes[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Date: Wed, 23 Jun 2021 10:07:05 GMT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Via: 1.1 varnish[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Served-By: cache-hhn4042-HHN[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Cache: HIT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Cache-Hits: 1[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Timer: S1624442825.381260,VS0,VE0[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Vary: Authorization,Accept-Encoding[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Access-Control-Allow-Origin: *[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "X-Fastly-Request-ID: 8fdd2aa933a7b261df98fd80c19c6070d0fd301f[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Expires: Wed, 23 Jun 2021 10:12:05 GMT[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "Source-Age: 19[\r][\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "[\r][\n]"
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << HTTP/1.1 200 OK
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Connection: keep-alive
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Length: 572
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Cache-Control: max-age=300
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Type: text/plain; charset=utf-8
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << ETag: W/"735ebad9858c9c0392e6a36283170566e78e25509eb1df7586d91ae47cc7f335"
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Strict-Transport-Security: max-age=31536000
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Content-Type-Options: nosniff
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Frame-Options: deny
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-XSS-Protection: 1; mode=block
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-GitHub-Request-Id: 7596:E724:81498E:8821EE:60D307B6
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Content-Encoding: gzip
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Accept-Ranges: bytes
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Date: Wed, 23 Jun 2021 10:07:05 GMT
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Via: 1.1 varnish
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Served-By: cache-hhn4042-HHN
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Cache: HIT
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Cache-Hits: 1
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Timer: S1624442825.381260,VS0,VE0
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Vary: Authorization,Accept-Encoding
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Access-Control-Allow-Origin: *
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << X-Fastly-Request-ID: 8fdd2aa933a7b261df98fd80c19c6070d0fd301f
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Expires: Wed, 23 Jun 2021 10:12:05 GMT
+[main] DEBUG org.apache.http.headers  - http-outgoing-0 << Source-Age: 19
+[main] DEBUG org.apache.http.impl.execchain.MainClientExec  - Connection can be kept alive indefinitely
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "[0x1f][0x8b][0x8][0x0][0x0][0x0][0x0][0x0][0x0][0x3][0xcd][0x95]]o[0x9b]0[0x14][0x86][0xaf][0x17])[0xff][0x1]u[0xd7]`B[0xf7][0xd1]dS[0xd4][0xa8][0x8d]r[0xb1]F[0x9a][0x6][0xaa]vU[0xc9][0xc1]&x[0x2][0x1b][0xd9][0xe]$[0xfb][0xf5][0xb5][\r][0xf9]0[0x1f]U[0xdb][0x9b]-W[0x8e][0xfd]>[0xe7][0xbc][0xe7]p[0xc][0xb7][0x5][0xc7][0x9][0xd9];3[0xe7]{*e!f[0x0]TU[0xe5]m[0x11][0xce][0xa4][0xc7][0xf8][0x16][0x8][0xc9]1[0xcc]?[0xce][0x1d]o<[0xba]m[0xc4]([0x86][0xb2][0x1][0x1a]}um[0xc4]T[0x0]}f[0xab]Y[0x95][0xf5][0x8a][0x3][0xdf][0xf][0x80][0xff][0x15][0xa8]s[0x1b][0xe0]([0xe9][0x5]&[0xd3][0xe9][0x14](&[0x8]\%q[0xc5][0x81]J[0xb8]w[0xa9][0xb0][0xe9]}[0xde][0x9f][0xee][0xf7][0xfa]AG[0xb8][0x1][0x14][0xe6]X[0x14]0[0xc6]6&[0xd0][0x90][0xcb][0x89]f[0xc3]8[0xc5]9[0xec][0x18][0x15]C[0x90][0xf][0x14]gl[0xf6][0x80]%[0x8b]av[0x89]^[0x13]d@.[\n]"
+[main] DEBUG org.apache.http.wire  - http-outgoing-0 << "P[0x1f][0xb6][0x80][0x82][0xb3][0xf2]E[0xbd][0xab][0x15]-[0xc8]*[0xa9][0x7][0x11][0xe8][0x95][0xcf]5[0xfa]e[0x90][0x8d][0xab][0x15][0xc0]b$[0xc9][0xf1]P[0xf][0xbe][0x0]}j[0xe7]Hx>8;[0x9][0xe3]9[0x94][0xc2]N[0xd0][0xaa][0xdc][0x2][0xce]5[0x8f]GGE[0xa6]kK[0x99][0x90][0xc0][0xc][0xf1][0xdc][0x81][0xa6][0x11]wP[0xc2][0x8c]mC[0xcc]K[0x12]c[0xe7][0xdb]x[0xf4][0xc1][0x94][0x8b][0xd4][0xbe][0xc0][0xf2][0x94]@[0xff][0xaf][0xc7]_[0x5][0xff][0x83][0xe3][0xfa][0x16][0x98][0x8d]2[0x0][0x19][0x14]rW([\r][0xf6][0xe4]^[0xc5][0xb6]S[0xbf][0x8d][0x85][0xc7]1[0x8][0xcd][0x15][0xd3][0x96][0x9c][0xe6]g[0x9c]I"3[0xec]\[0xad][0xee][0x97][0xf][0x91]{[0xbf][0x88][0x16]N-[0xbc]zz[0xd2][0xc3][0xaa].&[0xa1][0xdb][0xe]U[0xec]6[0x19][0x11])[0xe6]V[0xcb][0xda][0xa6][0xe6][0x1d][0xe]a[0x11]sRH[0xc2]h[0x93][0xd3]yM[0xce][0xa6][0x84][0x8a]P[0xc4][0xaa][0xe8]P[0xe0][0xe3][0x8e][0xea]5Q[0x8b]h[0x97]+?/0![0xf9][0xab][0x8a][0xfc][0x19]M>[0xaf][0x9b]$h[0xc7][0xa1][0xb1][0xd1]ER([0x16]I[0x92][0xed]0[0x95][0xce][0xcc][0x98]\[0xfd]X[0xdd][0x85][0x8f][0xdd][0xe][0xe][0x2][0xcb]R[0xad][0xdf][0x86][0xac][0xd5]R[0xf9]9C[0xe6][0xa1]_[0x84]k[0xb6][0x87][0x1e][0xe8]9[0xf0][0x92][0xa2][0x82][0x91][0x1]/[0xa7][0xc3][0x8b][0xf0][0xaa][0xbc][0xf7][0x6][0xbf][0xec]L_[0xe8][0xa6][0xaa][0xf7][0x86]o7[0xa5]/[0xc5]@}[0xad]\[0xa7][0xfd]cN3[0x8f][0x99][0xba][0xa5]T[0xe0][0xf3]g)VZIJ[0x1c][0xb3]<gT[0x98][0xab][0xd5][0x88][0x4][0xd8][0x1c]\[0x1a][0x83]O[0x9e][0xf][0xe6]v[0x98][0xfa][0x95]R[0xbf]u[0x94][0x93]Vo[0xff][o[0x83][0xdd][0xfd][0xc7][0xfe][0x9e][0x1]O[0xd4][0x8c][0x3]/[0x8][0x0][0x0]"
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection [id: 0][route: {s}->https://raw.githubusercontent.com:443] can be kept alive indefinitely
+[main] DEBUG org.apache.http.impl.conn.PoolingHttpClientConnectionManager  - Connection released: [id: 0][route: {s}->https://raw.githubusercontent.com:443][total kept alive: 1; route allocated: 1 of 5; total allocated: 1 of 10]

@@ -1,13 +1,13 @@
 package org.streamreasoning.rsp4j.yasper.querying;
 
-import org.streamreasoning.rsp4j.yasper.querying.syntax.CQ;
-import org.streamreasoning.rsp4j.yasper.querying.syntax.RSPQLVisitorImpl;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.syntax.CaseChangingCharStream;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLLexer;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLParser;
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.ParseCancellationException;
+import org.streamreasoning.rsp4j.yasper.querying.syntax.CQ;
+import org.streamreasoning.rsp4j.yasper.querying.syntax.RSPQLVisitorImpl;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

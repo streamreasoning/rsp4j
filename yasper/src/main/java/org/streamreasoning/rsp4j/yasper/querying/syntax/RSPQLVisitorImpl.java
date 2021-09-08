@@ -1,15 +1,13 @@
 package org.streamreasoning.rsp4j.yasper.querying.syntax;
 
-import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
+import org.apache.commons.lang.NotImplementedException;
+import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
+import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLBaseVisitor;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLParser;
-import org.streamreasoning.rsp4j.api.RDFUtils;
-import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.WindowNodeImpl;
-import org.antlr.v4.runtime.tree.TerminalNode;
-import org.apache.commons.lang.NotImplementedException;
 
-import java.time.Duration;
+import java.util.Map;
 
 /**
  * This parser class is based on the RSP-QL syntax described using ANTRL4. The parse tree visitor maps the static
@@ -30,17 +28,8 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
      * @return
      */
     public Object visitOutputStreamType(RSPQLParser.OutputStreamTypeContext ctx) {
-        switch (ctx.getText()) {
-            case "ISTREAM":
-                query.setIstream();
-                break;
-            case "RSTREAM":
-                query.setRstream();
-                break;
-            case "DSTREAM":
-                query.setDstream();
-                break;
-        }
+        RSPQLExtractionHelper.setOutputStreamType(query, ctx.getText());
+
         return null;
     }
 
@@ -51,16 +40,12 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
      * @return
      */
     public Object visitOutputStream(RSPQLParser.OutputStreamContext ctx) {
-        RSPQLParser.SourceSelectorContext sourceSelectorContext = ctx.sourceSelector();
-        RSPQLParser.IriContext iri1 = sourceSelectorContext.iri();
-        TerminalNode iriref = iri1.IRIREF();
-
-        String text = iriref.getText();
-        String iri = trimTags(text);
+        String iri = RSPQLExtractionHelper.extractOutputStream(ctx);
         query.setOutputStream(iri);
         //todo not supporting prefixes
         return query.getOutputStream();
     }
+
 
     /**
      * Visit window definition clauses. For now we support only  logical windows
@@ -69,22 +54,13 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
      * @return
      */
     public Object visitNamedWindowClause(RSPQLParser.NamedWindowClauseContext ctx) {
-        String windowUri = trimTags(ctx.windowUri().getText());
-        String streamUri = trimTags(ctx.streamUri().getText());
-        RSPQLParser.LogicalWindowContext c = ctx.window().logicalWindow();
-        Duration range = Duration.parse(c.logicalRange().duration().getText());
-        Duration step = null;
 
-        if (c.logicalStep() != null) {
-            step = Duration.parse(c.logicalStep().duration().getText());
-        }
-
-        WindowNode wn = new WindowNodeImpl(RDFUtils.createIRI(windowUri), range, step, 0);
-
-        query.addNamedWindow(streamUri, wn);
+        Map.Entry<String, WindowNode> streamWindowPair = RSPQLExtractionHelper.extractNamedWindowClause(ctx);
+        query.addNamedWindow(streamWindowPair.getKey(), streamWindowPair.getValue());
 
         return null;
     }
+
 
     public Object visitWindowGraphPattern(RSPQLParser.WindowGraphPatternContext ctx) {
         //Node n = (Node) ctx.varOrIri().accept(this);
@@ -139,7 +115,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
      * @return
      */
     public Object visitBaseDecl(RSPQLParser.BaseDeclContext ctx) {
-        String baseUri = trimTags(ctx.IRIREF().getText());
+        String baseUri = RDFUtils.trimTags(ctx.IRIREF().getText());
         // set it
         return null;
     }
@@ -151,8 +127,8 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
      * @return
      */
     public Object visitPrefixDecl(RSPQLParser.PrefixDeclContext ctx) {
-        String prefix = trimLast(ctx.PNAME_NS().getText());
-        String ns = trimTags(ctx.IRIREF().getText());
+        String prefix = RDFUtils.trimLast(ctx.PNAME_NS().getText());
+        String ns = RDFUtils.trimTags(ctx.IRIREF().getText());
         // set it
         return null;
     }
@@ -164,7 +140,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
      * @return
      */
     public Object visitDefaultGraphClause(RSPQLParser.DefaultGraphClauseContext ctx) {
-        String defaultGraphUri = trimTags(ctx.sourceSelector().accept(this).toString());
+        String defaultGraphUri = RDFUtils.trimTags(ctx.sourceSelector().accept(this).toString());
         // set it
         return null;
     }
@@ -176,7 +152,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
      * @return
      */
     public Object visitNamedGraphClause(RSPQLParser.NamedGraphClauseContext ctx) {
-        String namedGraphUri = trimTags(ctx.sourceSelector().accept(this).toString());
+        String namedGraphUri = RDFUtils.trimTags(ctx.sourceSelector().accept(this).toString());
         // add it
         return null;
     }
@@ -402,6 +378,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
      * @return
      */
     public Object visitTriplesBlock(RSPQLParser.TriplesBlockContext ctx) {
+        System.out.println(ctx);
         //ElementPathBlock el = (ElementPathBlock) ctx.triplesSameSubjectPath().accept(this);
         //if(ctx.triplesBlock() != null){
         //    ElementPathBlock elb = (ElementPathBlock) ctx.triplesBlock().accept(this);
@@ -544,7 +521,7 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
      */
     public Object visitIri(RSPQLParser.IriContext ctx) {
         if (ctx.IRIREF() != null) {
-            String uri = trimTags(ctx.IRIREF().getText());
+            String uri = RDFUtils.trimTags(ctx.IRIREF().getText());
             // create node
             return null;
         }
@@ -887,21 +864,6 @@ public class RSPQLVisitorImpl extends RSPQLBaseVisitor {
         throw new UnsupportedOperationException();
     }
 
-    public String trimTags(String s) {
-        return s.replaceAll("^<(.*)>$", "$1");
-    }
-
-    public String trimQuotes(String s) {
-        return s.replaceAll("^['\"](.*)['\"]$", "$1");
-    }
-
-    public String trimFirst(String s) {
-        return s.replaceAll("^.(.*)$", "$1");
-    }
-
-    public String trimLast(String s) {
-        return s.replaceAll("^(.*).$", "$1");
-    }
 
 }
 

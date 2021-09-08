@@ -1,6 +1,5 @@
 # YASPER
 
-
 ## INSTLLATION USING MAVEN
 
 ```xml
@@ -10,7 +9,6 @@
    <version>1.0.0</version>
 </dependency>
 ```
-
 
 ## APACHE RDF COMMONS
 

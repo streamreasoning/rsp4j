@@ -1,7 +1,9 @@
 # RSP-QL Example Queries
 
 ## Background data
+
 The following data exists at the URI ```http://temp-data.org#```:
+
 ```
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix dbp: <http://dbpedia.org/resource/> .
@@ -17,6 +19,7 @@ dbp:London a dbo:City .
 ```
 
 ### Streaming data
+
 The following stream is available as ```http://sensor-stream.org/```
 
 ```
@@ -74,7 +77,9 @@ _:b8 {
 ## Queries
 
 ### Query 1
+
 Generate a stream including all events reporting temperatures below 10 C.
+
 ```
 PREFIX prov: <http://www.w3.org/ns/prov#>
 PREFIX dbp: <http://dbpedia.org/resource/>
@@ -99,6 +104,7 @@ WHERE {
 ```
 
 ### Expected result
+
 | Timestamp            | Results       |
 | -------------------- |:-------------|
 | <sub>2018-01-01T01:00:06Z</sub> | <sub>no result</sub> |
@@ -109,14 +115,20 @@ WHERE {
 | <sub>2018-01-01T01:00:11Z</sub> | <sub>no result</sub> |
 
 ### Discussion
-Robin: Can we somehow access the generation time reported in the original events? Since all streamed graphs are placed in the same
-default graph this does not seem feasible. Instead it would have to be included within each individual event.
 
-Robin: What will be the reports at `2018-01-01T01:00:09Z` through `2018-01-01T01:00:11Z`? Istream has been defined as (informally) "everything that was not in present in the previous evaluation", which should mean that the observation at `2018-01-01T01:08:00Z` will appear again in `2018-01-01T01:10:00Z`. Is this the correct interpretation? Otherwise, do we need to revisit the meaning of Istream?
+Robin: Can we somehow access the generation time reported in the original events? Since all streamed graphs are placed
+in the same default graph this does not seem feasible. Instead it would have to be included within each individual
+event.
 
+Robin: What will be the reports at `2018-01-01T01:00:09Z` through `2018-01-01T01:00:11Z`? Istream has been defined as (
+informally) "everything that was not in present in the previous evaluation", which should mean that the observation
+at `2018-01-01T01:08:00Z` will appear again in `2018-01-01T01:10:00Z`. Is this the correct interpretation? Otherwise, do
+we need to revisit the meaning of Istream?
 
 ### Query 2
+
 Generate a stream reporting only the most recent temperature reading (highest timestamp) for each city.
+
 ```
 PREFIX prov: <http://www.w3.org/ns/prov#>
 PREFIX dbp: <http://dbpedia.org/resource/>
@@ -140,6 +152,7 @@ WHERE {
 ```
 
 ### Expected result
+
 | Timestamp            | Results       |
 | -------------------- |:-------------|
 | <sub>2018-01-01T01:00:00Z</sub> | ```_:b0  prov:generatedAtTime "2018-01-01T01:00:00Z"^^xsd:dateTimeStamp . _:b0 { dbp:Berlin loc:hasPointTempC "12.5"^^xsd:decimal }``` |
@@ -156,4 +169,6 @@ WHERE {
 | <sub>2018-01-01T01:00:11Z</sub> | ```_:b5  prov:generatedAtTime "2018-01-01T01:05:00Z"^^xsd:dateTimeStamp . _:b5 { dbp:London loc:hasPointTempC "10.5"^^xsd:decimal } . _:b8  prov:generatedAtTime "2018-01-01T01:10:00Z"^^xsd:dateTimeStamp . _:b8 { dbp:Berlin loc:hasPointTempC "8.5"^^xsd:decimal }``` |
 
 ### Discussion
-Robin: Without accessing the timestamp associated with the incoming events I don't see how this can be done, without CEP operators that is.
+
+Robin: Without accessing the timestamp associated with the incoming events I don't see how this can be done, without CEP
+operators that is.

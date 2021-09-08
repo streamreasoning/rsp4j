@@ -20,8 +20,9 @@ public class CaseChangingCharStream implements CharStream {
     /**
      * Constructs a new CaseChangingCharStream wrapping the given {@link CharStream} forcing
      * all characters to upper case or lower case.
+     *
      * @param stream The stream to wrap.
-     * @param upper If true force each symbol to upper case, otherwise force to lower.
+     * @param upper  If true force each symbol to upper case, otherwise force to lower.
      */
     public CaseChangingCharStream(CharStream stream, boolean upper) {
         this.stream = stream;

@@ -17,12 +17,12 @@
  */
 package org.streamreasoning.rsp4j.yasper.sds;
 
-import org.streamreasoning.rsp4j.api.RDFUtils;
-import org.streamreasoning.rsp4j.api.sds.SDS;
-import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import lombok.AllArgsConstructor;
 import org.apache.commons.rdf.api.*;
 import org.apache.commons.rdf.simple.DatasetGraphView;
+import org.streamreasoning.rsp4j.api.RDFUtils;
+import org.streamreasoning.rsp4j.api.sds.SDS;
+import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -43,6 +43,7 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
     private final Set<TimeVarying<Graph>> defs = new HashSet<>();
     private final Map<IRI, TimeVarying<Graph>> tvgs = new HashMap<>();
     private final IRI def;
+    private boolean materialized = false;
 
 
     public SDSImpl() {
@@ -69,7 +70,7 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
         // Check if any of the object references changed during the mapping, to
         // avoid creating a new Quad object if possible
         if (newGraph == quad.getGraphName().orElse(null) && newSubject == quad.getSubject()
-                && newPredicate == quad.getPredicate() && newObject == quad.getObject()) {
+            && newPredicate == quad.getPredicate() && newObject == quad.getObject()) {
             quads.add(quad);
         } else {
             // Make a new Quad with our mapped instances
@@ -208,7 +209,7 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
 
     @Override
     public Collection<TimeVarying<Graph>> asTimeVaryingEs() {
-        return defs;
+        return tvgs.values();
     }
 
     @Override
@@ -246,7 +247,28 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
                 }).forEach(n -> n.g.stream()
                 .forEach(o -> this.add(n.name, o.getSubject(), o.getPredicate(), o.getObject())));
 
+        materialized();
         return this;
+    }
+
+    @Override
+    public Stream<Graph> toStream() {
+        if (materialized) {
+            materialized = false;
+            Map<Optional<BlankNodeOrIRI>, List<Quad>> collect = stream().collect(Collectors.groupingBy(Quad::getGraphName));
+            IRI aDefault = RDFUtils.createIRI("default");
+
+            return collect.entrySet().stream().map(e -> {
+                BlankNodeOrIRI blankNodeOrIRI = e.getKey().orElse(aDefault);
+                return RDFUtils.createGraph(blankNodeOrIRI, e.getValue());
+            });
+        } else throw new RuntimeException("SDS not materialized");
+    }
+
+
+    @Override
+    public void materialized() {
+        this.materialized = true;
     }
 
 

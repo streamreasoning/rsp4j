@@ -11,16 +11,16 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 @Log4j
-public class JenaRDFParsingStrategy implements ParsingStrategy<Graph>{
+public class JenaRDFParsingStrategy implements ParsingStrategy<Graph> {
 
     private final RDFBase base;
 
-    public JenaRDFParsingStrategy(RDFBase base){
+    public JenaRDFParsingStrategy(RDFBase base) {
         this.base = base;
     }
 
     @Override
-    public ParsingResult<Graph> parse(String parseString) {
+    public Graph parse(String parseString) {
         log.debug("Received for parsing: " + parseString);
         Model dataModel = ModelFactory.createDefaultModel();
         try {
@@ -28,8 +28,8 @@ public class JenaRDFParsingStrategy implements ParsingStrategy<Graph>{
             dataModel.read(targetStream, null, base.name());
             JenaRDF jena = new JenaRDF();
             Graph g1 = jena.asGraph(dataModel);
-            return new ParsingResult<Graph>(g1);
-        }catch (Exception e) {
+            return g1;
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

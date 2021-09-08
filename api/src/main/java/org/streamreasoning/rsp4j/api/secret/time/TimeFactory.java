@@ -2,8 +2,8 @@ package org.streamreasoning.rsp4j.api.secret.time;
 
 public class TimeFactory {
 
-    private static Time time = null;
-    private static ET et = null;
+    protected static Time time = null;
+    protected static ET et = null;
 
     public static Time getInstance() {
         if (time == null) {
@@ -18,4 +18,6 @@ public class TimeFactory {
         }
         return et;
     }
+
+
 }

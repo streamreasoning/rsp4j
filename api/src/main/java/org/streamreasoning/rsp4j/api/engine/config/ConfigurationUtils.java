@@ -33,7 +33,7 @@ public class ConfigurationUtils {
     public static final String REPORT_STRATEGY_PP = ENGINE + "periodic";
 
     public static final String TICK = ENGINE + "tick";
-    
+
     public static final String REPORT_GRAIN = ENGINE + "report_grain";
 
 

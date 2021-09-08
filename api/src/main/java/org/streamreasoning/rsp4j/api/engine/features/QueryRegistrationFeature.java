@@ -1,10 +1,10 @@
 package org.streamreasoning.rsp4j.api.engine.features;
 
-import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
+import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
 
 public interface QueryRegistrationFeature<Q extends ContinuousQuery> {
 
-    <I, C, O> ContinuousQueryExecution<I, C, O> register(Q q);
+    <I, W, R, O> ContinuousQueryExecution<I, W, R, O> register(Q q);
 
 }

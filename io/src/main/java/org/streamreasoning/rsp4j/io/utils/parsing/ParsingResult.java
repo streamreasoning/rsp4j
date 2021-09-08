@@ -3,12 +3,12 @@ package org.streamreasoning.rsp4j.io.utils.parsing;
 
 /**
  * Wrapper class that combines a parsed object with its time stamp.
- *
+ * <p>
  * For cases where input contains both timestamp and parsing item, e.g.
  * "1590809839, <http://test/subject> <http://test/property> <http://test/subject>".
  * Not all parsers will be able to extract a timestamp, in that case current time can be assigned.
  *
- * @param <T>  the type of the parsed object
+ * @param <T> the type of the parsed object
  */
 public class ParsingResult<T> {
 
@@ -17,43 +17,48 @@ public class ParsingResult<T> {
 
     /**
      * Creates new ParsingResult with custom time stamp
-     * @param object  parsed object
-     * @param timeStamp  extracted time stamp
+     *
+     * @param object    parsed object
+     * @param timeStamp extracted time stamp
      */
-    public ParsingResult(T object, long timeStamp){
+    public ParsingResult(T object, long timeStamp) {
         this.object = object;
         this.timeStamp = timeStamp;
     }
 
     /**
      * Creates new ParsingResult and assigns current time as time stamp
-     * @param object  parsed object
+     *
+     * @param object parsed object
      */
-    public ParsingResult(T object){
-        this(object,System.currentTimeMillis());
+    public ParsingResult(T object) {
+        this(object, System.currentTimeMillis());
     }
 
     /**
      * Returns the time stamp assigned to the parsed object
-     * @return  time stamp
+     *
+     * @return time stamp
      */
-    public long getTimeStamp(){
+    public long getTimeStamp() {
         return timeStamp;
     }
 
     /**
      * Sets the time stamp
-     * @param timeStamp  time stamp
+     *
+     * @param timeStamp time stamp
      */
-    public void setTimeStamp(long timeStamp){
+    public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
     }
 
     /**
      * Returns the parsed object of type T
-     * @return  parsed object
+     *
+     * @return parsed object
      */
-    public T getResult(){
+    public T getResult() {
         return object;
     }
 }

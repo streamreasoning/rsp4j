@@ -4,6 +4,7 @@ import org.apache.commons.rdf.api.*;
 import org.apache.commons.rdf.simple.SimpleRDF;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.ServiceLoader;
 
 public class RDFUtils {
@@ -17,7 +18,10 @@ public class RDFUtils {
     public static RDF getInstance() {
         ServiceLoader<RDF> loader = ServiceLoader.load(RDF.class);
         Iterator<RDF> iterator = loader.iterator();
-        RDF rdf = iterator.next();
+        RDF rdf = null;
+
+        //rdf = iterator.next();
+
         if (rdf == null) {
             rdf = new SimpleRDF();
         }
@@ -26,6 +30,14 @@ public class RDFUtils {
 
     public static Graph createGraph() {
         return getInstance().createGraph();
+    }
+
+    public static Graph createGraph(BlankNodeOrIRI name, List<Quad> quadList) {
+        Graph graph = getInstance().createGraph();
+        for (Quad quad : quadList) {
+            graph.add(quad.asTriple());
+        }
+        return graph;
     }
 
     public static IRI createIRI(String w1) {
@@ -46,6 +58,34 @@ public class RDFUtils {
 
     public static RDFTerm createLiteral(String lexicalForm, String s) {
         return getInstance().createLiteral(lexicalForm, s);
+    }
+    public static RDFTerm createLiteral(String lexicalForm) {
+        return getInstance().createLiteral(lexicalForm);
+    }
+
+    public static String trimTags(String s) {
+        return s.replaceAll("^<(.*)>$", "$1");
+    }
+
+    public static String trimQuotes(String s) {
+        return s.replaceAll("^['\"](.*)['\"]$", "$1");
+    }
+
+    public static String trimFirst(String s) {
+        return s.replaceAll("^.(.*)$", "$1");
+    }
+
+    public static String trimLast(String s) {
+        return s.replaceAll("^(.*).$", "$1");
+    }
+
+
+    public static String trimVar(String inputVariable) {
+        return inputVariable.startsWith("?") ? trimFirst(inputVariable) : inputVariable;
+    }
+
+    public static Triple createTriple(BlankNodeOrIRI subject, IRI predicate, RDFTerm object) {
+        return getInstance().createTriple(subject, predicate, object);
     }
 
 

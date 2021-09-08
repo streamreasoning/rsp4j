@@ -1,6 +1,12 @@
 package org.streamreasoning.rsp4j.api.engine.config;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.streamreasoning.rsp4j.api.enums.ContentFormat;
+import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.T0;
+import org.streamreasoning.rsp4j.api.enums.Tick;
+import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.NonEmptyContent;
@@ -9,11 +15,6 @@ import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.Periodic;
 import org.streamreasoning.rsp4j.api.secret.time.Times;
 import org.streamreasoning.rsp4j.api.stream.metadata.StreamSchema;
-import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
-import org.streamreasoning.rsp4j.api.enums.ReportGrain;
-import org.streamreasoning.rsp4j.api.enums.Tick;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
 
 import java.net.URL;
 import java.time.Instant;
@@ -34,6 +35,18 @@ public class EngineConfiguration extends PropertiesConfiguration {
         if (config == null)
             return config;
         return getDefault();
+    }
+
+    public static EngineConfiguration loadConfig(String path) throws ConfigurationException {
+        URL resource = EngineConfiguration.class.getResource(path);
+        if (config == null) {
+            config = new EngineConfiguration(resource.getPath());
+        }
+        return config;
+    }
+
+    public static EngineConfiguration getDefault() throws ConfigurationException {
+        return loadConfig("/default.properties");
     }
 
     public Report report() {
@@ -87,18 +100,6 @@ public class EngineConfiguration extends PropertiesConfiguration {
 
     public boolean partialWindowsEnabled() {
         return this.getBoolean(ConfigurationUtils.PARTIAL_WINDOW, true);
-    }
-
-    public static EngineConfiguration loadConfig(String path) throws ConfigurationException {
-        URL resource = EngineConfiguration.class.getResource(path);
-        if (config == null) {
-            config = new EngineConfiguration(resource.getPath());
-        }
-        return config;
-    }
-
-    public static EngineConfiguration getDefault() throws ConfigurationException {
-        return loadConfig("/default.properties");
     }
 
     public String getBaseURI() {
@@ -161,5 +162,9 @@ public class EngineConfiguration extends PropertiesConfiguration {
 
     public String getResponseFormat() {
         return this.getString("rsp_engine.response_format");
+    }
+
+    public ContentFormat getContentFormat() {
+        return ContentFormat.valueOf(this.getString("rsp_engine.content_format"));
     }
 }

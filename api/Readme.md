@@ -1,6 +1,5 @@
 # API
 
-
 ## INSTALLATION USING MAVEN
 
 ```xml
