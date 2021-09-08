@@ -12,10 +12,8 @@
     <artifactId>csparql-rsp4j</artifactId>
     <repositories>
         <repository>
-            <id>streamreasoning_repository</id>
-            <name>streamreasoning repository</name>
-            <url>http://streamreasoning.org/maven/</url>
-            <layout>default</layout>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
@@ -25,14 +23,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>eu.larkc.csparql</groupId>
-            <artifactId>csparql-core</artifactId>
+            <groupId>com.github.streamreasoning</groupId>
+            <artifactId>CSPARQL-engine</artifactId>
             <version>0.9.5.1</version>
-        </dependency>
-        <dependency>
-            <groupId>it.polimi.deib</groupId>
-            <artifactId>rsp-services-api</artifactId>
-            <version>0.4.5</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

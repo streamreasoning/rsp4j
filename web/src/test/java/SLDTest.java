@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 public class SLDTest {
 
     JenaRDF rdf = new JenaRDF();
-    String uri = "https://raw.githubusercontent.com/streamreasoning/rsp4j/r2r/web/src/test/resources/sgraph.ttl";
+    String uri = "https://raw.githubusercontent.com/streamreasoning/rsp4j/master/web/src/test/resources/sgraph.ttl";
     Model ttl = rdf.createGraph().asJenaModel().read(uri, "TTL");
     Graph g = rdf.asGraph(ttl);
     Graph graph = SLD.fetchStreamDescriptor(uri);
