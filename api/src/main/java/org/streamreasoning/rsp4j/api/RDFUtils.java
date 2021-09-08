@@ -18,7 +18,10 @@ public class RDFUtils {
     public static RDF getInstance() {
         ServiceLoader<RDF> loader = ServiceLoader.load(RDF.class);
         Iterator<RDF> iterator = loader.iterator();
-        RDF rdf = iterator.next();
+        RDF rdf = null;
+
+        //rdf = iterator.next();
+
         if (rdf == null) {
             rdf = new SimpleRDF();
         }
