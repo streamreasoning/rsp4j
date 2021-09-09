@@ -1,6 +1,5 @@
 package org.streamreasoning.rsp4j.csparql;
 
-import com.hp.hpl.jena.graph.Node;
 import eu.larkc.csparql.cep.api.RdfQuadruple;
 import eu.larkc.csparql.cep.api.RdfStream;
 import org.apache.commons.rdf.api.Graph;

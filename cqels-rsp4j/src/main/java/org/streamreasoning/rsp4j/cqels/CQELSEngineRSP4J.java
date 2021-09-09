@@ -13,8 +13,6 @@ import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.engine.features.StreamRegistrationFeature;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
-import org.streamreasoning.rsp4j.api.querying.syntax.rspdialects.RSPDialect;
-import org.streamreasoning.rsp4j.api.querying.syntax.rspdialects.RSPDialectConverter;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.BindingImpl;

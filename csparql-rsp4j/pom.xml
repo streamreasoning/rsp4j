@@ -20,12 +20,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <dependencies>
         <dependency>
-            <groupId>com.github.streamreasoning</groupId>
+            <groupId>com.github.pbonte</groupId>
             <artifactId>CSPARQL-engine</artifactId>
-            <version>0.9.5.1</version>
+            <version>0.9.5.1-pomfix</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

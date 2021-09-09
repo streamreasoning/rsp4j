@@ -1,7 +1,7 @@
 package org.streamreasoning.rsp4j.yasper.querying.operators.windowing;
 
-import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.IRI;
+import org.apache.log4j.Logger;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.exceptions.OutOfOrderElementException;
@@ -20,9 +20,9 @@ import org.streamreasoning.rsp4j.yasper.sds.TimeVaryingObject;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Log4j
 public class CSPARQLStreamToRelationOp<I, W> extends ObservableStreamToRelationOp<I, W> {
 
+    private static final Logger log = Logger.getLogger(CSPARQLStreamToRelationOp.class);
     private final long a, b;
 
     private Map<Window, Content<I, W>> active_windows;

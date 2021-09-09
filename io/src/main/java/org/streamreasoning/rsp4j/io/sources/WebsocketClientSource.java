@@ -1,7 +1,7 @@
 package org.streamreasoning.rsp4j.io.sources;
 
 
-import lombok.extern.log4j.Log4j;
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Consumer;
@@ -20,9 +20,9 @@ import java.util.List;
  *
  * @param <T> output type of the sink
  */
-@Log4j
 public class WebsocketClientSource<T> implements DataStream<T> {
 
+    private static final Logger log = Logger.getLogger(WebsocketClientSource.class);
     protected List<Consumer<T>> consumers = new ArrayList<>();
     protected String wsUrl;
     protected String stream_uri;

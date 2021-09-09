@@ -1,7 +1,7 @@
 package org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner;
 
-import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.IRI;
+import org.apache.log4j.Logger;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.Window;
@@ -14,9 +14,9 @@ import org.streamreasoning.rsp4j.api.secret.time.Time;
 
 import java.util.Observable;
 
-@Log4j
 public abstract class ObservableStreamToRelationOp<E, O> extends Observable implements StreamToRelationOp<E, O> {
 
+    private static final Logger log = Logger.getLogger(ObservableStreamToRelationOp.class);
     protected final Ticker ticker;
     protected final Time time;
     protected final IRI iri;

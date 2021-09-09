@@ -1,6 +1,7 @@
 package org.streamreasoning.rsp4j.cqels;
 
-import com.hp.hpl.jena.graph.*;
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.graph.Triple;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 
 public class ConvertionUtils {

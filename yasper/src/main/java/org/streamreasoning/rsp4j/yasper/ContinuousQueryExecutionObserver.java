@@ -1,6 +1,5 @@
 package org.streamreasoning.rsp4j.yasper;
 
-import lombok.AllArgsConstructor;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
@@ -12,7 +11,6 @@ import java.util.Observer;
 /**
  * Created by riccardo on 03/07/2017.
  */
-@AllArgsConstructor
 public abstract class ContinuousQueryExecutionObserver<I, W, R, O> extends Observable implements Observer, ContinuousQueryExecution<I, W, R, O> {
 
     protected ContinuousQuery query;
@@ -24,4 +22,9 @@ public abstract class ContinuousQueryExecutionObserver<I, W, R, O> extends Obser
         this.sds = sds;
     }
 
+    public ContinuousQueryExecutionObserver(ContinuousQuery query, RelationToStreamOperator s2r, SDS sds) {
+        this.query = query;
+        this.s2r = s2r;
+        this.sds = sds;
+    }
 }

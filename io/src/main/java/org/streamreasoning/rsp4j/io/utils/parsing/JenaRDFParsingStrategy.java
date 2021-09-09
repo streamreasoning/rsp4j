@@ -1,18 +1,18 @@
 package org.streamreasoning.rsp4j.io.utils.parsing;
 
-import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.jena.JenaRDF;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.log4j.Logger;
 import org.streamreasoning.rsp4j.io.utils.RDFBase;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-@Log4j
 public class JenaRDFParsingStrategy implements ParsingStrategy<Graph> {
 
+    private static final Logger log = Logger.getLogger(JenaRDFParsingStrategy.class);
     private final RDFBase base;
 
     public JenaRDFParsingStrategy(RDFBase base) {

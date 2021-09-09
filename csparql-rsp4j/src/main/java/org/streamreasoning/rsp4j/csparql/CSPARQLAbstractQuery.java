@@ -5,8 +5,6 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.Syntax;
 import eu.larkc.csparql.core.engine.CsparqlQueryResultProxy;
 import org.apache.commons.rdf.api.Graph;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
-
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;

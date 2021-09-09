@@ -14,7 +14,6 @@ import org.streamreasoning.rsp4j.debs2021.utils.StreamGenerator;
 import org.streamreasoning.rsp4j.io.DataStreamImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +75,7 @@ public class TestCSPARQL {
         List<Object> resultCounter = new ArrayList<>();
         outputStream.addConsumer((el,ts)->resultCounter.add(el));
         generator.startStreaming();
-        Thread.sleep(10_000);
+        Thread.sleep(3_000);
         generator.stopStreaming();
         assertTrue(resultCounter.size()>0);
     }
@@ -109,7 +108,7 @@ public class TestCSPARQL {
         List<Object> resultCounter = new ArrayList<>();
         outputStream.addConsumer((el,ts)->resultCounter.add(el));
         generator.startStreaming();
-        Thread.sleep(10_000);
+        Thread.sleep(3_000);
         generator.stopStreaming();
         assertTrue(resultCounter.size()>0);
 

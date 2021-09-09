@@ -1,18 +1,18 @@
 package org.streamreasoning.rsp.distribution;
 
-import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.BlankNodeOrIRI;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
+import org.apache.log4j.Logger;
 import org.streamreasoning.rsp.SLD;
 import org.streamreasoning.rsp.enums.Format;
 import org.streamreasoning.rsp.enums.License;
 
 import java.util.Objects;
 
-@Log4j
 public abstract class AbstractDistribution<E> implements SLD.Distribution<E> {
 
+    private static final Logger log = Logger.getLogger(AbstractDistribution.class);
     protected final BlankNodeOrIRI uri;
     protected final String access;
     protected final License license;

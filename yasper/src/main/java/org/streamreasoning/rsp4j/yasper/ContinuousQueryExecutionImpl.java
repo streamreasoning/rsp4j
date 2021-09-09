@@ -1,6 +1,6 @@
 package org.streamreasoning.rsp4j.yasper;
 
-import lombok.extern.log4j.Log4j;
+import org.apache.log4j.Logger;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
@@ -19,9 +19,9 @@ import java.util.stream.Stream;
  * Created by Riccardo on 12/08/16.
  */
 
-@Log4j
 public class ContinuousQueryExecutionImpl<I, W, R, O> extends ContinuousQueryExecutionObserver<I, W, R, O> {
 
+    private static final Logger log = Logger.getLogger(ContinuousQueryExecutionImpl.class);
     private final RelationToStreamOperator<R, O> r2s;
     private final RelationToRelationOperator<W, R> r2r;
     private final SDS<W> sds;

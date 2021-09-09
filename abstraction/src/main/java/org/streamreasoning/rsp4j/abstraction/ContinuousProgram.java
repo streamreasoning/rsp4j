@@ -1,7 +1,7 @@
 package org.streamreasoning.rsp4j.abstraction;
 
-import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.IRI;
+import org.apache.log4j.Logger;
 import org.streamreasoning.rsp4j.abstraction.containers.AggregationContainer;
 import org.streamreasoning.rsp4j.abstraction.containers.R2SContainer;
 import org.streamreasoning.rsp4j.abstraction.containers.S2RContainer;
@@ -22,10 +22,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Log4j
 public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObserver<I, W, R, O> {
 
-  private List<Task<I, W, R, O>> tasks;
+    private static final Logger log = Logger.getLogger(ContinuousProgram.class);
+    private List<Task<I, W, R, O>> tasks;
   private DataStream<I> inputStream;
   private DataStream<O> outputStream;
   private SDS<W> sds;

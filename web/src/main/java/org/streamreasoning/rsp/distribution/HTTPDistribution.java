@@ -1,11 +1,11 @@
 package org.streamreasoning.rsp.distribution;
 
-import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.BlankNodeOrIRI;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.jena.JenaGraph;
 import org.apache.commons.rdf.jena.JenaRDF;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.log4j.Logger;
 import org.streamreasoning.rsp.SLD;
 import org.streamreasoning.rsp.enums.Format;
 import org.streamreasoning.rsp.enums.License;
@@ -24,10 +24,10 @@ import java.util.stream.Collectors;
 import static spark.Spark.get;
 import static spark.Spark.init;
 
-@Log4j
 public class HTTPDistribution<E> extends AbstractDistribution<E> {
 
 
+    private static final Logger log = Logger.getLogger(HTTPDistribution.class);
     private Duration poll;
     private Integer retention;
     private LimitedList<E> state;

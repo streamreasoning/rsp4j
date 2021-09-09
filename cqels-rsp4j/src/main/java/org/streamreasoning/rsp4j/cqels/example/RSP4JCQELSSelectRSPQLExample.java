@@ -1,14 +1,5 @@
 package org.streamreasoning.rsp4j.cqels.example;
 
-import org.apache.commons.rdf.api.Graph;
-import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
-import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
-import org.streamreasoning.rsp4j.api.stream.data.DataStream;
-import org.streamreasoning.rsp4j.cqels.CQELSEngineRSP4J;
-import org.streamreasoning.rsp4j.debs2021.utils.StreamGenerator;
-import org.streamreasoning.rsp4j.io.DataStreamImpl;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
-
 public class RSP4JCQELSSelectRSPQLExample {
 
     public static void main(String[] args) throws InterruptedException {

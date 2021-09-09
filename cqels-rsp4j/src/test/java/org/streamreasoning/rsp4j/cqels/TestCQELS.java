@@ -41,7 +41,7 @@ public class TestCQELS {
         List<Object> resultCounter = new ArrayList<>();
         outputStream.addConsumer((el,ts)->resultCounter.add(el));
         generator.startStreaming();
-        Thread.sleep(10_000);
+        Thread.sleep(3_000);
         generator.stopStreaming();
         assertTrue(resultCounter.size()>0);
 
@@ -72,7 +72,7 @@ public class TestCQELS {
         List<Object> resultCounter = new ArrayList<>();
         outputStream.addConsumer((el,ts)->resultCounter.add(el));
         generator.startStreaming();
-        Thread.sleep(10_000);
+        Thread.sleep(3_000);
         generator.stopStreaming();
         assertTrue(resultCounter.size()>0);
 

@@ -2,13 +2,10 @@ package org.streamreasoning.rsp4j.cqels.example;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.sparql.core.Var;
-import com.hp.hpl.jena.tdb.store.NodeId;
 import org.deri.cqels.data.Mapping;
 import org.deri.cqels.engine.ContinuousListener;
 import org.deri.cqels.engine.ContinuousSelect;
 import org.deri.cqels.engine.ExecContext;
-import org.deri.cqels.integration.CQELSInjector;
 
 public class CQELSStandAloneExample {
 

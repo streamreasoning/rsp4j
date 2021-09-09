@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 
 public class StreamGenerator {
-
     private static final String PREFIX = "http://test/";
     private static final Long TIMEOUT = 1000l;
 
@@ -30,6 +29,10 @@ public class StreamGenerator {
         this.activeStreams = new HashMap<String, DataStream<Graph>>();
         this.isStreaming = new AtomicBoolean(false);
         randomGenerator = new Random(1336);
+    }
+
+    public static String getPREFIX() {
+        return StreamGenerator.PREFIX;
     }
 
     public DataStream<Graph> getStream(String streamURI) {

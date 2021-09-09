@@ -17,7 +17,6 @@
  */
 package org.streamreasoning.rsp4j.yasper.sds;
 
-import lombok.AllArgsConstructor;
 import org.apache.commons.rdf.api.*;
 import org.apache.commons.rdf.simple.DatasetGraphView;
 import org.streamreasoning.rsp4j.api.RDFUtils;
@@ -272,10 +271,14 @@ final public class SDSImpl implements Dataset, SDS<Graph> {
     }
 
 
-    @AllArgsConstructor
     class NamedGraph {
         public IRI name;
         public Graph g;
+
+        public NamedGraph(IRI name, Graph g) {
+            this.name = name;
+            this.g = g;
+        }
     }
 
 }

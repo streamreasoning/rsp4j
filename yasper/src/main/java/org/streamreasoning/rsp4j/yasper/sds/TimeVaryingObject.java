@@ -1,16 +1,19 @@
 package org.streamreasoning.rsp4j.yasper.sds;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.rdf.api.IRI;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 
-@RequiredArgsConstructor
 public class TimeVaryingObject<E> implements TimeVarying<E> {
 
     private final StreamToRelationOp<?, E> op;
     private final IRI name;
     private E graph;
+
+    public TimeVaryingObject(StreamToRelationOp<?, E> op, IRI name) {
+        this.op = op;
+        this.name = name;
+    }
 
     /**
      * The setTimestamp function merges the element

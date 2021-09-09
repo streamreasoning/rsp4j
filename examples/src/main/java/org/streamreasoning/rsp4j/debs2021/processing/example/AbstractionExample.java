@@ -19,7 +19,10 @@ import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.debs2021.utils.StreamGenerator;
 import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TP;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarImpl;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
 
 /***
