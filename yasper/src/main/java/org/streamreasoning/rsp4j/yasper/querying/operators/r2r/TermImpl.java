@@ -46,6 +46,11 @@ public class TermImpl implements VarOrTerm {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(term);
+    }
+
+    @Override
     public String toString() {
         return term.toString();
     }
