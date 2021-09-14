@@ -62,6 +62,10 @@ public class BGP implements RelationToRelationOperator<Graph, Binding> {
         return this;
     }
 
+    public void setJoinAlgorithm(JoinAlgorithm<Binding> joinAlgorithm){
+        this.joinAlgorithm = joinAlgorithm;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

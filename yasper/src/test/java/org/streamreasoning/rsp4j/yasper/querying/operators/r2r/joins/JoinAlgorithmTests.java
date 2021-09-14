@@ -13,6 +13,28 @@ import static org.junit.Assert.*;
 public class JoinAlgorithmTests {
 
     @Test
+    public void testNestedNoJoin(){
+        Set<Binding> left = createInitialLeft();
+        Set<Binding> right = createUnique();
+
+        JoinAlgorithm<Binding> joinAlgorithm = new NestedJoinAlgorithm();
+        Set<Binding> joined = joinAlgorithm.join(left,right);
+        Binding expected = left.iterator().next().union(right.iterator().next());
+        assertEquals(Collections.singleton(expected), joined);
+
+    }
+    @Test
+    public void testHashNoJoin(){
+        Set<Binding> left = createInitialLeft();
+        Set<Binding> right = createUnique();
+
+        JoinAlgorithm<Binding> joinAlgorithm = new HashJoinAlgorithm();
+        Set<Binding> joined = joinAlgorithm.join(left,right);
+
+        Binding expected = left.iterator().next().union(right.iterator().next());
+        assertEquals(Collections.singleton(expected), joined);
+    }
+    @Test
     public void testNestedJoin(){
         Set<Binding> left = createInitialLeft();
         Set<Binding> right = createInitialRight();
@@ -33,7 +55,6 @@ public class JoinAlgorithmTests {
 
         assertEquals(createExpected(), joined);
     }
-
     @Test
     public void testNestedJoinEmptyLeft(){
         Set<Binding> left = new HashSet<>();
@@ -218,5 +239,15 @@ public class JoinAlgorithmTests {
         b1.add(varP, new TermImpl("test"));
         joined.add(b1);
         return joined;
+    }
+    private Set<Binding> createUnique(){
+        Set<Binding> right = new HashSet<>();
+        Var varS = new VarImpl("sUnique");
+        Var varP = new VarImpl("pUnique");
+        Binding b2 = new BindingImpl();
+        b2.add(varS, new TermImpl("colorName"));
+        b2.add(varP, new TermImpl("test"));
+        right.add(b2);
+        return right;
     }
 }

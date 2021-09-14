@@ -12,31 +12,28 @@ public class HashJoinAlgorithm implements JoinAlgorithm<Binding> {
   public Set<Binding> join(Set<Binding> bindings1, Set<Binding> bindings2) {
     Set<Binding> results = new HashSet<>();
     List<Var> joinVars = findOverlapingVars(bindings1, bindings2);
-    if (!joinVars.isEmpty()) {
 
-      Set<Binding> left = bindings1.size() > bindings2.size() ? bindings1 : bindings2;
-      Set<Binding> right = bindings1.size() > bindings2.size() ? bindings2 : bindings1;
+    Set<Binding> left = bindings1.size() > bindings2.size() ? bindings1 : bindings2;
+    Set<Binding> right = bindings1.size() > bindings2.size() ? bindings2 : bindings1;
 
-      // create hash map
-      Map<List<RDFTerm>, List<Binding>> bindingsHash = new HashMap<>();
-      for (Binding binding : right) {
-        bindingsHash
-            .computeIfAbsent(createKey(binding, joinVars), k -> new ArrayList<>())
-            .add(binding);
-      }
-
-      // do the joins
-      for (Binding binding : left) {
-        Set<Binding> bound =
-            bindingsHash
-                .getOrDefault(createKey(binding, joinVars), Collections.emptyList())
-                .stream()
-                .map(b -> b.union(binding))
-                .collect(Collectors.toSet());
-
-        results.addAll(bound);
-      }
+    // create hash map
+    Map<List<RDFTerm>, List<Binding>> bindingsHash = new HashMap<>();
+    for (Binding binding : right) {
+      bindingsHash
+          .computeIfAbsent(createKey(binding, joinVars), k -> new ArrayList<>())
+          .add(binding);
     }
+
+    // do the joins
+    for (Binding binding : left) {
+      Set<Binding> bound =
+          bindingsHash.getOrDefault(createKey(binding, joinVars), Collections.emptyList()).stream()
+              .map(b -> b.union(binding))
+              .collect(Collectors.toSet());
+
+      results.addAll(bound);
+    }
+
     return results;
   }
 

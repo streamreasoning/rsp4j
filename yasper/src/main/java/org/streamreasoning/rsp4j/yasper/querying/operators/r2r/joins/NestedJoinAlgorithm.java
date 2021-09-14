@@ -15,7 +15,7 @@ public class NestedJoinAlgorithm implements JoinAlgorithm<Binding> {
 
 
     public Set<Binding> join(Set<Binding> bindings1, Set<Binding> bindings2) {
-        Set<Binding> results = new HashSet<Binding>();
+        Set<Binding> results = new HashSet<>();
         for (Binding b1 : bindings1) {
             for (Binding b2 : bindings2) {
                 joinBinding(b1, b2)
