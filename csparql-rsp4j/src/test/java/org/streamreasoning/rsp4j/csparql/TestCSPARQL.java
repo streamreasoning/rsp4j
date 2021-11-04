@@ -115,7 +115,6 @@ public class TestCSPARQL {
         assertTrue(resultCounter.size()>0);
 
     }
-    @Test
     public void testRSP4JCSPARQLSelectDataValue() throws InterruptedException {
         DataStream<Graph> inputStream = new DataStreamImpl<>("http://test/stream");
         DataStream<Binding> outputStream = new DataStreamImpl<>("http://out/stream");
