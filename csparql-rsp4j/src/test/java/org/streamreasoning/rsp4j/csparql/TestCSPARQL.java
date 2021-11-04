@@ -153,7 +153,7 @@ public class TestCSPARQL {
         Thread.sleep(1000);
         inputStream.put(graph,System.currentTimeMillis());
         inputStream.put(graph,System.currentTimeMillis());
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         assertTrue(resultCounter.size()>0);
     }
 }
