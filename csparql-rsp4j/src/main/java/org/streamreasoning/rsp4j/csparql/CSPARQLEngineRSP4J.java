@@ -113,7 +113,11 @@ public class CSPARQLEngineRSP4J  implements StreamRegistrationFeature<DataStream
             while(var4.hasNext()) {
                 RDFTuple t = (RDFTuple)var4.next();
                 for(int i = 0 ; i <varNames.size(); i++){
+                    try{
                     b.add(new VarImpl(varNames.get(i)), RDFUtils.createIRI(t.get(i)));
+                    }catch(IllegalArgumentException e){
+                        b.add(new VarImpl(varNames.get(i)), RDFUtils.createLiteral(t.get(i)));
+                    }
                 }
                 outputSelect.put(b,time);
             }

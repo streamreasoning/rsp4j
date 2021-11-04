@@ -6,7 +6,9 @@ import eu.larkc.csparql.core.engine.CsparqlEngine;
 import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
 import eu.larkc.csparql.core.engine.CsparqlQueryResultProxy;
 import org.apache.commons.rdf.api.Graph;
+import org.apache.commons.rdf.api.RDF;
 import org.junit.Test;
+import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
@@ -112,5 +114,46 @@ public class TestCSPARQL {
         generator.stopStreaming();
         assertTrue(resultCounter.size()>0);
 
+    }
+    @Test
+    public void testRSP4JCSPARQLSelectDataValue() throws InterruptedException {
+        DataStream<Graph> inputStream = new DataStreamImpl<>("http://test/stream");
+        DataStream<Binding> outputStream = new DataStreamImpl<>("http://out/stream");
+
+
+
+        String query1 = "REGISTER QUERY GetColours AS "
+                + "PREFIX ex: <http://myexample.org/> "
+                + "SELECT ?s ?p ?o "
+                + "FROM STREAM <http://test/stream> [RANGE 1s STEP 1s] "
+                + "WHERE { ?s ?p ?o }";
+
+
+        CSPARQLEngineRSP4J csparql = new CSPARQLEngineRSP4J();
+        csparql.register(inputStream);
+        csparql.setSelectOutput(outputStream);
+
+        ContinuousQuery<Graph, Graph, Binding, Binding> cq = csparql.parseCSPARQLSelect(query1);
+
+        ContinuousQueryExecution<Graph, Graph, Binding, Binding> cqe = csparql.parseSelect(cq);
+
+
+        outputStream.addConsumer((el,ts)->System.out.println(el + " @ " + ts));
+        List<Object> resultCounter = new ArrayList<>();
+        outputStream.addConsumer((el,ts)->resultCounter.add(el));
+        RDF instance = RDFUtils.getInstance();
+
+        Graph graph = instance.createGraph();
+        graph.add(instance.createTriple(instance.createIRI("http://test#S1"), instance.createIRI("http://test#hasValue"), instance.createLiteral("56.1519", instance.createIRI("http://www.w3.org/2001/XMLSchema#double"))));
+        inputStream.put(graph,System.currentTimeMillis());
+        inputStream.put(graph,System.currentTimeMillis());
+        Thread.sleep(1000);
+        inputStream.put(graph,System.currentTimeMillis());
+        inputStream.put(graph,System.currentTimeMillis());
+        Thread.sleep(1000);
+        inputStream.put(graph,System.currentTimeMillis());
+        inputStream.put(graph,System.currentTimeMillis());
+        Thread.sleep(1000);
+        assertTrue(resultCounter.size()>0);
     }
 }
