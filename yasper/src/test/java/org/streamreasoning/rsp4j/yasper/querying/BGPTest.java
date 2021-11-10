@@ -6,6 +6,7 @@ import org.apache.commons.rdf.api.RDF;
 import org.junit.Test;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.joins.HashJoinAlgorithm;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -73,10 +74,13 @@ public class BGPTest {
         VarOrTerm s1 = new VarImpl("color");
         VarOrTerm p1 = new TermImpl("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
         VarOrTerm o1 = new VarImpl("type");
+
         TP tp1 = new TP(s1,p1,o1);
+
         VarOrTerm p2 = new TermImpl("http://test/hasName");
         VarOrTerm o2 = new VarImpl("name");
         TP tp2 = new TP(s1,p2,o2);
+
         BGP bgp = BGP.createFrom(tp1)
                 .join(tp2)
                 .create();
@@ -276,7 +280,7 @@ public class BGPTest {
         BGP bgp = BGP.createFrom(tp1)
                 .join(tp2)
                 .create();
-
+        bgp.setJoinAlgorithm(new HashJoinAlgorithm());
         //create a graph
         Stream<Graph> g = Stream.of(createLargeGraph());
         Stream<Binding> bindings = bgp.eval(g);

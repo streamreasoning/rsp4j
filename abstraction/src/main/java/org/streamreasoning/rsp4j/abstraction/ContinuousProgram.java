@@ -1,8 +1,10 @@
 package org.streamreasoning.rsp4j.abstraction;
 
 import org.apache.commons.rdf.api.IRI;
+import org.apache.jena.sparql.engine.join.Join;
 import org.apache.log4j.Logger;
 import org.streamreasoning.rsp4j.abstraction.containers.AggregationContainer;
+import org.streamreasoning.rsp4j.abstraction.containers.R2RContainer;
 import org.streamreasoning.rsp4j.abstraction.containers.R2SContainer;
 import org.streamreasoning.rsp4j.abstraction.containers.S2RContainer;
 import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunction;
@@ -16,6 +18,8 @@ import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.yasper.ContinuousQueryExecutionObserver;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.joins.JoinAlgorithm;
 import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
 
 import java.util.*;
@@ -26,21 +30,22 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
 
     private static final Logger log = Logger.getLogger(ContinuousProgram.class);
     private List<Task<I, W, R, O>> tasks;
-  private DataStream<I> inputStream;
-  private DataStream<O> outputStream;
-  private SDS<W> sds;
+    private Map<String,DataStream<I>> inputStreams;
+    private DataStream<O> outputStream;
+    private SDS<W> sds;
+    private JoinAlgorithm<R> joinAlgorithm;
 
   public ContinuousProgram(ContinuousProgramBuilder builder) {
     super(builder.sds, null);
     this.tasks = builder.tasks;
-    this.inputStream = builder.inputStream;
+    this.inputStreams = builder.inputStreams;
     this.outputStream = builder.outputStream;
     if (builder.sds != null) {
       this.sds = builder.sds;
     } else {
       this.sds = (SDS<W>) new SDSImpl();
     }
-
+    this.joinAlgorithm = builder.joinAlgorithm;
     linkStreamsToOperators();
   }
 
@@ -51,8 +56,9 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
         String streamURI = s2rContainer.getSourceURI();
         String tvgName = s2rContainer.getTvgName();
         IRI iri = RDFUtils.createIRI(tvgName);
-        if (inputStream != null) {
-          TimeVarying<W> tvg = s2rContainer.<I, W>getS2rOperator().link(this).apply(inputStream);
+        if (inputStreams.containsKey(streamURI)) {
+          DataStream<I> consumedStream = inputStreams.get(streamURI);
+          TimeVarying<W> tvg = s2rContainer.<I, W>getS2rOperator().link(this).apply(consumedStream);
 
           if (tvg.named()) {
             sds.add(iri, tvg);
@@ -150,39 +156,54 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
 
   public Stream<R> eval(Long now) {
     sds.materialize(now);
-    Stream<R> result = Stream.empty();
+    Set<R> result = Collections.emptySet();
     Task<I, W, R, O> iroTask = tasks.get(0);
-
+    boolean isFirst = true;
     if (!iroTask.getR2Rs().isEmpty()) {
       Map<String, W> tvgMap = sds.asTimeVaryingEs().stream().collect(Collectors.toMap(TimeVarying::iri, TimeVarying::get));
-      RelationToRelationOperator<W, R> r2rOperator = iroTask.getR2Rs().get(0).getR2rOperator();
-      String tvgTaskName = iroTask.getR2Rs().get(0).getTvgName();
-      if(tvgMap.containsKey(tvgTaskName)){
-        Stream<W> tvgStream = Stream.of(tvgMap.get(tvgTaskName));
-        result = r2rOperator.eval(tvgStream);
-      }else if(tvgTaskName==null && tvgMap.keySet().isEmpty()){
-        // no windows defined
-        result =  r2rOperator.eval(sds.toStream());
+      for (R2RContainer<W, R> r2RContainer : iroTask.getR2Rs()) {
+        RelationToRelationOperator<W, R> r2rOperator = r2RContainer.getR2rOperator();
+        String tvgTaskName = r2RContainer.getTvgName();
+        if (tvgMap.containsKey(tvgTaskName)) {
+          Stream<W> tvgStream = Stream.of(tvgMap.get(tvgTaskName));
+          result = checkAndMergeR2REval(result, r2rOperator, tvgStream, isFirst);
+        } else if (tvgTaskName == null && tvgMap.keySet().isEmpty()) {
+          // no windows defined
+          result = checkAndMergeR2REval(result,  r2rOperator, sds.toStream(), isFirst);
+        }
+        isFirst = false;
       }
     } else {
       log.error("No R2R operator defined!");
 
+    }
+    return result.stream();
+  }
+
+  private Set<R> checkAndMergeR2REval(Set<R> result, RelationToRelationOperator<W, R> r2rOperator, Stream<W> wStream, boolean isFirst) {
+    Set<R> currentResult = r2rOperator.eval(wStream).collect(Collectors.toSet());
+    if (result.isEmpty() && isFirst) {
+      result = currentResult;
+    } else {
+      result = joinAlgorithm.join(result, currentResult);
     }
     return result;
   }
 
   public static class ContinuousProgramBuilder<I, W, R, O> {
     private List<TaskAbstractionImpl<I, W, R, O>> tasks;
-    private DataStream<I> inputStream;
+    private Map<String,DataStream<I>> inputStreams;
     private DataStream<O> outputStream;
     private SDS<I> sds;
+    private JoinAlgorithm<R> joinAlgorithm;
 
     public ContinuousProgramBuilder() {
       tasks = new ArrayList<>();
+      inputStreams = new HashMap<>();
     }
 
     public ContinuousProgramBuilder<I, W, R, O> in(DataStream<I> stream) {
-      this.inputStream = stream;
+      this.inputStreams.put(stream.getName(),stream);
       return this;
     }
 
@@ -203,6 +224,11 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
 
     public ContinuousProgram<I, W, R, O> build() {
       return new ContinuousProgram<I, W, R, O>(this);
+    }
+
+    public ContinuousProgramBuilder<I, W, R, O> addJoinAlgorithm(JoinAlgorithm<R> joinAlgorithm){
+      this.joinAlgorithm = joinAlgorithm;
+      return this;
     }
   }
 }

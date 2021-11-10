@@ -3,11 +3,13 @@ package org.streamreasoning.rsp4j.api.format;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Consumer;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
 
+import java.util.Observer;
+
 /**
  * Created by riccardo on 03/07/2017.
  */
 
-public abstract class QueryResultFormatter<O> implements Consumer<O> {
+public abstract class QueryResultFormatter<O>  implements Consumer<O>, Observer {
 
     protected final String format;
     protected final boolean distinct;
