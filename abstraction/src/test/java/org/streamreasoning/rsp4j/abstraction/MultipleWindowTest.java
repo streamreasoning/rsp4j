@@ -7,13 +7,10 @@ import org.junit.Test;
 import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegistry;
 import org.streamreasoning.rsp4j.abstraction.functions.CountFunction;
 import org.streamreasoning.rsp4j.abstraction.table.BindingStream;
-import org.streamreasoning.rsp4j.abstraction.triplepattern.ContinuousTriplePatternQuery;
-import org.streamreasoning.rsp4j.abstraction.triplepattern.TriplePatternR2R;
 import org.streamreasoning.rsp4j.abstraction.utils.DummyConsumer;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
-import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
@@ -30,6 +27,7 @@ import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.joins.NestedJoinA
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
 import org.streamreasoning.rsp4j.yasper.querying.syntax.TPQueryFactory;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -313,11 +311,12 @@ public class MultipleWindowTest {
         Time instance = new TimeImpl(0);
 
         RDFStream stream = new RDFStream("http://test/stream");
-
+        URL fileURL = MultipleWindowTest.class.getClassLoader().getResource(
+                "colors.nt");
         ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
                 "REGISTER ISTREAM <http://out/stream> AS " +
                 "SELECT * " +
-                "FROM </Users/psbonte/Documents/Github/rsp4j/abstraction/src/test/java/resources/colors.nt> "
+                "FROM <" + fileURL.getPath() + "> "
                 + "FROM NAMED WINDOW <window1> ON <http://test/stream> [RANGE PT2S STEP PT2S] "
                 + "FROM NAMED WINDOW <window2> ON <http://test/stream> [RANGE PT4S STEP PT2S] "
                 + "WHERE {" +
