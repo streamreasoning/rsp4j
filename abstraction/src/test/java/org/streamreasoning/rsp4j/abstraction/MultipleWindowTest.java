@@ -19,6 +19,9 @@ import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
+import org.streamreasoning.rsp4j.io.sources.FileSource;
+import org.streamreasoning.rsp4j.io.utils.RDFBase;
+import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFParsingStrategy;
 import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
@@ -343,6 +346,67 @@ public class MultipleWindowTest {
 
 
         populateStream(stream, instance.getAppTime());
+
+
+
+        System.out.println(dummyConsumer.getReceived());
+
+        assertEquals(1, dummyConsumer.getSize());
+        List<Binding> expected = new ArrayList<>();
+        Binding b1 = new BindingImpl();
+        b1.add(new VarImpl("green"), RDFUtils.createIRI("S4"));
+        b1.add(new VarImpl("red"), RDFUtils.createIRI("S2"));
+        b1.add(new VarImpl("source"), RDFUtils.createIRI("Source2"));
+
+
+        expected.add(b1);
+        assertEquals(expected, dummyConsumer.getReceived());
+    }
+    @Test
+    public void multipleWindowFromQueryTestWithStaticDataAndFileSources() throws InterruptedException {
+        URL fileURL = MultipleWindowTest.class.getClassLoader().getResource(
+                "colors.nt");
+        URL streamURL = MultipleWindowTest.class.getClassLoader().getResource(
+                "stream1.nt");
+        Time instance = new TimeImpl(0);
+
+        // create parsing strategy
+        JenaRDFParsingStrategy parsingStrategy = new JenaRDFParsingStrategy(RDFBase.NT);
+        // create file source to read the newly created file
+        FileSource<Graph> stream1 = new FileSource<Graph>(streamURL.getPath(), 1000, parsingStrategy);
+        FileSource<Graph> stream2 = new FileSource<Graph>(streamURL.getPath(), 1000, parsingStrategy);
+
+        ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
+                "REGISTER ISTREAM <http://out/stream> AS " +
+                "SELECT * " +
+                "FROM <" + fileURL.getPath() + "> "
+                + "FROM NAMED WINDOW <window1> ON <"+streamURL.getPath()+"> [RANGE PT2S STEP PT2S] "
+                + "FROM NAMED WINDOW <window2> ON  <"+streamURL.getPath() +">[RANGE PT4S STEP PT2S] "
+                + "WHERE {" +
+                " ?green <http://color#source> ?source. ?red <http://color#source> ?source " +
+                "  WINDOW <window1> {?green <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Green>.}" +
+                "  WINDOW <window2> {?red <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Red>.}" +
+                "}");
+
+        //SDS
+        TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
+                new QueryTaskAbstractionImpl.QueryTaskBuilder()
+                        .fromQuery(query)
+                        .build();
+        ContinuousProgram<Graph, Graph, Binding, Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
+                .in(stream1)
+                .in(stream2)
+                .addTask(t)
+                .addJoinAlgorithm(new NestedJoinAlgorithm())
+                .out(query.getOutputStream())
+                .build();
+
+        DummyConsumer<Binding> dummyConsumer = new DummyConsumer<>();
+
+        query.getOutputStream().addConsumer(dummyConsumer);
+        stream1.stream();
+        stream2.stream();
+        Thread.sleep(7000);
 
 
 

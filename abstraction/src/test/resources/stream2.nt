@@ -1,0 +1,7 @@
+<S1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Green> .
+<S2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Red> .
+<S3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Blue> .
+<S4> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Green> .
+<S5> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Blue> .
+<S6> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Red> .
+<S7> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Red> .

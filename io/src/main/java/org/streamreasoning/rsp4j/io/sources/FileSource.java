@@ -36,29 +36,32 @@ public class FileSource<T> extends DataStreamImpl<T> {
     }
 
     /**
-     * Starts streaming the read file data into the webstream
+     * Starts streaming the read file data into the webstream in a new thread
      */
     public void stream() {
+        Runnable runnable = () -> {
+            try (BufferedReader br = new BufferedReader(new FileReader(this.filePath))) {
+                String line;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(this.filePath))) {
-            String line;
+                while ((line = br.readLine()) != null) {
 
-            while ((line = br.readLine()) != null) {
-
-                // parse the input
-                ParsingResult<T> parsingResult = parsingStrategy.parseAndAddTime(line);
-                // send to cosumers
-                this.put(parsingResult.getResult(), parsingResult.getTimeStamp());
-                try {
-                    Thread.sleep(this.timeOut);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    // parse the input
+                    ParsingResult<T> parsingResult = parsingStrategy.parseAndAddTime(line);
+                    // send to cosumers
+                    this.put(parsingResult.getResult(), parsingResult.getTimeStamp());
+                    try {
+                        Thread.sleep(this.timeOut);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        };
+        Thread thread = new Thread(runnable);
+        thread.start();
     }
 
 
