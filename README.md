@@ -2,6 +2,8 @@
 
 [![DOI](https://zenodo.org/badge/322566440.svg)](https://zenodo.org/badge/latestdoi/322566440)
 
+
+
 RSP4J is a library to build RDF Stream Processing (RSP) Engines according with the reference model
 RSP-QL [1](http://jeanpi.org/wp/media/rspql_ijswis_dellaglio_2015.pdf).
 
@@ -43,3 +45,4 @@ and
    <version>1.0.0</version>
 </dependency>
 ```
+![Alt text](./figs/rsp4jLogo.svg)
