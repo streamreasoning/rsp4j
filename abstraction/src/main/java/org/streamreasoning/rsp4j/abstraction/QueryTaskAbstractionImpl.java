@@ -61,8 +61,12 @@ public class QueryTaskAbstractionImpl extends TaskAbstractionImpl<Graph, Graph, 
                                                 new GraphContentFactory(instance));
                                 this.addS2R(entry.getValue().getName(), s2r, entry.getKey().iri());
                             });
-            // R2R DECLARATION
-            this.addR2R(query.getID(), query.r2r()); // TODO restrict TVG
+      // R2R DECLARATION
+            if (query.r2r().getR2RComponents().isEmpty()) {
+                this.addR2R(query.getID(), query.r2r()); // TODO restrict TVG
+            }else{
+                query.r2r().getR2RComponents().entrySet().stream().forEach((ent)->this.addR2R(ent.getKey(),ent.getValue()));
+            }
             RelationToStreamOperator<Binding, Binding> r2s = getR2RFromQuery(query);
             if (r2s != null) {
                 this.addR2S(query.getOutputStream().getName(), r2s);
@@ -71,6 +75,8 @@ public class QueryTaskAbstractionImpl extends TaskAbstractionImpl<Graph, Graph, 
             query.getAggregations().forEach(a -> aggregate(a.getTvg(), a.getFunctionName(), a.getInputVariable(), a.getOutputVariable()));
             //Add standard aggregations
             AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
+            //add default graph
+            addDefaultGraph(query.getDefaultGraph());
             return this;
         }
 

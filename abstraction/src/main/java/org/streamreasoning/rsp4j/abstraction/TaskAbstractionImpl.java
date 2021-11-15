@@ -7,6 +7,7 @@ import org.streamreasoning.rsp4j.abstraction.containers.S2RContainer;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
+import org.streamreasoning.rsp4j.api.sds.DataSet;
 
 import java.util.*;
 
@@ -15,6 +16,7 @@ public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
     private final Set<S2RContainer<I, W>> s2rs;
     private final List<R2RContainer<W, R>> r2rs;
     private final Set<R2SContainer<R, O>> r2ss;
+    private final DataSet<W> defaultGraph;
     private List<AggregationContainer> aggregations;
     private Map<String, String> prefixes;
 
@@ -24,6 +26,7 @@ public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
         this.r2ss = builder.r2ss;
         this.prefixes = builder.prefixes;
         this.aggregations = builder.aggregations;
+        this.defaultGraph = builder.defaultGraph;
     }
 
     @Override
@@ -46,6 +49,11 @@ public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
         return aggregations;
     }
 
+    @Override
+    public DataSet<W> getDefaultGraph(){
+        return defaultGraph;
+    }
+
 
     public static class TaskBuilder<I, W, R, O> {
 
@@ -54,6 +62,7 @@ public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
         private Set<R2SContainer<R, O>> r2ss;
         private List<AggregationContainer> aggregations;
         private Map<String, String> prefixes;
+        private DataSet<W> defaultGraph;
 
         public TaskBuilder() {
             this.s2rs = new HashSet<>();
@@ -80,6 +89,10 @@ public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
 
         public TaskBuilder<I, W, R, O> addR2S(String sinkURI, RelationToStreamOperator<R, O> r2s) {
             r2ss.add(new R2SContainer<R, O>(sinkURI, r2s));
+            return this;
+        }
+        public TaskBuilder<I, W, R, O> addDefaultGraph(DataSet<W> defaultGraph) {
+            this.defaultGraph = defaultGraph;
             return this;
         }
 

@@ -15,6 +15,7 @@ import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
+import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
@@ -27,6 +28,7 @@ import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.joins.NestedJoinAlgorithm;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
+import org.streamreasoning.rsp4j.yasper.querying.syntax.TPQueryFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -247,6 +249,115 @@ public class MultipleWindowTest {
 
         expected.add(b1);
         expected.add(b2);
+        assertEquals(expected, dummyConsumer.getReceived());
+    }
+
+    @Test
+    public void multipleWindowFromQueryTest() {
+
+        Time instance = new TimeImpl(0);
+
+        RDFStream stream = new RDFStream("http://test/stream");
+
+    ContinuousQuery<Graph, Graph, Binding, Binding> query =
+        TPQueryFactory.parse(
+            ""
+                + "REGISTER ISTREAM <http://out/stream> AS "
+                + "SELECT * "
+                + "FROM NAMED WINDOW <window1> ON <http://test/stream> [RANGE PT2S STEP PT2S] "
+                + "FROM NAMED WINDOW <window2> ON <http://test/stream> [RANGE PT4S STEP PT2S] "
+                + "WHERE {"
+                + "  WINDOW <window1> {?green <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Green>.}"
+                + "  WINDOW <window2> {?red <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Red>.}"
+                + "}");
+
+        //SDS
+        TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
+                new QueryTaskAbstractionImpl.QueryTaskBuilder()
+                        .fromQuery(query)
+                        .build();
+        ContinuousProgram<Graph, Graph, Binding, Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
+                .in(stream)
+                .addTask(t)
+                .addJoinAlgorithm(new NestedJoinAlgorithm())
+                .out(query.getOutputStream())
+                .build();
+
+        DummyConsumer<Binding> dummyConsumer = new DummyConsumer<>();
+
+        query.getOutputStream().addConsumer(dummyConsumer);
+
+
+        populateStream(stream, instance.getAppTime());
+
+
+
+        System.out.println(dummyConsumer.getReceived());
+
+        assertEquals(2, dummyConsumer.getSize());
+        List<Binding> expected = new ArrayList<>();
+        Binding b1 = new BindingImpl();
+        b1.add(new VarImpl("green"), RDFUtils.createIRI("S1"));
+        b1.add(new VarImpl("red"), RDFUtils.createIRI("S2"));
+        Binding b2 = new BindingImpl();
+        b2.add(new VarImpl("green"), RDFUtils.createIRI("S4"));
+        b2.add(new VarImpl("red"), RDFUtils.createIRI("S2"));
+
+        expected.add(b1);
+        expected.add(b2);
+        assertEquals(expected, dummyConsumer.getReceived());
+    }
+    @Test
+    public void multipleWindowFromQueryTestWithStaticData() {
+
+        Time instance = new TimeImpl(0);
+
+        RDFStream stream = new RDFStream("http://test/stream");
+
+        ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
+                "REGISTER ISTREAM <http://out/stream> AS " +
+                "SELECT * " +
+                "FROM </Users/psbonte/Documents/Github/rsp4j/abstraction/src/test/java/resources/colors.nt> "
+                + "FROM NAMED WINDOW <window1> ON <http://test/stream> [RANGE PT2S STEP PT2S] "
+                + "FROM NAMED WINDOW <window2> ON <http://test/stream> [RANGE PT4S STEP PT2S] "
+                + "WHERE {" +
+                " ?green <http://color#source> ?source. ?red <http://color#source> ?source " +
+                "  WINDOW <window1> {?green <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Green>.}" +
+                "  WINDOW <window2> {?red <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Red>.}" +
+                "}");
+
+        //SDS
+        TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
+                new QueryTaskAbstractionImpl.QueryTaskBuilder()
+                        .fromQuery(query)
+                        .build();
+        ContinuousProgram<Graph, Graph, Binding, Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
+                .in(stream)
+                .addTask(t)
+                .addJoinAlgorithm(new NestedJoinAlgorithm())
+                .out(query.getOutputStream())
+                .build();
+
+        DummyConsumer<Binding> dummyConsumer = new DummyConsumer<>();
+
+        query.getOutputStream().addConsumer(dummyConsumer);
+
+
+        populateStream(stream, instance.getAppTime());
+
+
+
+        System.out.println(dummyConsumer.getReceived());
+
+        assertEquals(1, dummyConsumer.getSize());
+        List<Binding> expected = new ArrayList<>();
+        Binding b1 = new BindingImpl();
+        b1.add(new VarImpl("green"), RDFUtils.createIRI("S4"));
+        b1.add(new VarImpl("red"), RDFUtils.createIRI("S2"));
+        b1.add(new VarImpl("source"), RDFUtils.createIRI("Source2"));
+
+
+        expected.add(b1);
         assertEquals(expected, dummyConsumer.getReceived());
     }
 

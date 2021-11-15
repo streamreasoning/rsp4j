@@ -23,17 +23,21 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
 
 
     private String outputStreamIRI;
-    private Map<String, WindowNode> windowMap;
+    private Map<String, List<WindowNode>> windowMap;
     private String outputStreamType;
     private Time time;
     private List<Aggregation> aggregations;
-    private String windowIRI = null;
+    private String windowIRI = "default";
     Stack<TripleHolder> triples;
+    Map<String,List<TripleHolder>> windowsToTriples;
+    private String defaultGraphUri;
+
     public TPVisitorImpl() {
         windowMap = new HashMap<>();
         aggregations = new ArrayList<>();
         this.time = new TimeImpl(0);
         triples = new Stack<TripleHolder>();
+        windowsToTriples = new HashMap<>();
     }
 
     @Override
@@ -73,7 +77,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
     @Override
     public CQ visitWindowGraphPattern(RSPQLParser.WindowGraphPatternContext ctx) {
         windowIRI=RDFUtils.trimTags(ctx.varOrIri().iri().getText());
-
+        windowsToTriples.put(windowIRI,new ArrayList<>());
         return super.visitWindowGraphPattern(ctx);
     }
 
@@ -104,10 +108,20 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
 
         return super.visitObject(ctx);
     }
+    @Override
+    public CQ visitDefaultGraphClause(RSPQLParser.DefaultGraphClauseContext ctx) {
+        this.defaultGraphUri = RDFUtils.trimTags(ctx.sourceSelector().iri().IRIREF().getText());
+        windowsToTriples.put("default", new ArrayList<>());
+        return super.visitDefaultGraphClause(ctx);
+    }
 
     @Override
     public CQ visitTriplesSameSubjectPath(RSPQLParser.TriplesSameSubjectPathContext ctx) {
         triples.push(new TripleHolder());
+        if(!windowsToTriples.containsKey(windowIRI)){
+            windowsToTriples.put(windowIRI,new ArrayList<>());
+        }
+        windowsToTriples.get(windowIRI).add(triples.peek());
         extractSubject(ctx.s);
         extractSinglePropertyObjectPair(ctx.ps);
 
@@ -141,6 +155,8 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
         if(triples.peek().p != null){
             VarOrTerm s = triples.peek().s;
             triples.push(new TripleHolder());
+            windowsToTriples.get(windowIRI).add(triples.peek());
+
             triples.peek().s=s;
         }
         if (propCandidate.verbPath() != null) {
@@ -167,6 +183,8 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
             VarOrTerm s = triples.peek().s;
             VarOrTerm p = triples.peek().p;
             triples.push(new TripleHolder());
+            windowsToTriples.get(windowIRI).add(triples.peek());
+
             triples.peek().s=s;
             triples.peek().p=p;
         }
@@ -182,16 +200,17 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
 
         DataStream stream = null;
         WindowNode win = null;
-        Optional<Map.Entry<String, WindowNode>> window = windowMap.entrySet().stream().findFirst();
+        Optional<Map.Entry<String, List<WindowNode>>> window = windowMap.entrySet().stream().findFirst();
         if (window.isPresent()) {
             stream = new DataStreamImpl(window.get().getKey());
-            win = window.get().getValue();
+            win = window.get().getValue().get(0);
 
         }
 
         Rstream<Binding, Binding> rstream = new Rstream<>();
-        SimpleRSPQLQuery<Binding> query = new SimpleRSPQLQuery<>(windowIRI, stream, time, win, new ArrayList(triples), rstream);
-        windowMap.entrySet().forEach(e -> query.addNamedWindow(e.getKey(), e.getValue()));
+        SimpleRSPQLQuery<Binding> query = new SimpleRSPQLQuery<>(windowIRI, stream, time, win, windowsToTriples, rstream, defaultGraphUri);
+        windowMap.entrySet().forEach(e ->
+                e.getValue().forEach(w->query.addNamedWindow(e.getKey(), w)));
         if (outputStreamType != null) {
             RSPQLExtractionHelper.setOutputStreamType(query, outputStreamType);
         }
@@ -251,7 +270,10 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
      */
     public CQ visitNamedWindowClause(RSPQLParser.NamedWindowClauseContext ctx) {
         Map.Entry<String, WindowNode> streamWindowPair = RSPQLExtractionHelper.extractNamedWindowClause(ctx);
-        windowMap.put(streamWindowPair.getKey(), streamWindowPair.getValue());
+        if(!windowMap.containsKey(streamWindowPair.getKey())){
+            windowMap.put(streamWindowPair.getKey(),new ArrayList<WindowNode>());
+        }
+        windowMap.get(streamWindowPair.getKey()).add( streamWindowPair.getValue());
 
         return super.visitNamedWindowClause(ctx);
     }

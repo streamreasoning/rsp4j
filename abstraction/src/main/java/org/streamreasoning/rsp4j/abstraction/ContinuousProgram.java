@@ -14,6 +14,7 @@ import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
+import org.streamreasoning.rsp4j.api.sds.DataSet;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
@@ -34,6 +35,7 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
     private DataStream<O> outputStream;
     private SDS<W> sds;
     private JoinAlgorithm<R> joinAlgorithm;
+    private Map<String,Collection<R>> cachedStaticBindings;
 
   public ContinuousProgram(ContinuousProgramBuilder builder) {
     super(builder.sds, null);
@@ -46,7 +48,9 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
       this.sds = (SDS<W>) new SDSImpl();
     }
     this.joinAlgorithm = builder.joinAlgorithm;
+    this.cachedStaticBindings = new HashMap<>();
     linkStreamsToOperators();
+    evaluateDefaultGraph();
   }
 
   private void linkStreamsToOperators() {
@@ -69,6 +73,18 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
           log.error(String.format("No stream found for IRI %s", streamURI));
         }
       }
+    }
+  }
+  private void evaluateDefaultGraph(){
+    for (Task<I, W, R, O> task : tasks) {
+      for(R2RContainer<W,R> r2r : task.getR2Rs()){
+        if(r2r.getTvgName().equals("default")){
+          DataSet<W> defaultGraph = task.getDefaultGraph();
+          Stream<R> staticBindings = r2r.getR2rOperator().eval(defaultGraph.getContent().stream());
+          cachedStaticBindings.put("default", staticBindings.collect(Collectors.toSet()));
+        }
+      }
+
     }
   }
 
@@ -164,10 +180,14 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
       for (R2RContainer<W, R> r2RContainer : iroTask.getR2Rs()) {
         RelationToRelationOperator<W, R> r2rOperator = r2RContainer.getR2rOperator();
         String tvgTaskName = r2RContainer.getTvgName();
-        if (tvgMap.containsKey(tvgTaskName)) {
+        if(tvgTaskName.equals("default")){
+          result = new HashSet<>(cachedStaticBindings.get("default"));
+        }
+        else if (tvgMap.containsKey(tvgTaskName)) {
           Stream<W> tvgStream = Stream.of(tvgMap.get(tvgTaskName));
           result = checkAndMergeR2REval(result, r2rOperator, tvgStream, isFirst);
-        } else if (tvgTaskName == null && tvgMap.keySet().isEmpty()) {
+        }
+        if (tvgMap.keySet().isEmpty()) {
           // no windows defined
           result = checkAndMergeR2REval(result,  r2rOperator, sds.toStream(), isFirst);
         }
