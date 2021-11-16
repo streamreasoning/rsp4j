@@ -4,7 +4,7 @@ import org.apache.commons.rdf.api.RDFTerm;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.BindingImpl;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Var;
+import org.streamreasoning.rsp4j.api.operators.r2r.Var;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarImpl;
 
 import java.util.Collection;

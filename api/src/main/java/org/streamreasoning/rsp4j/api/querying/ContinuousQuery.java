@@ -1,7 +1,9 @@
 package org.streamreasoning.rsp4j.api.querying;
 
 
+import org.apache.commons.rdf.api.IRI;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
+import org.streamreasoning.rsp4j.api.operators.r2r.Var;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
@@ -63,4 +65,6 @@ public interface ContinuousQuery<I, W, R, O> {//extends Task<I, Binding, O> {
     default DataSet<W> getDefaultGraph(){
         return new EmptyDataSet<W>();
     }
+
+    default List<Var> getProjections(){return Collections.emptyList();}
 }

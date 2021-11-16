@@ -8,6 +8,7 @@ import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.sds.DataSet;
+import org.streamreasoning.rsp4j.api.operators.r2r.Var;
 
 import java.util.*;
 
@@ -17,6 +18,7 @@ public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
     private final List<R2RContainer<W, R>> r2rs;
     private final Set<R2SContainer<R, O>> r2ss;
     private final DataSet<W> defaultGraph;
+    private final List<Var> projection;
     private List<AggregationContainer> aggregations;
     private Map<String, String> prefixes;
 
@@ -27,6 +29,7 @@ public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
         this.prefixes = builder.prefixes;
         this.aggregations = builder.aggregations;
         this.defaultGraph = builder.defaultGraph;
+        this.projection = builder.projection;
     }
 
     @Override
@@ -54,6 +57,11 @@ public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
         return defaultGraph;
     }
 
+    @Override
+    public List<Var> getProjection() {
+        return projection!=null? projection : Collections.emptyList();
+    }
+
 
     public static class TaskBuilder<I, W, R, O> {
 
@@ -63,6 +71,7 @@ public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
         private List<AggregationContainer> aggregations;
         private Map<String, String> prefixes;
         private DataSet<W> defaultGraph;
+        private List<Var> projection;
 
         public TaskBuilder() {
             this.s2rs = new HashSet<>();
@@ -93,6 +102,10 @@ public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
         }
         public TaskBuilder<I, W, R, O> addDefaultGraph(DataSet<W> defaultGraph) {
             this.defaultGraph = defaultGraph;
+            return this;
+        }
+        public TaskBuilder<I, W, R, O> addProjection(List<Var> projection) {
+            this.projection = projection;
             return this;
         }
 

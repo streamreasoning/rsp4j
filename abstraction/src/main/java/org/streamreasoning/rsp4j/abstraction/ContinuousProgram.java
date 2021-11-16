@@ -1,7 +1,6 @@
 package org.streamreasoning.rsp4j.abstraction;
 
 import org.apache.commons.rdf.api.IRI;
-import org.apache.jena.sparql.engine.join.Join;
 import org.apache.log4j.Logger;
 import org.streamreasoning.rsp4j.abstraction.containers.AggregationContainer;
 import org.streamreasoning.rsp4j.abstraction.containers.R2RContainer;
@@ -9,6 +8,8 @@ import org.streamreasoning.rsp4j.abstraction.containers.R2SContainer;
 import org.streamreasoning.rsp4j.abstraction.containers.S2RContainer;
 import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunction;
 import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegistry;
+import org.streamreasoning.rsp4j.abstraction.projection.BindingProjection;
+import org.streamreasoning.rsp4j.abstraction.projection.Projection;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
@@ -19,7 +20,6 @@ import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.yasper.ContinuousQueryExecutionObserver;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.joins.JoinAlgorithm;
 import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
 
@@ -36,7 +36,7 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
     private SDS<W> sds;
     private JoinAlgorithm<R> joinAlgorithm;
     private Map<String,Collection<R>> cachedStaticBindings;
-
+    private Projection<R> projection;
   public ContinuousProgram(ContinuousProgramBuilder builder) {
     super(builder.sds, null);
     this.tasks = builder.tasks;
@@ -49,6 +49,7 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
     }
     this.joinAlgorithm = builder.joinAlgorithm;
     this.cachedStaticBindings = new HashMap<>();
+    this.projection = builder.projection;
     linkStreamsToOperators();
     evaluateDefaultGraph();
   }
@@ -197,8 +198,12 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
       log.error("No R2R operator defined!");
 
     }
-    return result.stream();
+    // perform projection
+    return projection.project(result.stream(),iroTask.getProjection());
+
+
   }
+
 
   private Set<R> checkAndMergeR2REval(Set<R> result, RelationToRelationOperator<W, R> r2rOperator, Stream<W> wStream, boolean isFirst) {
     Set<R> currentResult = r2rOperator.eval(wStream).collect(Collectors.toSet());
@@ -216,10 +221,11 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
     private DataStream<O> outputStream;
     private SDS<I> sds;
     private JoinAlgorithm<R> joinAlgorithm;
-
+    private Projection<R> projection;
     public ContinuousProgramBuilder() {
       tasks = new ArrayList<>();
       inputStreams = new HashMap<>();
+      projection = (Projection<R>) new BindingProjection();
     }
 
     public ContinuousProgramBuilder<I, W, R, O> in(DataStream<I> stream) {
@@ -245,6 +251,7 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
     public ContinuousProgram<I, W, R, O> build() {
       return new ContinuousProgram<I, W, R, O>(this);
     }
+
 
     public ContinuousProgramBuilder<I, W, R, O> addJoinAlgorithm(JoinAlgorithm<R> joinAlgorithm){
       this.joinAlgorithm = joinAlgorithm;

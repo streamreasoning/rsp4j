@@ -3,6 +3,7 @@ package org.streamreasoning.rsp4j.yasper.querying;
 import org.apache.commons.rdf.api.Graph;
 import org.junit.Test;
 import org.streamreasoning.rsp4j.api.RDFUtils;
+import org.streamreasoning.rsp4j.api.operators.r2r.Var;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
 import org.streamreasoning.rsp4j.api.querying.Aggregation;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
@@ -11,6 +12,8 @@ import org.streamreasoning.rsp4j.io.DataStreamImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
 import org.streamreasoning.rsp4j.yasper.querying.syntax.TPQueryFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -145,6 +148,19 @@ public class TriplePatternQueryTest {
         Aggregation expected = new Aggregation(null, "?s", "?count", "Count");
         assertEquals(expected, query.getAggregations().get(0));
     }
-
+    @Test
+    public void testProjection() {
+        ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
+                "REGISTER ISTREAM <http://out/stream> AS " +
+                "SELECT ?s ?p " +
+                "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
+                "WHERE {" +
+                "   ?s ?p ?o ." +
+                "}");
+        List<Var> projections = new ArrayList<>();
+        projections.add(new VarImpl("s"));
+        projections.add(new VarImpl("p"));
+        assertEquals(projections, query.getProjections());
+    }
 
 }

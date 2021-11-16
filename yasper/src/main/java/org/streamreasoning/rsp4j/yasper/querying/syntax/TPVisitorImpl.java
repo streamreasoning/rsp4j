@@ -2,6 +2,7 @@ package org.streamreasoning.rsp4j.yasper.querying.syntax;
 
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.api.RDFUtils;
+import org.streamreasoning.rsp4j.api.operators.r2r.Var;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
 import org.streamreasoning.rsp4j.api.querying.Aggregation;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
@@ -12,10 +13,7 @@ import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.io.DataStreamImpl;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TermImpl;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarImpl;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
 
 import java.util.*;
 
@@ -31,6 +29,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
     Stack<TripleHolder> triples;
     Map<String,List<TripleHolder>> windowsToTriples;
     private String defaultGraphUri;
+    private List<Var> projections;
 
     public TPVisitorImpl() {
         windowMap = new HashMap<>();
@@ -38,6 +37,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
         this.time = new TimeImpl(0);
         triples = new Stack<TripleHolder>();
         windowsToTriples = new HashMap<>();
+        projections = new ArrayList<>();
     }
 
     @Override
@@ -214,6 +214,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
         if (outputStreamType != null) {
             RSPQLExtractionHelper.setOutputStreamType(query, outputStreamType);
         }
+        query.getProjections().addAll(projections);
         query.setOutputStream(outputStreamIRI);
         //add aggregations
         query.getAggregations().addAll(aggregations);
@@ -247,12 +248,18 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
     @Override
     public CQ visitSelectQuery(RSPQLParser.SelectQueryContext ctx) {
         for (RSPQLParser.ResultVarContext r : ctx.selectClause().resultVar()) {
+
             String var = r.var().getText();
-            String exp = r.expression().getText();
-            aggregations.add(new Aggregation(null, getVarName(exp), var, getFunctionName(exp)));
+            if (r.expression() != null) {
+                String exp = r.expression().getText();
+                aggregations.add(new Aggregation(null, getVarName(exp), var, getFunctionName(exp)));
+            }else{
+                projections.add(new VarImpl(RDFUtils.trimVar(var)));
+            }
         }
         return super.visitSelectQuery(ctx);
     }
+
 
     private String getFunctionName(String expression) {
         return expression.substring(0, expression.indexOf('('));

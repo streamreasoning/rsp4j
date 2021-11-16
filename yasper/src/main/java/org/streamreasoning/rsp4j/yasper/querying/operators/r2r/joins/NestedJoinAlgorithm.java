@@ -1,8 +1,7 @@
 package org.streamreasoning.rsp4j.yasper.querying.operators.r2r.joins;
 
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Var;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.joins.JoinAlgorithm;
+import org.streamreasoning.rsp4j.api.operators.r2r.Var;
 
 import java.util.HashSet;
 import java.util.Optional;

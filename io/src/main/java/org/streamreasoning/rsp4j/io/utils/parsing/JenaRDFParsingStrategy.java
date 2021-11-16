@@ -27,6 +27,7 @@ public class JenaRDFParsingStrategy implements ParsingStrategy<Graph> {
             InputStream targetStream = new ByteArrayInputStream(parseString.getBytes());
             dataModel.read(targetStream, null, base.name());
             JenaRDF jena = new JenaRDF();
+
             Graph g1 = jena.asGraph(dataModel);
             return g1;
         } catch (Exception e) {

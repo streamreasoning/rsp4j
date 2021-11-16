@@ -77,6 +77,8 @@ public class QueryTaskAbstractionImpl extends TaskAbstractionImpl<Graph, Graph, 
             AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
             //add default graph
             addDefaultGraph(query.getDefaultGraph());
+            //add proejction
+            addProjection(query.getProjections());
             return this;
         }
 

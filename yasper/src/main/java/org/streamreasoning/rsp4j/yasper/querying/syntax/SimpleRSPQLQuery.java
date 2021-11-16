@@ -2,8 +2,10 @@ package org.streamreasoning.rsp4j.yasper.querying.syntax;
 
 
 import org.apache.commons.rdf.api.Graph;
+import org.apache.commons.rdf.api.IRI;
 import org.streamreasoning.rsp4j.api.enums.StreamOperator;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
+import org.streamreasoning.rsp4j.api.operators.r2r.Var;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
@@ -38,6 +40,7 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
     private List<Aggregation> aggregations = new ArrayList<>();
     private StreamOperator streamOperator = StreamOperator.NONE;
     private Time time;
+    private List<Var> projections;
 
     public SimpleRSPQLQuery(String id, DataStream<Graph> stream, Time time, WindowNode win, VarOrTerm s, VarOrTerm p, VarOrTerm o, RelationToStreamOperator<Binding, O> r2s) {
         this.id = id;
@@ -51,6 +54,7 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
         }
         this.r2s = r2s;
         this.time = time;
+        this.projections = new ArrayList<>();
 
     }
     public SimpleRSPQLQuery(String id, DataStream<Graph> stream, Time time, WindowNode win, List<TripleHolder> triplePatterns, RelationToStreamOperator<Binding, O> r2s){
@@ -66,6 +70,7 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
         }
         this.r2s = r2s;
         this.time = time;
+        this.projections = new ArrayList<>();
 
     }
     public SimpleRSPQLQuery(String id, DataStream<Graph> stream, Time time, WindowNode win, Map<String,List<TripleHolder>> triplePatterns, RelationToStreamOperator<Binding, O> r2s, String defaultGraphIRI) {
@@ -174,7 +179,9 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
         }else{
             Map<String, RelationToRelationOperator<Graph, Binding>> r2rs = new HashMap<>();
             for(Map.Entry<String,List<TripleHolder>> entry: triples.entrySet()){
-                r2rs.put(entry.getKey(),createBGP(entry.getValue()));
+                if (!entry.getValue().isEmpty()) {
+                  r2rs.put(entry.getKey(), createBGP(entry.getValue()));
+                }
             }
             return new MultipleGraphR2R(r2rs);
         }
@@ -206,5 +213,8 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
     @Override
     public DataSet<Graph> getDefaultGraph(){
         return defaultGraph;
+    }
+    public List<Var> getProjections(){
+        return projections;
     }
 }

@@ -6,7 +6,7 @@ import org.streamreasoning.rsp4j.api.secret.content.Content;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.BindingImpl;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Var;
+import org.streamreasoning.rsp4j.api.operators.r2r.Var;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
 
 import java.util.HashSet;

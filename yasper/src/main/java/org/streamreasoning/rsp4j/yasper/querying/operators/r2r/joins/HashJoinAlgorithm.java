@@ -2,7 +2,7 @@ package org.streamreasoning.rsp4j.yasper.querying.operators.r2r.joins;
 
 import org.apache.commons.rdf.api.RDFTerm;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Var;
+import org.streamreasoning.rsp4j.api.operators.r2r.Var;
 
 import java.util.*;
 import java.util.stream.Collectors;

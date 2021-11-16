@@ -5,6 +5,7 @@ import org.streamreasoning.rsp4j.abstraction.containers.R2RContainer;
 import org.streamreasoning.rsp4j.abstraction.containers.R2SContainer;
 import org.streamreasoning.rsp4j.abstraction.containers.S2RContainer;
 import org.streamreasoning.rsp4j.api.sds.DataSet;
+import org.streamreasoning.rsp4j.api.operators.r2r.Var;
 
 import java.util.List;
 import java.util.Set;
@@ -19,4 +20,6 @@ public interface Task<I, W, R, O> {
     List<AggregationContainer> getAggregations();
 
     DataSet<W> getDefaultGraph();
+
+    List<Var> getProjection();
 }
