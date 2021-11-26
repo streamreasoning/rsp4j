@@ -1,6 +1,6 @@
-# RDF Stream Processing for Java (RSP4J)
-
+# RDF Stream Processing for Java (RSP4J) ![Alt text](./figs/rsp4jLogo.svg)
 [![DOI](https://zenodo.org/badge/322566440.svg)](https://zenodo.org/badge/latestdoi/322566440)
+
 
 
 
@@ -45,4 +45,4 @@ and
    <version>1.0.0</version>
 </dependency>
 ```
-![Alt text](./figs/rsp4jLogo.svg)
+
