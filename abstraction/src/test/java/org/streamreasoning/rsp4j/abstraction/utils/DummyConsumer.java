@@ -1,6 +1,5 @@
 package org.streamreasoning.rsp4j.abstraction.utils;
 
-
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Consumer;
 
 import java.util.ArrayList;

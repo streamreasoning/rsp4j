@@ -38,14 +38,11 @@ public class MultipleWindowQueryTest {
         VarOrTerm o2 = new VarImpl("oz");
         TP tp2 = new TP(s2, p2, o2);
 
-        BGP bgp = BGP.createFrom(tp)
-                .create();
-        BGP bgp2 = BGP.createFrom(tp2)
-                .create();
+
         Map<String, RelationToRelationOperator<Graph, Binding>> r2rs = new HashMap<>();
         RelationToRelationOperator<Graph, Binding> compbinedR2R = new MultipleGraphR2R(r2rs);
-        r2rs.put("window1", bgp);
-        r2rs.put("window2",bgp2);
+        r2rs.put("window1", tp);
+        r2rs.put("window2",tp2);
         assertEquals(compbinedR2R, query.r2r());
 
     }
@@ -73,15 +70,13 @@ public class MultipleWindowQueryTest {
         VarOrTerm o2 = new VarImpl("oz");
         TP tp2 = new TP(s2, p2, o2);
 
-        BGP bgp = BGP.createFrom(tp)
-                .create();
-        BGP bgp2 = BGP.createFrom(tp2)
-                .create();
+
         Map<String, RelationToRelationOperator<Graph, Binding>> r2rs = new HashMap<>();
         RelationToRelationOperator<Graph, Binding> compbinedR2R = new MultipleGraphR2R(r2rs);
-        r2rs.put("window1", bgp);
-        r2rs.put("default",bgp2);
+        r2rs.put("window1", tp);
+        r2rs.put("default",tp2);
         assertEquals(compbinedR2R, query.r2r());
 
     }
+
 }

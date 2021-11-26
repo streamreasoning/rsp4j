@@ -4,6 +4,7 @@ import org.apache.commons.rdf.api.Graph;
 import org.junit.Test;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.r2r.Var;
+import org.streamreasoning.rsp4j.api.operators.r2r.utils.R2RPipe;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
 import org.streamreasoning.rsp4j.api.querying.Aggregation;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
@@ -15,6 +16,8 @@ import org.streamreasoning.rsp4j.yasper.querying.syntax.TPQueryFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 
@@ -161,6 +164,21 @@ public class TriplePatternQueryTest {
         projections.add(new VarImpl("s"));
         projections.add(new VarImpl("p"));
         assertEquals(projections, query.getProjections());
+    }
+
+    @Test
+    public void testFilter() {
+        ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
+                "REGISTER ISTREAM <http://out/stream> AS " +
+                "SELECT ?s ?p " +
+                "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
+                "WHERE {" +
+                "   ?s ?p ?o . Filter(?s = ?o)" +
+                "}");
+
+        R2RPipe pipe = (R2RPipe) query.r2r();
+
+        assertEquals(pipe.getR2rs().length, 2);
     }
 
 }

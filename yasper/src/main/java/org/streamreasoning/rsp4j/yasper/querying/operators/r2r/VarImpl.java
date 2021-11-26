@@ -1,6 +1,7 @@
 package org.streamreasoning.rsp4j.yasper.querying.operators.r2r;
 
 import org.apache.commons.rdf.api.RDFTerm;
+import org.streamreasoning.rsp4j.api.RDFUtils;
 
 import java.util.Objects;
 
@@ -9,7 +10,7 @@ public class VarImpl implements VarOrTerm {
     private final String name;
 
     public VarImpl(String name) {
-        this.name = name;
+        this.name = RDFUtils.trimVar(name);
     }
 
 

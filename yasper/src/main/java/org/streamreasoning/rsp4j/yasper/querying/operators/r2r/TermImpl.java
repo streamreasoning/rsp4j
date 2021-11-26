@@ -24,17 +24,17 @@ public class TermImpl implements VarOrTerm {
 
     @Override
     public String getIRIString() {
-        return null;
+        return RDFUtils.trimTags(term.ntriplesString());
     }
 
     @Override
     public String ntriplesString() {
-        return null;
+        return term.ntriplesString();
     }
 
     @Override
     public String name() {
-        return null;
+        return term.ntriplesString();
     }
 
     @Override

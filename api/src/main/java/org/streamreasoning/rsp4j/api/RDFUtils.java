@@ -88,5 +88,10 @@ public class RDFUtils {
         return getInstance().createTriple(subject, predicate, object);
     }
 
-
+    public static double parseDouble(String doubleValue){
+        return Double.parseDouble(removeDataType(doubleValue));
+    }
+    private static String removeDataType(String dataLiteral){
+        return dataLiteral.substring(1,dataLiteral.lastIndexOf('"'));
+    }
 }

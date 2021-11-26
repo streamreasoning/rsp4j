@@ -8,6 +8,7 @@ import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegist
 import org.streamreasoning.rsp4j.abstraction.functions.CountFunction;
 import org.streamreasoning.rsp4j.abstraction.table.BindingStream;
 import org.streamreasoning.rsp4j.abstraction.utils.DummyConsumer;
+import org.streamreasoning.rsp4j.abstraction.utils.DummyStream;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
@@ -422,6 +423,51 @@ public class MultipleWindowTest {
 
         expected.add(b1);
         assertEquals(expected, dummyConsumer.getReceived());
+    }
+    //@Test
+    public void testLargeStatic() throws InterruptedException {
+
+        Time instance = new TimeImpl(0);
+
+        // create parsing strategy
+        JenaRDFParsingStrategy parsingStrategy = new JenaRDFParsingStrategy(RDFBase.N3);
+        // create file source to read the newly created file
+        RDFStream stream = new RDFStream("http://test/stream");
+
+
+        ContinuousQuery<Graph, Graph, Binding, Binding> query =
+        TPQueryFactory.parse(
+            ""
+                + "REGISTER ISTREAM <http://out/stream> AS "
+                + "SELECT * "
+                + "FROM </Users/psbonte/Documents/Github/CityBench_yasper_tmp/dataset/SensorRepository.n3> "
+                + "WHERE {"
+                + " ?p1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.insight-centre.org/citytraffic#CongestionLevel> . "
+                + "    ?p2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.insight-centre.org/citytraffic#CongestionLevel> . "
+                + "}");
+
+        //SDS
+        TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
+                new QueryTaskAbstractionImpl.QueryTaskBuilder()
+                        .fromQuery(query)
+                        .build();
+        ContinuousProgram<Graph, Graph, Binding, Binding> cp = new ContinuousProgram.ContinuousProgramBuilder()
+                .in(stream)
+                .addTask(t)
+                .addJoinAlgorithm(new NestedJoinAlgorithm())
+                .out(query.getOutputStream())
+                .build();
+
+        DummyConsumer<Binding> dummyConsumer = new DummyConsumer<>();
+        query.getOutputStream().addConsumer(dummyConsumer);
+        while (true) {
+            populateStream(stream, 0 );
+
+            Thread.sleep(1000);
+        }
+
+
+
     }
 
     private void populateStream(DataStream<Graph> stream, long startTime) {

@@ -10,11 +10,14 @@ import java.util.Set;
 
 public class BindingImpl implements Binding {
 
-    Map<Var, RDFTerm> internal = new HashMap<>();
+    Map<Var, RDFTerm> internal;
 
     public BindingImpl() {
+        internal= new HashMap<>();
     }
-
+    public BindingImpl(int size) {
+        internal= new HashMap<>(size);
+    }
 
     @Override
     public Set<Var> variables() {

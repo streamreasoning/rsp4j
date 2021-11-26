@@ -1,4 +1,4 @@
-package org.streamreasoning.rsp4j.debs2021.processing.example;
+package org.streamreasoning.rsp4j.bigdata2021.processing.assignment;
 
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.abstraction.ContinuousProgram;
@@ -8,6 +8,7 @@ import org.streamreasoning.rsp4j.api.operators.r2r.utils.R2RPipe;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
+import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
@@ -16,13 +17,18 @@ import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.debs2021.utils.StreamGenerator;
-import org.streamreasoning.rsp4j.examples.operators.r2r.SimpleR2RFilter;
+import org.streamreasoning.rsp4j.examples.operators.r2r.UpwardExtension;
 import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
 
-public class CustomR2RExample {
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class CustomR2RAssignment {
 
   public static void main(String[] args) throws InterruptedException {
     StreamGenerator generator = new StreamGenerator();
@@ -42,8 +48,8 @@ public class CustomR2RExample {
     ReportGrain report_grain = ReportGrain.SINGLE;
     Time instance = new TimeImpl(0);
 
-    // Window (S2R) declaration incl. window name, window range (1s), window step (1s), start time
-    // (instance) etc.
+    // WINDOW DECLARATION
+    // TODO update the window definition to a window of 2s range and 2s step
     StreamToRelationOp<Graph, Graph> build =
         new CSPARQLStreamToRelationOp<>(
             RDFUtils.createIRI("w1"),
@@ -61,11 +67,21 @@ public class CustomR2RExample {
     VarOrTerm o = new VarImpl("type");
     TP tp = new TP(s, p, o);
 
-    // Define a filter that filters out all the greens
-    SimpleR2RFilter<Binding> filter = new SimpleR2RFilter<>(binding -> binding.value(o).equals(RDFUtils.createIRI("http://test/Green")));
+    // We define a small hierarchy stating that Green, Orange, Yellow, Red and White are Warm colors
+    // while Green (again), Blue, Violet, Red (again), Black and Grey are Cool colors
+    Map<String, List<String>> schema = new HashMap<>();
+    schema.put("http://test/Warm", Arrays.asList("http://test/Green", "http://test/Orange","http://test/Yellow","http://test/Red","http://test/White"));
+    schema.put("http://test/Cool", Arrays.asList("http://test/Green", "http://test/Blue","http://test/Violet","http://test/Red","http://test/Black","http://test/Grey"));
 
-    // Create a pipe of two r2r operators, TP and filter
-    R2RPipe<Graph,Binding> r2r = new R2RPipe<>(tp,filter);
+    // The upward extension accepts a type and returns all the supertypes
+    UpwardExtension upwardExtension = new UpwardExtension(schema);
+    System.out.println(upwardExtension.getUpwardExtension("http://test/Yellow")); // [http://test/Warm]
+    System.out.println(upwardExtension.getUpwardExtension("http://test/Green"));  // [http://test/Cool, http://test/Warm]
+
+    // TODO create a custom R2R operator that uses the upward extension to add all the super types to the stream
+    RelationToRelationOperator<Graph,Graph> upwardR2R = null; // <- add your R2R operator here
+
+    R2RPipe<Graph,Binding> r2r = new R2RPipe<>(tp); // <- do not forget to add your r2r operator to the r2r pipeline
 
     TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
         new TaskAbstractionImpl.TaskBuilder()

@@ -1,6 +1,7 @@
 package org.streamreasoning.rsp4j.yasper.querying.syntax;
 
 import org.apache.commons.rdf.api.Graph;
+import org.apache.commons.rdf.api.RDFTerm;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.r2r.Var;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
@@ -16,6 +17,7 @@ import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
 
@@ -28,6 +30,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
     private String windowIRI = "default";
     Stack<TripleHolder> triples;
     Map<String,List<TripleHolder>> windowsToTriples;
+    Map<String,List<Predicate<Binding>>> windowsToFilters;
     private String defaultGraphUri;
     private List<Var> projections;
 
@@ -37,6 +40,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
         this.time = new TimeImpl(0);
         triples = new Stack<TripleHolder>();
         windowsToTriples = new HashMap<>();
+        windowsToFilters = new HashMap<>();
         projections = new ArrayList<>();
     }
 
@@ -216,6 +220,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
         }
         query.getProjections().addAll(projections);
         query.setOutputStream(outputStreamIRI);
+        query.addFiltersIfDefined(windowsToFilters);
         //add aggregations
         query.getAggregations().addAll(aggregations);
         return query;
@@ -283,6 +288,109 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
         windowMap.get(streamWindowPair.getKey()).add( streamWindowPair.getValue());
 
         return super.visitNamedWindowClause(ctx);
+    }
+    @Override
+    public CQ visitFilter(RSPQLParser.FilterContext ctx) {
+        Predicate<Binding> orPredicate = null;
+        for(RSPQLParser.ConditionalAndExpressionContext andExpression :ctx.constraint().brackettedExpression().expression().conditionalOrExpression().conditionalAndExpression()){
+            Predicate<Binding> andPredicate = null;
+            for(RSPQLParser.ValueLogicalContext val :andExpression.valueLogical()){
+                RSPQLParser.RelationalExpressionContext expression = val.relationalExpression();
+                String expression1 = expression.numericExpression(0).getText();
+                String expression2 = expression.numericExpression(1).getText();
+                String logicalOperator = expression.getChild(1).getText();
+                Predicate<Binding> p = null;
+                if (!isValue(expression1) && !isValue(expression2)) {
+                  p = createPredicateWithoutValues(expression1, expression2, logicalOperator);
+                }else{
+                    p = createPredicateWithValues(expression1, expression2, logicalOperator);
+                }
+                if(andPredicate!=null && p!=null){
+                    andPredicate= andPredicate.and(p);
+                }else if(p!=null){
+                    andPredicate = p;
+                }
+            }
+            if(andPredicate!=null && orPredicate!=null){
+                orPredicate= orPredicate.or(andPredicate);
+            }else if(andPredicate!=null){
+                orPredicate = andPredicate;
+            }
+        }
+        if(orPredicate!=null){
+            windowsToFilters.computeIfAbsent(windowIRI,s->new ArrayList<>()).add(orPredicate);
+        }
+        return visitChildren(ctx);
+    }
+
+    private Predicate<Binding> createPredicateWithValues(String expression1, String expression2, String logicalOperator) {
+        Predicate<Binding> p = null;
+        switch (logicalOperator){
+            case "=":
+                p = b-> parseOrRetrieveDataFromBinding(b, expression1).equals(parseOrRetrieveDataFromBinding(b, expression2));
+                break;
+            case "!=":
+                p = b-> !parseOrRetrieveDataFromBinding(b, expression1).equals(parseOrRetrieveDataFromBinding(b, expression2));
+                break;
+            case "<=":
+                p = b-> parseOrRetrieveDataFromBinding(b,expression1) <= parseOrRetrieveDataFromBinding(b,expression2);
+                break;
+            case ">=":
+                p = b-> parseOrRetrieveDataFromBinding(b,expression1) >= parseOrRetrieveDataFromBinding(b,expression2);
+                break;
+            case ">":
+                p = b-> parseOrRetrieveDataFromBinding(b,expression1) > parseOrRetrieveDataFromBinding(b,expression2);
+                break;
+            case "<":
+                p = b-> parseOrRetrieveDataFromBinding(b,expression1) < parseOrRetrieveDataFromBinding(b,expression2);
+                break;
+        }
+        return p;
+    }
+
+    private Double parseOrRetrieveDataFromBinding(Binding b, String expression){
+        if(isValue(expression)){
+            return Double.parseDouble(expression) ;
+        }else{
+            return RDFUtils.parseDouble(b.value(new VarImpl(expression)).ntriplesString());
+        }
+    }
+    private Predicate<Binding> createPredicateWithoutValues(String expression1, String expression2, String logicalOperator) {
+        VarOrTerm var1 = convertToVarOrTerm(expression1);
+        VarOrTerm var2 = convertToVarOrTerm(expression2);
+        Predicate<Binding> p = null;
+        switch(logicalOperator){
+            case "=":
+                p = b-> getBindingValue(b,var1).equals(getBindingValue(b,var2));
+                break;
+            case "!=":
+                p = b-> !getBindingValue(b,var1).equals(getBindingValue(b,var2));
+                break;
+        }
+        return p;
+    }
+
+    private boolean isValue(String expression){
+        try{
+            Double.parseDouble(expression);
+        }catch(NumberFormatException e){
+            return false;
+        }
+        return true;
+    }
+    private RDFTerm getBindingValue(Binding b, VarOrTerm varOrTerm){
+        if(varOrTerm instanceof VarImpl){
+            return b.value(varOrTerm);
+        }else{
+            return varOrTerm;
+        }
+    }
+    private VarOrTerm convertToVarOrTerm(String varOrTerm){
+        if(varOrTerm.startsWith("?")){
+            return new VarImpl(varOrTerm);
+        }else{
+            return new TermImpl(RDFUtils.trimTags(varOrTerm));
+        }
     }
 
 

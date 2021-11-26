@@ -6,6 +6,7 @@ import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegist
 import org.streamreasoning.rsp4j.abstraction.functions.CountFunction;
 import org.streamreasoning.rsp4j.abstraction.table.BindingStream;
 import org.streamreasoning.rsp4j.abstraction.utils.DummyConsumer;
+import org.streamreasoning.rsp4j.abstraction.utils.DummyStream;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;

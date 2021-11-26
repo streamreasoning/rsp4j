@@ -193,6 +193,7 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
           result = checkAndMergeR2REval(result,  r2rOperator, sds.toStream(), isFirst);
         }
         isFirst = false;
+        log.debug("Result for " + tvgTaskName + ": " + result);
       }
     } else {
       log.error("No R2R operator defined!");

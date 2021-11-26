@@ -1,4 +1,4 @@
-package org.streamreasoning.rsp4j.debs2021.processing.example;
+package org.streamreasoning.rsp4j.bigdata2021.processing.example;
 
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.abstraction.ContinuousProgram;

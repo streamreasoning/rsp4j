@@ -2,10 +2,10 @@ package org.streamreasoning.rsp4j.yasper.querying.syntax;
 
 
 import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.api.IRI;
 import org.streamreasoning.rsp4j.api.enums.StreamOperator;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2r.Var;
+import org.streamreasoning.rsp4j.api.operators.r2r.utils.R2RPipe;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SimpleRSPQLQuery<O> implements RSPQL<O> {
 
@@ -41,6 +44,7 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
     private StreamOperator streamOperator = StreamOperator.NONE;
     private Time time;
     private List<Var> projections;
+    private Map<String, List<Predicate<Binding>>> windowsToFilters;
 
     public SimpleRSPQLQuery(String id, DataStream<Graph> stream, Time time, WindowNode win, VarOrTerm s, VarOrTerm p, VarOrTerm o, RelationToStreamOperator<Binding, O> r2s) {
         this.id = id;
@@ -83,7 +87,9 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
         this.id = id;
     }
 
-
+    public void addFiltersIfDefined(Map<String,List<Predicate<Binding>>> windowsToFilters){
+        this.windowsToFilters = windowsToFilters;
+    }
     @Override
     public void addNamedWindow(String streamUri, WindowNode wo) {
         windowMap.put(wo, new DataStreamImpl<>(streamUri));
@@ -168,24 +174,36 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
 
     @Override
     public RelationToRelationOperator<Graph, Binding> r2r() {
-        if (triples.size() == 1) {
-            List<TripleHolder> bgpTriples = triples.values().iterator().next();
-              if (bgpTriples.size() == 1) {
-                TripleHolder triple = bgpTriples.get(0);
-                return new TP(triple.s, triple.p, triple.o);
-              } else {
-                return createBGP(bgpTriples);
-              }
-        }else{
             Map<String, RelationToRelationOperator<Graph, Binding>> r2rs = new HashMap<>();
             for(Map.Entry<String,List<TripleHolder>> entry: triples.entrySet()){
                 if (!entry.getValue().isEmpty()) {
-                  r2rs.put(entry.getKey(), createBGP(entry.getValue()));
+                  RelationToRelationOperator<Graph, Binding> bgp =   createR2R(entry.getValue());
+                  RelationToRelationOperator<Graph, Binding> filteredBgp = addFiltersIfDefined(entry.getKey(),bgp);
+                  r2rs.put(entry.getKey(), filteredBgp);
                 }
             }
-            return new MultipleGraphR2R(r2rs);
+            if(r2rs.size()>1){
+                return new MultipleGraphR2R(r2rs);
+            }else{
+                return r2rs.values().iterator().next();
+            }
+    }
+    private RelationToRelationOperator<Graph, Binding> addFiltersIfDefined(String graph, RelationToRelationOperator<Graph, Binding> bgp){
+        if(windowsToFilters.containsKey(graph)){
+            List<RelationToRelationOperator> r2rList = windowsToFilters.get(graph).stream().map(p->new Filter(Stream.empty(),p)).collect(Collectors.toList());
+            r2rList.add(0,bgp);//add the bgp pattern as first
+            R2RPipe<Graph,Binding> pipe = new R2RPipe(r2rList.toArray(new RelationToRelationOperator[0]));
+            return pipe;
+        }else{
+            return bgp;
         }
-
+    }
+    private RelationToRelationOperator<Graph, Binding> createR2R(List<TripleHolder> triples){
+        if(triples.size()==1){
+            return createTP(triples.get(0));
+        }else{
+            return createBGP(triples);
+        }
     }
     private BGP createBGP(List<TripleHolder> bgpTriples){
         TripleHolder triple = bgpTriples.get(0);
@@ -194,6 +212,9 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
             bgp.join(new TP(bgpTriples.get(i).s,bgpTriples.get(i).p,bgpTriples.get(i).o));
         }
         return bgp.create();
+    }
+    private TP createTP(TripleHolder singleTP){
+        return new TP(singleTP.s, singleTP.p, singleTP.o);
     }
     @Override
     public StreamToRelationOp<Graph, Graph>[] s2r() {

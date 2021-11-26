@@ -3,7 +3,7 @@ package org.streamreasoning.rsp4j.examples.operators.r2r;
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.junit.Test;
-import org.streamreasoning.rsp4j.abstraction.utils.R2RPipe;
+import org.streamreasoning.rsp4j.api.operators.r2r.utils.R2RPipe;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;

@@ -1,13 +1,15 @@
-package org.streamreasoning.rsp4j.debs2021.processing.example;
+package org.streamreasoning.rsp4j.bigdata2021.processing.assignment;
 
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.abstraction.ContinuousProgram;
 import org.streamreasoning.rsp4j.abstraction.TaskAbstractionImpl;
+import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegistry;
+import org.streamreasoning.rsp4j.abstraction.functions.CountFunction;
 import org.streamreasoning.rsp4j.abstraction.table.BindingStream;
-import org.streamreasoning.rsp4j.api.operators.r2r.utils.R2RPipe;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
+import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
@@ -16,19 +18,22 @@ import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.debs2021.utils.StreamGenerator;
-import org.streamreasoning.rsp4j.examples.operators.r2r.SimpleR2RFilter;
 import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
 
-public class CustomR2RExample {
+/***
+ * In this example, we show how to build an RSP engine by defining the different operators.
+ */
+public class AbstractionAssignment {
 
   public static void main(String[] args) throws InterruptedException {
+    // Setup the stream generator
     StreamGenerator generator = new StreamGenerator();
     DataStream<Graph> inputStream = generator.getStream("http://test/stream");
 
-    // define output stream
+    // Define output stream
     BindingStream outStream = new BindingStream("out");
 
     // Engine properties
@@ -42,8 +47,8 @@ public class CustomR2RExample {
     ReportGrain report_grain = ReportGrain.SINGLE;
     Time instance = new TimeImpl(0);
 
-    // Window (S2R) declaration incl. window name, window range (1s), window step (1s), start time
-    // (instance) etc.
+    // Window (S2R) declaration incl. window name, window range (1s), window step (1s), start time, etc.
+    // TODO update the window definition to a window of 2s range and 2s step
     StreamToRelationOp<Graph, Graph> build =
         new CSPARQLStreamToRelationOp<>(
             RDFUtils.createIRI("w1"),
@@ -55,22 +60,17 @@ public class CustomR2RExample {
             report_grain,
             new GraphContentFactory(instance));
 
-    // R2R
-    VarOrTerm s = new VarImpl("color");
-    VarOrTerm p = new TermImpl("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-    VarOrTerm o = new VarImpl("type");
-    TP tp = new TP(s, p, o);
+    // TODO define a R2R operator that extracts all green colors.
+    RelationToRelationOperator<Graph, Binding> r2r = null; // <- Add your R2R operator here
+    // Hint variables can be defined using VarImpl while terms can be defined using TermImpl
 
-    // Define a filter that filters out all the greens
-    SimpleR2RFilter<Binding> filter = new SimpleR2RFilter<>(binding -> binding.value(o).equals(RDFUtils.createIRI("http://test/Green")));
+    // REGISTER FUNCTION
+    AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
 
-    // Create a pipe of two r2r operators, TP and filter
-    R2RPipe<Graph,Binding> r2r = new R2RPipe<>(tp,filter);
-
+    // TODO add the created R2R to the RSP4J Task and Continuous Program
     TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
         new TaskAbstractionImpl.TaskBuilder()
             .addS2R("stream1", build, "w1")
-            .addR2R("w1", r2r)
             .addR2S("out", new Rstream<Binding, Binding>())
             .build();
     ContinuousProgram<Graph, Graph, Binding, Binding> cp =
@@ -79,9 +79,13 @@ public class CustomR2RExample {
             .addTask(t)
             .out(outStream)
             .build();
-
+    // Add the Consumer to the stream
     outStream.addConsumer((el, ts) -> System.out.println(el + " @ " + ts));
+
+    // Start streaming
     generator.startStreaming();
+
+    // Stop streaming after 20s
     Thread.sleep(20_000);
     generator.stopStreaming();
   }

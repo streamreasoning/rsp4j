@@ -1,4 +1,4 @@
-package org.streamreasoning.rsp4j.abstraction.utils;
+package org.streamreasoning.rsp4j.api.operators.r2r.utils;
 
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
@@ -14,6 +14,10 @@ public class R2RPipe<W, R> implements RelationToRelationOperator<W, R> {
 
     public R2RPipe(RelationToRelationOperator... r2rs) {
         this.r2rs = r2rs;
+    }
+
+    public RelationToRelationOperator[] getR2rs() {
+        return r2rs;
     }
 
     @Override
