@@ -21,6 +21,8 @@
         <module>web</module>
         <module>csparql-rsp4j</module>
         <module>cqels-rsp4j</module>
+        <module>csparql2</module>
+        <module>dsms</module>
     </modules>
 
     <dependencyManagement>
