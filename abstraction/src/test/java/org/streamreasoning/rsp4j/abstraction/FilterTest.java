@@ -263,7 +263,7 @@ public class FilterTest {
                 "SELECT ?value " +
                 "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
                 "WHERE {" +
-                "   WINDOW <http://test/window> {?obs <http://test/hasValue> ?value . ?obs2 <http://test/hasValue> ?value2 . Filter(?value2 >40). Filter(?value=?value2})" +
+                "   WINDOW <http://test/window> {?obs <http://test/hasValue> ?value . ?obs2 <http://test/hasValue> ?value2 . Filter(?value2 >=40). Filter(?value > value2})" +
                 "}", StreamType.VALUES);
 
         System.out.println(dummyConsumer.getReceived());
@@ -285,7 +285,7 @@ public class FilterTest {
                 "SELECT ?value " +
                 "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
                 "WHERE {" +
-                "   WINDOW <http://test/window> {?obs <http://test/hasValue> ?value . ?obs2 <http://test/hasValue> ?value2 . Filter(?value2 >40 && ?value=?value2})" +
+                "   WINDOW <http://test/window> {?obs <http://test/hasValue> ?value . ?obs2 <http://test/hasValue> ?value2 . Filter(?value2 >=40 && ?value > ?value2})" +
                 "}", StreamType.VALUES);
 
         System.out.println(dummyConsumer.getReceived());

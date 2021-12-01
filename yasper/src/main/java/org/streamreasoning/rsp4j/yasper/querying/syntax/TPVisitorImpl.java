@@ -366,6 +366,18 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
             case "!=":
                 p = b-> !getBindingValue(b,var1).equals(getBindingValue(b,var2));
                 break;
+            case "<=":
+                p = b-> parseOrRetrieveDataFromBinding(b,expression1) <= parseOrRetrieveDataFromBinding(b,expression2);
+                break;
+            case ">=":
+                p = b-> parseOrRetrieveDataFromBinding(b,expression1) >= parseOrRetrieveDataFromBinding(b,expression2);
+                break;
+            case ">":
+                p = b-> parseOrRetrieveDataFromBinding(b,expression1) > parseOrRetrieveDataFromBinding(b,expression2);
+                break;
+            case "<":
+                p = b-> parseOrRetrieveDataFromBinding(b,expression1) < parseOrRetrieveDataFromBinding(b,expression2);
+                break;
         }
         return p;
     }
