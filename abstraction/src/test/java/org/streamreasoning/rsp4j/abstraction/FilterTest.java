@@ -256,6 +256,50 @@ public class FilterTest {
         expected.add(b1);
         assertEquals(expected, dummyConsumer.getReceived());
     }
+    @Test
+    public void valueMultipleFilterQuery() {
+        DummyConsumer<Binding> dummyConsumer = parseQueryAndGetConsumer("" +
+                "REGISTER ISTREAM <http://out/stream> AS " +
+                "SELECT ?value " +
+                "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
+                "WHERE {" +
+                "   WINDOW <http://test/window> {?obs <http://test/hasValue> ?value . ?obs2 <http://test/hasValue> ?value2 . Filter(?value2 >40). Filter(?value=?value2})" +
+                "}", StreamType.VALUES);
+
+        System.out.println(dummyConsumer.getReceived());
+
+        assertEquals(1, dummyConsumer.getSize());
+        List<Binding> expected = new ArrayList<>();
+
+        Binding b1 = new BindingImpl();
+        b1.add(
+                new VarImpl("value"),
+                RDFUtils.createLiteral("50", RDFUtils.createIRI("http://www.w3.org/2001/XMLSchema#integer")));
+        expected.add(b1);
+        assertEquals(expected, dummyConsumer.getReceived());
+    }
+    @Test
+    public void valueConjunctionFilterQuery() {
+        DummyConsumer<Binding> dummyConsumer = parseQueryAndGetConsumer("" +
+                "REGISTER ISTREAM <http://out/stream> AS " +
+                "SELECT ?value " +
+                "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
+                "WHERE {" +
+                "   WINDOW <http://test/window> {?obs <http://test/hasValue> ?value . ?obs2 <http://test/hasValue> ?value2 . Filter(?value2 >40 && ?value=?value2})" +
+                "}", StreamType.VALUES);
+
+        System.out.println(dummyConsumer.getReceived());
+
+        assertEquals(1, dummyConsumer.getSize());
+        List<Binding> expected = new ArrayList<>();
+
+        Binding b1 = new BindingImpl();
+        b1.add(
+                new VarImpl("value"),
+                RDFUtils.createLiteral("50", RDFUtils.createIRI("http://www.w3.org/2001/XMLSchema#integer")));
+        expected.add(b1);
+        assertEquals(expected, dummyConsumer.getReceived());
+    }
 
     private DummyConsumer<Binding> parseQueryAndGetConsumer(String s, StreamType streamType) {
         //STREAM DECLARATION
