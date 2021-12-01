@@ -71,7 +71,7 @@ public class EPLFactoryTest {
 
         System.out.println(epStatementObjectModel.toEPL());
 
-        assertEquals("select * from " + stream + ".win:time(5 seconds) output all every 5 seconds", epStatementObjectModel.toEPL());
+        assertEquals("select * from " + stream + ".win:time(5 seconds) output snapshot every 5 seconds", epStatementObjectModel.toEPL());
     }
 
     @Test
@@ -90,7 +90,7 @@ public class EPLFactoryTest {
 
         System.out.println(epStatementObjectModel.toEPL());
 
-        assertEquals("select * from " + stream + ".win:time(5 seconds) output all every 1 events", epStatementObjectModel.toEPL());
+        assertEquals("select * from " + stream + ".win:time(5 seconds) output snapshot every 5 seconds", epStatementObjectModel.toEPL());
     }
 
 }
