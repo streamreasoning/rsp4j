@@ -35,6 +35,16 @@ public class VarImpl implements VarOrTerm {
     }
 
     @Override
+    public boolean isVariable() {
+        return true;
+    }
+
+    @Override
+    public boolean isTerm() {
+        return false;
+    }
+
+    @Override
     public String toString() {
         return name;
     }

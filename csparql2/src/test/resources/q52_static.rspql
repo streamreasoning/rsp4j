@@ -6,7 +6,7 @@ PREFIX : <http://differenthost:12134/>
 REGISTER RSTREAM <out> AS
 SELECT  *
 FROM NAMED WINDOW <win2> ON :stream2 [RANGE PT5S STEP PT0.5S]
-FROM <file:///Users/psbonte/Documents/Github/csparql2/jasper/src/test/resources/static.ttl>
+FROM <file:///Users/psbonte/Documents/Github/rsp4j/csparql2/src/test/resources/static.ttl>
 WHERE  {
     ?a ars:hasName ?name.
     WINDOW ?w {

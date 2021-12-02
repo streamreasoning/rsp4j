@@ -18,6 +18,9 @@ public class BindingImpl implements Binding {
     public BindingImpl(int size) {
         internal= new HashMap<>(size);
     }
+    public BindingImpl(Map<Var, RDFTerm> possibleBinding) {
+        this.internal = new HashMap<>(possibleBinding);
+    }
 
     @Override
     public Set<Var> variables() {
@@ -71,5 +74,9 @@ public class BindingImpl implements Binding {
     @Override
     public int hashCode() {
         return Objects.hash(internal);
+    }
+
+    public Map<Var, RDFTerm> getInternals() {
+        return internal;
     }
 }

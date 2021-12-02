@@ -23,6 +23,16 @@ public class TermImpl implements VarOrTerm {
     }
 
     @Override
+    public boolean isVariable() {
+        return false;
+    }
+
+    @Override
+    public boolean isTerm() {
+        return true;
+    }
+
+    @Override
     public String getIRIString() {
         return RDFUtils.trimTags(term.ntriplesString());
     }
