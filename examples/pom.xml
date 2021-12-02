@@ -37,6 +37,12 @@
         </dependency>
         <dependency>
             <groupId>org.streamreasoning.rsp4j</groupId>
+            <artifactId>reasoning</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.streamreasoning.rsp4j</groupId>
             <artifactId>abstraction</artifactId>
             <version>1.0.0</version>
             <scope>compile</scope>

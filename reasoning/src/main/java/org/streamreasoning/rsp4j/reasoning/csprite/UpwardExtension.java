@@ -1,4 +1,4 @@
-package org.streamreasoning.rsp4j.examples.operators.r2r;
+package org.streamreasoning.rsp4j.reasoning.csprite;
 
 import java.util.*;
 

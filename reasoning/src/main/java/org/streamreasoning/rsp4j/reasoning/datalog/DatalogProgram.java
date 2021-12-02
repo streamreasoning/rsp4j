@@ -1,6 +1,8 @@
-package be.idlab.reasoning.datalog;
+package org.streamreasoning.rsp4j.reasoning.datalog;
 
+import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.RDFTerm;
+import org.apache.commons.rdf.api.Triple;
 import org.streamreasoning.rsp4j.api.operators.r2r.Var;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
 
@@ -8,7 +10,7 @@ import java.util.*;
 
 public class DatalogProgram {
 
-    private final List<Triple> facts;
+    private final List<ReasonerTriple> facts;
     private final List<Rule> rules;
     private int factProcessIndex = 0;
     private long counter=0;
@@ -17,10 +19,15 @@ public class DatalogProgram {
         this.facts = new ArrayList<>();
         this.rules = new ArrayList<>();
     }
-    public void addFact(Triple t) {
+    public void addFact(ReasonerTriple t) {
         facts.add(t);
     }
-
+    public void addFact(Triple t) {
+        facts.add(new ReasonerTriple(new TermImpl(t.getSubject()),new TermImpl(t.getPredicate()),new TermImpl(t.getObject())));
+    }
+    public void addFacts(Graph g) {
+        g.stream().forEach(t->addFact(t));
+    }
     public int getFactSize() {
         return facts.size();
     }
@@ -36,7 +43,7 @@ public class DatalogProgram {
     public void materialize() {
         factProcessIndex = 0;
         while(factProcessIndex < facts.size()){
-            Triple evaluateFact = facts.get(factProcessIndex);
+            ReasonerTriple evaluateFact = facts.get(factProcessIndex);
             System.out.println("checking: " +evaluateFact + " size facts: " + facts.size());
 
             List<Rule> matchingRules = matchFactAgainstRules(evaluateFact);
@@ -46,25 +53,25 @@ public class DatalogProgram {
         }
     }
 
-    private void evaluateMatchingRules(List<Rule> matchingRules,Triple evaluateFact) {
+    private void evaluateMatchingRules(List<Rule> matchingRules, ReasonerTriple evaluateFact) {
         for(Rule r: matchingRules){
             Rule substitutedRule = r.substitute(evaluateFact);
-            Set<Triple> inferedTriples = queryBodySubstitutedRule(substitutedRule);
-            for(Triple inferedTriple: inferedTriples){
+            Set<ReasonerTriple> inferedTriples = queryBodySubstitutedRule(substitutedRule);
+            for(ReasonerTriple inferedTriple: inferedTriples){
                 facts.add(inferedTriple);
             }
 
         }
     }
-    private Set<Triple> backwardEvaluateMatchingRules(List<Rule> matchingRules,Triple evaluateFact) {
-        Set<Triple> toBeEvaluatedTriples = new HashSet<>();
+    private Set<ReasonerTriple> backwardEvaluateMatchingRules(List<Rule> matchingRules, ReasonerTriple evaluateFact) {
+        Set<ReasonerTriple> toBeEvaluatedTriples = new HashSet<>();
         for(Rule r: matchingRules){
             Rule substitutedRule = r.backwardSubstitute(evaluateFact);
-            Set<Triple> possibleTriples = queryBodySubstitutedRuleBackward(substitutedRule);
+            Set<ReasonerTriple> possibleTriples = queryBodySubstitutedRuleBackward(substitutedRule);
             if(possibleTriples.isEmpty()){
-                for(Triple bodyTriple:substitutedRule.getBody()){
+                for(ReasonerTriple bodyTriple:substitutedRule.getBody()){
                     List<Rule> tempRules = matchFactAgainstRuleHeads(bodyTriple);
-                    Set<Triple> subTripleResult = backwardEvaluateMatchingRules(tempRules,bodyTriple);
+                    Set<ReasonerTriple> subTripleResult = backwardEvaluateMatchingRules(tempRules,bodyTriple);
                     // all triple patterns of the body should match
                     if(subTripleResult.isEmpty()){
                         return Collections.emptySet();
@@ -79,7 +86,7 @@ public class DatalogProgram {
         }
         return toBeEvaluatedTriples;
     }
-    private Set<Triple> queryBodySubstitutedRule(Rule substitutedRule) {
+    private Set<ReasonerTriple> queryBodySubstitutedRule(Rule substitutedRule) {
 //        Map<VarImpl,TermImpl> subs = new HashMap<>();
 //        for(Triple bodyTriple: substitutedRule.getBody()){
 //            boolean found = false;
@@ -97,9 +104,9 @@ public class DatalogProgram {
 //                return Optional.empty();
 //            }
 //        }
-        Optional<Set<Binding>> bindings = query(substitutedRule.getBody().toArray(new Triple[0]));
+        Optional<Set<Binding>> bindings = query(substitutedRule.getBody().toArray(new ReasonerTriple[0]));
 
-        Set<Triple> newHeads = new HashSet<>();
+        Set<ReasonerTriple> newHeads = new HashSet<>();
         if(bindings.isPresent()) {
             for (Binding b : bindings.get()) {
                 newHeads.add(TripleUtils.substituteBody(substitutedRule.getHead(),((BindingImpl)b).getInternals()));
@@ -111,12 +118,12 @@ public class DatalogProgram {
         return newHeads;
 
     }
-    private Set<Triple> queryBodySubstitutedRuleBackward(Rule substitutedRule) {
-        Optional<Set<Binding>> bindings = queryAllFacts(substitutedRule.getBody().toArray(new Triple[0]));
+    private Set<ReasonerTriple> queryBodySubstitutedRuleBackward(Rule substitutedRule) {
+        Optional<Set<Binding>> bindings = queryAllFacts(substitutedRule.getBody().toArray(new ReasonerTriple[0]));
 
-        Set<Triple> newBodies = new HashSet<>();
+        Set<ReasonerTriple> newBodies = new HashSet<>();
         if(bindings.isPresent()) {
-            for(Triple bodyTriple: substitutedRule.getBody()){
+            for(ReasonerTriple bodyTriple: substitutedRule.getBody()){
                 for (Binding b : bindings.get()) {
                     newBodies.add(TripleUtils.substituteBody(bodyTriple,((BindingImpl)b).getInternals()));
                 }
@@ -137,7 +144,7 @@ public class DatalogProgram {
     }
 
 
-    private List<Rule> matchFactAgainstRules(Triple evaluateFact) {
+    private List<Rule> matchFactAgainstRules(ReasonerTriple evaluateFact) {
         List<Rule> candiateRules = new ArrayList<>();
         for(Rule candidateRule: rules){
             if(candidateRule.factMatchesBody(evaluateFact)){
@@ -146,7 +153,7 @@ public class DatalogProgram {
         }
         return candiateRules;
     }
-    private List<Rule> matchFactAgainstRuleHeads(Triple evaluateFact) {
+    private List<Rule> matchFactAgainstRuleHeads(ReasonerTriple evaluateFact) {
         List<Rule> candiateRules = new ArrayList<>();
         for(Rule candidateRule: rules){
             if(candidateRule.factMatchesHead(evaluateFact)){
@@ -156,17 +163,17 @@ public class DatalogProgram {
         return candiateRules;
     }
 
-    public List<Triple> getFacts() {
+    public List<ReasonerTriple> getFacts() {
         return facts;
     }
-    public Optional<Set<Binding>> queryAllFacts(Triple... triple){
+    public Optional<Set<Binding>> queryAllFacts(ReasonerTriple... triple){
         factProcessIndex = facts.size()-1;
         return query(triple);
     }
-    public Optional<Set<Binding>> query(Triple... triple) {
+    public Optional<Set<Binding>> query(ReasonerTriple... triple) {
         Set<Binding> results = new HashSet<>();
         boolean matched = true;
-        for(Triple tp: Arrays.asList(triple)){
+        for(ReasonerTriple tp: Arrays.asList(triple)){
             Optional<Set<Binding>> bindings = evaluateTriplePattern(tp);
             matched &= bindings.isPresent();
             if(bindings.isPresent()) {
@@ -209,11 +216,11 @@ public class DatalogProgram {
         return true;
     }
 
-    private Optional<Set<Binding>> evaluateTriplePattern(Triple tp) {
+    private Optional<Set<Binding>> evaluateTriplePattern(ReasonerTriple tp) {
         Set<Binding> results = new HashSet<>();
         boolean foundMatch = false;
         for(int factIndex = 0 ; factIndex <= factProcessIndex ; factIndex++){
-            Triple factTriple = facts.get(factIndex);
+            ReasonerTriple factTriple = facts.get(factIndex);
             if(TripleUtils.matchTriples(tp,factTriple)){
                 foundMatch = true;
                 Map<Var, RDFTerm> possibleBinding = TripleUtils.extractSubstitutionVar(tp,factTriple);
@@ -224,9 +231,9 @@ public class DatalogProgram {
         return foundMatch? Optional.of(results): Optional.empty();
     }
 
-    public boolean backward(Triple evaluateFact) {
+    public boolean backward(ReasonerTriple evaluateFact) {
         List<Rule> matchingRules = matchFactAgainstRuleHeads(evaluateFact);
-        Set<Triple> backwardInferredTriples = backwardEvaluateMatchingRules(matchingRules,evaluateFact);
+        Set<ReasonerTriple> backwardInferredTriples = backwardEvaluateMatchingRules(matchingRules,evaluateFact);
 
         return !backwardInferredTriples.isEmpty();
     }
@@ -245,9 +252,9 @@ public class DatalogProgram {
         return new VarImpl("?new_" + counter++);
     }
 
-    public Rule alignHeadVariableNames(Triple toRewriteTo, Rule r) {
+    public Rule alignHeadVariableNames(ReasonerTriple toRewriteTo, Rule r) {
         Map<Var,VarOrTerm> varSubstitution = new HashMap<>();
-        Triple head = r.getHead();
+        ReasonerTriple head = r.getHead();
         if(head.getSubject().isVariable() && toRewriteTo.getSubject().isVariable()){
             varSubstitution.put((VarImpl)head.getSubject(),(VarImpl)toRewriteTo.getSubject());
         }
@@ -259,4 +266,12 @@ public class DatalogProgram {
         }
         return r.substituteVars(varSubstitution);
     }
+
+    public void reset(){
+        this.counter = 0;
+        this.factProcessIndex = 0;
+        this.facts.clear();
+    }
+
+
 }

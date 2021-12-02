@@ -1,4 +1,4 @@
-package be.idlab.reasoning.datalog;
+package org.streamreasoning.rsp4j.reasoning.datalog;
 
 import org.apache.commons.rdf.api.RDFTerm;
 import org.streamreasoning.rsp4j.api.operators.r2r.Var;
@@ -11,7 +11,7 @@ public class TripleUtils {
 
 
 
-    public static boolean matchTriples(Triple t1, Triple t2) {
+    public static boolean matchTriples(ReasonerTriple t1, ReasonerTriple t2) {
         if (t1.getSubject().isTerm() && !t1.getSubject().equals(t2.getSubject())) {
             return false;
         }
@@ -24,7 +24,7 @@ public class TripleUtils {
         return true;
     }
 
-    public static Map<Var, RDFTerm> extractSubstitutionVar(Triple triple, Triple evaluateFact) {
+    public static Map<Var, RDFTerm> extractSubstitutionVar(ReasonerTriple triple, ReasonerTriple evaluateFact) {
         Map<Var, RDFTerm> subs = new HashMap<Var, RDFTerm>();
         if (triple.getSubject().isVariable()) {
             subs.put(triple.getSubject(), evaluateFact.getSubject());
@@ -38,7 +38,7 @@ public class TripleUtils {
         return subs;
     }
 
-    public static Triple substituteBody(Triple triple, Map<Var, RDFTerm> substutitionVariables) {
+    public static ReasonerTriple substituteBody(ReasonerTriple triple, Map<Var, RDFTerm> substutitionVariables) {
         VarOrTerm s = triple.getSubject();
         VarOrTerm p = triple.getProperty();
         VarOrTerm o = triple.getObject();
@@ -51,10 +51,10 @@ public class TripleUtils {
         if (substutitionVariables.containsKey(triple.getObject())) {
             o = (VarOrTerm) substutitionVariables.get(triple.getObject());
         }
-        return new Triple(s, p, o);
+        return new ReasonerTriple(s, p, o);
     }
 
-    public static Triple substutitionVariables(Triple triple, Map<Var, VarOrTerm> substutitionVariables) {
+    public static ReasonerTriple substutitionVariables(ReasonerTriple triple, Map<Var, VarOrTerm> substutitionVariables) {
         VarOrTerm s = triple.getSubject();
         VarOrTerm p = triple.getProperty();
         VarOrTerm o = triple.getObject();
@@ -67,9 +67,9 @@ public class TripleUtils {
         if (substutitionVariables.containsKey(triple.getObject())) {
             o = substutitionVariables.get(triple.getObject());
         }
-        return new Triple(s, p, o);
+        return new ReasonerTriple(s, p, o);
     }
-    public static boolean containsNoVars(Triple triple) {
+    public static boolean containsNoVars(ReasonerTriple triple) {
         return triple.getSubject().isTerm()&&triple.getProperty().isTerm()&&triple.getObject().isTerm();
     }
 

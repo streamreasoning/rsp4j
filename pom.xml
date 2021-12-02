@@ -23,6 +23,7 @@
         <module>cqels-rsp4j</module>
         <module>csparql2</module>
         <module>dsms</module>
+        <module>reasoning</module>
     </modules>
 
     <dependencyManagement>
