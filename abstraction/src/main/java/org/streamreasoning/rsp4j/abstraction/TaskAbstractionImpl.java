@@ -95,6 +95,10 @@ public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
             r2rs.add(new R2RContainer<W, R>(tvgName, r2r));
             return this;
         }
+        public TaskBuilder<I, W, R, O> addR2R(List<String> tvgNames, RelationToRelationOperator<W, R> r2r) {
+            r2rs.add(new R2RContainer<W, R>(tvgNames, r2r));
+            return this;
+        }
 
         public TaskBuilder<I, W, R, O> addR2S(String sinkURI, RelationToStreamOperator<R, O> r2s) {
             r2ss.add(new R2SContainer<R, O>(sinkURI, r2s));

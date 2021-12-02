@@ -44,7 +44,6 @@ public class DatalogProgram {
         factProcessIndex = 0;
         while(factProcessIndex < facts.size()){
             ReasonerTriple evaluateFact = facts.get(factProcessIndex);
-            System.out.println("checking: " +evaluateFact + " size facts: " + facts.size());
 
             List<Rule> matchingRules = matchFactAgainstRules(evaluateFact);
             evaluateMatchingRules(matchingRules,evaluateFact);

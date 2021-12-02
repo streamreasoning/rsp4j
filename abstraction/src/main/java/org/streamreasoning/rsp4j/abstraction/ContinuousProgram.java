@@ -79,7 +79,7 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
   private void evaluateDefaultGraph(){
     for (Task<I, W, R, O> task : tasks) {
       for(R2RContainer<W,R> r2r : task.getR2Rs()){
-        if(r2r.getTvgName().equals("default")){
+        if(r2r.getTvgNames().equals(Collections.singletonList("default"))){
           DataSet<W> defaultGraph = task.getDefaultGraph();
           Stream<R> staticBindings = r2r.getR2rOperator().eval(defaultGraph.getContent().stream());
           cachedStaticBindings.put("default", staticBindings.collect(Collectors.toSet()));
@@ -180,20 +180,22 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
       Map<String, W> tvgMap = sds.asTimeVaryingEs().stream().collect(Collectors.toMap(TimeVarying::iri, TimeVarying::get));
       for (R2RContainer<W, R> r2RContainer : iroTask.getR2Rs()) {
         RelationToRelationOperator<W, R> r2rOperator = r2RContainer.getR2rOperator();
-        String tvgTaskName = r2RContainer.getTvgName();
-        if(tvgTaskName.equals("default")){
-          result = new HashSet<>(cachedStaticBindings.get("default"));
-        }
-        else if (tvgMap.containsKey(tvgTaskName)) {
-          Stream<W> tvgStream = Stream.of(tvgMap.get(tvgTaskName));
-          result = checkAndMergeR2REval(result, r2rOperator, tvgStream, isFirst);
-        }
-        if (tvgMap.keySet().isEmpty()) {
-          // no windows defined
-          result = checkAndMergeR2REval(result,  r2rOperator, sds.toStream(), isFirst);
-        }
-        isFirst = false;
-        log.debug("Result for " + tvgTaskName + ": " + result);
+        List<String> tvgTaskNames = r2RContainer.getTvgNames();
+          if (tvgTaskNames.equals(Collections.singletonList("default"))) {
+            result = new HashSet<>(cachedStaticBindings.get("default"));
+          } else  {
+            // when multiple TVG are defined for an R2R, merge them together
+            Stream<W> tvgStream =tvgTaskNames.stream().filter(tvg -> tvgMap.containsKey(tvg))
+                    .map(tvg -> tvgMap.get(tvg));
+            result = checkAndMergeR2REval(result, r2rOperator, tvgStream, isFirst);
+          }
+          if (tvgMap.keySet().isEmpty()) {
+            // no windows defined
+            result = checkAndMergeR2REval(result, r2rOperator, sds.toStream(), isFirst);
+          }
+          isFirst = false;
+          log.debug("Result for " + tvgTaskNames + ": " + result);
+
       }
     } else {
       log.error("No R2R operator defined!");
