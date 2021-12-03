@@ -7,7 +7,6 @@ import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
-import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.TermImpl;
 
 import java.util.Collection;
 import java.util.stream.Stream;
