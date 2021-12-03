@@ -52,4 +52,15 @@ public class UpwardExtension {
             }
         }
     }
+
+    public Map<String, Set<String>> getExtensions() {
+        Map<String, Set<String>> copyExtensions = new HashMap<>();
+        this.extensions.entrySet().stream()
+                .forEach(e->copyExtensions.put(e.getKey(),new HashSet<>(e.getValue())));
+        return copyExtensions;
+    }
+
+    public void setExtensions(Map<String, Set<String>> extensions) {
+        this.extensions = extensions;
+    }
 }

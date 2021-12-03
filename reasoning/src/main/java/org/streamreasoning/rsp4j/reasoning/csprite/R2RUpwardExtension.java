@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 public class R2RUpwardExtension implements RelationToRelationOperator<Graph, Graph> {
 
 
-    private final IRI RDFTYPE = RDFUtils.createIRI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+    private final IRI RDFTYPE = RDFUtils.RDFTYPE;
     private UpwardExtension extension;
 
 

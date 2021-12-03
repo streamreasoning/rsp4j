@@ -89,4 +89,15 @@ public class TP implements RelationToRelationOperator<Graph, Binding> {
         return tp.s.equals(this.s) && tp.p.equals(this.p) && tp.o.equals(this.o);
     }
 
+    public VarOrTerm getSubject() {
+        return s;
+    }
+
+    public VarOrTerm getProperty() {
+        return p;
+    }
+
+    public VarOrTerm getObject() {
+        return o;
+    }
 }

@@ -78,4 +78,8 @@ public class BGP implements RelationToRelationOperator<Graph, Binding> {
     public int hashCode() {
         return Objects.hash(tps);
     }
+
+    public List<TP> getTPs() {
+        return tps;
+    }
 }

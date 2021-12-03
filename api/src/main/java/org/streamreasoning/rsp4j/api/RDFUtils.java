@@ -9,6 +9,7 @@ import java.util.ServiceLoader;
 
 public class RDFUtils {
 
+    public static final IRI RDFTYPE = RDFUtils.createIRI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
     private static final RDF rdf;
 
     static {

@@ -130,7 +130,7 @@ public class EsperGGWindowOperator implements StreamToRelationOp<Graph, Graph> {
 
         @Override
         public Content<Graph, Graph> content(long now) {
-            return null;
+            return getContent(now);
         }
 
         @Override
