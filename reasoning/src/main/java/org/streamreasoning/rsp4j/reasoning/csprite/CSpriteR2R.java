@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class CSpriteR2R implements RelationToRelationOperator<Graph, Graph>{
+public class CSpriteR2R implements RelationToRelationOperator<Graph, Binding>{
     private final HierarchySchema hierarchySchema;
     private final RelationToRelationOperator<Graph, Binding> r2r;
     private final UpwardExtension upwardExtension;
@@ -80,17 +80,18 @@ public class CSpriteR2R implements RelationToRelationOperator<Graph, Graph>{
     }
 
     @Override
-    public Stream<Graph> eval(Stream<Graph> sds) {
-        return r2rUpward.eval(sds);
+    public Stream<Binding> eval(Stream<Graph> sds) {
+        return r2r.eval(r2rUpward.eval(sds));
     }
 
     @Override
-    public TimeVarying<Collection<Graph>> apply(SDS<Graph> sds) {
-        return r2rUpward.apply(sds);
+    public TimeVarying<Collection<Binding>> apply(SDS<Graph> sds) {
+        r2rUpward.apply(sds);
+        return r2r.apply(sds);
     }
 
     @Override
-    public SolutionMapping<Graph> createSolutionMapping(Graph result) {
-        return r2rUpward.createSolutionMapping(result);
+    public SolutionMapping<Binding> createSolutionMapping(Binding result) {
+        return r2r.createSolutionMapping(result);
     }
 }

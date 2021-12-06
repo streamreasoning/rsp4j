@@ -32,6 +32,11 @@ public class RDFUtils {
     public static Graph createGraph() {
         return getInstance().createGraph();
     }
+    public static Graph copyGraph(Graph graph){
+        Graph newGraph = createGraph();
+        graph.stream().forEach(t->newGraph.add(t));
+        return newGraph;
+    }
 
     public static Graph createGraph(BlankNodeOrIRI name, List<Quad> quadList) {
         Graph graph = getInstance().createGraph();

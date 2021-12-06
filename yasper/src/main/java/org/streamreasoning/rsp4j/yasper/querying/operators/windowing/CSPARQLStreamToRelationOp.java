@@ -23,17 +23,17 @@ import java.util.stream.Collectors;
 public class CSPARQLStreamToRelationOp<I, W> extends ObservableStreamToRelationOp<I, W> {
 
     private static final Logger log = Logger.getLogger(CSPARQLStreamToRelationOp.class);
-    private final long a, b;
+    private final long width, slide;
 
     private Map<Window, Content<I, W>> active_windows;
     private Set<Window> to_evict;
     private long t0;
     private long toi;
 
-    public CSPARQLStreamToRelationOp(IRI iri, long a, long b, Time instance, Tick tick, Report report, ReportGrain grain, ContentFactory<I, W> cf) {
+    public CSPARQLStreamToRelationOp(IRI iri, long width, long slide, Time instance, Tick tick, Report report, ReportGrain grain, ContentFactory<I, W> cf) {
         super(iri, instance, tick, report, grain, cf);
-        this.a = a;
-        this.b = b;
+        this.width = width;
+        this.slide = slide;
         this.t0 = instance.getScope();
         this.toi = 0;
         this.active_windows = new HashMap<>();
@@ -90,7 +90,7 @@ public class CSPARQLStreamToRelationOp<I, W> extends ObservableStreamToRelationO
 
 
         active_windows.keySet().stream()
-                .filter(w -> report.report(w, null, t_e, System.currentTimeMillis()))
+                .filter(w -> report.report(w, getWindowContent(w), t_e, System.currentTimeMillis()))
                 .max(Comparator.comparingLong(Window::getC))
                 .ifPresent(window -> ticker.tick(t_e, window));
 
@@ -98,22 +98,22 @@ public class CSPARQLStreamToRelationOp<I, W> extends ObservableStreamToRelationO
             log.debug("Evicting [" + w.getO() + "," + w.getC() + ")");
             active_windows.remove(w);
             if (toi < w.getC())
-                toi = w.getC() + b;
+                toi = w.getC() + slide;
         });
         to_evict.clear();
     }
 
     private void scope(long t_e) {
-        long c_sup = (long) Math.ceil(((double) Math.abs(t_e - t0) / (double) b)) * b;
-        long o_i = c_sup - a;
+        long c_sup = (long) Math.ceil(((double) Math.abs(t_e - t0) / (double) slide)) * slide;
+        long o_i = c_sup - width;
         log.debug("Calculating the Windows to Open. First one opens at [" + o_i + "] and closes at [" + c_sup + "]");
 
         do {
-            log.debug("Computing Window [" + o_i + "," + (o_i + a) + ") if absent");
+            log.debug("Computing Window [" + o_i + "," + (o_i + width) + ") if absent");
 
             active_windows
-                    .computeIfAbsent(new WindowImpl(o_i, o_i + a), x -> cf.create());
-            o_i += b;
+                    .computeIfAbsent(new WindowImpl(o_i, o_i + width), x -> cf.create());
+            o_i += slide;
 
         } while (o_i <= t_e);
 
@@ -126,9 +126,13 @@ public class CSPARQLStreamToRelationOp<I, W> extends ObservableStreamToRelationO
 
 
     public Content<I, W> compute(long t_e, Window w) {
-        Content<I, W> content = active_windows.containsKey(w) ? active_windows.get(w) : cf.createEmpty();
+        Content<I, W> content = getWindowContent(w);
         time.setAppTime(t_e);
         return setVisible(t_e, w, content);
+    }
+
+    private Content<I, W> getWindowContent(Window w) {
+        return active_windows.containsKey(w) ? active_windows.get(w) : cf.createEmpty();
     }
 
     @Override

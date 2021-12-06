@@ -43,4 +43,8 @@ public class TimeImpl implements Time {
     public void addEvaluationTimeInstants(TimeInstant et) {
         timeInstants.add(et);
     }
+
+    public static Time forStartTime(long startTime){
+        return new TimeImpl(startTime);
+    }
 }

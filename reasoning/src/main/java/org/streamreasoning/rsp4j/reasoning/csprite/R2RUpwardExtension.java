@@ -10,6 +10,7 @@ import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
+import org.streamreasoning.rsp4j.api.utils.TripleCollector;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,6 +21,7 @@ public class R2RUpwardExtension implements RelationToRelationOperator<Graph, Gra
 
     private final IRI RDFTYPE = RDFUtils.RDFTYPE;
     private UpwardExtension extension;
+    private final RDF instance = RDFUtils.getInstance();
 
 
     public R2RUpwardExtension(Map<String, List<String>> schema) {
@@ -30,39 +32,33 @@ public class R2RUpwardExtension implements RelationToRelationOperator<Graph, Gra
         this.extension = extension;
 
     }
-
     @Override
     public Stream<Graph> eval(Stream<Graph> tvg) {
-        RDF instance = RDFUtils.getInstance();
-
-        Set<Graph> sol = new HashSet<Graph>();
-        // iterate over the triples in the SDS
-        for (Graph g : tvg.collect(Collectors.toList())) {
-            Graph upwardGraph = RDFUtils.createGraph();
-            for (Triple t : g.stream().collect(Collectors.toList())) {
-                // add the current triple
-                upwardGraph.add(t);
-                // check if triple is a type assertion
-                if (t.getPredicate().equals(instance.createIRI("a")) || t.getPredicate().equals(RDFTYPE)) {
-                    //reasoning step
-                    String type = t.getObject().ntriplesString();
-                    type = RDFUtils.trimTags(type);
-                        // extract the parent concepts
-                        for (String parents : extension.getUpwardExtension(type)) {
-                            // create a new triple (the materialization)
-                            Triple reasoningResult = instance.createTriple(t.getSubject(), RDFTYPE, instance.createIRI(parents));
-                            // add the materialization to the solution set
-//                       sol.add(new SelectInstResponse(query.getID() + "/ans/" + ts, ts, reasoningResult));s
-                            upwardGraph.add(reasoningResult);
-                        }
-                }
-                //add to the solution
-                sol.add(upwardGraph);
-            }
+        return tvg.map(
+            g -> g.stream()
+                  .map(triple -> performUpwardExtension(triple))
+                  .flatMap(Collection::stream)
+                  .collect(TripleCollector.toGraph())
+            );
+    }
+    private List<Triple> performUpwardExtension(Triple t){
+        if(isTypeAssertion(t)){
+            String type = t.getObject().ntriplesString();
+            type = RDFUtils.trimTags(type);
+            //reasoning step
+            List<Triple> upward = extension.getUpwardExtension(type).stream()
+                    .map(parents -> instance.createTriple(t.getSubject(), RDFTYPE, instance.createIRI(parents)))
+                    .collect(Collectors.toList());
+            upward.add(t);
+            return upward;
+        }else{
+            return Collections.singletonList(t);
         }
+    }
 
-        return sol.stream();
 
+    private boolean isTypeAssertion(Triple t) {
+        return t.getPredicate().equals(instance.createIRI("a")) || t.getPredicate().equals(RDFTYPE);
     }
 
 
