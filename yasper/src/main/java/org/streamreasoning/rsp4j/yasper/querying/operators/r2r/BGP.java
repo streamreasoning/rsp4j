@@ -29,6 +29,9 @@ public class BGP implements RelationToRelationOperator<Graph, Binding> {
     public static BGP createFrom(TP tp1) {
         return new BGP(tp1);
     }
+    public static BGP createFrom(String s, String p , String o) {
+        return new BGP(new TP(s,p,o));
+    }
 
     @Override
     public Stream<Binding> eval(Stream<Graph> sds) {
@@ -56,6 +59,9 @@ public class BGP implements RelationToRelationOperator<Graph, Binding> {
     public BGP join(TP tp) {
         tps.add(tp);
         return this;
+    }
+    public BGP join(String s, String p, String o){
+        return this.join(new TP(s,p,o));
     }
 
     public BGP create() {

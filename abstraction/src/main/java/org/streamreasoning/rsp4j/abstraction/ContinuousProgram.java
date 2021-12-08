@@ -98,8 +98,9 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
       Set<R2SContainer<R, O>> r2ss = task.getR2Ss();
       for (R2SContainer<R, O> r2s : r2ss) {
         if (task.getAggregations().isEmpty()) {
-          eval(now)
-              .forEach(o1 -> outstream().put((O) r2s.getR2sOperator().transform(o1, now), now));
+          Stream<R> r2rResult = eval(now);
+          Stream<O> output = r2s.getR2sOperator().eval(r2rResult, now);
+          output.forEach(out->{System.out.println(out);outputStream.put(out,now);});
         } else {
           handleAggregations(task, r2s, now);
         }

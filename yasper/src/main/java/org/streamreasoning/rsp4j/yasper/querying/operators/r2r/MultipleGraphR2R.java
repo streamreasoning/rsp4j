@@ -20,7 +20,7 @@ public class MultipleGraphR2R implements RelationToRelationOperator<Graph, Bindi
     }
     @Override
     public Stream<Binding> eval(Stream<Graph> sds) {
-        return null;
+        return r2rs.values().stream().findFirst().get().eval(sds);
     }
 
     @Override

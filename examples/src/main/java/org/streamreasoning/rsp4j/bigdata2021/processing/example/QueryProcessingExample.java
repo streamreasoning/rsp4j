@@ -34,8 +34,7 @@ public class QueryProcessingExample {
                 + "FROM NAMED WINDOW <http://test/window2> ON <http://rsp4j.io/covid/tracing> [RANGE PT10M STEP PT1M] "
                 + "WHERE {"
                 + "   WINDOW <http://test/window> { ?s <http://rsp4j.io/covid/isIn> ?o .}"
-                + "   WINDOW <http://test/window2> { ?s2 <http://rsp4j.io/covid/isWith> ?s3 .}" +
-                    "FILTER(?s3=?s)"
+                + "   WINDOW <http://test/window2> { ?s2 <http://rsp4j.io/covid/isWith> ?s .}"
                     + "}");
 
     // Create the RSP4J Task and Continuous Program

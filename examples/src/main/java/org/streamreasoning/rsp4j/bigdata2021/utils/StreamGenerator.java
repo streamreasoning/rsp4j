@@ -146,7 +146,7 @@ public class StreamGenerator {
 
         graph.add(instance.createTriple(instance.createIRI(PREFIX + "_observation" + eventID), a, instance.createIRI(PREFIX + "TestResultPost")));
         graph.add(instance.createTriple(instance.createIRI(PREFIX + "_observation" + eventID), instance.createIRI(PREFIX + "who"), instance.createIRI(PREFIX + randomPerson)));
-
+        graph.add(instance.createTriple(instance.createIRI(PREFIX + "_observation" + eventID), instance.createIRI(PREFIX + "hasResult"), instance.createIRI(PREFIX + "positive")));
         return graph;
     }
 

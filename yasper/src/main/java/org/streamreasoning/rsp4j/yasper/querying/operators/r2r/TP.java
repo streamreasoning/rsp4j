@@ -26,6 +26,11 @@ public class TP implements RelationToRelationOperator<Graph, Binding> {
         this.p = p;
         this.o = o;
     }
+    public TP(String s, String p, String o) {
+        this.s = VarOrTerm.create(s);
+        this.p = VarOrTerm.create(p);
+        this.o = VarOrTerm.create(o);
+    }
 
     @Override
     //it returns a stream of variable bindings, which is a sequence

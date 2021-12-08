@@ -3,6 +3,7 @@ package org.streamreasoning.rsp4j.yasper.querying.operators;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,11 +34,17 @@ public class Istream<R, O> implements RelationToStreamOperator<R, O> {
     @Override
     public Stream<O> eval(Stream<R> sml, long ts) {
         Collection<R> current = sml.collect(Collectors.toList());
-        if (last_responses == null)
-            last_responses = current;
-        Stream<O> oStream = current.stream().filter(r -> !last_responses.contains(r)).map(r -> transform(r, ts));
+        Stream<O> oStream;
+        if (last_responses == null) {
+          oStream = current.stream().map(r->transform(r,ts));
+
+        } else {
+          oStream = current.stream().filter(r -> !last_responses.contains(r)).map(r -> transform(r, ts));
+        }
+
+        Set<O> result = oStream.collect(Collectors.toSet());
         last_responses = current;
-        return oStream;
+        return result.stream();
     }
 
 }

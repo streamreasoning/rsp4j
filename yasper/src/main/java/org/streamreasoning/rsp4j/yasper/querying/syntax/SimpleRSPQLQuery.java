@@ -15,6 +15,8 @@ import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.io.DataStreamImpl;
 import org.streamreasoning.rsp4j.io.utils.RDFBase;
+import org.streamreasoning.rsp4j.yasper.querying.operators.Dstream;
+import org.streamreasoning.rsp4j.yasper.querying.operators.Istream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
 import org.streamreasoning.rsp4j.yasper.sds.DataSetImpl;
@@ -225,7 +227,15 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
 
     @Override
     public RelationToStreamOperator<Binding, O> r2s() {
-        return new Rstream();
+        switch (streamOperator){
+            case RSTREAM:
+                return new Rstream();
+            case ISTREAM:
+                return new Istream(0);
+            case DSTREAM:
+                return new Dstream(0);
+        }
+        return  new Rstream<>();
     }
 
     @Override
