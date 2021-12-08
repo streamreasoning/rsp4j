@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BindingImpl implements Binding {
 
@@ -54,7 +55,7 @@ public class BindingImpl implements Binding {
 
     @Override
     public String toString() {
-        return internal.toString().replace("=", " -> ");
+       return internal.toString().replace("=", " -> ");
     }
 
     @Override

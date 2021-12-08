@@ -12,6 +12,7 @@ import org.streamreasoning.rsp4j.abstraction.projection.BindingProjection;
 import org.streamreasoning.rsp4j.abstraction.projection.Projection;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
+import org.streamreasoning.rsp4j.api.operators.r2r.utils.R2RPipe;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
@@ -20,6 +21,7 @@ import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.yasper.ContinuousQueryExecutionObserver;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Filter;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.joins.JoinAlgorithm;
 import org.streamreasoning.rsp4j.yasper.sds.SDSImpl;
 
@@ -182,7 +184,10 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
         RelationToRelationOperator<W, R> r2rOperator = r2RContainer.getR2rOperator();
         List<String> tvgTaskNames = r2RContainer.getTvgNames();
           if (tvgTaskNames.equals(Collections.singletonList("default"))) {
-            result = new HashSet<>(cachedStaticBindings.get("default"));
+            if (!cachedStaticBindings.get("default").isEmpty()) {
+              result = new HashSet<>(cachedStaticBindings.get("default"));
+            }
+            result = handleCrossWindowFilter(result, r2rOperator);
           } else  {
             // when multiple TVG are defined for an R2R, merge them together
             Stream<W> tvgStream =tvgTaskNames.stream().filter(tvg -> tvgMap.containsKey(tvg))
@@ -207,7 +212,14 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
 
   }
 
-
+  private Set<R> handleCrossWindowFilter(Set<R> result, RelationToRelationOperator<W, R> r2rOperator){
+    //check if filter
+    if(r2rOperator instanceof R2RPipe && ((R2RPipe)r2rOperator).getR2rs()[0] instanceof Filter){
+      return r2rOperator.eval((Stream<W>) result.stream()).collect(Collectors.toSet());
+    }else{
+      return result;
+    }
+  }
   private Set<R> checkAndMergeR2REval(Set<R> result, RelationToRelationOperator<W, R> r2rOperator, Stream<W> wStream, boolean isFirst) {
     Set<R> currentResult = r2rOperator.eval(wStream).collect(Collectors.toSet());
     if (result.isEmpty() && isFirst) {

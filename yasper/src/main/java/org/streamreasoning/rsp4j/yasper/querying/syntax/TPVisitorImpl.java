@@ -39,7 +39,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
         aggregations = new ArrayList<>();
         this.time = new TimeImpl(0);
         triples = new Stack<TripleHolder>();
-        windowsToTriples = new HashMap<>();
+        windowsToTriples = new LinkedHashMap<>();
         windowsToFilters = new HashMap<>();
         projections = new ArrayList<>();
     }
@@ -82,7 +82,9 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
     public CQ visitWindowGraphPattern(RSPQLParser.WindowGraphPatternContext ctx) {
         windowIRI=RDFUtils.trimTags(ctx.varOrIri().iri().getText());
         windowsToTriples.put(windowIRI,new ArrayList<>());
-        return super.visitWindowGraphPattern(ctx);
+        CQ result = super.visitWindowGraphPattern(ctx);
+        windowIRI = "default";
+        return result;
     }
 
     @Override
@@ -318,6 +320,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
             }
         }
         if(orPredicate!=null){
+            windowsToTriples.putIfAbsent(windowIRI, new ArrayList<>());
             windowsToFilters.computeIfAbsent(windowIRI,s->new ArrayList<>()).add(orPredicate);
         }
         return visitChildren(ctx);

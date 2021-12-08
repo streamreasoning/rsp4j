@@ -42,7 +42,7 @@ public class TriplePatternQueryTest {
         VarOrTerm o = new VarImpl("o");
         TP TP = new TP(s, p, o);
 
-        assertEquals(TP, query.r2r());
+        assertEquals(TP, query.r2r().getR2RComponents().get("default"));
 
     }
 
@@ -62,7 +62,7 @@ public class TriplePatternQueryTest {
         VarOrTerm o = new TermImpl(RDFUtils.createIRI("http://test/o"));
         TP TP = new TP(s, p, o);
 
-        assertEquals(TP, query.r2r());
+        assertEquals(TP, query.r2r().getR2RComponents().get("default"));
 
     }
 
@@ -176,7 +176,7 @@ public class TriplePatternQueryTest {
                 "   ?s ?p ?o . Filter(?s = ?o)" +
                 "}");
 
-        R2RPipe pipe = (R2RPipe) query.r2r();
+        R2RPipe pipe = (R2RPipe) query.r2r().getR2RComponents().get("default");
 
         assertEquals(pipe.getR2rs().length, 2);
     }

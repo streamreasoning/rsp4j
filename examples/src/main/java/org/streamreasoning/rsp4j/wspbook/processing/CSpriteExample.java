@@ -8,6 +8,7 @@ import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
+import org.streamreasoning.rsp4j.api.operators.r2r.utils.R2RPipe;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
@@ -24,6 +25,10 @@ import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class CSpriteExample {
 
     public static void main(String[] args) throws InterruptedException {
@@ -32,20 +37,23 @@ public class CSpriteExample {
         DataStream<Graph> inputStream = generator.getStream("http://test/stream");
         // define output stream
         BindingStream outStream = new BindingStream("out");
+        //create the window operator
+        StreamToRelationOp<Graph, Graph> windowOperator = createWindowOperator(2000, 2000, "w1");
         // create a simple hierarchy
         HierarchySchema hierarchySchema = getHierarchySchema();
         // create a simple triple pattern
         RelationToRelationOperator<Graph, Binding> tp = createTriplePattern();
         // create the CSprite R2R
-        RelationToRelationOperator<Graph, Binding> cSpriteR2R = new CSpriteR2R(tp, hierarchySchema);
-        //create the window operator
-        StreamToRelationOp<Graph, Graph> windowOperator = createWindowOperator(2000, 2000, "w1");
+        RelationToRelationOperator<Graph, Graph> cSpriteR2R = new CSpriteR2R(tp, hierarchySchema);
+        // create a R2R pipeline to combine CSprite and the TP evaluation
+        R2RPipe<Graph,Binding> r2rPipe = new R2RPipe<>(cSpriteR2R,tp);
+
 
         // define the task and CP
         TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
                 new TaskAbstractionImpl.TaskBuilder()
                         .addS2R("http://test/stream", windowOperator, "w1")
-                        .addR2R("w1", cSpriteR2R)
+                        .addR2R("w1", r2rPipe)
                         .addR2S("out", new Rstream<Binding, Binding>())
                         .build();
         ContinuousProgram<Graph, Graph, Binding, Binding> cp =

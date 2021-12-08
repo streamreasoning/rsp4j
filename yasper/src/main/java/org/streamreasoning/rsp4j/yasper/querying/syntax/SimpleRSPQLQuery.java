@@ -19,10 +19,7 @@ import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
 import org.streamreasoning.rsp4j.yasper.sds.DataSetImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -174,24 +171,29 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
 
     @Override
     public RelationToRelationOperator<Graph, Binding> r2r() {
-            Map<String, RelationToRelationOperator<Graph, Binding>> r2rs = new HashMap<>();
+            Map<String, RelationToRelationOperator<Graph, Binding>> r2rs = new LinkedHashMap<>();
             for(Map.Entry<String,List<TripleHolder>> entry: triples.entrySet()){
                 if (!entry.getValue().isEmpty()) {
                   RelationToRelationOperator<Graph, Binding> bgp =   createR2R(entry.getValue());
                   RelationToRelationOperator<Graph, Binding> filteredBgp = addFiltersIfDefined(entry.getKey(),bgp);
                   r2rs.put(entry.getKey(), filteredBgp);
+                }else if(windowsToFilters.containsKey(entry.getKey())){
+                    r2rs.put(entry.getKey(), createFilter(entry.getKey()));
                 }
             }
-            if(r2rs.size()>1){
-                return new MultipleGraphR2R(r2rs);
-            }else{
-                return r2rs.values().iterator().next();
-            }
+
+            return new MultipleGraphR2R(r2rs);
+
+    }
+    private RelationToRelationOperator<Graph, Binding> createFilter(String graph){
+        return addFiltersIfDefined(graph, null);
     }
     private RelationToRelationOperator<Graph, Binding> addFiltersIfDefined(String graph, RelationToRelationOperator<Graph, Binding> bgp){
         if(windowsToFilters.containsKey(graph)){
             List<RelationToRelationOperator> r2rList = windowsToFilters.get(graph).stream().map(p->new Filter(Stream.empty(),p)).collect(Collectors.toList());
-            r2rList.add(0,bgp);//add the bgp pattern as first
+            if (bgp != null) {
+                r2rList.add(0, bgp); // add the bgp pattern as first
+            }
             R2RPipe<Graph,Binding> pipe = new R2RPipe(r2rList.toArray(new RelationToRelationOperator[0]));
             return pipe;
         }else{

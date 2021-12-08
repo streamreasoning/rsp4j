@@ -82,8 +82,8 @@ public class CSpriteTest {
         IRI a = RDFUtils.createIRI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
         graph.add(RDFUtils.createTriple(RDFUtils.createIRI("g1"), a, RDFUtils.createIRI("http://test/Green")));
         graph.add(RDFUtils.createTriple(RDFUtils.createIRI("b1"), a, RDFUtils.createIRI("http://test/Blue")));
-
-        Set<Binding> result = cSpriteR2R.eval(Stream.of(graph)).collect(Collectors.toSet());
+        R2RPipe<Graph,Binding> r2rPipe = new R2RPipe<>(cSpriteR2R,tp);
+        Set<Binding> result = r2rPipe.eval(Stream.of(graph)).collect(Collectors.toSet());
         Binding b1 = new BindingImpl();
         b1.add(new VarImpl("warmColor"), RDFUtils.createIRI("g1"));
 
@@ -104,7 +104,8 @@ public class CSpriteTest {
         graph.add(RDFUtils.createTriple(RDFUtils.createIRI("g1"), a, RDFUtils.createIRI("http://test/Green")));
         graph.add(RDFUtils.createTriple(RDFUtils.createIRI("b1"), a, RDFUtils.createIRI("http://test/Blue")));
 
-        Set<Binding> result = cSpriteR2R.eval(Stream.of(graph)).collect(Collectors.toSet());
+        R2RPipe<Graph,Binding> r2rPipe = new R2RPipe<>(cSpriteR2R,tp);
+        Set<Binding> result = r2rPipe.eval(Stream.of(graph)).collect(Collectors.toSet());
         Binding b1 = new BindingImpl();
         b1.add(new VarImpl("warmColor"), RDFUtils.createIRI("g1"));
         b1.add(new VarImpl("type"), RDFUtils.createIRI("http://test/Green"));
@@ -138,7 +139,8 @@ public class CSpriteTest {
         graph.add(RDFUtils.createTriple(RDFUtils.createIRI("g1"), a, RDFUtils.createIRI("http://test/Green")));
         graph.add(RDFUtils.createTriple(RDFUtils.createIRI("b1"), a, RDFUtils.createIRI("http://test/Blue")));
 
-        Set<Binding> result = cSpriteR2R.eval(Stream.of(graph)).collect(Collectors.toSet());
+        R2RPipe<Graph,Binding> r2rPipe = new R2RPipe<>(cSpriteR2R,bgp);
+        Set<Binding> result = r2rPipe.eval(Stream.of(graph)).collect(Collectors.toSet());
         Binding b1 = new BindingImpl();
         b1.add(new VarImpl("warmColor"), RDFUtils.createIRI("g1"));
         b1.add(new VarImpl("coolColor"), RDFUtils.createIRI("b1"));

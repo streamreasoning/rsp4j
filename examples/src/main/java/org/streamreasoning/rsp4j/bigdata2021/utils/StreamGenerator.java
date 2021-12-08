@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 
 public class StreamGenerator {
-    private static final String PREFIX = "http://test/";
+    private static final String PREFIX = "http://rsp4j.io/covid/";
     private static final Long TIMEOUT = 1000l;
 
     private DataStream<Graph> observationStream;
@@ -27,7 +27,7 @@ public class StreamGenerator {
     private AtomicLong streamIndexCounter;
 
     private enum Person {Alice, Bob, Elena, Carl, David, John};
-    private enum Room {Red, Blue};
+    private enum Room {RedRoom, BlueRoom};
     private enum EventType {RFID, Facebook, ContactTracing, HospitalResult};
 
     Map<Person, EventType> personsEventTypesMap =
@@ -39,6 +39,9 @@ public class StreamGenerator {
     Map<Person, Person> isWithMap =
             Map.of(Person.Carl, Person.Bob,
                     Person.David, Person.Elena);
+
+    private Person[] isWithPersons = new Person[]{Person.Carl, Person.David};
+    private Person[] evenTyptesPersons = new Person[]{Person.Alice, Person.John,Person.Bob, Person.Elena};
 
     public StreamGenerator() {
         this.observationStream = new DataStreamImpl<>(PREFIX+"observations");
@@ -106,7 +109,7 @@ public class StreamGenerator {
         return Room.values()[randomIndex];
     }
     public Graph createRandomObservationEvent(){
-        Person randomPerson = selectRandomPerson(personsEventTypesMap.keySet().toArray(new Person[0]));
+        Person randomPerson = selectRandomPerson(evenTyptesPersons);
         Room randomRoom = selectRandomRoom();
         EventType selectedType = personsEventTypesMap.get(randomPerson);
 
@@ -148,8 +151,7 @@ public class StreamGenerator {
     }
 
     public Graph createRandomContactTracingEvent(){
-        Person randomPerson = selectRandomPerson(isWithMap.keySet().toArray(new Person[0]));
-
+        Person randomPerson = selectRandomPerson(isWithPersons);
 
         RDF instance = RDFUtils.getInstance();
         Graph graph = instance.createGraph();

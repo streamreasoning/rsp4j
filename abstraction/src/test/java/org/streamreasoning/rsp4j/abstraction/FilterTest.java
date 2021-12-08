@@ -300,6 +300,36 @@ public class FilterTest {
         expected.add(b1);
         assertEquals(expected, dummyConsumer.getReceived());
     }
+    @Test
+    public void filterOutsideOfWindow() {
+        DummyConsumer<Binding> dummyConsumer = parseQueryAndGetConsumer("" +
+                "REGISTER ISTREAM <http://out/stream> AS " +
+                "SELECT ?green ?green2 " +
+                "FROM NAMED WINDOW <http://test/window> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
+                "FROM NAMED WINDOW <http://test/window2> ON <http://test/stream> [RANGE PT10S STEP PT5S] " +
+
+                "WHERE {" +
+                "   WINDOW <http://test/window> {?green <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Green> .  }" +
+                "   WINDOW <http://test/window2> {?green2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://color#Green> . }" +
+                "Filter(?green = ?green2)" +
+                "}", StreamType.IRIS);
+
+        System.out.println(dummyConsumer.getReceived());
+
+        assertEquals(2, dummyConsumer.getSize());
+        List<Binding> expected = new ArrayList<>();
+
+        Binding b1 = new BindingImpl();
+        b1.add(new VarImpl("green"), RDFUtils.createIRI("http://test/S1"));
+        b1.add(new VarImpl("green2"), RDFUtils.createIRI("http://test/S1"));
+
+        Binding b2 = new BindingImpl();
+        b2.add(new VarImpl("green"), RDFUtils.createIRI("http://test/S4"));
+        b2.add(new VarImpl("green2"), RDFUtils.createIRI("http://test/S4"));
+        expected.add(b1);
+        expected.add(b2);
+        assertEquals(expected, dummyConsumer.getReceived());
+    }
 
     private DummyConsumer<Binding> parseQueryAndGetConsumer(String s, StreamType streamType) {
         //STREAM DECLARATION

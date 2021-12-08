@@ -35,7 +35,7 @@ public class BGPQueryTest {
         BGP bgp = BGP.createFrom(tp)
                 .join(tp2)
                 .create();
-        assertEquals(bgp, query.r2r());
+        assertEquals(bgp, query.r2r().getR2RComponents().get("window2"));
 
     }
     @Test
@@ -63,7 +63,7 @@ public class BGPQueryTest {
         BGP bgp = BGP.createFrom(tp)
                 .join(tp2)
                 .create();
-        assertEquals(bgp, query.r2r());
+        assertEquals(bgp, query.r2r().getR2RComponents().get("window2"));
 
     }
     @Test
@@ -90,7 +90,7 @@ public class BGPQueryTest {
         BGP bgp = BGP.createFrom(tp)
                 .join(tp2)
                 .create();
-        assertEquals(bgp, query.r2r());
+        assertEquals(bgp, query.r2r().getR2RComponents().get("window2"));
 
     }
     @Test
@@ -121,7 +121,7 @@ public class BGPQueryTest {
                 .join(tp2)
                 .join(tp3)
                 .create();
-        assertEquals(bgp, query.r2r());
+        assertEquals(bgp, query.r2r().getR2RComponents().get("window2"));
 
     }
 }

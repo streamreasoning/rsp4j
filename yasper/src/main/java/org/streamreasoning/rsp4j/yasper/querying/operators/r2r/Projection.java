@@ -1,6 +1,7 @@
 package org.streamreasoning.rsp4j.yasper.querying.operators.r2r;
 
 import org.apache.commons.rdf.api.RDFTerm;
+import org.apache.log4j.Logger;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2r.Var;
 import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
@@ -20,26 +21,28 @@ public class Projection implements RelationToRelationOperator<Binding, Binding>,
     private final Function<Binding, Binding> f;
     private final Collection<Binding> solutions;
     private Stream<Binding> tvb;
-
+    private static final Logger log = Logger.getLogger(Projection.class);
 
     public Projection(Stream<Binding> tvb, Var... vars) {
         this.tvb = tvb;
         this.vars = vars;
         this.star = vars == null;
         this.solutions = new ArrayList<>();
-        this.f = binding -> {
-            if (!star) {
-                Binding b = new BindingImpl();
-                for (Var v : vars) {
-                    RDFTerm value = binding.value(v);
-                    if (value != null)
-                        b.add(v, value);
-                    else
-                        return null;
-                }
-                return b;
+    this.f =
+        binding -> {
+          if (!star) {
+            Binding b = new BindingImpl();
+            for (Var v : vars) {
+              RDFTerm value = binding.value(v);
+              if (value != null) b.add(v, value);
+              else {
+                  log.warn("Projection Variable not found: " + v.name());
+                  b.add(v, null);
+              }
             }
-            return binding;
+            return b;
+          }
+          return binding;
         };
     }
 
