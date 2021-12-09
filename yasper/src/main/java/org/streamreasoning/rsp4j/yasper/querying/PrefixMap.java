@@ -23,6 +23,9 @@ public class PrefixMap {
         return Optional.ofNullable(this.prefixes.get(prefixName));
     }
     public String expandIfPrefixed(String iri){
+        if(iri==null){
+            return null;
+        }
         if(iri.equals("a")){
             return "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
         }
