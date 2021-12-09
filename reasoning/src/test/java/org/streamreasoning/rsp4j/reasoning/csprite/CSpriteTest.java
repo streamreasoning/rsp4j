@@ -4,7 +4,6 @@ import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.junit.Test;
 import org.streamreasoning.rsp4j.api.RDFUtils;
-import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2r.utils.R2RPipe;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
 
@@ -131,7 +130,7 @@ public class CSpriteTest {
         VarOrTerm s2 = new VarImpl("coolColor");
         VarOrTerm o2 = new TermImpl("http://test/Cool");
         TP tp2 = new TP(s2, p, o2);
-        BGP bgp = BGP.createFrom(tp).join(tp2).create();
+        BGP bgp = BGP.createFrom(tp).addTP(tp2).build();
         CSpriteR2R cSpriteR2R = new CSpriteR2R(bgp, hierarchySchema);
 
         Graph graph = RDFUtils.createGraph();

@@ -9,8 +9,11 @@ import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.sds.DataSet;
 import org.streamreasoning.rsp4j.api.operators.r2r.Var;
+import org.streamreasoning.rsp4j.yasper.querying.PrefixMap;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarImpl;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
 
@@ -20,7 +23,7 @@ public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
     private final DataSet<W> defaultGraph;
     private final List<Var> projection;
     private List<AggregationContainer> aggregations;
-    private Map<String, String> prefixes;
+    private PrefixMap prefixes;
 
     public TaskAbstractionImpl(TaskBuilder<I, W, R, O> builder) {
         this.s2rs = builder.s2rs;
@@ -30,6 +33,7 @@ public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
         this.aggregations = builder.aggregations;
         this.defaultGraph = builder.defaultGraph;
         this.projection = builder.projection;
+
     }
 
     @Override
@@ -69,7 +73,7 @@ public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
         private List<R2RContainer<W, R>> r2rs;
         private Set<R2SContainer<R, O>> r2ss;
         private List<AggregationContainer> aggregations;
-        private Map<String, String> prefixes;
+        private PrefixMap prefixes;
         private DataSet<W> defaultGraph;
         private List<Var> projection;
 
@@ -77,31 +81,31 @@ public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
             this.s2rs = new HashSet<>();
             this.r2rs = new ArrayList<>();
             this.r2ss = new HashSet<>();
-            this.prefixes = new HashMap<String, String>();
+            this.prefixes = new PrefixMap();
             this.aggregations = new ArrayList<>();
         }
-
-        public TaskBuilder<I, W, R, O> prefix(String prefix, String url) {
-            prefixes.put(prefix, url);
-            return this;
+        public TaskBuilder(PrefixMap prefixes) {
+            this();
+            this.prefixes = prefixes;
         }
 
         public TaskBuilder<I, W, R, O> addS2R(String sourceURI, StreamToRelationOp<I, W> s2r, String tvgName) {
-            s2rs.add(new S2RContainer<I, W>(sourceURI, s2r, tvgName));
+            s2rs.add(new S2RContainer<I, W>(prefixes.expandIfPrefixed(sourceURI), s2r, tvgName));
             return this;
         }
 
         public TaskBuilder<I, W, R, O> addR2R(String tvgName, RelationToRelationOperator<W, R> r2r) {
-            r2rs.add(new R2RContainer<W, R>(tvgName, r2r));
+            r2rs.add(new R2RContainer<W, R>(prefixes.expandIfPrefixed(tvgName), r2r));
             return this;
         }
         public TaskBuilder<I, W, R, O> addR2R(List<String> tvgNames, RelationToRelationOperator<W, R> r2r) {
+            tvgNames = tvgNames.stream().map(tvg -> prefixes.expandIfPrefixed(tvg)).collect(Collectors.toList());
             r2rs.add(new R2RContainer<W, R>(tvgNames, r2r));
             return this;
         }
 
         public TaskBuilder<I, W, R, O> addR2S(String sinkURI, RelationToStreamOperator<R, O> r2s) {
-            r2ss.add(new R2SContainer<R, O>(sinkURI, r2s));
+            r2ss.add(new R2SContainer<R, O>(prefixes.expandIfPrefixed(sinkURI), r2s));
             return this;
         }
         public TaskBuilder<I, W, R, O> addDefaultGraph(DataSet<W> defaultGraph) {
@@ -112,9 +116,13 @@ public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
             this.projection = projection;
             return this;
         }
+        public TaskBuilder<I, W, R, O> addProjectionStrings(List<String> projection) {
+            this.projection = projection.stream().map(p-> new VarImpl(p)).collect(Collectors.toList());
+            return this;
+        }
 
         public TaskBuilder<I, W, R, O> aggregate(String tvgName, String functionName, String inputVariable, String outputVariable) {
-            aggregations.add(new AggregationContainer(tvgName, functionName.toUpperCase(), inputVariable, outputVariable));
+            aggregations.add(new AggregationContainer(prefixes.expandIfPrefixed(tvgName), functionName.toUpperCase(), inputVariable, outputVariable));
             return this;
         }
 

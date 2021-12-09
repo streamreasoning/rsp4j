@@ -33,8 +33,8 @@ public class BGPQueryTest {
         VarOrTerm o2 = new VarImpl("o2");
         TP tp2 = new TP(s2, p2, o2);
         BGP bgp = BGP.createFrom(tp)
-                .join(tp2)
-                .create();
+                .addTP(tp2)
+                .build();
         assertEquals(bgp, query.r2r().getR2RComponents().get("window2"));
 
     }
@@ -61,8 +61,8 @@ public class BGPQueryTest {
         VarOrTerm o2 = new VarImpl("o2");
         TP tp2 = new TP(s2, p2, o2);
         BGP bgp = BGP.createFrom(tp)
-                .join(tp2)
-                .create();
+                .addTP(tp2)
+                .build();
         assertEquals(bgp, query.r2r().getR2RComponents().get("window2"));
 
     }
@@ -88,8 +88,8 @@ public class BGPQueryTest {
         VarOrTerm o2 = new VarImpl("o2");
         TP tp2 = new TP(s2, p2, o2);
         BGP bgp = BGP.createFrom(tp)
-                .join(tp2)
-                .create();
+                .addTP(tp2)
+                .build();
         assertEquals(bgp, query.r2r().getR2RComponents().get("window2"));
 
     }
@@ -118,9 +118,9 @@ public class BGPQueryTest {
         VarOrTerm o3 = new VarImpl("o3");
         TP tp3 = new TP(s2, p2, o3);
         BGP bgp = BGP.createFrom(tp)
-                .join(tp2)
-                .join(tp3)
-                .create();
+                .addTP(tp2)
+                .addTP(tp3)
+                .build();
         assertEquals(bgp, query.r2r().getR2RComponents().get("window2"));
 
     }

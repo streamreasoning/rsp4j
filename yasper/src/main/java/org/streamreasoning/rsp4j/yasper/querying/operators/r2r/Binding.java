@@ -12,6 +12,8 @@ public interface Binding extends Differentiable<Binding, Binding>, Cloneable {
 
     RDFTerm value(Var v);
 
+    RDFTerm value(String v);
+
     boolean compatible(Binding b);
 
     default Binding union(Binding b) {

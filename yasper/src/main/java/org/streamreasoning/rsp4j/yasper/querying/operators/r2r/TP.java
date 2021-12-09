@@ -6,6 +6,7 @@ import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.querying.result.SolutionMappingBase;
 import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
+import org.streamreasoning.rsp4j.yasper.querying.PrefixMap;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,6 +31,11 @@ public class TP implements RelationToRelationOperator<Graph, Binding> {
         this.s = VarOrTerm.create(s);
         this.p = VarOrTerm.create(p);
         this.o = VarOrTerm.create(o);
+    }
+    public TP(String s, String p, String o, PrefixMap prefixes) {
+        this.s = VarOrTerm.create(prefixes.expandIfPrefixed(s));
+        this.p = VarOrTerm.create(prefixes.expandIfPrefixed(p));
+        this.o = VarOrTerm.create(prefixes.expandIfPrefixed(o));
     }
 
     @Override

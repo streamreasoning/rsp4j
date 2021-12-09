@@ -1,5 +1,6 @@
 package org.streamreasoning.rsp4j.reasoning.datalog;
 
+import org.streamreasoning.rsp4j.yasper.querying.PrefixMap;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarOrTerm;
 
 import java.util.Objects;
@@ -15,6 +16,12 @@ public class ReasonerTriple {
         this.o = VarOrTerm.create(o);
         this.p = VarOrTerm.create(p);
     }
+    public ReasonerTriple(String s, String p, String o,PrefixMap prefixes){
+        this(prefixes.expandIfPrefixed(s),
+                prefixes.expandIfPrefixed(p),
+                prefixes.expandIfPrefixed(o));
+    }
+
 
     public ReasonerTriple(VarOrTerm s, VarOrTerm p, VarOrTerm o) {
         this.s = s ;

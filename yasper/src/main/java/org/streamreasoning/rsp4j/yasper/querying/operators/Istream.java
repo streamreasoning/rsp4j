@@ -18,6 +18,9 @@ public class Istream<R, O> implements RelationToStreamOperator<R, O> {
         this.i = i;
     }
 
+    public Istream() {
+        this(0);
+    }
     public static <R, O> RelationToStreamOperator<R, O> get() {
         return new Istream<>(1);
     }

@@ -2,6 +2,8 @@ package org.streamreasoning.rsp4j.yasper.querying.syntax;
 
 import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.RDFTerm;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.r2r.Var;
 import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
@@ -19,6 +21,7 @@ import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
 
@@ -35,6 +38,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
     private String defaultGraphUri;
     private List<Var> projections;
     private PrefixMap prefixMap;
+    Logger log = LogManager.getLogger(TPVisitorImpl.class);
     public TPVisitorImpl() {
         windowMap = new HashMap<>();
         aggregations = new ArrayList<>();
@@ -90,6 +94,15 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
     @Override
     public CQ visitWindowGraphPattern(RSPQLParser.WindowGraphPatternContext ctx) {
         windowIRI=RDFUtils.trimTags(ctx.varOrIri().iri().getText());
+        windowIRI = prefixMap.expandIfPrefixed(windowIRI);
+        boolean isDefinedWindow = windowMap.values().stream()
+                .flatMap(x->x.stream())
+                .map(v->v.iri())
+                .filter(iri->iri.equals(windowIRI))
+                .findAny().isPresent();
+        if(!isDefinedWindow){
+            log.warn("Named window not found: "+windowIRI);
+        }
         windowsToTriples.put(windowIRI,new ArrayList<>());
         CQ result = super.visitWindowGraphPattern(ctx);
         windowIRI = "default";

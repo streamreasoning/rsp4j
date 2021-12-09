@@ -83,8 +83,10 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
       for(R2RContainer<W,R> r2r : task.getR2Rs()){
         if(r2r.getTvgNames().equals(Collections.singletonList("default"))){
           DataSet<W> defaultGraph = task.getDefaultGraph();
-          Stream<R> staticBindings = r2r.getR2rOperator().eval(defaultGraph.getContent().stream());
-          cachedStaticBindings.put("default", staticBindings.collect(Collectors.toSet()));
+          if (defaultGraph != null) {
+            Stream<R> staticBindings = r2r.getR2rOperator().eval(defaultGraph.getContent().stream());
+            cachedStaticBindings.put("default", staticBindings.collect(Collectors.toSet()));
+          }
         }
       }
 
@@ -185,7 +187,7 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
         RelationToRelationOperator<W, R> r2rOperator = r2RContainer.getR2rOperator();
         List<String> tvgTaskNames = r2RContainer.getTvgNames();
           if (tvgTaskNames.equals(Collections.singletonList("default"))) {
-            if (!cachedStaticBindings.get("default").isEmpty()) {
+            if (!cachedStaticBindings.getOrDefault("default",Collections.emptyList()).isEmpty()) {
               result = new HashSet<>(cachedStaticBindings.get("default"));
             }
             result = handleCrossWindowFilter(result, r2rOperator);

@@ -1,10 +1,7 @@
 package org.streamreasoning.rsp4j.yasper.querying;
 
 import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.api.IRI;
-import org.apache.commons.rdf.api.RDF;
 import org.apache.commons.rdf.api.RDFTerm;
-import org.junit.Test;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.operators.r2r.Var;
 import org.streamreasoning.rsp4j.api.sds.DataSet;
@@ -36,7 +33,7 @@ public class StaticR2RTest {
     TP tp2 = new TP(s2, p, o2);
     TP tp3 = new TP(s, p2, o3);
     TP tp4 = new TP(s2, p2, o3);
-    BGP bgp = BGP.createFrom(tp).join(tp2).join(tp3).join(tp4).create();
+    BGP bgp = BGP.createFrom(tp).addTP(tp2).addTP(tp3).addTP(tp4).build();
     URL fileURL = StaticR2RTest.class.getClassLoader().getResource(
             "colors.nt");
 
@@ -65,7 +62,7 @@ public class StaticR2RTest {
     TP tp = new TP(s, p, o);
     TP tp2 = new TP(s2, p, o);
 
-    BGP bgp = BGP.createFrom(tp).join(tp2).create();
+    BGP bgp = BGP.createFrom(tp).addTP(tp2).build();
     Stream<Binding> bindings = Stream.empty();
     while (true) {
       DataSet<Graph> staticDataSet =

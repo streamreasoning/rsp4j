@@ -20,6 +20,10 @@ public class Filter<T> implements RelationToRelationOperator<T, T>, Function<T, 
     private Predicate<T> p;
     private Collection<T> solutions2;
 
+    public Filter( Predicate<T> p) {
+       this(Stream.empty(), p);
+    }
+
     public Filter(Stream<T> solutions, Predicate<T> p) {
         this.solutions = solutions;
         this.p = p;

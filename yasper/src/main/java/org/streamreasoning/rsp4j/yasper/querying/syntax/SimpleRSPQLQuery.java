@@ -213,9 +213,9 @@ public class SimpleRSPQLQuery<O> implements RSPQL<O> {
         TripleHolder triple = bgpTriples.get(0);
         BGP bgp = BGP.createFrom(new TP(triple.s,triple.p,triple.o));
         for(int i = 1; i < bgpTriples.size(); i++){
-            bgp.join(new TP(bgpTriples.get(i).s,bgpTriples.get(i).p,bgpTriples.get(i).o));
+            bgp.addTP(new TP(bgpTriples.get(i).s,bgpTriples.get(i).p,bgpTriples.get(i).o));
         }
-        return bgp.create();
+        return bgp.build();
     }
     private TP createTP(TripleHolder singleTP){
         return new TP(singleTP.s, singleTP.p, singleTP.o);

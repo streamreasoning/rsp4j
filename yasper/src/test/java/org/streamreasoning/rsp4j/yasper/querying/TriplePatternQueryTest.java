@@ -203,5 +203,23 @@ public class TriplePatternQueryTest {
 
         assertEquals(pipe.getR2rs().length, 2);
     }
+    @Test
+    public void testSyntacticSugar() {
+        ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
+                "PREFIX : <http://test/> " +
+                "PREFIX test: <http://test/> " +
+
+                "REGISTER ISTREAM test:outStream AS " +
+                "SELECT ?s ?p " +
+                "FROM NAMED WINDOW :window ON :stream [RANGE PT10S STEP PT5S] " +
+                "WHERE {" +
+                "   ?s a :Test" +
+                "}");
+
+        TP tp = (TP) query.r2r().getR2RComponents().get("default");
+
+        assertEquals(new TermImpl("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), tp.getProperty());
+
+    }
 
 }

@@ -32,6 +32,10 @@ public class BindingImpl implements Binding {
     public RDFTerm value(Var v) {
         return internal.get(v);
     }
+    @Override
+    public RDFTerm value(String v) {
+        return internal.get(new VarImpl(v));
+    }
 
     @Override
     public boolean compatible(Binding b) {

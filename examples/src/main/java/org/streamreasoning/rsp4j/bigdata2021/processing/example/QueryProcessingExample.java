@@ -12,29 +12,70 @@ import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.joins.HashJoinAlg
 import org.streamreasoning.rsp4j.yasper.querying.syntax.TPQueryFactory;
 
 /***
- * In this exercise we will learn how to query the color stream using RSPQL
+ * In this exercise we will learn how to query the covid streams using RSPQL
+ * We will define a query that checks who is with who and in which room,
+ * in the last 10 minutes and provide answers each minute
+ *
+ * Used prefixes:
+ *  PREFIX : <http://rsp4j.io/covid/>
+ *  PREFIX rsp4j: <http://rsp4j.io/>
  */
 public class QueryProcessingExample {
 
   public static void main(String[] args) throws InterruptedException {
     // Setup the stream generator
     StreamGenerator generator = new StreamGenerator();
-    DataStream<Graph> observationStream = generator.getObservationStream(); // contains both the RFIDObservations and FacebookPosts
+    /* Creates the observation stream
+     * Contains both the RFIDObservations and FacebookPosts
+     * IRI: http://rsp4j.io/covid/observations
+     *
+     * Example RFID observation:
+     *  :observationX a :RFIDObservation .
+     *  :observationX :who :Alice .
+     *  :observationX :where :RedRoom .
+     *  :Alice :isIn :RedRoom .
+     *
+     * Example Facebook Post checkin:
+     * :postY a :FacebookPost .
+     * :postY :who :Bob .
+     * :postY :where :BlueRoom .
+     * :Bob :isIn :BlueRoom .
+     */
+    DataStream<Graph> observationStream = generator.getObservationStream();
+    /* Creates the contact tracing stream
+     * Describes who was with whom
+     * IRI: http://rsp4j.io/covid/tracing
+     *
+     * Example contact post:
+     * :postZ a :ContactTracingPost .
+     * :postZ :who :Carl.
+     * :Carl :isWith :Bob .
+     */
     DataStream<Graph> tracingStream = generator.getContactStream();
+    /* Creates the covid results stream
+     * Contains the test results
+     * IRI: http://rsp4j.io/covid/testResults
+     *
+     * Example covid result:
+     * :postQ a :TestResultPost.
+     * :postQ :who :Carl .
+     * :postQ :hasResult :positive
+     */
     DataStream<Graph> covidStream = generator.getCovidStream();
 
 
     // Define the query that checks who is with who and in which room in the last 10 minutes and provide answers each minute
     ContinuousQuery<Graph, Graph, Binding, Binding> query =
         TPQueryFactory.parse(
-            ""
+                "PREFIX : <http://rsp4j.io/covid/> "
+                + "PREFIX rsp4j: <http://rsp4j.io/>"
                 + "REGISTER RSTREAM <http://out/stream> AS "
                 + "SELECT ?s ?o ?s2 "
-                + "FROM NAMED WINDOW <http://test/window> ON <http://rsp4j.io/covid/observations> [RANGE PT10M STEP PT1M] "
-                + "FROM NAMED WINDOW <http://test/window2> ON <http://rsp4j.io/covid/tracing> [RANGE PT10M STEP PT1M] "
+                + "FROM NAMED WINDOW rsp4j:window ON :observations [RANGE PT10M STEP PT1M] "
+                + "FROM NAMED WINDOW rsp4j:window2 ON :tracing [RANGE PT10M STEP PT1M] "
                 + "WHERE {"
-                + "   WINDOW <http://test/window> { ?s <http://rsp4j.io/covid/isIn> ?o .}"
-                + "   WINDOW <http://test/window2> { ?s2 <http://rsp4j.io/covid/isWith> ?s .}"
+                + "   WINDOW rsp4j:window { ?s :isIn ?o .}"
+                + "   WINDOW rsp4j:window2 { ?s2 :isWith ?s .}"
                     + "}");
 
     // Create the RSP4J Task and Continuous Program
