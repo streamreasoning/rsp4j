@@ -13,6 +13,7 @@ import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.io.DataStreamImpl;
+import org.streamreasoning.rsp4j.yasper.querying.PrefixMap;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
 
@@ -33,7 +34,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
     Map<String,List<Predicate<Binding>>> windowsToFilters;
     private String defaultGraphUri;
     private List<Var> projections;
-
+    private PrefixMap prefixMap;
     public TPVisitorImpl() {
         windowMap = new HashMap<>();
         aggregations = new ArrayList<>();
@@ -42,8 +43,16 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
         windowsToTriples = new LinkedHashMap<>();
         windowsToFilters = new HashMap<>();
         projections = new ArrayList<>();
+        prefixMap = new PrefixMap();
     }
 
+    @Override
+    public CQ visitPrefixDecl(RSPQLParser.PrefixDeclContext ctx) {
+        String prefixName = ctx.PNAME_NS().getSymbol().getText();
+        String prefixIRI = RDFUtils.trimTags(ctx.IRIREF().getSymbol().getText());
+        prefixMap.addPrefix(prefixName,prefixIRI);
+        return visitChildren(ctx);
+    }
     @Override
     public CQ visitTriplesTemplate(RSPQLParser.TriplesTemplateContext ctx) {
         RSPQLParser.TriplesSameSubjectContext t = ctx.triplesSameSubject();
@@ -181,6 +190,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
 
     private TermImpl createTerm(String textIRI) {
         textIRI = RDFUtils.trimTags(textIRI);
+        textIRI = prefixMap.expandIfPrefixed(textIRI);
         return new TermImpl(RDFUtils.createIRI(textIRI));
     }
 
@@ -248,7 +258,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
      */
     public CQ visitOutputStream(RSPQLParser.OutputStreamContext ctx) {
         outputStreamIRI = RSPQLExtractionHelper.extractOutputStream(ctx);
-
+        outputStreamIRI = prefixMap.expandIfPrefixed(outputStreamIRI);
         return super.visitOutputStream(ctx);
     }
 
@@ -283,7 +293,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
      * @return
      */
     public CQ visitNamedWindowClause(RSPQLParser.NamedWindowClauseContext ctx) {
-        Map.Entry<String, WindowNode> streamWindowPair = RSPQLExtractionHelper.extractNamedWindowClause(ctx);
+        Map.Entry<String, WindowNode> streamWindowPair = RSPQLExtractionHelper.extractNamedWindowClause(ctx,prefixMap);
         if(!windowMap.containsKey(streamWindowPair.getKey())){
             windowMap.put(streamWindowPair.getKey(),new ArrayList<WindowNode>());
         }
@@ -404,7 +414,7 @@ public class TPVisitorImpl extends RSPQLBaseVisitor<CQ> {
         if(varOrTerm.startsWith("?")){
             return new VarImpl(varOrTerm);
         }else{
-            return new TermImpl(RDFUtils.trimTags(varOrTerm));
+            return new TermImpl(prefixMap.expandIfPrefixed(RDFUtils.trimTags(varOrTerm)));
         }
     }
 

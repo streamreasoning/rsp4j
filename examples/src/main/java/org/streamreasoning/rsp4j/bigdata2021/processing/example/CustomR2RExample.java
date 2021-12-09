@@ -2,6 +2,7 @@ package org.streamreasoning.rsp4j.bigdata2021.processing.example;
 
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.abstraction.ContinuousProgram;
+import org.streamreasoning.rsp4j.abstraction.RSPEngine;
 import org.streamreasoning.rsp4j.abstraction.TaskAbstractionImpl;
 import org.streamreasoning.rsp4j.abstraction.table.BindingStream;
 import org.streamreasoning.rsp4j.api.operators.r2r.utils.R2RPipe;
@@ -43,51 +44,34 @@ public class CustomR2RExample {
     BindingStream outStream = new BindingStream("out");
 
     // Engine properties
+
     Report report = new ReportImpl();
     report.add(new OnWindowClose());
     //        report.add(new NonEmptyContent());
     //        report.add(new OnContentChange());
     //        report.add(new Periodic());
-
     Tick tick = Tick.TIME_DRIVEN;
     ReportGrain report_grain = ReportGrain.SINGLE;
     Time instance = new TimeImpl(0);
 
+    RSPEngine engine = new RSPEngine(instance, tick, report_grain, report);
     // Window (S2R) declaration incl. window name, window range (1s), window step (1s), start time
     // (instance) etc.
-    StreamToRelationOp<Graph, Graph> w1 =
-        new CSPARQLStreamToRelationOp<>(
-            RDFUtils.createIRI("w1"),
-            600_000,
-            60_000,
-            instance,
-            tick,
-            report,
-            report_grain,
-            new GraphContentFactory(instance));
-    StreamToRelationOp<Graph, Graph> w2 =
-            new CSPARQLStreamToRelationOp<>(
+    StreamToRelationOp<Graph, Graph> w1 = engine.createCSparqlWindow(
+                    RDFUtils.createIRI("w1"),
+                    600_000,
+                    60_000);
+
+    StreamToRelationOp<Graph, Graph> w2 = engine.createCSparqlWindow(
                     RDFUtils.createIRI("w2"),
                     600_000,
-                    60_000,
-                    instance,
-                    tick,
-                    report,
-                    report_grain,
-                    new GraphContentFactory(instance));
-    StreamToRelationOp<Graph, Graph> w3 =
-            new CSPARQLStreamToRelationOp<>(
+                    60_000);
+    StreamToRelationOp<Graph, Graph> w3 = engine.createCSparqlWindow(
                     RDFUtils.createIRI("w3"),
                     60*60_000,
-                    60_000,
-                    instance,
-                    tick,
-                    report,
-                    report_grain,
-                    new GraphContentFactory(instance));
+                    60_000);
 
     // R2R
-
     BGP bgp = BGP.createFrom("?s", "http://rsp4j.io/covid/isIn", "?o")
             .join("?s2","http://rsp4j.io/covid/isIn", "?o")
             .create();
@@ -112,9 +96,9 @@ public class CustomR2RExample {
 
     TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
         new TaskAbstractionImpl.TaskBuilder()
-            .addS2R("http://rsp4j.io/covid/observations", w1, "http://test/window")
-            .addS2R("http://rsp4j.io/covid/tracing", w2, "http://test/window2")
-            .addS2R("http://rsp4j.io/covid/testResults", w3, "http://test/window3")
+            .addS2R("http://rsp4j.io/covid/observations", w1, "w1")
+            .addS2R("http://rsp4j.io/covid/tracing", w2, "w2")
+            .addS2R("http://rsp4j.io/covid/testResults", w3, "w3")
             .addR2R(List.of("w1", "w2"), r2r)
             .addR2R("w3", bgp2)
             .addR2S("out", new Rstream<Binding, Binding>())

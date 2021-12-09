@@ -181,4 +181,27 @@ public class TriplePatternQueryTest {
         assertEquals(pipe.getR2rs().length, 2);
     }
 
+    @Test
+    public void testPrefix() {
+        ContinuousQuery<Graph, Graph, Binding, Binding> query = TPQueryFactory.parse("" +
+                "PREFIX : <http://test/> " +
+                "PREFIX test: <http://test/> " +
+
+                "REGISTER ISTREAM test:outStream AS " +
+                "SELECT ?s ?p " +
+                "FROM NAMED WINDOW :window ON :stream [RANGE PT10S STEP PT5S] " +
+                "WHERE {" +
+                "   ?s ?p :test . Filter(?s = test:test2)" +
+                "}");
+
+        R2RPipe pipe = (R2RPipe) query.r2r().getR2RComponents().get("default");
+        String windowIRI = query.getWindowMap().keySet().stream().map(w->w.iri()).findFirst().get();
+        String streamIRI = query.getWindowMap().values().stream().map(d->d.getName()).findFirst().get();
+        assertEquals("http://test/window", windowIRI);
+        assertEquals("http://test/stream", streamIRI);
+        assertEquals("http://test/outStream",query.getOutputStream().getName());
+
+        assertEquals(pipe.getR2rs().length, 2);
+    }
+
 }
