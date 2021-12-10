@@ -102,7 +102,7 @@ public class ContinuousProgram<I, W, R, O> extends ContinuousQueryExecutionObser
         if (task.getAggregations().isEmpty()) {
           Stream<R> r2rResult = eval(now);
           Stream<O> output = r2s.getR2sOperator().eval(r2rResult, now);
-          output.forEach(out->{System.out.println(out);outputStream.put(out,now);});
+          output.forEach(out->{outputStream.put(out,now);});
         } else {
           handleAggregations(task, r2s, now);
         }
