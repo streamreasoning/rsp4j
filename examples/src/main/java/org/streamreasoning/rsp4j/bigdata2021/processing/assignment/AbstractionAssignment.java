@@ -133,6 +133,9 @@ public class AbstractionAssignment {
 
             .build();
     //TODO: define the Filter definition for FILTER(?s3 = ?s || ?s3 = ?s2).
+    // TIP: Binding objects contain the values that our bound to a certain variable.
+    //      You can retrieve the bound value by calling the value-method
+    //      For example: binding.value("?s")
     Filter<Binding> filter = new Filter<>(b->true);
 
     // Create the RSP4J Task and Continuous Program that counts the number of s variables

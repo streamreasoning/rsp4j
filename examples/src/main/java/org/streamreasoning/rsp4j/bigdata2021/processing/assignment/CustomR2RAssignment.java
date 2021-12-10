@@ -37,7 +37,7 @@ import java.util.List;
  * Graph representation:
  *  :bob -isWith-> :elena -isIn-> :redRoom
  *   \                             ^
- *    \----inferred :isIn---------/
+ *    \-----inferred :isIn--------/
  *
  * By inferring this relation, we can simplify the query definitions when we want to fetch who is in each room.
  * This comes in handy when want to query who has been infected because they were in a room with a person who got
@@ -130,7 +130,7 @@ public class CustomR2RAssignment {
     PrefixMap prefixes = new PrefixMap();
     prefixes.addPrefix("","http://rsp4j.io/covid/");
     // R2R
-    // TODO: define the first BGP that fetches the locations of the individuals
+    //TODO: define the first BGP that fetches the locations of the individuals
     // this BGP will be executed over the results of the reasoner
     BGP bgp = BGP.createWithPrefixes(prefixes)
             .addTP("?s", "?p", "?o")
@@ -141,13 +141,17 @@ public class CustomR2RAssignment {
             .addTP("?s", "?p", "?o")
             .build();
 
-    // TODO: Define a rule that infers the location of individuals reported through the contact tracing stream
+    //TODO: Define a rule that infers the location of individuals reported through the contact tracing stream.
+    // TIP: Each Rule object takes a number of ReasonerTriples, the first one being the head of the rule,
+    //      while the remainder triples are the body of the rule.
+    //      Adding multiple triples as body translates to a conjunction (AND) between the body triples.
+    //      Example: the rule below can be interpreted as ?x ?p ?o1 AND ?o1 ?p ?o -> ?x ?p ?o
     DatalogR2R datalogR2R = new DatalogR2R();
     TripleGenerator tripleGenerator = new TripleGenerator(prefixes);
 
     ReasonerTriple head = tripleGenerator.createReasonerTriple("?x", "?p", "?o");
-    ReasonerTriple body1 = tripleGenerator.createReasonerTriple("?x", "?p", "?o");
-    ReasonerTriple body2 = tripleGenerator.createReasonerTriple("?y", "?p", "?o");
+    ReasonerTriple body1 = tripleGenerator.createReasonerTriple("?x", "?p", "?o1");
+    ReasonerTriple body2 = tripleGenerator.createReasonerTriple("?o1", "?p", "?o");
 
     Rule r = new Rule(head,body1,body2);
 
