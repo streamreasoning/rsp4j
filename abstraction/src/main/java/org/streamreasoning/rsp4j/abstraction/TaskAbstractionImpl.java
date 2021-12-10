@@ -1,15 +1,20 @@
 package org.streamreasoning.rsp4j.abstraction;
 
+import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.abstraction.containers.AggregationContainer;
 import org.streamreasoning.rsp4j.abstraction.containers.R2RContainer;
 import org.streamreasoning.rsp4j.abstraction.containers.R2SContainer;
 import org.streamreasoning.rsp4j.abstraction.containers.S2RContainer;
+import org.streamreasoning.rsp4j.abstraction.monitoring.MonitoringR2RProxy;
+import org.streamreasoning.rsp4j.abstraction.monitoring.MonitoringR2SProxy;
+import org.streamreasoning.rsp4j.abstraction.monitoring.MonitoringS2RProxy;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.sds.DataSet;
 import org.streamreasoning.rsp4j.api.operators.r2r.Var;
 import org.streamreasoning.rsp4j.yasper.querying.PrefixMap;
+import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.Binding;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.VarImpl;
 
 import java.util.*;
@@ -132,6 +137,26 @@ public class TaskAbstractionImpl<I, W, R, O> implements Task<I, W, R, O> {
         }
 
 
+    }
+
+
+    public static class MonitoringTaskBuilder<I, W, R, O> extends TaskBuilder<I, W, R, O>{
+        public TaskBuilder<I, W, R, O> addR2R(String tvgName, RelationToRelationOperator<W, R> r2r) {
+            RelationToRelationOperator<W, R> monitorProxy = new MonitoringR2RProxy<>(r2r);
+            return super.addR2R(tvgName,monitorProxy);
+        }
+        public TaskBuilder<I, W, R, O> addR2R(List<String> tvgNames, RelationToRelationOperator<W, R> r2r) {
+            RelationToRelationOperator<W, R> monitorProxy = new MonitoringR2RProxy<>(r2r);
+            return super.addR2R(tvgNames,monitorProxy);
+        }
+        public TaskBuilder<I, W, R, O> addS2R(String sourceURI, StreamToRelationOp<I, W> s2r, String tvgName) {
+            StreamToRelationOp<I,W> monitorProxy = new MonitoringS2RProxy<>(s2r);
+            return super.addS2R(sourceURI,monitorProxy, tvgName);
+        }
+        public TaskBuilder<I, W, R, O> addR2S(String sinkURI, RelationToStreamOperator<R, O> r2s) {
+            RelationToStreamOperator<R,O> monitorProxy = new MonitoringR2SProxy<>(r2s);
+            return super.addR2S(sinkURI,monitorProxy);
+        }
     }
 
 

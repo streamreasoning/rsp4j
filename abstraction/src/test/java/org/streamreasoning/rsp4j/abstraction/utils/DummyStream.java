@@ -94,4 +94,12 @@ public class DummyStream {
         graph.add(instance.createTriple(instance.createIRI(prefix +"S7"), p, instance.createLiteral("20",instance.createIRI("http://www.w3.org/2001/XMLSchema#integer"))));
         stream.put(graph, 6001 + startTime);
     }
+
+    public static Graph createSingleColorGraph(String prefix, String color){
+        RDF instance = RDFUtils.getInstance();
+        Graph graph = instance.createGraph();
+        IRI p = instance.createIRI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+        graph.add(instance.createTriple(instance.createIRI(prefix +"S1"), p, instance.createIRI(prefix+color)));
+        return graph;
+    }
 }
