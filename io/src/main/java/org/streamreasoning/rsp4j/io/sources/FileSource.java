@@ -34,6 +34,32 @@ public class FileSource<T> extends DataStreamImpl<T> {
         this.timeOut = timeOut;
         this.parsingStrategy = parsingStrategy;
     }
+    public FileSource(String filePath, String streamURL, long timeOut, ParsingStrategy<T> parsingStrategy) {
+        super(streamURL);
+        this.filePath = filePath;
+        this.timeOut = timeOut;
+        this.parsingStrategy = parsingStrategy;
+    }
+    /**
+     * Creates a new File sources that reads one line from a file in filePath and waits timeout time between lines.
+     * No parsing strategy is used and the stream will return the read input type (Strings)
+     *
+     * @param filePath        path of the file
+     * @param timeOut         timeout between reading lines (in milliseconds)
+     */
+    public FileSource(String filePath, long timeOut) {
+        super(filePath);
+        this.filePath = filePath;
+        this.timeOut = timeOut;
+        this.parsingStrategy = e-> (T) e;
+    }
+
+    public FileSource(String filePath, String streamURL, long timeOut) {
+        super(streamURL);
+        this.filePath = filePath;
+        this.timeOut = timeOut;
+        this.parsingStrategy = e-> (T) e;
+    }
 
     /**
      * Starts streaming the read file data into the webstream in a new thread

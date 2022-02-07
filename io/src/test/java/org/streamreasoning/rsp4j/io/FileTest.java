@@ -53,17 +53,8 @@ public class FileTest {
         String[] inputLines = new String[]{line1, line2};
 
         String filePath = "filetest_" + System.currentTimeMillis() + ".txt";
-        Path path = Paths.get(filePath);
 
-        // create file and write lines to file
-        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-            for (String line : inputLines) {
-                writer.write(line + System.lineSeparator());
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Path path = createFile(inputLines, filePath);
         // create parsing strategy
         JenaRDFParsingStrategy parsingStrategy = new JenaRDFParsingStrategy(RDFBase.NT);
         // create file source to read the newly created file
@@ -85,6 +76,21 @@ public class FileTest {
         ParsingStrategyTest.compareGraph(expectedGraph2, bufferedConsumer.getMessage(1));
         // delete file
         deleteFile(path);
+    }
+
+    public static Path createFile(String[] inputLines, String filePath) {
+        Path path = Paths.get(filePath);
+
+        // create file and write lines to file
+        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+            for (String line : inputLines) {
+                writer.write(line + System.lineSeparator());
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return path;
     }
 
     //  @Test
