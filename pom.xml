@@ -19,11 +19,12 @@
         <module>abstraction</module>
         <module>io</module>
         <module>web</module>
-        <module>csparql-rsp4j</module>
-        <module>cqels-rsp4j</module>
+        <!--<module>csparql-rsp4j</module>
+        <module>cqels-rsp4j</module>-->
         <module>csparql2</module>
         <module>dsms</module>
         <module>reasoning</module>
+        <module>mapping</module>
     </modules>
 
     <dependencyManagement>
