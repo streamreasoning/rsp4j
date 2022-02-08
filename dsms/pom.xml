@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.github.jsonld-java</groupId>
             <artifactId>jsonld-java</artifactId>
-            <version>0.13.3</version>
+            <version>0.13.4</version>
         </dependency>
         <dependency>
             <groupId>com.espertech</groupId>
