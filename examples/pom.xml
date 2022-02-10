@@ -8,7 +8,7 @@
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
+    <version>${rsp4j.version}</version>
     <artifactId>examples</artifactId>
     <build>
         <plugins>
@@ -26,25 +26,25 @@
         <dependency>
             <groupId>org.streamreasoning.rsp4j</groupId>
             <artifactId>api</artifactId>
-            <version>1.0.0</version>
+            <version>${rsp4j.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.streamreasoning.rsp4j</groupId>
             <artifactId>yasper</artifactId>
-            <version>1.0.0</version>
+            <version>${rsp4j.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.streamreasoning.rsp4j</groupId>
             <artifactId>reasoning</artifactId>
-            <version>1.0.0</version>
+            <version>${rsp4j.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.streamreasoning.rsp4j</groupId>
-            <artifactId>abstraction</artifactId>
-            <version>1.0.0</version>
+            <artifactId>operatorapi</artifactId>
+            <version>${rsp4j.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

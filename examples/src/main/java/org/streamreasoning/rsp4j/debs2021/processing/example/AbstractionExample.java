@@ -1,11 +1,11 @@
 package org.streamreasoning.rsp4j.debs2021.processing.example;
 
 import org.apache.commons.rdf.api.Graph;
-import org.streamreasoning.rsp4j.abstraction.ContinuousProgram;
-import org.streamreasoning.rsp4j.abstraction.TaskAbstractionImpl;
-import org.streamreasoning.rsp4j.abstraction.functions.AggregationFunctionRegistry;
-import org.streamreasoning.rsp4j.abstraction.functions.CountFunction;
-import org.streamreasoning.rsp4j.abstraction.table.BindingStream;
+import org.streamreasoning.rsp4j.operatorapi.ContinuousProgram;
+import org.streamreasoning.rsp4j.operatorapi.TaskOperatorAPIImpl;
+import org.streamreasoning.rsp4j.operatorapi.functions.AggregationFunctionRegistry;
+import org.streamreasoning.rsp4j.operatorapi.functions.CountFunction;
+import org.streamreasoning.rsp4j.operatorapi.table.BindingStream;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
@@ -72,8 +72,8 @@ public class AbstractionExample {
     AggregationFunctionRegistry.getInstance().addFunction("COUNT", new CountFunction());
 
     // Create the RSP4J Task and Continuous Program that counts the number of s variables
-    TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
-        new TaskAbstractionImpl.TaskBuilder()
+    TaskOperatorAPIImpl<Graph, Graph, Binding, Binding> t =
+        new TaskOperatorAPIImpl.TaskBuilder()
             .addS2R("stream1", s2r, "w1")
             .addR2R("w1", r2r)
             .addR2S("out", new Rstream<Binding, Binding>())

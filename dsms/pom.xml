@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.streamreasoning.rsp4j</groupId>
             <artifactId>io</artifactId>
-            <version>1.0.0</version>
+            <version>${rsp4j.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

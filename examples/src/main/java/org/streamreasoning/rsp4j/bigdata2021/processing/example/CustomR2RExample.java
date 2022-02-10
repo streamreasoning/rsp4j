@@ -1,10 +1,10 @@
 package org.streamreasoning.rsp4j.bigdata2021.processing.example;
 
 import org.apache.commons.rdf.api.Graph;
-import org.streamreasoning.rsp4j.abstraction.ContinuousProgram;
+import org.streamreasoning.rsp4j.operatorapi.ContinuousProgram;
 import org.streamreasoning.rsp4j.abstraction.RSPEngine;
-import org.streamreasoning.rsp4j.abstraction.TaskAbstractionImpl;
-import org.streamreasoning.rsp4j.abstraction.table.BindingStream;
+import org.streamreasoning.rsp4j.operatorapi.TaskOperatorAPIImpl;
+import org.streamreasoning.rsp4j.operatorapi.table.BindingStream;
 import org.streamreasoning.rsp4j.reasoning.datalog.TripleGenerator;
 import org.streamreasoning.rsp4j.api.operators.r2r.utils.R2RPipe;
 import org.streamreasoning.rsp4j.api.RDFUtils;
@@ -153,8 +153,8 @@ public class CustomR2RExample {
     // Create a pipe of two r2r operators, datalog reasoner and BGP
     R2RPipe<Graph,Binding> r2r = new R2RPipe<>(datalogR2R,bgp);
 
-    TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
-        new TaskAbstractionImpl.TaskBuilder(prefixes)
+    TaskOperatorAPIImpl<Graph, Graph, Binding, Binding> t =
+        new TaskOperatorAPIImpl.TaskBuilder(prefixes)
             .addS2R(":observations", w1, "w1")
             .addS2R(":tracing", w2, "w2")
             .addS2R(":testResults", w3, "w3")

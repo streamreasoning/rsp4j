@@ -1,9 +1,9 @@
 package org.streamreasoning.rsp4j.wspbook.processing;
 
 import org.apache.commons.rdf.api.Graph;
-import org.streamreasoning.rsp4j.abstraction.ContinuousProgram;
-import org.streamreasoning.rsp4j.abstraction.TaskAbstractionImpl;
-import org.streamreasoning.rsp4j.abstraction.table.BindingStream;
+import org.streamreasoning.rsp4j.operatorapi.ContinuousProgram;
+import org.streamreasoning.rsp4j.operatorapi.TaskOperatorAPIImpl;
+import org.streamreasoning.rsp4j.operatorapi.table.BindingStream;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
 import org.streamreasoning.rsp4j.api.enums.Tick;
@@ -12,7 +12,6 @@ import org.streamreasoning.rsp4j.api.operators.r2r.utils.R2RPipe;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.report.ReportImpl;
-import org.streamreasoning.rsp4j.api.secret.report.strategies.NonEmptyContent;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.OnWindowClose;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
@@ -24,10 +23,6 @@ import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.*;
 import org.streamreasoning.rsp4j.yasper.querying.operators.windowing.CSPARQLStreamToRelationOp;
-
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class CSpriteExample {
 
@@ -50,8 +45,8 @@ public class CSpriteExample {
 
 
         // define the task and CP
-        TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
-                new TaskAbstractionImpl.TaskBuilder()
+        TaskOperatorAPIImpl<Graph, Graph, Binding, Binding> t =
+                new TaskOperatorAPIImpl.TaskBuilder()
                         .addS2R("http://test/stream", windowOperator, "w1")
                         .addR2R("w1", r2rPipe)
                         .addR2S("out", new Rstream<Binding, Binding>())

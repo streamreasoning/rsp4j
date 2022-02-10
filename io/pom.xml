@@ -8,7 +8,7 @@
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
+    <version>${rsp4j.version}</version>
     <artifactId>io</artifactId>
     <dependencies>
         <dependency>
@@ -47,7 +47,7 @@
         <dependency>
             <groupId>org.streamreasoning.rsp4j</groupId>
             <artifactId>api</artifactId>
-            <version>1.0.0</version>
+            <version>${rsp4j.version}</version>
         </dependency>
 
         <!--<dependency>

@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>api</artifactId>
-    <version>1.0.0</version>
+    <version>${rsp4j.version}</version>
 
     <build>
         <plugins>

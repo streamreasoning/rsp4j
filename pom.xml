@@ -9,6 +9,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <github.release>${project.version}</github.release>
+        <rsp4j.version>1.0.1</rsp4j.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -16,7 +17,7 @@
         <module>api</module>
         <module>yasper</module>
         <module>examples</module>
-        <module>abstraction</module>
+        <module>operatorapi</module>
         <module>io</module>
         <module>web</module>
         <!--<module>csparql-rsp4j</module>
