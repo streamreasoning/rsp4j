@@ -28,3 +28,5 @@ hs_err_pid*
 rsp-spin-converter/*
 */demoApplication.log
 demoApplication.log
+
+install.sh
