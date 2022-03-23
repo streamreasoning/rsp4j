@@ -33,6 +33,18 @@ public class CARMLCSVMapper implements Function<String,String> {
                 .setLogicalSourceResolver(Rdf.Ql.Csv, CsvResolver::getInstance)
                 .build();
     }
+    public CARMLCSVMapper(String rmlMapping, String streamURI, Object... functions) {
+        RmlMappingLoader loader = RmlMappingLoader.build();
+        InputStream rmlStream = new ByteArrayInputStream(rmlMapping.getBytes());
+
+        Set<TriplesMap> mapping = loader.load(RDFFormat.TURTLE, rmlStream);
+        this.streamURI= streamURI;
+        this.mapper = RdfRmlMapper.builder()
+                .triplesMaps(mapping)
+                .setLogicalSourceResolver(Rdf.Ql.Csv, CsvResolver::getInstance)
+                .addFunctions(functions)
+                .build();
+    }
     @Override
     public String apply(String event) {
         if(csvHeader == null){
@@ -57,4 +69,6 @@ public class CARMLCSVMapper implements Function<String,String> {
 
         return resultString;
     }
+
+
 }

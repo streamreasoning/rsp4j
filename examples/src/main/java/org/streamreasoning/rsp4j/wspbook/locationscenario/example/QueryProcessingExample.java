@@ -1,4 +1,4 @@
-package org.streamreasoning.rsp4j.wspbook.processing.assignment;
+package org.streamreasoning.rsp4j.wspbook.locationscenario.example;
 
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.operatorapi.ContinuousProgram;
@@ -12,24 +12,15 @@ import org.streamreasoning.rsp4j.yasper.querying.operators.r2r.joins.HashJoinAlg
 import org.streamreasoning.rsp4j.yasper.querying.syntax.TPQueryFactory;
 
 /***
- * In this example we will learn how to query the covid streams using RSPQL
- * You will define a query that checks who is infected through close contact.
- * Furthermore, you will need to report in which room the contact happened.
- *
- * This means that you will need to check:
- *  1) Who is with who through the contact tracing stream in the last 10minutes
- *  2) The location of certain individuals through the observation stream in last 10minutes
- *  3) Who had a positive test result in the last 24hours
- *
- *  TIP:
- *  As both persons in the contact tracing results (?person1 :isWith ?person2) can be reported in the testResults
- *  stream, we can use a FILTER to create an OR-case.
+ * In this exercise we will learn how to query the covid streams using RSPQL
+ * We will define a query that checks who is with who and in which room,
+ * in the last 10 minutes and provide answers each minute
  *
  * Used prefixes:
  *  PREFIX : <http://rsp4j.io/covid/>
  *  PREFIX rsp4j: <http://rsp4j.io/>
  */
-public class QueryProcessingAssignment {
+public class QueryProcessingExample {
 
   public static void main(String[] args) throws InterruptedException {
     // Setup the stream generator
@@ -70,34 +61,35 @@ public class QueryProcessingAssignment {
      * :postQ :who :Carl .
      * :postQ :hasResult :positive
      */
-
     DataStream<Graph> covidStream = generator.getCovidStream();
 
-    // TODO: Define the query that checks who is infected through close contact
+
+    // Define the query that checks who is with who and in which room in the last 10 minutes and provide answers each minute
     ContinuousQuery<Graph, Graph, Binding, Binding> query =
-            TPQueryFactory.parse(
-                    "PREFIX : <http://rsp4j.io/covid/> "
-                            + " PREFIX rsp4j: <http://rsp4j.io/> "
-                            + "REGISTER RSTREAM <http://out/stream> AS "
-                            + "SELECT * "
-                            + " "
-                            + "WHERE {"
-                            +  "?s ?p ?o"
-                            + "}");
+        TPQueryFactory.parse(
+                "PREFIX : <http://rsp4j.io/covid/> "
+                + "PREFIX rsp4j: <http://rsp4j.io/>"
+                + "REGISTER RSTREAM <http://out/stream> AS "
+                + "SELECT ?s ?o ?s2 "
+                + "FROM NAMED WINDOW rsp4j:window ON :observations [RANGE PT10M STEP PT1M] "
+                + "FROM NAMED WINDOW rsp4j:window2 ON :tracing [RANGE PT10M STEP PT1M] "
+                + "WHERE {"
+                + "   WINDOW rsp4j:window { ?s :isIn ?o .}"
+                + "   WINDOW rsp4j:window2 { ?s2 :isWith ?s .}"
+                    + "}");
 
     // Create the RSP4J Task and Continuous Program
     TaskOperatorAPIImpl<Graph, Graph, Binding, Binding> t =
-            new QueryTaskOperatorAPIImpl.QueryTaskBuilder().fromQuery(query).build();
-
+        new QueryTaskOperatorAPIImpl.QueryTaskBuilder().fromQuery(query).build();
     ContinuousProgram<Graph, Graph, Binding, Binding> cp =
-            new ContinuousProgram.ContinuousProgramBuilder()
-                    .in(observationStream)
-                    .in(tracingStream)
-                    .in(covidStream)
-                    .addTask(t)
-                    .out(query.getOutputStream())
-                    .addJoinAlgorithm(new HashJoinAlgorithm())
-                    .build();
+        new ContinuousProgram.ContinuousProgramBuilder()
+            .in(observationStream)
+            .in(tracingStream)
+            .in(covidStream)
+            .addTask(t)
+            .out(query.getOutputStream())
+            .addJoinAlgorithm(new HashJoinAlgorithm())
+            .build();
     // Add the Consumer to the stream
     query.getOutputStream().addConsumer((el, ts) -> System.out.println(el + " @ " + ts));
 
@@ -105,7 +97,7 @@ public class QueryProcessingAssignment {
     generator.startStreaming();
 
     // Stop streaming after 20s
-    Thread.sleep(40_000);
+    Thread.sleep(30_000);
     generator.stopStreaming();
   }
 }

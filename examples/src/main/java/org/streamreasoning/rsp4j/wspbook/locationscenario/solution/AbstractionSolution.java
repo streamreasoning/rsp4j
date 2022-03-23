@@ -1,4 +1,4 @@
-package org.streamreasoning.rsp4j.wspbook.processing.assignment;
+package org.streamreasoning.rsp4j.wspbook.locationscenario.solution;
 
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.operatorapi.ContinuousProgram;
@@ -44,7 +44,7 @@ import java.util.List;
  *                       FILTER(?s3 = ?s || ?s3 = ?s2).
  *                    }
  */
-public class AbstractionAssignment {
+public class AbstractionSolution {
 
   public static void main(String[] args) throws InterruptedException {
     // Setup the stream generator
@@ -121,24 +121,24 @@ public class AbstractionAssignment {
     prefixes.addPrefix("","http://rsp4j.io/covid/");
 
     // Definition of the R2R operators
-    // TODO: define the BGP for window 1
+    // BGP for window 1
     BGP bgp = BGP.createWithPrefixes(prefixes)
-            .addTP("?s", "?p", "?o")
+            .addTP("?s", ":isIn", "?o")
             .build();
-    // TODO: define the BGP for window 2
+    // BGP for window 2
     BGP bgp2 = BGP.createWithPrefixes(prefixes)
-            .addTP("?s", "?p", "?o")
+            .addTP("?s2", ":isWith", "?s")
             .build();
-    // TODO: define the BGP for window 3
+    // BGP for window 3
+    // ?testResult a covid:TestResultPost; covid:who ?s3; covid:hasResult covid:positive
     BGP bgp3 = BGP.createWithPrefixes(prefixes)
-            .addTP("?s", "?p", "?o")
-
+            .addTP("?testResult", "a", ":TestResultPost")
+            .addTP("?testResult", ":who", "?s3")
+            .addTP("?testResult", ":hasResult", ":positive")
             .build();
-    //TODO: define the Filter definition for FILTER(?s3 = ?s || ?s3 = ?s2).
-    // TIP: Binding objects contain the values that our bound to a certain variable.
-    //      You can retrieve the bound value by calling the value-method
-    //      For example: binding.value("?s")
-    Filter<Binding> filter = new Filter<>(b->true);
+    //Filter definition for FILTER(?s3 = ?s || ?s3 = ?s2).
+    Filter<Binding> filter = new Filter<>(b->b.value("?s3").equals(b.value("?s")) ||
+            b.value("?s3").equals(b.value("?s2")));
 
     // Create the RSP4J Task and Continuous Program that counts the number of s variables
     TaskOperatorAPIImpl<Graph, Graph, Binding, Binding> t =

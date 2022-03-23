@@ -1,4 +1,4 @@
-package org.streamreasoning.rsp4j.wspbook.processing.example;
+package org.streamreasoning.rsp4j.wspbook.locationscenario.example;
 
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.operatorapi.ContinuousProgram;

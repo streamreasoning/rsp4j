@@ -9,7 +9,7 @@ import org.streamreasoning.rsp4j.io.sources.FileSource;
 import org.streamreasoning.rsp4j.io.utils.BufferedConsumer;
 import org.streamreasoning.rsp4j.io.utils.ParsingStrategyTest;
 import org.streamreasoning.rsp4j.io.utils.RDFBase;
-import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFParsingStrategy;
+import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFCommonsParsingStrategy;
 import org.streamreasoning.rsp4j.io.utils.serialization.JenaRDFSerializationStrategy;
 
 import java.io.BufferedReader;
@@ -56,7 +56,7 @@ public class FileTest {
 
         Path path = createFile(inputLines, filePath);
         // create parsing strategy
-        JenaRDFParsingStrategy parsingStrategy = new JenaRDFParsingStrategy(RDFBase.NT);
+        JenaRDFCommonsParsingStrategy parsingStrategy = new JenaRDFCommonsParsingStrategy(RDFBase.NT);
         // create file source to read the newly created file
         FileSource<Graph> fileSource = new FileSource<Graph>(filePath, 0, parsingStrategy);
         // create and add dummy consumer

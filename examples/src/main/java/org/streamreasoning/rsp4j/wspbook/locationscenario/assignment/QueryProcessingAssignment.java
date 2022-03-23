@@ -1,4 +1,4 @@
-package org.streamreasoning.rsp4j.wspbook.processing.solution;
+package org.streamreasoning.rsp4j.wspbook.locationscenario.assignment;
 
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.operatorapi.ContinuousProgram;
@@ -29,7 +29,7 @@ import org.streamreasoning.rsp4j.yasper.querying.syntax.TPQueryFactory;
  *  PREFIX : <http://rsp4j.io/covid/>
  *  PREFIX rsp4j: <http://rsp4j.io/>
  */
-public class QueryProcessingSolution {
+public class QueryProcessingAssignment {
 
   public static void main(String[] args) throws InterruptedException {
     // Setup the stream generator
@@ -73,23 +73,17 @@ public class QueryProcessingSolution {
 
     DataStream<Graph> covidStream = generator.getCovidStream();
 
-    // Define the query that checks who is infected through close contact
+    // TODO: Define the query that checks who is infected through close contact
     ContinuousQuery<Graph, Graph, Binding, Binding> query =
-        TPQueryFactory.parse(
-            "PREFIX : <http://rsp4j.io/covid/> "
-                + " PREFIX rsp4j: <http://rsp4j.io/> "
-                + "REGISTER RSTREAM <http://out/stream> AS "
-                + "SELECT ?s ?s2 ?o ?s3 "
-                + " "
-                + " FROM NAMED WINDOW rsp4j:window ON :observations [RANGE PT10M STEP PT1M] "
-                + " FROM NAMED WINDOW rsp4j:window2 ON :tracing [RANGE PT10M STEP PT1M] "
-                + " FROM NAMED WINDOW rsp4j:window3 ON :testResults [RANGE PT24H STEP PT1M] "
-                + "WHERE {"
-                + "   WINDOW rsp4j:window { ?s :isIn ?o .}"
-                + "   WINDOW rsp4j:window2 { ?s2 :isWith ?s .}"
-                + "   WINDOW rsp4j:window3 { ?testResult a :TestResultPost; :who ?s3; :hasResult :positive .}"
-                + " FILTER(?s3 = ?s || ?s3 = ?s2)."
-                + "}");
+            TPQueryFactory.parse(
+                    "PREFIX : <http://rsp4j.io/covid/> "
+                            + " PREFIX rsp4j: <http://rsp4j.io/> "
+                            + "REGISTER RSTREAM <http://out/stream> AS "
+                            + "SELECT * "
+                            + " "
+                            + "WHERE {"
+                            +  "?s ?p ?o"
+                            + "}");
 
     // Create the RSP4J Task and Continuous Program
     TaskOperatorAPIImpl<Graph, Graph, Binding, Binding> t =

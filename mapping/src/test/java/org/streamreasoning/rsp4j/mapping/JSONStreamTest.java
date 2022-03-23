@@ -3,12 +3,10 @@ package org.streamreasoning.rsp4j.mapping;
 import org.apache.commons.rdf.api.Graph;
 import org.junit.Assert;
 import org.junit.Test;
-import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.io.DataStreamImpl;
 import org.streamreasoning.rsp4j.io.sources.FileSource;
-import org.streamreasoning.rsp4j.io.utils.BufferedConsumer;
 import org.streamreasoning.rsp4j.io.utils.RDFBase;
-import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFParsingStrategy;
+import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFCommonsParsingStrategy;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingStrategy;
 
 import java.io.BufferedWriter;
@@ -96,7 +94,7 @@ public class JSONStreamTest {
         // We need to to define the URL of the result stream
         DataStreamImpl<String> rdfStream = stream.map(mapper::apply, "http://example.org/test/mapped");
         // Here we will map the RDF triple Strings (NTriples format) to Jena Graph objects with a Jena Parser
-        ParsingStrategy<Graph> jenaParser = new JenaRDFParsingStrategy(RDFBase.NT);
+        ParsingStrategy<Graph> jenaParser = new JenaRDFCommonsParsingStrategy(RDFBase.NT);
         // Mapping of NTriple Strings to Graph objects
         DataStreamImpl<Graph> graphStream = rdfStream.map(jenaParser::parse,"http://example.org/test/parsed");
 

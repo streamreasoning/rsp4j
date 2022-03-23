@@ -6,7 +6,7 @@ import org.apache.commons.rdf.api.RDF;
 import org.apache.commons.rdf.api.Triple;
 import org.apache.commons.rdf.simple.SimpleRDF;
 import org.junit.Test;
-import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFParsingStrategy;
+import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFCommonsParsingStrategy;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingResult;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingStrategy;
 import org.streamreasoning.rsp4j.io.utils.parsing.TimeExtractingParsingStrategy;
@@ -36,7 +36,7 @@ public class ParsingStrategyTest {
     }
 
     public static void parseAndCompare(String message, RDFBase base) {
-        ParsingStrategy<Graph> jenaRDFParser = new JenaRDFParsingStrategy(base);
+        ParsingStrategy<Graph> jenaRDFParser = new JenaRDFCommonsParsingStrategy(base);
         ParsingResult<Graph> parsedResult = jenaRDFParser.parseAndAddTime(message);
         Graph parsedGraph = parsedResult.getResult();
         Graph graph = createGraph();
@@ -106,7 +106,7 @@ public class ParsingStrategyTest {
         RDFBase base = RDFBase.NT;
         // first test with time at index 0
         String message = "12345, <http://test/subject> <http://test/property> <http://test/object>.";
-        ParsingStrategy<Graph> jenaRDFParser = new JenaRDFParsingStrategy(base);
+        ParsingStrategy<Graph> jenaRDFParser = new JenaRDFCommonsParsingStrategy(base);
         TimeExtractingParsingStrategy<Graph> timeExtractor = new TimeExtractingParsingStrategy<>(0, ",", jenaRDFParser);
         ParsingResult<Graph> parsedResult = timeExtractor.parseAndAddTime(message);
         Graph parsedGraph = parsedResult.getResult();

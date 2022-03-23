@@ -1,4 +1,4 @@
-package org.streamreasoning.rsp4j.wspbook.processing.solution;
+package org.streamreasoning.rsp4j.wspbook.locationscenario.assignment;
 
 import org.apache.commons.rdf.api.Graph;
 import org.streamreasoning.rsp4j.operatorapi.ContinuousProgram;
@@ -44,7 +44,7 @@ import java.util.List;
  *                       FILTER(?s3 = ?s || ?s3 = ?s2).
  *                    }
  */
-public class AbstractionSolution {
+public class AbstractionAssignment {
 
   public static void main(String[] args) throws InterruptedException {
     // Setup the stream generator
@@ -121,24 +121,24 @@ public class AbstractionSolution {
     prefixes.addPrefix("","http://rsp4j.io/covid/");
 
     // Definition of the R2R operators
-    // BGP for window 1
+    // TODO: define the BGP for window 1
     BGP bgp = BGP.createWithPrefixes(prefixes)
-            .addTP("?s", ":isIn", "?o")
+            .addTP("?s", "?p", "?o")
             .build();
-    // BGP for window 2
+    // TODO: define the BGP for window 2
     BGP bgp2 = BGP.createWithPrefixes(prefixes)
-            .addTP("?s2", ":isWith", "?s")
+            .addTP("?s", "?p", "?o")
             .build();
-    // BGP for window 3
-    // ?testResult a covid:TestResultPost; covid:who ?s3; covid:hasResult covid:positive
+    // TODO: define the BGP for window 3
     BGP bgp3 = BGP.createWithPrefixes(prefixes)
-            .addTP("?testResult", "a", ":TestResultPost")
-            .addTP("?testResult", ":who", "?s3")
-            .addTP("?testResult", ":hasResult", ":positive")
+            .addTP("?s", "?p", "?o")
+
             .build();
-    //Filter definition for FILTER(?s3 = ?s || ?s3 = ?s2).
-    Filter<Binding> filter = new Filter<>(b->b.value("?s3").equals(b.value("?s")) ||
-            b.value("?s3").equals(b.value("?s2")));
+    //TODO: define the Filter definition for FILTER(?s3 = ?s || ?s3 = ?s2).
+    // TIP: Binding objects contain the values that our bound to a certain variable.
+    //      You can retrieve the bound value by calling the value-method
+    //      For example: binding.value("?s")
+    Filter<Binding> filter = new Filter<>(b->true);
 
     // Create the RSP4J Task and Continuous Program that counts the number of s variables
     TaskOperatorAPIImpl<Graph, Graph, Binding, Binding> t =

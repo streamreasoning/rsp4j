@@ -5,7 +5,7 @@ import org.streamreasoning.rsp4j.io.sources.HTTPPullSource;
 import org.streamreasoning.rsp4j.io.utils.BufferedConsumer;
 import org.streamreasoning.rsp4j.io.utils.ParsingStrategyTest;
 import org.streamreasoning.rsp4j.io.utils.RDFBase;
-import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFParsingStrategy;
+import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFCommonsParsingStrategy;
 import spark.Spark;
 
 import static org.junit.Assert.assertNotEquals;
@@ -21,7 +21,7 @@ public class HTTPPullTest {
             return "<http://test/subject> <http://test/property> <http://test/object>.";
         });
         // create http pull source
-        JenaRDFParsingStrategy parsingStrategy = new JenaRDFParsingStrategy(RDFBase.NT);
+        JenaRDFCommonsParsingStrategy parsingStrategy = new JenaRDFCommonsParsingStrategy(RDFBase.NT);
         HTTPPullSource<Graph> pullSource = new HTTPPullSource<Graph>("http://localhost:9000/" + pathName, 100, parsingStrategy);
         Thread.sleep(100);
         pullSource.stream();

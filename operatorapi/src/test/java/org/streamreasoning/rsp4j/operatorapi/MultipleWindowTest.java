@@ -22,7 +22,7 @@ import org.streamreasoning.rsp4j.api.secret.time.TimeImpl;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import org.streamreasoning.rsp4j.io.sources.FileSource;
 import org.streamreasoning.rsp4j.io.utils.RDFBase;
-import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFParsingStrategy;
+import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFCommonsParsingStrategy;
 import org.streamreasoning.rsp4j.yasper.content.GraphContentFactory;
 import org.streamreasoning.rsp4j.yasper.examples.RDFStream;
 import org.streamreasoning.rsp4j.yasper.querying.operators.Rstream;
@@ -372,7 +372,7 @@ public class MultipleWindowTest {
         Time instance = new TimeImpl(0);
 
         // create parsing strategy
-        JenaRDFParsingStrategy parsingStrategy = new JenaRDFParsingStrategy(RDFBase.NT);
+        JenaRDFCommonsParsingStrategy parsingStrategy = new JenaRDFCommonsParsingStrategy(RDFBase.NT);
         // create file source to read the newly created file
         FileSource<Graph> stream1 = new FileSource<Graph>(streamURL.getPath(), 1000, parsingStrategy);
         FileSource<Graph> stream2 = new FileSource<Graph>(streamURL.getPath(), 1000, parsingStrategy);
@@ -430,7 +430,7 @@ public class MultipleWindowTest {
         Time instance = new TimeImpl(0);
 
         // create parsing strategy
-        JenaRDFParsingStrategy parsingStrategy = new JenaRDFParsingStrategy(RDFBase.N3);
+        JenaRDFCommonsParsingStrategy parsingStrategy = new JenaRDFCommonsParsingStrategy(RDFBase.N3);
         // create file source to read the newly created file
         RDFStream stream = new RDFStream("http://test/stream");
 

@@ -31,6 +31,10 @@
                     <groupId>com.github.jsonld-java</groupId>
                     <artifactId>jsonld-java</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.apache.jena</groupId>
+                    <artifactId>jena-osgi</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <!-- version 0.11.1 of jsonld-java gives problems -->
@@ -49,7 +53,17 @@
             <artifactId>api</artifactId>
             <version>${rsp4j.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-arq</artifactId>
+            <version>3.14.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.jsonld-java</groupId>
+                    <artifactId>jsonld-java</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <!--<dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
