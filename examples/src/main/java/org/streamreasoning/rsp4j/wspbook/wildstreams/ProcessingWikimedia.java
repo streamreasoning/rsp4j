@@ -28,13 +28,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+/***
+ * This example will show you how to process live data from Wikimedia streams.
+ */
 public class ProcessingWikimedia {
 
     public static void main(String[] args) throws IOException, ConfigurationException {
-
+        // First a new stream is opened that fetches the data from wikimedia
         SSESource<String> sseSource = new SSESource("https://stream.wikimedia.org/v2/stream/recentchange",1000);
         sseSource.addRequestOptions("Accept","application/json");
         sseSource.stream();
+        // Next the RML mapping is defined that converts the raw JSON data to RDF triples
         String rmlMapping =
         ""
             + "@prefix : <http://vocab.org/transit/terms/>.\n"
@@ -114,52 +118,27 @@ public class ProcessingWikimedia {
         // Map the Stream with CSV Strings to NT Strings using the RML Mapper
         // We need to to define the URL of the result stream
         DataStreamImpl<String> mappedStream = sseSource.map(mapper::apply, "http://example.org/test/mapped");
-
-       // JenaRDFCommonsParsingStrategy jenaParser = new JenaRDFCommonsParsingStrategy(RDFBase.NT);
-//        DataStreamImpl<Graph> rdfStream =  mappedStream.map(jenaParser::parse, "http://example.org/test/rdf");
-//        rdfStream.addConsumer((e, t) -> System.out.println(e));
-//
-//        // Define the query that checks the different types of data in the DBPedia Live Stream
-//        ContinuousQuery<Graph, Graph, Binding, Binding> query =
-//                TPQueryFactory.parse(
-//                        "PREFIX : <http://rsp4j.io/covid/> "
-//                                + " PREFIX rsp4j: <http://rsp4j.io/> "
-//                                + "REGISTER RSTREAM <http://out/stream> AS "
-//                                + "SELECT ?user  "
-//                                + " "
-//                                + " FROM NAMED WINDOW rsp4j:window ON <http://example.org/test/rdf> [RANGE PT1S STEP PT1S] "
-//
-//                                + "WHERE {"
-//                                + "   WINDOW rsp4j:window { ?s <http://vocab.org/transit/terms/user> ?user .}"
-//
-//                                + "} ");
-//
-//        // Create the RSP4J Task and Continuous Program
-//        TaskOperatorAPIImpl<Graph, Graph, Binding, Binding> t =
-//                new QueryTaskOperatorAPIImpl.QueryTaskBuilder().fromQuery(query).build();
-//
-//        ContinuousProgram<Graph, Graph, Binding, Binding> cp =
-//                new ContinuousProgram.ContinuousProgramBuilder()
-//                        .in(rdfStream)
-//                        .addTask(t)
-//                        .out(query.getOutputStream())
-//                        .addJoinAlgorithm(new HashJoinAlgorithm())
-//                        .build();
-//        // Add the Consumer to the stream
-//        query.getOutputStream().addConsumer((el, ts) -> System.out.println(el + " @ " + ts));
+        // We map the RDF stream to a stream of internal graph objects
         DataStreamImpl<org.apache.jena.graph.Graph> rdfStream =  mappedStream.map(e->parse(e), "http://example.org/test/rdf");
-    mappedStream.addConsumer((e, t) -> System.out.println(e));
+
+        mappedStream.addConsumer((e, t) -> System.out.println(e));
+        // we define the RSP-QL query to process the data stream
         String rspqlQuery =
                 "PREFIX gdelt: <http://gdelt.org/vocab/>\n"
                         + "PREFIX xsd:   <http://www.w3.org/2001/XMLSchema#>\n"
                         + "PREFIX :   <https://www.geldt.org/stream#>\n"
                         + "REGISTER RSTREAM <http://out/stream> AS\n"
-                        + "SELECT ?user (COUNT(?event) AS ?count) \n"
-                        + "FROM NAMED WINDOW <w> ON <http://example.org/test/rdf> [RANGE PT10S STEP PT1S]\t\n"
+
+                        + "Select ?wiki ?count "
+                        + "FROM NAMED WINDOW <w> ON <http://example.org/test/rdf> [RANGE PT60S STEP PT10S]\t\n"
+                        + " WHERE { {"
+                        + "SELECT ?wiki (COUNT(?event) AS ?count) \n"
                         + "WHERE{\n"
-                        + " WINDOW <w> {   ?event <http://vocab.org/transit/terms/user> ?user"
+                        + " WINDOW <w> {   ?event <http://vocab.org/transit/terms/wiki> ?wiki"
                         + "    }  \n"
-                        + "} GROUP BY ?user ";
+                        + "} GROUP BY ?wiki} " +
+                        " FILTER(?count >2) } Order By DESC(?count) ";
+        // We define the CSPARQL 2.0 engine
         URL resource = ProcessingGDELT.class.getResource("/csparql.properties");
         SDSConfiguration config = new SDSConfiguration(resource.getPath());
         EngineConfiguration ec = EngineConfiguration.loadConfig("/csparql.properties");
@@ -197,6 +176,6 @@ public class ProcessingWikimedia {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return null;
+        return dataModel.getGraph();
     }
 }
