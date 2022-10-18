@@ -44,7 +44,7 @@
         <dependency>
             <groupId>org.streamreasoning.rsp4j</groupId>
             <artifactId>mapping</artifactId>
-            <version>1.0.1</version>
+            <version>${rsp4j.version}</version>
             <scope>compile</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
