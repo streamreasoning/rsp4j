@@ -21,6 +21,7 @@
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
+
     <dependencies>
         <dependency>
             <groupId>com.github.pbonte</groupId>
@@ -28,10 +29,15 @@
             <version>1.0.3</version>
         </dependency>
         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.streamreasoning.rsp4j</groupId>
             <artifactId>examples</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
+            <version>1.0.1</version>
         </dependency>
     </dependencies>
 </project>

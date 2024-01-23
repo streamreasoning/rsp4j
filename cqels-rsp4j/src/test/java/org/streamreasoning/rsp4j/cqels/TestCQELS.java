@@ -30,7 +30,7 @@ public class TestCQELS {
 
         CQELSEngineRSP4J cqels = new CQELSEngineRSP4J();
         cqels.register(inputStream);
-        cqels.setSelectOutput(outputStream);
+        DataStream<Binding> bindingDataStream = cqels.setSelectOutput(outputStream);
 
         ContinuousQuery<Graph, Binding, Binding, Binding> cq = cqels.parseCQELSSelect(query1);
 
