@@ -109,6 +109,11 @@ public class R2ROperatorSPARQL implements RelationToRelationOperator<SolutionMap
     }
 
     @Override
+    public String getQueryString() {
+        return null;
+    }
+
+    @Override
     public ResultSet execSelect() {
         return execution.execSelect();
     }

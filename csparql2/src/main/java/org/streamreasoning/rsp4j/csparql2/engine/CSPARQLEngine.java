@@ -47,7 +47,7 @@ public class CSPARQLEngine extends EsperRSPEngine<Graph> implements QueryObserve
     }
 
     @Override
-    public ContinuousQueryExecution<Graph, Graph, SolutionMapping<Binding>,SolutionMapping<Binding>> register(RSPQLJenaQuery continuousQuery) {
+    public ContinuousQueryExecution<Graph, Graph, SolutionMapping<Binding>, SolutionMapping<Binding>> register(RSPQLJenaQuery continuousQuery) {
         try {
             return register(continuousQuery, SDSConfiguration.getDefault());
         } catch (ConfigurationException e) {
@@ -56,7 +56,7 @@ public class CSPARQLEngine extends EsperRSPEngine<Graph> implements QueryObserve
     }
 
     @Override
-    public ContinuousQueryExecution<Graph, Graph, SolutionMapping<Binding>,SolutionMapping<Binding>> register(String s) {
+    public ContinuousQueryExecution<Graph, Graph, SolutionMapping<Binding>, SolutionMapping<Binding>> register(String s) {
         try {
             return register(s, SDSConfiguration.getDefault());
         } catch (ConfigurationException e) {
@@ -65,7 +65,7 @@ public class CSPARQLEngine extends EsperRSPEngine<Graph> implements QueryObserve
     }
 
     @Override
-    public ContinuousQueryExecution<Graph, Graph, SolutionMapping<Binding>,SolutionMapping<Binding>> register(String q, SDSConfiguration queryConfiguration) {
+    public ContinuousQueryExecution<Graph, Graph, SolutionMapping<Binding>, SolutionMapping<Binding>> register(String q, SDSConfiguration queryConfiguration) {
         log.info("Parsing Query [" + q + "]");
         try {
             return register(QueryFactory.parse(base_uri, q), queryConfiguration);
@@ -75,13 +75,12 @@ public class CSPARQLEngine extends EsperRSPEngine<Graph> implements QueryObserve
     }
 
 
-    public ContinuousQueryExecution<Graph, Graph, SolutionMapping<Binding>,SolutionMapping<Binding>> register(RSPQLJenaQuery q, SDSConfiguration c) {
+    public ContinuousQueryExecution<Graph, Graph, SolutionMapping<Binding>, SolutionMapping<Binding>> register(RSPQLJenaQuery q, SDSConfiguration c) {
 
         SDSManagerImpl builder = new SDSManagerImpl(
                 this,
                 q,
                 this.time,
-                this.base_uri,
                 this.report,
                 this.responseFormat,
                 this.enabled_recursion,
@@ -92,7 +91,6 @@ public class CSPARQLEngine extends EsperRSPEngine<Graph> implements QueryObserve
                 this.maintenance,
                 c.getTboxLocation(),
                 this.entailment);
-
 
 
         return save(q, builder.build(), builder.getContinuousQueryExecution());

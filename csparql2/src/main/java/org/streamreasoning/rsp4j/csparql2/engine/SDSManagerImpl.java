@@ -1,17 +1,9 @@
 package org.streamreasoning.rsp4j.csparql2.engine;
 
-import org.streamreasoning.rsp4j.csparql2.operators.EsperGGWindowOperator;
-import org.streamreasoning.rsp4j.csparql2.operators.R2ROperatorSPARQL;
-import org.streamreasoning.rsp4j.csparql2.operators.R2ROperatorSPARQLEnt;
-import org.streamreasoning.rsp4j.csparql2.syntax.RSPQLJenaQuery;
-import org.streamreasoning.rsp4j.esper.engine.esper.StreamRegistrationService;
-import org.streamreasoning.rsp4j.esper.querying.Entailment;
-import org.streamreasoning.rsp4j.esper.sds.SDSImpl;
-import org.streamreasoning.rsp4j.esper.sds.tv.TimeVaryingStatic;
-
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.graph.Graph;
+import org.apache.jena.irix.IRIs;
 import org.apache.jena.mem.GraphMem;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -20,7 +12,6 @@ import org.apache.jena.rdf.model.impl.InfModelImpl;
 import org.apache.jena.reasoner.InfGraph;
 import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.reasoner.ReasonerRegistry;
-import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.graph.GraphFactory;
 import org.streamreasoning.rsp4j.api.RDFUtils;
@@ -39,6 +30,14 @@ import org.streamreasoning.rsp4j.api.sds.SDS;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
 import org.streamreasoning.rsp4j.api.stream.data.DataStream;
+import org.streamreasoning.rsp4j.csparql2.operators.EsperGGWindowOperator;
+import org.streamreasoning.rsp4j.csparql2.operators.R2ROperatorSPARQL;
+import org.streamreasoning.rsp4j.csparql2.operators.R2ROperatorSPARQLEnt;
+import org.streamreasoning.rsp4j.csparql2.syntax.RSPQLJenaQuery;
+import org.streamreasoning.rsp4j.esper.engine.esper.StreamRegistrationService;
+import org.streamreasoning.rsp4j.esper.querying.Entailment;
+import org.streamreasoning.rsp4j.esper.sds.SDSImpl;
+import org.streamreasoning.rsp4j.esper.sds.tv.TimeVaryingStatic;
 
 import java.util.List;
 import java.util.Map;
@@ -48,11 +47,9 @@ import java.util.stream.Collectors;
  * Created by Riccardo on 05/09/2017.
  */
 @Log4j
-public class SDSManagerImpl  {
+public class SDSManagerImpl {
 
     private final RSPQLJenaQuery query;
-
-    private final IRIResolver resolver;
 
     private final Report report;
     private final String responseFormat;
@@ -81,11 +78,10 @@ public class SDSManagerImpl  {
     private String tboxLocation;
     private DataStream<Graph> out;
 
-    public SDSManagerImpl(CSPARQLEngine CSPARQLEngine, RSPQLJenaQuery query, Time time, String baseUri, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, StreamRegistrationService stream_registration_service, Maintenance sdsMaintainance, String tboxLocation, Entailment et) {
+    public SDSManagerImpl(CSPARQLEngine CSPARQLEngine, RSPQLJenaQuery query, Time time, Report report, String responseFormat, Boolean enabled_recursion, Boolean usingEventTime, ReportGrain reportGrain, Tick tick, StreamRegistrationService stream_registration_service, Maintenance sdsMaintainance, String tboxLocation, Entailment et) {
         this.CSPARQLEngine = CSPARQLEngine;
         this.query = query;
         this.time = time;
-        this.resolver = IRIResolver.create(baseUri);
         this.report = report;
         this.responseFormat = responseFormat;
         this.enabled_recursion = enabled_recursion;
@@ -130,7 +126,7 @@ public class SDSManagerImpl  {
                 Graph staticGraph = GraphFactory.createGraphMem();
                 // load static data
                 StmtIterator stmtIt = m.listStatements();
-                while(stmtIt.hasNext()){
+                while (stmtIt.hasNext()) {
                     staticGraph.add(stmtIt.nextStatement().asTriple());
                 }
                 this.sds.add(new TimeVaryingStatic<>(sds, staticGraph));
@@ -152,7 +148,7 @@ public class SDSManagerImpl  {
             WindowNode wo = e.getKey();
             DataStream s = e.getValue();
 
-            String key = this.resolver.resolveToString(s.getName());
+            String key = IRIs.resolve(s.getName());
             if (!registeredStreams.containsKey(s.getName())) {
                 throw new StreamRegistrationException(s.getName());
             } else {
@@ -179,19 +175,19 @@ public class SDSManagerImpl  {
 
         StreamOperator r2S = query.getR2S() != null ? query.getR2S() : StreamOperator.RSTREAM;
 
-        RelationToRelationOperator<SolutionMapping<Binding>,SolutionMapping<Binding>> r2r = reasoner != null ?
-                new R2ROperatorSPARQLEnt(query, reasoner, sds, resolver.getBaseIRIasString()) :
-                new R2ROperatorSPARQL(query, sds, resolver.getBaseIRIasString());
+        RelationToRelationOperator<SolutionMapping<Binding>, SolutionMapping<Binding>> r2r = reasoner != null ?
+                new R2ROperatorSPARQLEnt(query, reasoner, sds, IRIs.getBaseStr()) :
+                new R2ROperatorSPARQL(query, sds, IRIs.getBaseStr());
 
-        RelationToStreamOperator<SolutionMapping<Binding>,SolutionMapping<Binding>> s2r = ContinuousQueryExecutionFactory.getToStreamOperator(r2S);
+        RelationToStreamOperator<SolutionMapping<Binding>, SolutionMapping<Binding>> s2r = ContinuousQueryExecutionFactory.getToStreamOperator(r2S);
 
-        this.sds.addObserver(this.cqe = new JenaContinuousQueryExecution(resolver, out, query, sds, r2r, s2r, windows));
+        this.sds.addObserver(this.cqe = new JenaContinuousQueryExecution(out, query, sds, r2r, s2r, windows));
 
         return sds;
 
     }
 
-    public ContinuousQueryExecution<Graph, Graph, SolutionMapping<Binding>,SolutionMapping<Binding>> getContinuousQueryExecution() {
+    public ContinuousQueryExecution<Graph, Graph, SolutionMapping<Binding>, SolutionMapping<Binding>> getContinuousQueryExecution() {
         return cqe;
     }
 

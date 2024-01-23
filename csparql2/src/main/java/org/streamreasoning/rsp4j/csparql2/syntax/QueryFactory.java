@@ -5,7 +5,6 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.DefaultErrorStrategy;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.apache.jena.riot.system.IRIResolver;
 import org.streamreasoning.rsp4j.api.querying.syntax.CaseChangingCharStream;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLLexer;
 import org.streamreasoning.rsp4j.api.querying.syntax.RSPQLParser;
@@ -38,7 +37,7 @@ public class QueryFactory {
         parser.addErrorListener(listener);
         ParseTree tree = parser.queryUnit();
 
-        RSPQLJenaQuery query = new RSPQLJenaQuery(IRIResolver.create(baseUri));
+        RSPQLJenaQuery query = new RSPQLJenaQuery(baseUri);
         RSPQLJenaVisitor visitor = new RSPQLJenaVisitor(query);
         visitor.visit(tree);
 

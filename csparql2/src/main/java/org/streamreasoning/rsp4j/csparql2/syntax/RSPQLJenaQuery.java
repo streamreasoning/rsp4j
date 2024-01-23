@@ -5,10 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
+import org.apache.jena.irix.IRIs;
+import org.apache.jena.irix.IRIx;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryVisitor;
 import org.apache.jena.query.Syntax;
-import org.apache.jena.riot.system.IRIResolver;
 import org.streamreasoning.rsp4j.api.enums.StreamOperator;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
@@ -33,7 +34,7 @@ public class RSPQLJenaQuery extends Query implements ContinuousQuery {
     public static String ISTREAM = "ISTREAM";
     public static String DSTREAM = "DSTREAM";
     public static String defaultStreamType = RSTREAM;
-    private IRIResolver stream_resolver;
+    private IRIx stream_resolver;
 
     private String streamType = defaultStreamType;
     private String outputStreamUri;
@@ -53,13 +54,12 @@ public class RSPQLJenaQuery extends Query implements ContinuousQuery {
         return true;
     }
 
-    public RSPQLJenaQuery(IRIResolver resolver) {
-        super.setResolver(resolver);
-        this.stream_resolver = IRIResolver.create(resolver.getBaseIRIasString() + "streams/");
+    public RSPQLJenaQuery(String baseuri) {
+        this.stream_resolver = IRIx.create(baseuri + "/streams/");
     }
 
     public void addNamedWindow(Node windowUri, Node streamUri, Duration range, Duration step) {
-        streamUri = NodeFactory.createURI(stream_resolver.resolveToString(streamUri.toString()));
+        streamUri = NodeFactory.createURI(IRIs.resolve(streamUri.getURI()));
         NamedWindow namedWindow = new NamedWindow(this, windowUri, streamUri, NamedWindow.LOGICAL_WINDOW);
         namedWindow.setLogicalRange(range);
         namedWindow.setLogicalStep(step);
@@ -68,7 +68,7 @@ public class RSPQLJenaQuery extends Query implements ContinuousQuery {
     }
 
     public void addNamedWindow(Node windowUri, Node streamUri, int range, int step) {
-        streamUri = NodeFactory.createURI(stream_resolver.resolveToString(streamUri.toString()));
+        streamUri = NodeFactory.createURI(IRIs.resolve(streamUri.getURI()));
         NamedWindow namedWindow = new NamedWindow(this, windowUri, streamUri, NamedWindow.PHYSICAL_WINDOW);
         namedWindow.setPhysicalRange(range);
         namedWindow.setPhysicalStep(step);

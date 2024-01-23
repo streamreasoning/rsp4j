@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 @Log4j
-public class R2ROperatorSPARQLEnt implements RelationToRelationOperator<SolutionMapping<Binding>,SolutionMapping<Binding>>, QueryExecution {
+public class R2ROperatorSPARQLEnt implements RelationToRelationOperator<SolutionMapping<Binding>, SolutionMapping<Binding>>, QueryExecution {
 
     private final RSPQLJenaQuery query;
     private final SDS<Graph> sds;
@@ -78,7 +78,8 @@ public class R2ROperatorSPARQLEnt implements RelationToRelationOperator<Solution
 
     @Override
     public SolutionMapping<SolutionMapping<Binding>> createSolutionMapping(SolutionMapping<Binding> result) {
-        throw new UnsupportedOperationException("createSolutionMapping not implemented");    }
+        throw new UnsupportedOperationException("createSolutionMapping not implemented");
+    }
 
     private List<Binding> getSolutionSet(ResultSet results) {
 
@@ -112,6 +113,11 @@ public class R2ROperatorSPARQLEnt implements RelationToRelationOperator<Solution
     @Override
     public Query getQuery() {
         return query;
+    }
+
+    @Override
+    public String getQueryString() {
+        return query.getSPARQL();
     }
 
     @Override

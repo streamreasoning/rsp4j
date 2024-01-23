@@ -1,7 +1,6 @@
 package org.streamreasoning.rsp4j.csparql2.sysout;
 
 import com.github.jsonldjava.core.JsonLdOptions;
-import org.streamreasoning.rsp4j.esper.querying.results.SolutionMappingImpl;
 import lombok.extern.log4j.Log4j;
 import org.apache.jena.atlas.io.IndentedWriter;
 import org.apache.jena.graph.Node;
@@ -12,7 +11,7 @@ import org.apache.jena.riot.JsonLDWriteContext;
 import org.apache.jena.riot.RDFFormat;
 import org.apache.jena.riot.system.PrefixMap;
 import org.apache.jena.riot.system.PrefixMapStd;
-import org.apache.jena.riot.writer.JsonLDWriter;
+import org.apache.jena.riot.writer.JsonLD11Writer;
 import org.apache.jena.sparql.algebra.Table;
 import org.apache.jena.sparql.core.DatasetGraphFactory;
 import org.apache.jena.sparql.core.Var;
@@ -23,6 +22,7 @@ import org.apache.jena.sparql.resultset.RDFOutput;
 import org.apache.jena.sparql.serializer.SerializationContext;
 import org.apache.jena.sparql.util.FmtUtils;
 import org.streamreasoning.rsp4j.api.format.QueryResultFormatter;
+import org.streamreasoning.rsp4j.esper.querying.results.SolutionMappingImpl;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
@@ -35,7 +35,7 @@ import java.util.Observer;
 @Log4j
 public abstract class SelectResponseDefaultFormatter extends QueryResultFormatter implements Observer {
 
-    private JsonLDWriter jsonLDWriter = new JsonLDWriter(RDFFormat.JSONLD_FLATTEN_PRETTY);
+    private JsonLD11Writer jsonLDWriter = new JsonLD11Writer(RDFFormat.JSONLD_FLATTEN_PRETTY);
     private long last_result = -1L;
     private PrefixMap pm = new PrefixMapStd();
     private JsonLDWriteContext context = new JsonLDWriteContext();

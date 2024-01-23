@@ -1,7 +1,6 @@
 package org.streamreasoning.rsp4j.csparql2.syntax;
 
 
-
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.TypeMapper;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
@@ -32,7 +31,7 @@ import java.util.List;
 /**
  * This parser class is based on the RSP-QL syntax described using ANTRL4. The parse tree visitor maps the static
  * syntax parts of the syntax to a Jena query.
- *
+ * <p>
  * The SPARQLJenaVisitor currently has the following known limitations:
  * - No support for complex values in collections e.g. SELECT * WHERE { ?s ?p ( [ a <test> ] ) }
  */
@@ -41,12 +40,14 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
     private Query rootQuery;
     private Query query;
 
-    public SPARQL11JenaVisitor(Query query){
+    public SPARQL11JenaVisitor(Query query) {
         rootQuery = query;
         this.query = query;
     }
 
-    /** SPARQL 1.1 parser starts here **/
+    /**
+     * SPARQL 1.1 parser starts here
+     **/
 
     public Object visitBaseDecl(RSPQLParser.BaseDeclContext ctx) {
         rootQuery.setBaseURI(trimTags(ctx.IRIREF().getText()));
@@ -74,13 +75,13 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
 
     public Object visitConstructQuery(RSPQLParser.ConstructQueryContext ctx) {
         query.setQueryConstructType();
-        if(ctx.triplesTemplate() != null){
+        if (ctx.triplesTemplate() != null) {
             ElementTriplesBlock elt = (ElementTriplesBlock) ctx.triplesTemplate().accept(this);
             ElementGroup elg = new ElementGroup();
             elg.addElement(elt);
             query.setQueryPattern(elg);
             query.setConstructTemplate(new Template(elt.getPattern()));
-            ctx.datasetClause().forEach(x -> { x.accept(this); });
+            ctx.datasetClause().forEach(x -> {x.accept(this);});
             ctx.solutionModifier().accept(this);
         } else {
             visitChildren(ctx);
@@ -91,7 +92,7 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
     public Element visitTriplesTemplate(RSPQLParser.TriplesTemplateContext ctx) {
         ElementTriplesBlock etb = new ElementTriplesBlock();
         RSPQLParser.TriplesTemplateContext t = ctx;
-        while(t != null){
+        while (t != null) {
             ElementTriplesBlock el = (ElementTriplesBlock) t.triplesSameSubject().accept(this);
             etb.getPattern().addAll(el.getPattern());
             t = t.triplesTemplate();
@@ -101,7 +102,7 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
 
     public Object visitConstructTemplate(RSPQLParser.ConstructTemplateContext ctx) {
         BasicPattern bgp = new BasicPattern();
-        if(ctx.quads().triplesTemplate() != null) {
+        if (ctx.quads().triplesTemplate() != null) {
             ctx.quads().triplesTemplate().forEach(triplesTemplate -> {
                 ElementTriplesBlock etb = (ElementTriplesBlock) triplesTemplate.accept(this);
                 etb.patternElts().forEachRemaining(bgp::add);
@@ -113,7 +114,7 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
 
     public Object visitConstructTriples(RSPQLParser.ConstructTriplesContext ctx) {
         ElementTriplesBlock el = (ElementTriplesBlock) ctx.triplesSameSubject().accept(this);
-        if(ctx.constructTriples() != null){
+        if (ctx.constructTriples() != null) {
             ElementTriplesBlock elb = (ElementTriplesBlock) ctx.constructTriples().accept(this);
             elb.patternElts().forEachRemaining(el::addTriple);
         }
@@ -138,9 +139,9 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
         query.setDistinct(ctx.distinct() != null);
         query.setReduced(ctx.reduced() != null);
         List<RSPQLParser.ResultVarContext> resultVars = ctx.resultVar();
-        for(RSPQLParser.ResultVarContext resultVar : resultVars){
+        for (RSPQLParser.ResultVarContext resultVar : resultVars) {
             String var = trimFirst(resultVar.var().getText());
-            if(resultVar.expression() != null){
+            if (resultVar.expression() != null) {
                 Expr expr = (Expr) resultVar.expression().accept(this);
                 query.addResultVar(var, expr);
             } else {
@@ -205,11 +206,12 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
 
     /**
      * This function could possibly be removed.
+     *
      * @param ctx
      * @return
      */
     public Element visitGroupGraphPattern(RSPQLParser.GroupGraphPatternContext ctx) {
-        if(ctx.subSelect() != null){
+        if (ctx.subSelect() != null) {
             return (Element) ctx.subSelect().accept(this);
         } else {
             return (Element) ctx.groupGraphPatternSub().accept(this);
@@ -218,12 +220,12 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
 
     public ElementGroup visitGroupGraphPatternSub(RSPQLParser.GroupGraphPatternSubContext ctx) {
         ElementGroup elg = new ElementGroup();
-        if(ctx.children == null) {
+        if (ctx.children == null) {
             return elg;
         }
-        ctx.children.forEach( x -> {
+        ctx.children.forEach(x -> {
             Element el = (Element) x.accept(this);
-            if(el != null){
+            if (el != null) {
                 elg.addElement(el);
             }
         });
@@ -251,7 +253,7 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
     }
 
     public Element visitGroupOrUnionGraphPattern(RSPQLParser.GroupOrUnionGraphPatternContext ctx) {
-        if(ctx.groupGraphPattern().size() > 1) {
+        if (ctx.groupGraphPattern().size() > 1) {
             ElementUnion el = new ElementUnion();
             for (RSPQLParser.GroupGraphPatternContext i : ctx.groupGraphPattern()) {
                 el.addElement((Element) i.accept(this));
@@ -263,7 +265,7 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
 
     public ElementPathBlock visitTriplesBlock(RSPQLParser.TriplesBlockContext ctx) {
         ElementPathBlock el = (ElementPathBlock) ctx.triplesSameSubjectPath().accept(this);
-        if(ctx.triplesBlock() != null){
+        if (ctx.triplesBlock() != null) {
             ElementPathBlock elb = (ElementPathBlock) ctx.triplesBlock().accept(this);
             elb.patternElts().forEachRemaining(el::addTriplePath);
         }
@@ -292,32 +294,32 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
             subject = (Node) ctx.varOrTerm().accept(this);
         }
 
-        if (ctx.propertyListPathNotEmpty() != null){
-            for(RSPQLParser.PropertyListPathContext p : ctx.propertyListPathNotEmpty().propertyListPath()){
+        if (ctx.propertyListPathNotEmpty() != null) {
+            for (RSPQLParser.PropertyListPathContext p : ctx.propertyListPathNotEmpty().propertyListPath()) {
                 Node property = null;
                 Path propertyPath = null;
 
                 // Property
-                if(p.verbSimple() != null) {
+                if (p.verbSimple() != null) {
                     property = (Node) p.verbSimple().accept(this);
-                } else if(p.verbPath() != null) {
+                } else if (p.verbPath() != null) {
                     propertyPath = (Path) p.verbPath().accept(this);
                 }
 
                 // Objects
-                for(RSPQLParser.ObjectPathContext o : p.objectListPath().objectPath()){
+                for (RSPQLParser.ObjectPathContext o : p.objectListPath().objectPath()) {
                     Object object = o.accept(this);
-                    if(object instanceof ElementPathBlock) {
+                    if (object instanceof ElementPathBlock) {
                         ElementPathBlock el = (ElementPathBlock) object;
                         bnodeBlocks.getPattern().addAll(el.getPattern());
                         object = el.getPattern().iterator().next().getSubject();
                     }
 
-                    if(property != null) {
+                    if (property != null) {
                         Triple triple = new Triple(subject, property, (Node) object);
                         elb.addTriple(triple);
                     }
-                    if(propertyPath != null) {
+                    if (propertyPath != null) {
                         TriplePath triplePath = new TriplePath(subject, propertyPath, (Node) object);
                         elb.addTriplePath(triplePath);
                     }
@@ -333,12 +335,12 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
 
         // varOrTerm  propertyListNotEmpty
         Node subject = (Node) ctx.varOrTerm().accept(this);
-        for(RSPQLParser.PropertyListContext p : ctx.propertyListNotEmpty().propertyList()){
+        for (RSPQLParser.PropertyListContext p : ctx.propertyListNotEmpty().propertyList()) {
             // Property
             Node property = (Node) p.verb().accept(this);
 
             // Objects
-            for(RSPQLParser.ObjectContext o : p.objectList().object()){
+            for (RSPQLParser.ObjectContext o : p.objectList().object()) {
                 Node object = (Node) o.accept(this);
                 Triple triple = new Triple(subject, property, object);
                 etb.addTriple(triple);
@@ -357,7 +359,7 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
     }
 
     public Object visitValuesClause(RSPQLParser.ValuesClauseContext ctx) {
-        if(ctx.dataBlock() != null) {
+        if (ctx.dataBlock() != null) {
             ElementData el = (ElementData) ctx.dataBlock().accept(this);
             query.setValuesDataBlock(el.getVars(), el.getRows());
         }
@@ -369,7 +371,7 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
 
         Var var = (Var) ctx.var().accept(this);
         el.add(var);
-        for(RSPQLParser.DataBlockValueContext dataBlock : ctx.dataBlockValue()){
+        for (RSPQLParser.DataBlockValueContext dataBlock : ctx.dataBlockValue()) {
             Node value = (Node) dataBlock.accept(this);
             Binding binding = BindingFactory.binding(var, value);
             el.add(binding);
@@ -380,19 +382,19 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
     public Element visitInlineDataFull(RSPQLParser.InlineDataFullContext ctx) {
         ElementData el = new ElementData();
 
-        for(RSPQLParser.VarContext v : ctx.var()){
+        for (RSPQLParser.VarContext v : ctx.var()) {
             el.add((Var) v.accept(this));
         }
 
         List<Var> vars = el.getVars();
-        for(RSPQLParser.DataBlockValuesContext dataBlock : ctx.dataBlockValues()){
+        for (RSPQLParser.DataBlockValuesContext dataBlock : ctx.dataBlockValues()) {
             Binding binding = null;
-            for(int i = 0; i < vars.size(); i++){
+            for (int i = 0; i < vars.size(); i++) {
                 Var var = vars.get(i % vars.size());
                 Node value = (Node) dataBlock.dataBlockValue(i).accept(this);
                 binding = BindingFactory.binding(binding, var, value);
             }
-            if(binding != null)
+            if (binding != null)
                 el.add(binding);
         }
         return el;
@@ -406,25 +408,25 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
         ElementPathBlock elb = new ElementPathBlock();
         Node subject = NodeFactory.createBlankNode();
 
-        for(RSPQLParser.PropertyListPathContext p : ctx.propertyListPathNotEmpty().propertyListPath()){
+        for (RSPQLParser.PropertyListPathContext p : ctx.propertyListPathNotEmpty().propertyListPath()) {
             Node property = null;
             Path propertyPath = null;
 
             // Property
-            if(p.verbSimple() != null) {
+            if (p.verbSimple() != null) {
                 property = (Node) p.verbSimple().accept(this);
-            } else if(p.verbPath() != null) {
+            } else if (p.verbPath() != null) {
                 propertyPath = (Path) p.verbPath().accept(this);
             }
 
             // Objects
-            for(RSPQLParser.ObjectPathContext o : p.objectListPath().objectPath()){
+            for (RSPQLParser.ObjectPathContext o : p.objectListPath().objectPath()) {
                 Node object = (Node) o.accept(this);
-                if(property != null) {
+                if (property != null) {
                     Triple triple = new Triple(subject, property, object);
                     elb.addTriple(triple);
                 }
-                if(propertyPath != null) {
+                if (propertyPath != null) {
                     TriplePath triplePath = new TriplePath(subject, propertyPath, object);
                     elb.addTriplePath(triplePath);
                 }
@@ -442,15 +444,15 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
         ElementPathBlock epb = new ElementPathBlock();
         Node current = NodeFactory.createBlankNode();
         int i = 0;
-        while(i < ctx.graphNodePath().size()){
+        while (i < ctx.graphNodePath().size()) {
             Object o = ctx.graphNodePath(i).accept(this);
-            if(o instanceof ElementPathBlock){
+            if (o instanceof ElementPathBlock) {
                 System.err.println("Complex values not yet supported in collections");
                 return epb;
             }
             epb.addTriple(new Triple(current, RDF.first.asNode(), (Node) o));
             i++;
-            if(ctx.graphNodePath().size() == i){
+            if (ctx.graphNodePath().size() == i) {
                 break;
             }
             Node rest = NodeFactory.createBlankNode();
@@ -462,9 +464,9 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
     }
 
     public Node visitIri(RSPQLParser.IriContext ctx) {
-        if(ctx.IRIREF() != null){
-            String uri =  trimTags(ctx.IRIREF().getText());
-            return  NodeFactory.createURI(uri);
+        if (ctx.IRIREF() != null) {
+            String uri = trimTags(ctx.IRIREF().getText());
+            return NodeFactory.createURI(uri);
         }
         return (Node) ctx.prefixedName().accept(this);
     }
@@ -486,8 +488,8 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
         return p;
     }
 
-    public Node visitBlankNode(RSPQLParser.BlankNodeContext ctx){
-        if(ctx.ANON() != null)
+    public Node visitBlankNode(RSPQLParser.BlankNodeContext ctx) {
+        if (ctx.ANON() != null)
             return NodeFactory.createBlankNode();
         return NodeFactory.createBlankNode(ctx.BLANK_NODE_LABEL().getText());
     }
@@ -501,17 +503,17 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
     }
 
     public Node visitNumericLiteralPositive(RSPQLParser.NumericLiteralPositiveContext ctx) {
-        if(ctx.INTEGER_POSITIVE() != null)
+        if (ctx.INTEGER_POSITIVE() != null)
             return NodeFactory.createLiteral(ctx.getText(), XSDDatatype.XSDinteger);
-        if(ctx.DECIMAL_POSITIVE() != null)
+        if (ctx.DECIMAL_POSITIVE() != null)
             return NodeFactory.createLiteral(ctx.getText(), XSDDatatype.XSDdecimal);
         return NodeFactory.createLiteral(ctx.getText(), XSDDatatype.XSDdouble);
     }
 
     public Node visitNumericLiteralUnsigned(RSPQLParser.NumericLiteralUnsignedContext ctx) {
-        if(ctx.INTEGER() != null)
+        if (ctx.INTEGER() != null)
             return NodeFactory.createLiteral(ctx.getText(), XSDDatatype.XSDinteger);
-        if(ctx.DECIMAL() != null)
+        if (ctx.DECIMAL() != null)
             return NodeFactory.createLiteral(ctx.getText(), XSDDatatype.XSDdecimal);
         return NodeFactory.createLiteral(ctx.getText(), XSDDatatype.XSDdouble);
     }
@@ -526,10 +528,10 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
 
     public Object visitRdfliteral(RSPQLParser.RdfliteralContext ctx) {
         String lex = trimQuotes(ctx.string().getText());
-        if(ctx.LANGTAG() != null){
+        if (ctx.LANGTAG() != null) {
             String lang = trimFirst(ctx.LANGTAG().toString());
             return NodeFactory.createLiteral(lex, lang);
-        } else if(ctx.iri() != null){
+        } else if (ctx.iri() != null) {
             String typeUri = ctx.iri().accept(this).toString();
             RDFDatatype type = TypeMapper.getInstance().getSafeTypeByName(typeUri);
             return NodeFactory.createLiteral(lex, type);
@@ -549,9 +551,9 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
 
     public Expr visitConditionalOrExpression(RSPQLParser.ConditionalOrExpressionContext ctx) {
         Expr expr1 = null;
-        for(RSPQLParser.ConditionalAndExpressionContext i : ctx.conditionalAndExpression()){
+        for (RSPQLParser.ConditionalAndExpressionContext i : ctx.conditionalAndExpression()) {
             Expr expr2 = (Expr) i.accept(this);
-            if(expr1 != null) {
+            if (expr1 != null) {
                 expr2 = new E_LogicalOr(expr1, expr2);
             }
             expr1 = expr2;
@@ -573,9 +575,9 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
 
     public Expr visitRelationalExpression(RSPQLParser.RelationalExpressionContext ctx) {
         Expr expr1 = null;
-        for(RSPQLParser.NumericExpressionContext i : ctx.numericExpression()){
+        for (RSPQLParser.NumericExpressionContext i : ctx.numericExpression()) {
             Expr expr2 = (Expr) i.accept(this);
-            if(expr1 != null) {
+            if (expr1 != null) {
                 String op = ctx.getChild(1).getText();
                 if (op.equals("=")) {
                     expr2 = new E_Equals(expr1, expr2);
@@ -583,7 +585,7 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
                     expr2 = new E_NotEquals(expr1, expr2);
                 } else if (op.equals("<")) {
                     expr2 = new E_LessThan(expr1, expr2);
-                }  else if (op.equals(">")) {
+                } else if (op.equals(">")) {
                     expr2 = new E_GreaterThan(expr1, expr2);
                 } else if (op.equals("<=")) {
                     expr2 = new E_LessThanOrEqual(expr1, expr2);
@@ -594,10 +596,10 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
             expr1 = expr2;
         }
 
-        if(ctx.expressionList() != null){
+        if (ctx.expressionList() != null) {
             ExprList exprList = (ExprList) ctx.expressionList().accept(this);
             String op = ctx.getChild(1).getText();
-            if(op.toUpperCase().equals("IN")){
+            if (op.toUpperCase().equals("IN")) {
                 expr1 = new E_OneOf(expr1, exprList);
             } else {
                 expr1 = new E_NotOneOf(expr1, exprList);
@@ -609,24 +611,24 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
     public Expr visitAdditiveExpression(RSPQLParser.AdditiveExpressionContext ctx) {
         Expr expr1 = (Expr) ctx.multiplicativeExpression().accept(this);
 
-        for(RSPQLParser.MultiExprContext i : ctx.multiExpr()){
+        for (RSPQLParser.MultiExprContext i : ctx.multiExpr()) {
             Expr expr2;
-            if(i.multiplicativeExpression() != null){
+            if (i.multiplicativeExpression() != null) {
                 expr2 = (Expr) i.multiplicativeExpression().accept(this);
                 // addObservable expr
                 String op = i.getChild(0).getText();
-                if(op.equals("+")){
+                if (op.equals("+")) {
                     expr1 = new E_Add(expr1, expr2);
-                } else if(op.equals("-")){
+                } else if (op.equals("-")) {
                     expr1 = new E_Subtract(expr1, expr2);
                 }
             } else {
-                if(i.numericLiteralPositive() != null){
+                if (i.numericLiteralPositive() != null) {
                     String s = trimFirst(i.numericLiteralPositive().getText());
                     Node n = NodeFactory.createLiteral(s, XSDDatatype.XSDinteger);
                     expr2 = ExprUtils.nodeToExpr(n);
                     expr1 = new E_Add(expr1, expr2);
-                } else if(i.numericLiteralNegative() != null){
+                } else if (i.numericLiteralNegative() != null) {
                     String s = trimFirst(i.numericLiteralNegative().getText());
                     Node n = NodeFactory.createLiteral(s, XSDDatatype.XSDinteger);
                     expr2 = ExprUtils.nodeToExpr(n);
@@ -640,9 +642,9 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
 
     public Expr visitMultiplicativeExpression(RSPQLParser.MultiplicativeExpressionContext ctx) {
         Expr expr1 = null;
-        for(RSPQLParser.UnaryExpressionContext i : ctx.unaryExpression()){
+        for (RSPQLParser.UnaryExpressionContext i : ctx.unaryExpression()) {
             Expr expr2 = (Expr) i.accept(this);
-            if(expr1 != null) {
+            if (expr1 != null) {
                 String op = ctx.getChild(1).getText();
                 if (op.equals("*")) {
                     expr2 = new E_Multiply(expr1, expr2);
@@ -657,13 +659,13 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
 
     public Expr visitUnaryExpression(RSPQLParser.UnaryExpressionContext ctx) {
         Expr expr = (Expr) ctx.primaryExpression().accept(this);
-        if(ctx.getChildCount() > 1) {
+        if (ctx.getChildCount() > 1) {
             String op = ctx.getChild(0).getText();
             if (op.equals("!")) {
                 return new E_LogicalNot(expr);
-            } else if(op.equals("+")) {
+            } else if (op.equals("+")) {
                 return new E_UnaryPlus(expr);
-            } else if(op.equals("-")) {
+            } else if (op.equals("-")) {
                 return new E_UnaryMinus(expr);
             }
         }
@@ -671,15 +673,15 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
     }
 
     public Expr visitPrimaryExpression(RSPQLParser.PrimaryExpressionContext ctx) {
-        if(ctx.brackettedExpression() != null) {
+        if (ctx.brackettedExpression() != null) {
             return (Expr) ctx.brackettedExpression().accept(this);
         }
-        if(ctx.builtInCall() != null) {
+        if (ctx.builtInCall() != null) {
             return (Expr) ctx.builtInCall().accept(this);
         }
-        if(ctx.iriOrFunction() != null) {
+        if (ctx.iriOrFunction() != null) {
             String iri = ctx.iriOrFunction().iri().accept(this).toString();
-            if(ctx.iriOrFunction().argList() != null) {
+            if (ctx.iriOrFunction().argList() != null) {
                 Args args = (Args) ctx.iriOrFunction().argList().accept(this);
                 if (args != null) {
                     return new E_Function(iri, args);
@@ -687,7 +689,7 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
             }
             return ExprUtils.nodeToExpr((Node) ctx.iriOrFunction().iri().accept(this));
         }
-        if(ctx.booleanLiteral() != null){
+        if (ctx.booleanLiteral() != null) {
             return ExprUtils.nodeToExpr((Node) ctx.booleanLiteral().accept(this));
         }
         return ExprUtils.nodeToExpr((Node) visitChildren(ctx));
@@ -695,20 +697,20 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
 
     public Args visitArgList(RSPQLParser.ArgListContext ctx) {
         Args args = new Args();
-        if(ctx.distinct() != null){
+        if (ctx.distinct() != null) {
             args.distinct = true;
         }
         ctx.expression().forEach(a -> {
             args.add((Expr) a.accept(this));
         });
-        if(args.size() == 0)
+        if (args.size() == 0)
             return null;
         return args;
     }
 
     public ExprList visitExpressionList(RSPQLParser.ExpressionListContext ctx) {
         ExprList exprList = new ExprList();
-        for(RSPQLParser.ExpressionContext i : ctx.expression()){
+        for (RSPQLParser.ExpressionContext i : ctx.expression()) {
             Expr expr = (Expr) i.accept(this);
             exprList.add(expr);
         }
@@ -719,10 +721,10 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
         Expr expr1 = (Expr) ctx.expression(0).accept(this);
         Expr expr2 = (Expr) ctx.expression(1).accept(this);
         Expr exprFlags = null;
-        if(ctx.expression().size() == 3){
+        if (ctx.expression().size() == 3) {
             exprFlags = (Expr) ctx.expression(2).accept(this);
         }
-        Expr e = new E_Regex(expr1, expr2, exprFlags) ;
+        Expr e = new E_Regex(expr1, expr2, exprFlags);
         return e;
     }
 
@@ -763,7 +765,7 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
 
         switch (op) {
             case "COUNT":
-                if(ctx.expression() != null) {
+                if (ctx.expression() != null) {
                     expr = (Expr) ctx.expression().accept(this);
                     agg = AggregatorFactory.createCountExpr(distinct, expr);
                 } else {
@@ -803,7 +805,7 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
         Expr expr1 = (Expr) ctx.expression(0).accept(this);
         Expr expr2 = (Expr) ctx.expression(1).accept(this);
         Expr expr3 = null;
-        if(ctx.expression().size() > 2){
+        if (ctx.expression().size() > 2) {
             expr3 = (Expr) ctx.expression(2).accept(this);
         }
         return new E_StrSubstring(expr1, expr2, expr3);
@@ -814,38 +816,31 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
         Expr expr2 = (Expr) ctx.expression(1).accept(this);
         Expr expr3 = (Expr) ctx.expression(2).accept(this);
         Expr expr4 = null;
-        if(ctx.expression().size() > 3){
+        if (ctx.expression().size() > 3) {
             expr3 = (Expr) ctx.expression(3).accept(this);
         }
         return new E_StrReplace(expr1, expr2, expr3, expr4);
     }
 
     public Expr visitBuiltInCall(RSPQLParser.BuiltInCallContext ctx) {
-        if(ctx.aggregate() != null){
+        if (ctx.aggregate() != null) {
             return (Expr) ctx.aggregate().accept(this);
-        }
-        else if(ctx.substringExpression() != null){
+        } else if (ctx.substringExpression() != null) {
             return (Expr) ctx.substringExpression().accept(this);
-        }
-        else if(ctx.strReplaceExpression() != null){
+        } else if (ctx.strReplaceExpression() != null) {
             return (Expr) ctx.strReplaceExpression().accept(this);
-        }
-        else if(ctx.regexExpression() != null){
+        } else if (ctx.regexExpression() != null) {
             return (Expr) ctx.regexExpression().accept(this);
-        }
-        else if(ctx.existsFunc() != null){
+        } else if (ctx.existsFunc() != null) {
             return (Expr) ctx.existsFunc().accept(this);
-        }
-        else if(ctx.notExistsFunc() != null){
+        } else if (ctx.notExistsFunc() != null) {
             return (Expr) ctx.notExistsFunc().accept(this);
-        }
-
-        else if(ctx.expression() != null){
+        } else if (ctx.expression() != null) {
             String op = ctx.getChild(0).getText().toUpperCase();
             Expr expr1, expr2, expr3;
             ExprList exprList;
 
-            switch (op){
+            switch (op) {
                 case "STR":
                     expr1 = (Expr) ctx.expression().get(0).accept(this);
                     return new E_Str(expr1);
@@ -869,11 +864,11 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
                     expr1 = (Expr) ctx.expression().get(0).accept(this);
                     return new E_URI(expr1);
                 case "BNODE":
-                    if(ctx.expression().size() > 0) {
+                    if (ctx.expression().size() > 0) {
                         expr1 = (Expr) ctx.expression().get(0).accept(this);
-                        return new E_BNode(expr1);
+                        return E_BNode.create(expr1);
                     }
-                    return new E_BNode();
+                    return E_BNode.create();
                 case "RAND":
                     return new E_Random();
                 case "ABS":
@@ -1009,19 +1004,19 @@ public class SPARQL11JenaVisitor extends RSPQLBaseVisitor {
         return null;
     }
 
-    public String trimTags(String s){
+    public String trimTags(String s) {
         return s.replaceAll("^<(.*)>$", "$1");
     }
 
-    public String trimQuotes(String s){
+    public String trimQuotes(String s) {
         return s.replaceAll("^['\"](.*)['\"]$", "$1");
     }
 
-    public String trimFirst(String s){
+    public String trimFirst(String s) {
         return s.replaceAll("^.(.*)$", "$1");
     }
 
-    public String trimLast(String s){
+    public String trimLast(String s) {
         return s.replaceAll("^(.*).$", "$1");
     }
 }
