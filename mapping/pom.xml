@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>rsp4j-parent</artifactId>
+        <groupId>org.streamreasoning.rsp4j</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>mapping</artifactId>
+    <version>${rsp4j.version}</version>
+    <properties>
+        <carml.version>0.4.0-beta-5</carml.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.taxonic.carml</groupId>
+            <artifactId>carml-engine</artifactId>
+            <version>${carml.version}</version>
+        </dependency>
+
+        <!-- Choose the resolvers to suit your need -->
+        <dependency>
+            <groupId>com.taxonic.carml</groupId>
+            <artifactId>carml-logical-source-resolver-jsonpath</artifactId>
+            <version>${carml.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.taxonic.carml</groupId>
+            <artifactId>carml-logical-source-resolver-xpath</artifactId>
+            <version>${carml.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.taxonic.carml</groupId>
+            <artifactId>carml-logical-source-resolver-csv</artifactId>
+            <version>${carml.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.streamreasoning.rsp4j</groupId>
+            <artifactId>api</artifactId>
+            <version>${rsp4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.streamreasoning.rsp4j</groupId>
+            <artifactId>io</artifactId>
+            <version>${rsp4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.12.4</version>
+        </dependency>
+
+    </dependencies>
+
+
+</project>

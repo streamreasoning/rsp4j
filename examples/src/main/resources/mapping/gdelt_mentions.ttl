@@ -1,0 +1,144 @@
+@prefix : <http://vocab.org/transit/terms/>.
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+@prefix rml: <http://semweb.mmlab.be/ns/rml#>.
+@prefix ql: <http://semweb.mmlab.be/ns/ql#>.
+@prefix gdelt: <http://gdelt.org/vocab/>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix wgs84_pos: <http://www.w3.org/2003/01/geo/wgs84_pos#>.
+@prefix carml: <http://carml.taxonic.com/carml/> .
+@prefix vocals: <http://w3id.org/rsp/vocals#> .
+
+<#GDELTMapping> a rr:TriplesMap ;
+  rml:logicalSource [
+    rml:source [
+       a carml:Stream ;
+       carml:streamName "GDELTStream" ;
+    ] ;
+    rml:referenceFormulation ql:CSV
+  ];
+
+  rr:subjectMap [
+    rr:template "http://gdelt.org/instance/{GLOBALEVENTID}";
+    rr:class gdelt:Mention
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate gdelt:mentionID;
+    rr:objectMap [
+      rml:reference "MentionIdentifier";
+      ]
+    ];
+
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:eventDateTime;
+      rr:objectMap [
+         rr:template "http://gdelt.com#{EventTimeDate}";
+        ]
+      ];
+
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:mentionDateTime;
+      rr:objectMap [
+         rr:template "http://gdelt.com#{MentionTimeDate}";
+        ]
+      ];
+
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:mentionType;
+      rr:objectMap [
+         rr:template "http://gdelt.org/vocab/{MentionType}";
+        ]
+      ];
+
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:mentionSource;
+      rr:objectMap [
+         rr:template "http://gdelt.org/vocab/{MentionSourceName}";
+        ]
+      ];
+
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:mentionSource;
+      rr:objectMap [
+         rml:reference "MentionSourceName";
+        ]
+      ];
+
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:sentenceID;
+      rr:objectMap [
+         rml:reference "SentenceID";
+        ]
+      ];
+
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:actorCharOffset;
+      rr:objectMap [
+         rml:reference "Actor1CharOffset";
+        ]
+      ];
+  rr:predicateObjectMap [
+      rr:predicate gdelt:actorCharOffset;
+      rr:objectMap [
+         rml:reference "Actor2CharOffset";
+        ]
+      ];
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:actionCharOffset;
+      rr:objectMap [
+         rml:reference "ActionCharOffset";
+        ]
+      ];
+
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:inRawText;
+      rr:objectMap [
+         rml:reference "InRawText";
+        ]
+      ];
+
+   rr:predicateObjectMap [
+       rr:predicate gdelt:confidence;
+       rr:objectMap [
+          rml:reference "Confidence";
+         ]
+       ];
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:mentionDocLen;
+      rr:objectMap [
+         rml:reference "MentionDocLen";
+        ]
+      ];
+
+   rr:predicateObjectMap [
+        rr:predicate gdelt:mentionDocTone;
+        rr:objectMap [
+           rml:reference "MentionDocTone";
+          ]
+        ];
+
+   rr:predicateObjectMap [
+       rr:predicate gdelt:mentionTranslationInfo;
+       rr:objectMap [
+         rml:reference "MentionDocTranslationInfo";
+         ]
+       ];
+
+   rr:predicateObjectMap [
+     rr:predicate gdelt:mentionExtas;
+     rr:objectMap [
+        rml:reference "Extras";
+       ]
+     ];
+
+.

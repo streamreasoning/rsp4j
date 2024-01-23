@@ -1,0 +1,480 @@
+@prefix : <http://vocab.org/transit/terms/>.
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+@prefix rml: <http://semweb.mmlab.be/ns/rml#>.
+@prefix ql: <http://semweb.mmlab.be/ns/ql#>.
+@prefix gdelt: <http://gdelt.org/vocab/>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix wgs84_pos: <http://www.w3.org/2003/01/geo/wgs84_pos#>.
+@prefix carml: <http://carml.taxonic.com/carml/> .
+@prefix vocals: <http://w3id.org/rsp/vocals#> .
+
+
+<source>  rml:source [
+                a carml:Stream ;
+                carml:streamName "GDELTStream" ;
+             ] ;
+             rml:referenceFormulation ql:CSV .
+
+<#GDELTMapping> a rr:TriplesMap ;
+  rml:logicalSource  <source>;
+  rr:subjectMap [
+    rr:template "http://gdelt.com/{GLOBALEVENTID}";
+    rr:class gdelt:Event;
+    rr:graphMap [ rr:template  "http://gdelt.time.com/{DATEADDED}" ]
+  ];
+
+  rr:predicateObjectMap [
+      rr:predicate rdf:type;
+      rr:objectMap [
+         rr:template "http://gdelt.com#{EventCode}";
+        ]
+      ];
+
+  rr:predicateObjectMap [
+        rr:predicate rdf:type;
+        rr:objectMap [
+          rr:template "http://gdelt.com#{EventRootCode}";
+          ]
+        ];
+
+  rr:predicateObjectMap [
+    rr:predicate gdelt:actor1;
+     rr:objectMap [ rr:parentTriplesMap <#Actor1TriplesMap> ];
+    ];
+
+  rr:predicateObjectMap [
+    rr:predicate gdelt:actor2;
+     rr:objectMap [ rr:parentTriplesMap <#Actor2TriplesMap> ];
+    ];
+
+
+      rr:predicateObjectMap [
+        rr:predicate gdelt:EventsourceURL;
+        rr:objectMap [
+          rml:reference "SOURCEURL";
+          ]
+        ];
+
+
+
+
+  rr:predicateObjectMap [
+        rr:predicate gdelt:eventMonthYear;
+        rr:objectMap [
+          rml:reference "MonthYear";
+          ]
+        ];
+
+  rr:predicateObjectMap [
+        rr:predicate gdelt:eventYear;
+        rr:objectMap [
+          rml:reference "Year";
+          ]
+        ];
+
+
+  rr:predicateObjectMap [
+        rr:predicate gdelt:eventYear;
+        rr:objectMap [
+          rml:reference "Year";
+          ]
+        ];
+
+  rr:predicateObjectMap [
+        rr:predicate gdelt:isRootEvent;
+        rr:objectMap [
+          rml:reference "IsRootEvent";
+          ]
+        ];
+
+
+  rr:predicateObjectMap [
+        rr:predicate gdelt:eventBaseCode;
+        rr:objectMap [
+          rml:reference "EventBaseCode";
+          ]
+        ];
+
+
+     rr:predicateObjectMap [
+           rr:predicate gdelt:quadClass;
+           rr:objectMap [
+             rml:reference "QuadClass";
+             ]
+           ];
+
+
+     rr:predicateObjectMap [
+           rr:predicate gdelt:goldsteinScale;
+           rr:objectMap [
+             rml:reference "GoldsteinScale";
+             ]
+           ];
+
+
+        rr:predicateObjectMap [
+              rr:predicate gdelt:mentionsNumber;
+              rr:objectMap [
+                rml:reference "NumMentions";
+                ]
+              ];
+
+
+         rr:predicateObjectMap [
+               rr:predicate gdelt:sourcesNumber;
+               rr:objectMap [
+                 rml:reference "NumSources";
+                 ]
+               ];
+
+
+         rr:predicateObjectMap [
+               rr:predicate gdelt:articlesNumber;
+               rr:objectMap [
+                 rml:reference "NumArticles";
+                 ]
+               ];
+
+
+         rr:predicateObjectMap [
+               rr:predicate gdelt:toneAverage;
+               rr:objectMap [
+                 rml:reference "AvgTone";
+                 ]
+               ];
+
+         rr:predicateObjectMap [
+                    rr:predicate gdelt:geoType;
+                    rr:objectMap [
+                      rml:reference "ActionGeo_Type";
+                      ]
+                    ];
+
+          rr:predicateObjectMap [
+                rr:predicate gdelt:geoFullName;
+                rr:objectMap [
+                  rml:reference "ActionGeo_FullName";
+                  ]
+                ];
+
+           rr:predicateObjectMap [
+                 rr:predicate gdelt:geoCountryCode;
+                 rr:objectMap [
+                   rml:reference "ActionGeo_CountryCode";
+                   ]
+                 ];
+
+
+          rr:predicateObjectMap [
+                rr:predicate gdelt:geoADM1Code;
+                rr:objectMap [
+                  rml:reference "ActionGeo_ADM1Code";
+                  ]
+                ];
+
+          rr:predicateObjectMap [
+                rr:predicate gdelt:geoADM2Code;
+                rr:objectMap [
+                  rml:reference "ActionGeo_ADM2Code";
+                  ]
+                ];
+
+           rr:predicateObjectMap [
+            rr:predicate gdelt:geoLNAG;
+            rr:objectMap [
+              rml:reference "ActionGeo_Long";
+              ]
+            ];
+
+
+          rr:predicateObjectMap [
+            rr:predicate gdelt:geoLAT;
+            rr:objectMap [
+              rml:reference "ActionGeo_Lat";
+              ]
+            ];
+
+          rr:predicateObjectMap [
+            rr:predicate gdelt:geoFeatureID;
+            rr:objectMap [
+              rml:reference "ActionGeo_FeatureID";
+              ]
+            ];
+
+  .
+
+  <#Actor1TriplesMap> rml:logicalSource <source> ;
+
+  rr:subjectMap [
+      rr:template "http://gdelt.com/actor/{Actor1Name}";
+      rr:class gdelt:Actor
+    ];
+
+
+  rr:predicateObjectMap [
+    rr:predicate gdelt:actorCode;
+    rr:objectMap [
+      rml:reference "Actor1Code";
+      ]
+    ];
+
+  rr:predicateObjectMap [
+    rr:predicate gdelt:actorName;
+    rr:objectMap [
+      rml:reference "Actor1Name";
+      ]
+    ];
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:actorCountry;
+      rr:objectMap [
+        rml:reference "Actor1CountryCode";
+        ]
+      ];
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:actorKnownGroup;
+      rr:objectMap [
+        rml:reference "Actor1KnownGroupCode";
+        ]
+      ];
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:actorEthnic;
+      rr:objectMap [
+        rml:reference "Actor1EthnicCode";
+        ]
+      ];
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:actorReligion;
+      rr:objectMap [
+        rml:reference "Actor1Religion1Code";
+        ]
+      ];
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:actorReligion;
+      rr:objectMap [
+        rml:reference "Actor1Religion2Code";
+        ]
+      ];
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:actorType;
+      rr:objectMap [
+        rml:reference "Actor1Type1Code";
+        ]
+      ];
+
+  rr:predicateObjectMap [
+        rr:predicate gdelt:actorType;
+        rr:objectMap [
+          rml:reference "Actor1Type2Code";
+          ]
+        ];
+
+  rr:predicateObjectMap [
+        rr:predicate gdelt:actorType;
+        rr:objectMap [
+          rml:reference "Actor1Type3Code";
+          ]
+        ];
+
+    rr:predicateObjectMap [
+               rr:predicate gdelt:geoType;
+               rr:objectMap [
+                 rml:reference "Actor1Geo_Type";
+                 ]
+               ];
+
+      rr:predicateObjectMap [
+            rr:predicate gdelt:geoFullName;
+            rr:objectMap [
+              rml:reference "Actor1Geo_FullName";
+              ]
+            ];
+
+      rr:predicateObjectMap [
+            rr:predicate gdelt:geoCountryCode;
+            rr:objectMap [
+              rml:reference "Actor1Geo_CountryCode";
+              ]
+            ];
+
+
+      rr:predicateObjectMap [
+            rr:predicate gdelt:geoADM1Code;
+            rr:objectMap [
+              rml:reference "Actor1Geo_ADM1Code";
+              ]
+            ];
+
+      rr:predicateObjectMap [
+            rr:predicate gdelt:geoADM2Code;
+            rr:objectMap [
+              rml:reference "Actor1Geo_ADM2Code";
+              ]
+            ];
+
+      rr:predicateObjectMap [
+            rr:predicate gdelt:geoLNAG;
+            rr:objectMap [
+              rml:reference "Actor1Geo_Long";
+              ]
+            ];
+
+      rr:predicateObjectMap [
+            rr:predicate gdelt:geoLAT;
+            rr:objectMap [
+              rml:reference "Actor1Geo_Lat";
+              ]
+            ];
+
+      rr:predicateObjectMap [
+            rr:predicate gdelt:geoFeatureID;
+            rr:objectMap [
+              rml:reference "Actor1Geo_FeatureID";
+              ]
+            ];
+
+  .
+
+   <#Actor2TriplesMap>
+   rml:logicalSource  <source> ;
+    rr:subjectMap [
+        rr:template "http://gdelt.com/actor/{Actor2Name}";
+        rr:class gdelt:Actor
+      ];
+
+  rr:predicateObjectMap [
+    rr:predicate gdelt:actorCode;
+    rr:objectMap [
+      rml:reference "Actor2Code";
+      ]
+    ];
+
+  rr:predicateObjectMap [
+    rr:predicate gdelt:actorName;
+    rr:objectMap [
+      rml:reference "Actor2Name";
+      ]
+    ];
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:actorCountry;
+      rr:objectMap [
+        rml:reference "Actor2CountryCode";
+        ]
+      ];
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:actorKnownGroup;
+      rr:objectMap [
+        rml:reference "Actor2KnownGroupCode";
+        ]
+      ];
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:actorEthnic;
+      rr:objectMap [
+        rml:reference "Actor2EthnicCode";
+        ]
+      ];
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:actorReligion;
+      rr:objectMap [
+        rml:reference "Actor2Religion1Code";
+        ]
+      ];
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:actorReligion;
+      rr:objectMap [
+        rml:reference "Actor2Religion2Code";
+        ]
+      ];
+
+  rr:predicateObjectMap [
+      rr:predicate gdelt:actorType;
+      rr:objectMap [
+        rml:reference "Actor2Type1Code";
+        ]
+      ];
+
+  rr:predicateObjectMap [
+        rr:predicate gdelt:actorType;
+        rr:objectMap [
+          rml:reference "Actor2Type2Code";
+          ]
+        ];
+
+  rr:predicateObjectMap [
+        rr:predicate gdelt:actorType;
+        rr:objectMap [
+          rml:reference "Actor2Type3Code";
+          ]
+        ];
+
+        rr:predicateObjectMap [
+              rr:predicate gdelt:geoType;
+              rr:objectMap [
+                rml:reference "Actor2Geo_Type";
+                ]
+              ];
+
+
+          rr:predicateObjectMap [
+                rr:predicate gdelt:geoFullName;
+                rr:objectMap [
+                  rml:reference "Actor2Geo_FullName";
+                  ]
+                ];
+
+       rr:predicateObjectMap [
+                 rr:predicate gdelt:geoCountryCode;
+                 rr:objectMap [
+                   rml:reference "Actor2Geo_CountryCode";
+                   ]
+                 ];
+
+
+      rr:predicateObjectMap [
+                rr:predicate gdelt:geoADM1Code;
+                rr:objectMap [
+                  rml:reference "Actor2Geo_ADM1Code";
+                  ]
+                ];
+
+
+      rr:predicateObjectMap [
+                rr:predicate gdelt:geoADM2Code;
+                rr:objectMap [
+                  rml:reference "Actor2Geo_ADM2Code";
+                  ]
+                ];
+
+      rr:predicateObjectMap [
+            rr:predicate gdelt:geoLNAG;
+            rr:objectMap [
+              rml:reference "Actor2Geo_Long";
+              ]
+            ];
+
+
+      rr:predicateObjectMap [
+            rr:predicate gdelt:geoLAT;
+            rr:objectMap [
+              rml:reference "Actor2Geo_Lat";
+              ]
+            ];
+
+
+      rr:predicateObjectMap [
+            rr:predicate gdelt:geoFeatureID;
+            rr:objectMap [
+              rml:reference "Actor2Geo_FeatureID";
+              ]
+            ];
+.

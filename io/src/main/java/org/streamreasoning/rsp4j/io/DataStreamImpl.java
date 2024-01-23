@@ -6,6 +6,8 @@ import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * Wrapper class for {@link DataStream} providing functionality for interaction with consumers.
@@ -54,5 +56,11 @@ public class DataStreamImpl<T> implements DataStream<T> {
     @Override
     public String toString() {
         return stream_uri;
+    }
+
+    public <R> DataStreamImpl<R> map(Function<? super T, ? extends R> mapper, String streamURL){
+        DataStreamImpl<R> newStream = new DataStreamImpl<>(streamURL);
+        this.addConsumer((e, ts) -> newStream.put(mapper.apply(e),ts));
+        return newStream;
     }
 }

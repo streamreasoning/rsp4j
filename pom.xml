@@ -9,6 +9,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <github.release>${project.version}</github.release>
+        <rsp4j.version>1.0.1</rsp4j.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -16,14 +17,15 @@
         <module>api</module>
         <module>yasper</module>
         <module>examples</module>
-        <module>abstraction</module>
+        <module>operatorapi</module>
         <module>io</module>
         <module>web</module>
-        <module>csparql-rsp4j</module>
-        <module>cqels-rsp4j</module>
+        <!--<module>csparql-rsp4j</module>
+        <module>cqels-rsp4j</module>-->
         <module>csparql2</module>
         <module>dsms</module>
         <module>reasoning</module>
+        <module>mapping</module>
     </modules>
 
     <dependencyManagement>
@@ -112,16 +114,16 @@
             <artifactId>commons-rdf-api</artifactId>
             <version>0.5.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-rdf-jena</artifactId>
-            <version>0.5.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.github.jsonld-java</groupId>
-                    <artifactId>jsonld-java</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.commons</groupId>-->
+<!--            <artifactId>commons-rdf-jena</artifactId>-->
+<!--            <version>0.5.0</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>com.github.jsonld-java</groupId>-->
+<!--                    <artifactId>jsonld-java</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
     </dependencies>
 </project>

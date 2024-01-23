@@ -4,11 +4,10 @@ import org.apache.commons.rdf.api.Graph;
 import org.apache.log4j.Logger;
 import org.streamreasoning.rsp4j.api.sds.DataSet;
 import org.streamreasoning.rsp4j.io.utils.RDFBase;
-import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFParsingStrategy;
+import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFCommonsParsingStrategy;
 import org.streamreasoning.rsp4j.io.utils.parsing.ParsingStrategy;
 
 import java.io.IOException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -25,7 +24,7 @@ public class DataSetImpl implements DataSet<Graph> {
     public DataSetImpl(String name, String path, RDFBase rdfBase) {
         this.name = name;
         this.path = path;
-        this.parsingStrategy = new JenaRDFParsingStrategy(rdfBase);
+        this.parsingStrategy = new JenaRDFCommonsParsingStrategy(rdfBase);
     }
     public void setParsingStrategy(ParsingStrategy<Graph> parsingStrategy){
         this.parsingStrategy = parsingStrategy;

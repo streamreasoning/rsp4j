@@ -12,18 +12,18 @@
     <artifactId>dsms</artifactId>
     <version>2.0.0</version>
 
-    <repositories>
+    <!--<repositories>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-    </repositories>
+    </repositories>-->
 
     <dependencies>
         <dependency>
             <groupId>com.github.jsonld-java</groupId>
             <artifactId>jsonld-java</artifactId>
-            <version>0.13.3</version>
+            <version>0.13.4</version>
         </dependency>
         <dependency>
             <groupId>com.espertech</groupId>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.streamreasoning.rsp4j</groupId>
             <artifactId>io</artifactId>
-            <version>1.0.0</version>
+            <version>${rsp4j.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

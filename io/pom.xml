@@ -8,13 +8,13 @@
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
+    <version>${rsp4j.version}</version>
     <artifactId>io</artifactId>
     <dependencies>
         <dependency>
             <groupId>org.streamreasoning.rsp4j</groupId>
             <artifactId>api</artifactId>
-            <version>1.0.0</version>
+            <version>${rsp4j.version}</version>
             <scope>compile</scope>
         </dependency>
         <!--<dependency>
@@ -30,6 +30,10 @@
                 <exclusion>
                     <groupId>com.github.jsonld-java</groupId>
                     <artifactId>jsonld-java</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.jena</groupId>
+                    <artifactId>jena-osgi</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -47,9 +51,19 @@
         <dependency>
             <groupId>org.streamreasoning.rsp4j</groupId>
             <artifactId>api</artifactId>
-            <version>1.0.0</version>
+            <version>${rsp4j.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-arq</artifactId>
+            <version>3.14.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.jsonld-java</groupId>
+                    <artifactId>jsonld-java</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <!--<dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

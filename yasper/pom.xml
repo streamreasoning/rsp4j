@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>yasper</artifactId>
-    <version>1.0.0</version>
+    <version>${rsp4j.version}</version>
     <build>
         <plugins>
             <plugin>
@@ -28,41 +28,19 @@
         <dependency>
             <groupId>org.streamreasoning.rsp4j</groupId>
             <artifactId>api</artifactId>
-            <version>1.0.0</version>
+            <version>${rsp4j.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.jena</groupId>
-            <artifactId>jena-core</artifactId>
-            <version>3.5.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-rdf-jena</artifactId>
-            <version>0.5.0</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.github.jsonld-java</groupId>
-                    <artifactId>jsonld-java</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+
         <dependency>
             <groupId>org.streamreasoning.rsp4j</groupId>
             <artifactId>io</artifactId>
-            <version>1.0.0</version>
+            <version>${rsp4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.streamreasoning.rsp4j</groupId>
             <artifactId>web</artifactId>
-            <version>1.0.0</version>
+            <version>${rsp4j.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-rdf-jena</artifactId>
-            <version>0.5.0</version>
-            <scope>compile</scope>
-        </dependency>
+
     </dependencies>
 </project>

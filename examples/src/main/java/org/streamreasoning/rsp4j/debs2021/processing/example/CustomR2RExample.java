@@ -1,9 +1,9 @@
 package org.streamreasoning.rsp4j.debs2021.processing.example;
 
 import org.apache.commons.rdf.api.Graph;
-import org.streamreasoning.rsp4j.abstraction.ContinuousProgram;
-import org.streamreasoning.rsp4j.abstraction.TaskAbstractionImpl;
-import org.streamreasoning.rsp4j.abstraction.table.BindingStream;
+import org.streamreasoning.rsp4j.operatorapi.ContinuousProgram;
+import org.streamreasoning.rsp4j.operatorapi.TaskOperatorAPIImpl;
+import org.streamreasoning.rsp4j.operatorapi.table.BindingStream;
 import org.streamreasoning.rsp4j.api.operators.r2r.utils.R2RPipe;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.enums.ReportGrain;
@@ -67,8 +67,8 @@ public class CustomR2RExample {
     // Create a pipe of two r2r operators, TP and filter
     R2RPipe<Graph,Binding> r2r = new R2RPipe<>(tp,filter);
 
-    TaskAbstractionImpl<Graph, Graph, Binding, Binding> t =
-        new TaskAbstractionImpl.TaskBuilder()
+    TaskOperatorAPIImpl<Graph, Graph, Binding, Binding> t =
+        new TaskOperatorAPIImpl.TaskBuilder()
             .addS2R("stream1", build, "w1")
             .addR2R("w1", r2r)
             .addR2S("out", new Rstream<Binding, Binding>())

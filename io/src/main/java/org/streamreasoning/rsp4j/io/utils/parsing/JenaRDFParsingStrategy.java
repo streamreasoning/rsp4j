@@ -1,7 +1,7 @@
 package org.streamreasoning.rsp4j.io.utils.parsing;
 
-import org.apache.commons.rdf.api.Graph;
-import org.apache.commons.rdf.jena.JenaRDF;
+
+import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.log4j.Logger;
@@ -26,10 +26,8 @@ public class JenaRDFParsingStrategy implements ParsingStrategy<Graph> {
         try {
             InputStream targetStream = new ByteArrayInputStream(parseString.getBytes());
             dataModel.read(targetStream, null, base.name());
-            JenaRDF jena = new JenaRDF();
+            return dataModel.getGraph();
 
-            Graph g1 = jena.asGraph(dataModel);
-            return g1;
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

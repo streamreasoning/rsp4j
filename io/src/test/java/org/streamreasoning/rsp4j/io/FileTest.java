@@ -9,7 +9,7 @@ import org.streamreasoning.rsp4j.io.sources.FileSource;
 import org.streamreasoning.rsp4j.io.utils.BufferedConsumer;
 import org.streamreasoning.rsp4j.io.utils.ParsingStrategyTest;
 import org.streamreasoning.rsp4j.io.utils.RDFBase;
-import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFParsingStrategy;
+import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFCommonsParsingStrategy;
 import org.streamreasoning.rsp4j.io.utils.serialization.JenaRDFSerializationStrategy;
 
 import java.io.BufferedReader;
@@ -53,19 +53,10 @@ public class FileTest {
         String[] inputLines = new String[]{line1, line2};
 
         String filePath = "filetest_" + System.currentTimeMillis() + ".txt";
-        Path path = Paths.get(filePath);
 
-        // create file and write lines to file
-        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-            for (String line : inputLines) {
-                writer.write(line + System.lineSeparator());
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Path path = createFile(inputLines, filePath);
         // create parsing strategy
-        JenaRDFParsingStrategy parsingStrategy = new JenaRDFParsingStrategy(RDFBase.NT);
+        JenaRDFCommonsParsingStrategy parsingStrategy = new JenaRDFCommonsParsingStrategy(RDFBase.NT);
         // create file source to read the newly created file
         FileSource<Graph> fileSource = new FileSource<Graph>(filePath, 0, parsingStrategy);
         // create and add dummy consumer
@@ -85,6 +76,21 @@ public class FileTest {
         ParsingStrategyTest.compareGraph(expectedGraph2, bufferedConsumer.getMessage(1));
         // delete file
         deleteFile(path);
+    }
+
+    public static Path createFile(String[] inputLines, String filePath) {
+        Path path = Paths.get(filePath);
+
+        // create file and write lines to file
+        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+            for (String line : inputLines) {
+                writer.write(line + System.lineSeparator());
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return path;
     }
 
     //  @Test

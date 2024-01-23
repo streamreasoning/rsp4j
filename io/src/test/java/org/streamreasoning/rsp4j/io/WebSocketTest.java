@@ -11,7 +11,7 @@ import org.streamreasoning.rsp4j.io.sources.WebsocketServerSource;
 import org.streamreasoning.rsp4j.io.utils.BufferedConsumer;
 import org.streamreasoning.rsp4j.io.utils.ParsingStrategyTest;
 import org.streamreasoning.rsp4j.io.utils.RDFBase;
-import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFParsingStrategy;
+import org.streamreasoning.rsp4j.io.utils.parsing.JenaRDFCommonsParsingStrategy;
 import org.streamreasoning.rsp4j.io.utils.serialization.JenaRDFSerializationStrategy;
 
 import static org.junit.Assert.assertEquals;
@@ -39,7 +39,7 @@ public class WebSocketTest {
 
         /* creating a websocket client source */
         // we define a parsing strategy to convert strings to Graph object
-        JenaRDFParsingStrategy parsingStrategy = new JenaRDFParsingStrategy(RDFBase.NT);
+        JenaRDFCommonsParsingStrategy parsingStrategy = new JenaRDFCommonsParsingStrategy(RDFBase.NT);
         // next we create a websocket client as source that uses the parsing strategy
         WebsocketClientSource<Graph> websocketSource = new WebsocketClientSource<Graph>("ws://localhost:9000/test", parsingStrategy);
         websocketSource.startSocket();
@@ -69,7 +69,7 @@ public class WebSocketTest {
     public void testWebSocketServerSource() throws InterruptedException {
         /* creating a websocket server source */
         // first we define a parsing strategy to convert strings to Graph object
-        JenaRDFParsingStrategy parsingStrategy = new JenaRDFParsingStrategy(RDFBase.NT);
+        JenaRDFCommonsParsingStrategy parsingStrategy = new JenaRDFCommonsParsingStrategy(RDFBase.NT);
         // next we create a websocket server as source that uses the parsing strategy
         WebsocketServerSource<Graph> websocketSource = new WebsocketServerSource<Graph>(9000, "test", parsingStrategy);
         /* creating a websocket client sink */
