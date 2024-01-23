@@ -6,6 +6,6 @@ public enum Maintenance {
     private final String name;
 
     Maintenance(String name) {
-        this.name=name;
+        this.name = name;
     }
 }

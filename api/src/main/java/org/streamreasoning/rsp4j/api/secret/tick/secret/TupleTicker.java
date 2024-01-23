@@ -3,7 +3,6 @@ package org.streamreasoning.rsp4j.api.secret.tick.secret;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.Window;
 import org.streamreasoning.rsp4j.api.secret.tick.Ticker;
-import lombok.RequiredArgsConstructor;
 
 /**
  * The Tick dimension in our model defines the condition which drives an SPE
@@ -16,10 +15,13 @@ import lombok.RequiredArgsConstructor;
  * (b) time-driven, where the progress of tapp causes a system to react;
  * (c) batch-driven, where either a new batch arrival or the progress of tapp causes a system to react.
  **/
-@RequiredArgsConstructor
 public class TupleTicker implements Ticker {
 
     private final StreamToRelationOp<?, ?> wa;
+
+    public TupleTicker(StreamToRelationOp<?, ?> wa) {
+        this.wa = wa;
+    }
 
     @Override
     public void tick(long t_e, Window w) {

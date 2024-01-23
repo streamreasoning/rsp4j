@@ -1,38 +1,39 @@
 package org.streamreasoning.rsp4j.yasper.querying.operators.windowing;
 
+import org.apache.commons.rdf.api.IRI;
+import org.apache.log4j.Logger;
+import org.streamreasoning.rsp4j.api.enums.ReportGrain;
+import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.exceptions.OutOfOrderElementException;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.ObservableStreamToRelationOp;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.Window;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.WindowImpl;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQueryExecution;
 import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
-import org.streamreasoning.rsp4j.api.secret.content.ContentFactory;
-import org.streamreasoning.rsp4j.yasper.sds.TimeVaryingObject;
 import org.streamreasoning.rsp4j.api.secret.content.Content;
+import org.streamreasoning.rsp4j.api.secret.content.ContentFactory;
 import org.streamreasoning.rsp4j.api.secret.report.Report;
-import org.streamreasoning.rsp4j.api.enums.ReportGrain;
-import org.streamreasoning.rsp4j.api.enums.Tick;
 import org.streamreasoning.rsp4j.api.secret.time.Time;
-import lombok.extern.log4j.Log4j;
-import org.apache.commons.rdf.api.IRI;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
+import org.streamreasoning.rsp4j.yasper.sds.TimeVaryingObject;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Log4j
-public class CSPARQLStreamToRelationOp<T1, T2> extends ObservableStreamToRelationOp<T1, T2> {
+public class CSPARQLStreamToRelationOp<I, W> extends ObservableStreamToRelationOp<I, W> {
 
-    private final long a, b;
+    private static final Logger log = Logger.getLogger(CSPARQLStreamToRelationOp.class);
+    private final long width, slide;
 
-    private Map<Window, Content<T1, T2>> active_windows;
+    private Map<Window, Content<I, W>> active_windows;
     private Set<Window> to_evict;
     private long t0;
     private long toi;
 
-    public CSPARQLStreamToRelationOp(IRI iri, long a, long b, Time instance, Tick tick, Report report, ReportGrain grain, ContentFactory<T1, T2> cf) {
+    public CSPARQLStreamToRelationOp(IRI iri, long width, long slide, Time instance, Tick tick, Report report, ReportGrain grain, ContentFactory<I, W> cf) {
         super(iri, instance, tick, report, grain, cf);
-        this.a = a;
-        this.b = b;
+        this.width = width;
+        this.slide = slide;
         this.t0 = instance.getScope();
         this.toi = 0;
         this.active_windows = new HashMap<>();
@@ -45,7 +46,7 @@ public class CSPARQLStreamToRelationOp<T1, T2> extends ObservableStreamToRelatio
     }
 
     @Override
-    public Content<T1, T2> content(long t_e) {
+    public Content<I, W> content(long t_e) {
         Optional<Window> max = active_windows.keySet().stream()
                 .filter(w -> w.getO() < t_e && w.getC() <= t_e)
                 .max(Comparator.comparingLong(Window::getC));
@@ -57,13 +58,13 @@ public class CSPARQLStreamToRelationOp<T1, T2> extends ObservableStreamToRelatio
     }
 
     @Override
-    public List<Content<T1, T2>> getContents(long t_e) {
+    public List<Content<I, W>> getContents(long t_e) {
         return active_windows.keySet().stream()
                 .filter(w -> w.getO() <= t_e && t_e < w.getC())
                 .map(active_windows::get).collect(Collectors.toList());
     }
 
-    protected void windowing(T1 e, long timestamp) {
+    public void windowing(I e, long timestamp) {
 
         log.debug("Received element (" + e + "," + timestamp + ")");
         long t_e = timestamp;
@@ -89,7 +90,7 @@ public class CSPARQLStreamToRelationOp<T1, T2> extends ObservableStreamToRelatio
 
 
         active_windows.keySet().stream()
-                .filter(w -> report.report(w, null, t_e, System.currentTimeMillis()))
+                .filter(w -> report.report(w, getWindowContent(w), t_e, System.currentTimeMillis()))
                 .max(Comparator.comparingLong(Window::getC))
                 .ifPresent(window -> ticker.tick(t_e, window));
 
@@ -97,22 +98,22 @@ public class CSPARQLStreamToRelationOp<T1, T2> extends ObservableStreamToRelatio
             log.debug("Evicting [" + w.getO() + "," + w.getC() + ")");
             active_windows.remove(w);
             if (toi < w.getC())
-                toi = w.getC() + b;
+                toi = w.getC() + slide;
         });
         to_evict.clear();
     }
 
     private void scope(long t_e) {
-        long c_sup = (long) Math.ceil(((double) Math.abs(t_e - t0) / (double) b)) * b;
-        long o_i = c_sup - a;
+        long c_sup = (long) Math.ceil(((double) Math.abs(t_e - t0) / (double) slide)) * slide;
+        long o_i = c_sup - width;
         log.debug("Calculating the Windows to Open. First one opens at [" + o_i + "] and closes at [" + c_sup + "]");
 
         do {
-            log.debug("Computing Window [" + o_i + "," + (o_i + a) + ") if absent");
+            log.debug("Computing Window [" + o_i + "," + (o_i + width) + ") if absent");
 
             active_windows
-                    .computeIfAbsent(new WindowImpl(o_i, o_i + a), x -> cf.create());
-            o_i += b;
+                    .computeIfAbsent(new WindowImpl(o_i, o_i + width), x -> cf.create());
+            o_i += slide;
 
         } while (o_i <= t_e);
 
@@ -124,20 +125,31 @@ public class CSPARQLStreamToRelationOp<T1, T2> extends ObservableStreamToRelatio
     }
 
 
-    public Content<T1, T2> compute(long t_e, Window w) {
-        Content<T1, T2> content = active_windows.containsKey(w) ? active_windows.get(w) : cf.createEmpty();
+    public Content<I, W> compute(long t_e, Window w) {
+        Content<I, W> content = getWindowContent(w);
         time.setAppTime(t_e);
         return setVisible(t_e, w, content);
     }
 
+    private Content<I, W> getWindowContent(Window w) {
+        return active_windows.containsKey(w) ? active_windows.get(w) : cf.createEmpty();
+    }
+
     @Override
-    public void link(ContinuousQueryExecution context) {
+    public CSPARQLStreamToRelationOp<I, W> link(ContinuousQueryExecution<I, W, ?, ?> context) {
         this.addObserver((Observer) context);
+        return this;
+    }
+
+    @Override
+    public TimeVarying<W> apply(DataStream<I> s) {
+        s.addConsumer(this);
+        return new TimeVaryingObject(this, iri);
     }
 
 
     @Override
-    public TimeVarying<T2> get() {
+    public TimeVarying<W> get() {
         return new TimeVaryingObject<>(this, iri);
     }
 

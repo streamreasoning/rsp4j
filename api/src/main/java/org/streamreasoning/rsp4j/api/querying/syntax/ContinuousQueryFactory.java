@@ -1,19 +1,19 @@
 package org.streamreasoning.rsp4j.api.querying.syntax;
 
-import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
-* Depending on the implementation this class may be sed later. As of now, please see how
-* this is implemented in yasper-jena.
-*/
+ * Depending on the implementation this class may be sed later. As of now, please see how
+ * this is implemented in yasper-jena.
+ */
 
 public class ContinuousQueryFactory {
     public static ContinuousQuery parse(String queryString) throws IOException {

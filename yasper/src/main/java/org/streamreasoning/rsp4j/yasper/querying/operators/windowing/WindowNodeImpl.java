@@ -1,22 +1,39 @@
 package org.streamreasoning.rsp4j.yasper.querying.operators.windowing;
 
-import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowType;
-import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.rdf.api.IRI;
+import org.streamreasoning.rsp4j.api.RDFUtils;
+import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowNode;
+import org.streamreasoning.rsp4j.api.operators.s2r.syntax.WindowType;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
-@RequiredArgsConstructor
-@AllArgsConstructor
 public class WindowNodeImpl implements WindowNode {
 
     private final IRI windowUri;
     private final Duration logicalRange;
     private Duration logicalStep;
     private final Integer t0;
+
+    public WindowNodeImpl(String id, Integer range, Integer step, Integer t0) {
+        this.windowUri = RDFUtils.createIRI(id);
+        this.logicalRange = Duration.ofSeconds(range);
+        this.logicalStep = Duration.ofSeconds(step);
+        this.t0 = t0;
+    }
+
+    public WindowNodeImpl(IRI windowUri, Duration logicalRange, Integer t0) {
+        this.windowUri = windowUri;
+        this.logicalRange = logicalRange;
+        this.t0 = t0;
+    }
+
+    public WindowNodeImpl(IRI windowUri, Duration logicalRange, Duration logicalStep, Integer t0) {
+        this.windowUri = windowUri;
+        this.logicalRange = logicalRange;
+        this.logicalStep = logicalStep;
+        this.t0 = t0;
+    }
 
 
     @Override

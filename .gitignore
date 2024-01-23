@@ -25,3 +25,6 @@ hs_err_pid*
 .settings/
 
 *.iml
+rsp-spin-converter/*
+*/demoApplication.log
+demoApplication.log

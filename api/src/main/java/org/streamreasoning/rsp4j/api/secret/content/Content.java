@@ -1,7 +1,7 @@
 package org.streamreasoning.rsp4j.api.secret.content;
 
 
-public interface Content<I,O> {
+public interface Content<I, O> {
     int size();
 
     void add(I e);

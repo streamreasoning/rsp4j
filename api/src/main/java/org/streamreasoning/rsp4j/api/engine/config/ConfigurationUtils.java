@@ -1,16 +1,15 @@
 package org.streamreasoning.rsp4j.api.engine.config;
 
-import lombok.extern.log4j.Log4j;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.log4j.Logger;
 
 import java.util.Iterator;
 
 /**
  * Created by riccardo on 09/07/2017.
  */
-@Log4j
 public class ConfigurationUtils {
 
     public static final String ENGINE = "rsp_engine.";
@@ -33,8 +32,9 @@ public class ConfigurationUtils {
     public static final String REPORT_STRATEGY_PP = ENGINE + "periodic";
 
     public static final String TICK = ENGINE + "tick";
-    
+
     public static final String REPORT_GRAIN = ENGINE + "report_grain";
+    private static final Logger log = Logger.getLogger(ConfigurationUtils.class);
 
 
 //    rspengine.tbox_location=/Users/riccardo/_Projects/RSP/RSP-Baselines/src/main/resources/arist.tbox.owl

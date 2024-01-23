@@ -1,0 +1,3 @@
+PREFIX ars: <http://www.streamreasoning/artist#>
+
+<http://differenthost:12134/stream2/artist1> ars:hasName "someName".

@@ -1,9 +1,8 @@
 package org.streamreasoning.rsp4j.api.engine.features;
 
-import org.streamreasoning.rsp4j.api.stream.web.WebStream;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 
-public interface StreamDeletionFeature<S extends WebStream> {
+public interface StreamDeletionFeature<T> {
 
-    void unregister(S s);
-
+    public void unregister(DataStream<T> s);
 }

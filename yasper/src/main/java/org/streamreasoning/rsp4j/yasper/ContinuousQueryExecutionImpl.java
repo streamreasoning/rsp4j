@@ -1,15 +1,16 @@
 package org.streamreasoning.rsp4j.yasper;
 
+import org.apache.log4j.Logger;
 import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
 import org.streamreasoning.rsp4j.api.operators.r2s.RelationToStreamOperator;
 import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.StreamToRelationOp;
 import org.streamreasoning.rsp4j.api.querying.ContinuousQuery;
-import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
 import org.streamreasoning.rsp4j.api.sds.SDS;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
-import lombok.extern.log4j.Log4j;
+import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Observable;
 import java.util.stream.Stream;
@@ -18,17 +19,17 @@ import java.util.stream.Stream;
  * Created by Riccardo on 12/08/16.
  */
 
-@Log4j
-public class ContinuousQueryExecutionImpl<I, E1, E2> extends ContinuousQueryExecutionObserver<I, E1, E2> {
+public class ContinuousQueryExecutionImpl<I, W, R, O> extends ContinuousQueryExecutionObserver<I, W, R, O> {
 
-    private final RelationToStreamOperator<E2> r2s;
-    private final RelationToRelationOperator<E2> r2r;
-    private final SDS<E1> sds;
+    private static final Logger log = Logger.getLogger(ContinuousQueryExecutionImpl.class);
+    private final RelationToStreamOperator<R, O> r2s;
+    private final RelationToRelationOperator<W, R> r2r;
+    private final SDS<W> sds;
     private final ContinuousQuery query;
-    private final WebDataStream<E2> outstream;
-    private List<StreamToRelationOp<I, E1>> s2rs;
+    private final DataStream<O> outstream;
+    private List<StreamToRelationOp<I, W>> s2rs;
 
-    public ContinuousQueryExecutionImpl(SDS sds, ContinuousQuery query, WebDataStream<E2> outstream, RelationToRelationOperator<E2> r2r, RelationToStreamOperator<E2> r2s, StreamToRelationOp<I, E1>... s2rs) {
+    public ContinuousQueryExecutionImpl(SDS sds, ContinuousQuery query, DataStream<O> outstream, RelationToRelationOperator<W, R> r2r, RelationToStreamOperator<R, O> r2s, StreamToRelationOp<I, W>... s2rs) {
         super(sds, query);
         this.s2rs = Arrays.asList(s2rs);
         this.query = query;
@@ -39,8 +40,13 @@ public class ContinuousQueryExecutionImpl<I, E1, E2> extends ContinuousQueryExec
     }
 
     @Override
-    public WebDataStream<E2> outstream() {
+    public DataStream<O> outstream() {
         return outstream;
+    }
+
+    @Override
+    public TimeVarying<Collection<R>> output() {
+        return r2r.apply(sds);
     }
 
     @Override
@@ -54,36 +60,36 @@ public class ContinuousQueryExecutionImpl<I, E1, E2> extends ContinuousQueryExec
     }
 
     @Override
-    public StreamToRelationOp<I, E1>[] s2rs() {
-        StreamToRelationOp<I, E1>[] a = new StreamToRelationOp[s2rs.size()];
+    public StreamToRelationOp<I, W>[] s2rs() {
+        StreamToRelationOp<I, W>[] a = new StreamToRelationOp[s2rs.size()];
         return s2rs.toArray(a);
     }
 
     @Override
-    public RelationToRelationOperator<E2> r2r() {
+    public RelationToRelationOperator<W, R> r2r() {
         return r2r;
     }
 
     @Override
-    public RelationToStreamOperator<E2> r2s() {
+    public RelationToStreamOperator<R, O> r2s() {
         return r2s;
     }
 
     @Override
-    public void add(StreamToRelationOp<I, E1> op) {
+    public void add(StreamToRelationOp<I, W> op) {
         op.link(this);
     }
 
     @Override
     public void update(Observable o, Object arg) {
         Long now = (Long) arg;
-        eval(now).forEach(o1 -> outstream().put(r2s.eval(o1, now), now));
+        r2s.eval(eval(now), now).forEach(o1 -> outstream().put(o1, now));
     }
 
     @Override
-    public Stream<SolutionMapping<E2>> eval(Long now) {
+    public Stream<R> eval(Long now) {
         sds.materialize(now);
-        return r2r.eval(now);
+        return r2r.eval(sds.toStream());
     }
 }
 

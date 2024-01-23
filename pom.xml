@@ -1,4 +1,4 @@
-    <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.streamreasoning.rsp4j</groupId>
@@ -11,12 +11,19 @@
         <github.release>${project.version}</github.release>
     </properties>
 
-    <packaging>pom</packaging>j
+    <packaging>pom</packaging>
     <modules>
         <module>api</module>
         <module>yasper</module>
         <module>examples</module>
+        <module>abstraction</module>
         <module>io</module>
+        <module>web</module>
+        <module>csparql-rsp4j</module>
+        <module>cqels-rsp4j</module>
+        <module>csparql2</module>
+        <module>dsms</module>
+        <module>reasoning</module>
     </modules>
 
     <dependencyManagement>
@@ -72,22 +79,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.2</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>9</source>
+                    <target>9</target>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
     <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -113,6 +112,16 @@
             <artifactId>commons-rdf-api</artifactId>
             <version>0.5.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-rdf-jena</artifactId>
+            <version>0.5.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.jsonld-java</groupId>
+                    <artifactId>jsonld-java</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 </project>

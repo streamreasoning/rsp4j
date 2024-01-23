@@ -1,22 +1,20 @@
 package org.streamreasoning.rsp4j.yasper.examples;
 
-import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Consumer;
-import org.streamreasoning.rsp4j.api.stream.data.WebDataStream;
 import org.apache.commons.rdf.api.Graph;
+import org.streamreasoning.rsp4j.api.operators.s2r.execution.assigner.Consumer;
+import org.streamreasoning.rsp4j.api.stream.data.DataStream;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RDFStream implements WebDataStream<Graph> {
+public class RDFStream implements DataStream<Graph> {
 
     protected String stream_uri;
+    protected List<Consumer<Graph>> consumers = new ArrayList<>();
 
     public RDFStream(String stream_uri) {
         this.stream_uri = stream_uri;
     }
-
-    protected List<Consumer<Graph>> consumers = new ArrayList<>();
-
 
     @Override
     public void addConsumer(Consumer<Graph> c) {
@@ -29,6 +27,10 @@ public class RDFStream implements WebDataStream<Graph> {
     }
 
     @Override
+    public String getName() {
+        return stream_uri;
+    }
+
     public String uri() {
         return stream_uri;
     }

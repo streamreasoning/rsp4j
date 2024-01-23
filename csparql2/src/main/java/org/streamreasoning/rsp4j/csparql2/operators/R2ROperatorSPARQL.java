@@ -1,0 +1,225 @@
+package org.streamreasoning.rsp4j.csparql2.operators;
+
+import org.streamreasoning.rsp4j.csparql2.syntax.RSPQLJenaQuery;
+import org.streamreasoning.rsp4j.esper.querying.results.SolutionMappingImpl;
+
+import lombok.extern.log4j.Log4j;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
+import org.apache.jena.ext.com.google.common.collect.Streams;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.graph.compose.MultiUnion;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.impl.ModelCom;
+import org.apache.jena.sparql.core.DatasetGraphFactory;
+import org.apache.jena.sparql.core.Quad;
+import org.apache.jena.sparql.engine.binding.Binding;
+import org.apache.jena.sparql.util.Context;
+import org.streamreasoning.rsp4j.api.operators.r2r.RelationToRelationOperator;
+import org.streamreasoning.rsp4j.api.querying.result.SolutionMapping;
+import org.streamreasoning.rsp4j.api.sds.SDS;
+import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
+
+@Log4j
+public class R2ROperatorSPARQL implements RelationToRelationOperator<SolutionMapping<Binding>,SolutionMapping<Binding>>, QueryExecution {
+
+    private final RSPQLJenaQuery query;
+    private final SDS<Graph> sds;
+    private final Dataset ds;
+    private final String baseURI;
+    public final List<String> resultVars;
+    private QueryExecution execution;
+
+    public R2ROperatorSPARQL(RSPQLJenaQuery query, SDS<Graph> sds, String baseURI) {
+        this.query = query;
+        this.sds = sds;
+        MultiUnion graph = new MultiUnion();
+        ds = DatasetFactory.wrap(DatasetGraphFactory.create(graph));
+        sds.asTimeVaryingEs().forEach(tvg -> {
+            if (tvg.named()) {
+                ds.addNamedModel(tvg.iri(), new ModelCom(tvg.get()));
+            } else {
+                ((MultiUnion) ds.getDefaultModel().getGraph()).addGraph(tvg.get());
+            }
+        });
+
+        this.baseURI = baseURI;
+        this.resultVars = query.getResultVars();
+
+    }
+
+    @Override
+    public Stream<SolutionMapping<Binding>> eval(Stream<SolutionMapping<Binding>> incoming) {
+        //TODO fix up to stream
+        long ts = System.currentTimeMillis();
+
+        String id = baseURI + "result/" + ts;
+
+        this.execution = QueryExecutionFactory.create(query, ds);
+        return Streams.stream(this.execution.execSelect()).map(querySolution -> ((org.apache.jena.sparql.core.ResultBinding) querySolution).getBinding()).map(b -> new SolutionMappingImpl<>(id, b, this.resultVars, ts));
+    }
+
+    @Override
+    public TimeVarying<Collection<SolutionMapping<Binding>>> apply(SDS<SolutionMapping<Binding>> sds) {
+        throw new UnsupportedOperationException("apply not implemented");
+
+    }
+
+    @Override
+    public SolutionMapping<SolutionMapping<Binding>> createSolutionMapping(SolutionMapping<Binding> result) {
+        throw new UnsupportedOperationException("createSolutionMapping not implemented");
+    }
+
+    private List<Binding> getSolutionSet(ResultSet results) {
+
+        List<Binding> solutions = new ArrayList<>();
+        while (results.hasNext()) {
+            solutions.add(results.nextBinding());
+        }
+        return solutions;
+    }
+
+    @Override
+    public void setInitialBinding(QuerySolution binding) {
+
+    }
+
+    @Override
+    public Dataset getDataset() {
+        return ds;
+    }
+
+    @Override
+    public Context getContext() {
+        return null;
+    }
+
+    @Override
+    public Query getQuery() {
+        return query;
+    }
+
+    @Override
+    public ResultSet execSelect() {
+        return execution.execSelect();
+    }
+
+    @Override
+    public Model execConstruct() {
+        return execution.execConstruct();
+    }
+
+    @Override
+    public Model execConstruct(Model model) {
+        return execution.execConstruct(model);
+    }
+
+    @Override
+    public Iterator<Triple> execConstructTriples() {
+        return execution.execConstructTriples();
+    }
+
+    @Override
+    public Iterator<Quad> execConstructQuads() {
+        return execution.execConstructQuads();
+    }
+
+    @Override
+    public Dataset execConstructDataset() {
+        return execution.execConstructDataset();
+    }
+
+    @Override
+    public Dataset execConstructDataset(Dataset dataset) {
+        return execution.execConstructDataset(dataset);
+    }
+
+    @Override
+    public Model execDescribe() {
+        return execution.execDescribe();
+    }
+
+    @Override
+    public Model execDescribe(Model model) {
+        return execution.execDescribe(model);
+    }
+
+    @Override
+    public Iterator<Triple> execDescribeTriples() {
+        return execution.execDescribeTriples();
+    }
+
+    @Override
+    public boolean execAsk() {
+        return execution.execAsk();
+    }
+
+    @Override
+    public JsonArray execJson() {
+        return execution.execJson();
+    }
+
+    @Override
+    public Iterator<JsonObject> execJsonItems() {
+        return execution.execJsonItems();
+    }
+
+    @Override
+    public void abort() {
+        execution.abort();
+    }
+
+    @Override
+    public void close() {
+        execution.close();
+    }
+
+    @Override
+    public void setInitialBinding(Binding binding) {
+        execution.setInitialBinding(binding);
+    }
+
+    @Override
+    public boolean isClosed() {
+        return execution.isClosed();
+    }
+
+    @Override
+    public void setTimeout(long timeout, TimeUnit timeoutUnits) {
+        execution.setTimeout(timeout, timeoutUnits);
+    }
+
+    @Override
+    public void setTimeout(long timeout) {
+        execution.setTimeout(timeout);
+    }
+
+    @Override
+    public void setTimeout(long timeout1, TimeUnit timeUnit1, long timeout2, TimeUnit timeUnit2) {
+        execution.setTimeout(timeout1, timeUnit1, timeout2, timeUnit2);
+    }
+
+    @Override
+    public void setTimeout(long timeout1, long timeout2) {
+        execution.setTimeout(timeout1, timeout2);
+    }
+
+    @Override
+    public long getTimeout1() {
+        return execution.getTimeout1();
+    }
+
+    @Override
+    public long getTimeout2() {
+        return execution.getTimeout2();
+    }
+}

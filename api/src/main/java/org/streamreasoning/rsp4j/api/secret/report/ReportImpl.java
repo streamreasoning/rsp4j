@@ -1,11 +1,12 @@
 package org.streamreasoning.rsp4j.api.secret.report;
 
 
+import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.Window;
 import org.streamreasoning.rsp4j.api.secret.content.Content;
 import org.streamreasoning.rsp4j.api.secret.report.strategies.ReportingStrategy;
-import org.streamreasoning.rsp4j.api.operators.s2r.execution.instance.Window;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ReportImpl implements Report {
@@ -27,5 +28,11 @@ public class ReportImpl implements Report {
         return strategies.toArray(new ReportingStrategy[strategies.size()]);
     }
 
+
+    public static Report fromStrategies(ReportingStrategy... strategies){
+        Report report = new ReportImpl();
+        Arrays.stream(strategies).forEach(s -> report.add(s));
+        return report;
+    }
 
 }

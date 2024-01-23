@@ -9,25 +9,27 @@ public class BufferedConsumer<T> implements Consumer<T> {
 
     public List<T> buffer;
 
-    public BufferedConsumer(){
+    public BufferedConsumer() {
         this.buffer = new ArrayList<T>();
     }
+
     @Override
     public void notify(T arg, long ts) {
         this.buffer.add(arg);
     }
 
-    public int getSize(){
+    public int getSize() {
         return this.buffer.size();
     }
 
-    public List<T> getMessages(){
+    public List<T> getMessages() {
         return buffer;
     }
-    public T getMessage(int index){
-        if(index < buffer.size()){
+
+    public T getMessage(int index) {
+        if (index < buffer.size()) {
             return buffer.get(index);
-        }else{
+        } else {
             return null;
         }
     }

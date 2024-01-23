@@ -1,9 +1,10 @@
 package org.streamreasoning.rsp4j.api.sds;
 
-import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 import org.apache.commons.rdf.api.IRI;
+import org.streamreasoning.rsp4j.api.sds.timevarying.TimeVarying;
 
 import java.util.Collection;
+import java.util.stream.Stream;
 
 /**
  * Created by riccardo on 01/07/2017.
@@ -18,7 +19,11 @@ public interface SDS<E> {
 
     default SDS<E> materialize(long ts) {
         asTimeVaryingEs().forEach(eTimeVarying -> eTimeVarying.materialize(ts));
+        materialized();
         return this;
     }
 
+    void materialized();
+
+    Stream<E> toStream();
 }
