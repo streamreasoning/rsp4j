@@ -5,6 +5,7 @@ import org.apache.commons.rdf.api.Graph;
 import org.apache.commons.rdf.api.IRI;
 import org.apache.commons.rdf.api.RDF;
 import org.junit.Before;
+import org.junit.Test;
 import org.streamreasoning.rsp4j.TestConsumer;
 import org.streamreasoning.rsp4j.api.RDFUtils;
 import org.streamreasoning.rsp4j.api.engine.config.EngineConfiguration;
@@ -36,6 +37,7 @@ public class FullEngineTestCSPARQL {
         instance = RDFUtils.getInstance();
     }
 
+    @Test
     public void csparql() throws ConfigurationException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         EngineConfiguration ec = EngineConfiguration.loadConfig("/csparql.properties");
